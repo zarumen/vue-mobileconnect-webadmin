@@ -1,17 +1,29 @@
 module.exports = {
   root: true,
+  excludedFiles: 'app.config.js',
+  'parser': "vue-eslint-parser",
+  parserOptions: {
+    parser: 'babel-eslint',
+    sourceType: 'module',
+  },
   env: {
-    node: true
+    node: true,
+    jest: true
   },
   'extends': [
     'plugin:vue/essential',
-    '@vue/prettier'
+    'eslint:recommended',
+    'prettier/standard',
   ],
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   },
-  parserOptions: {
-    parser: 'babel-eslint'
+  globals: {
+      mount: false,
+      shallowMount: false,
+      shallowMountView: false,
+      createComponentMocks: false,
+      createModuleStore: false,
   }
 }
