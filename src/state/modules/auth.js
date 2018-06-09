@@ -4,7 +4,7 @@ import firestoreApp from '@utils/firestore.config'
 export const state = {
   currentUser: getSavedState('auth.currentUser'),
   userInfo: getSavedState('auth.userInfo'),
-  isAdmin: false
+  isAdmin: getSavedState('auth.admin')
 }
 
 export const getters = {
@@ -28,6 +28,7 @@ export const mutations = {
   },
   setAdminRole(state, newValue) {
     state.isAdmin = newValue
+    saveState('auth.admin', newValue)
   }
 }
 
@@ -50,6 +51,7 @@ export const actions = {
     if (state.userInfo.email !== state.currentUser.email) {
       commit ('SET_CURRENT_USER', null)
       commit ('setUserInfo', null)
+      commit ('setAdminRole', false)
       return Promise.resolve(null)
     }
 
@@ -111,6 +113,7 @@ export const actions = {
             if (error.response.status === 401) {
               commit('setUserInfo', null)
               commit('SET_CURRENT_USER', null)
+              commit('setAdminRole', false)
             }
             return null
           })
@@ -120,6 +123,7 @@ export const actions = {
   logOut({ commit }) {
     commit('SET_CURRENT_USER', null)
     commit('setUserInfo', null)
+    commit('setAdminRole', false)
   },
 }
 
