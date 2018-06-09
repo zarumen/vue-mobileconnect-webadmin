@@ -31,7 +31,7 @@ export default [
       authRequired: true,
     },
     props: route => ({
-      user: store.state.auth.currentUser,
+      user: store.state.auth.userInfo,
     }),
   },
   {
@@ -70,6 +70,42 @@ export default [
     props: route => ({
       user: route.params.user,
     }),
+  },
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: () => lazyLoadView(import('@views/dashboard')),
+    meta: {
+      authRequired: true,
+    },
+    // TODO check admin role to access
+  },
+  {
+    path: '/organizations',
+    name: 'organizations',
+    component: () => lazyLoadView(import('@views/organizations')),
+    meta: {
+      authRequired: true,
+    },
+    // TODO check admin role to access
+  },
+  {
+    path: '/users',
+    name: 'users',
+    component: () => lazyLoadView(import('@views/users')),
+    meta: {
+      authRequired: true,
+    },
+    // TODO check admin role to access
+  },
+  {
+    path: '/campaigns',
+    name: 'campaigns',
+    component: () => lazyLoadView(import('@views/campaigns')),
+    meta: {
+      authRequired: true,
+    },
+    // TODO check admin role to access
   },
   {
     path: '/logout',

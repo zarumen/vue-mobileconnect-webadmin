@@ -1,9 +1,5 @@
-import { firebaseConfig } from '@utils/firebase.config'
-import firebase from 'firebase/app'
-import 'firebase/firestore'
-import 'firebase/auth'
-
-const firstApp = firebase.initializeApp(firebaseConfig, 'First')
+// import fireauthApp from '@utils/fireauth.config'
+import firestoreApp from "@utils/firestore.config"
 
 export const state = {
   cached: [],
@@ -19,14 +15,22 @@ export const mutations = {
 
 export const actions = {
   fetchUser({ commit, state, rootState }, { username }) {
+    // 1. Check if we already have the user as a current user.
     const { currentUser } = rootState.auth
     if (currentUser && currentUser.email === username) {
       return Promise.resolve(currentUser)
     }
+    // 2. Check if we've already fetched and cached the user.
+    const matchedUser = state.cached.find(user => user.email === username)
+    if (matchedUser) {
+      return Promise.resolve(currentUser)
+    }
 
-    return firstApp.firestore()
+    // 3. Fetch the user from the API and cache it in case
+    //    we need it again in the future.
+    return firestoreApp
       .collection('users')
-      .where('email', '==', currentUser.email)
+      .where('email', '==', username)
       .get()
       .then(querySnapshot => {
         var updatedUser = {}
@@ -34,8 +38,11 @@ export const actions = {
           updatedUser = doc.data()
           updatedUser['id'] = doc.id
         })
-        commit('CACHE_USER', updatedUser)
+        commit('setUserInfo', updatedUser)
         return updatedUser
-      })
+      })      
+  },
+  createUser( { commit, state }, { username, password } ) {
+
   },
 }

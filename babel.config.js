@@ -7,14 +7,8 @@ module.exports = {
         // polyfill.io service in index.html
         useBuiltIns: false,
       },
-      
-    ],
-    [
-      '@babel/preset-env', 
-      { 
-        "modules": false 
-      }
-    ],
+      // ["env", { "modules": false }]
+    ]
   ],
   plugins: [
     // Support async/await

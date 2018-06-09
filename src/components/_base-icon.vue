@@ -23,8 +23,14 @@ export default {
         // Add new icons to this list as you need them
         // free solid
         addressCard: require('@fortawesome/fontawesome-free-solid/faAddressCard'),
+        chartLine: require('@fortawesome/fontawesome-free-solid/faChartLine'),
+        chartPie: require('@fortawesome/fontawesome-free-solid/faChartPie'),
         sync: require('@fortawesome/fontawesome-free-solid/faSync'),
+        syncAlt: require('@fortawesome/fontawesome-free-solid/faSyncAlt'),
+        siteMap: require('@fortawesome/fontawesome-free-solid/faSitemap'),
+        storeAlt: require('@fortawesome/fontawesome-free-solid/faStoreAlt'),
         user: require('@fortawesome/fontawesome-free-solid/faUser'),
+        userFriends: require('@fortawesome/fontawesome-free-solid/faUserFriends'),
         userCircle: require('@fortawesome/fontawesome-free-solid/faUserCircle'),
         school: require('@fortawesome/fontawesome-free-solid/faSchool'),
         signOutAlt: require('@fortawesome/fontawesome-free-solid/faSignOutAlt'),

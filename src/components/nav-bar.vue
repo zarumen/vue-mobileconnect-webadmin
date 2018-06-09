@@ -7,23 +7,6 @@ export default {
   data() {
     return {
       drawer: null,
-      menuItems: [
-        {
-          name: 'home',
-          icon: 'school',
-          title: 'Home',
-        },
-        {
-          name: 'profile',
-          icon: 'userCircle',
-          title: 'Profile',
-        },
-        {
-          name: 'logout',
-          icon: 'signOutAlt',
-          title: 'Log out',
-        },
-      ],
       loggedInNavRoutes: [
         {
           name: 'profile',
@@ -44,6 +27,50 @@ export default {
   },
   computed: {
     ...authComputed,
+    menuItems () {
+      // init menu Items by use 'auth/isAdmin' role
+      var menuItems =  []
+      let menuAdmin = [
+        {
+          name: 'dashboard',
+          icon: 'chartPie',
+          title: 'Dashboard',
+        },
+        {
+          name: 'organizations',
+          icon: 'siteMap',
+          title: 'Organizations Manager',
+        },
+        {
+          name: 'users',
+          icon: 'userFriends',
+          title: 'User Manager',
+        },
+        {
+          name: 'campaigns',
+          icon: 'storeAlt',
+          title: 'Campaigns Manager',
+        },
+      ]
+      let menuUser = [
+        {
+          name: 'profile',
+          icon: 'userCircle',
+          title: 'Profile',
+        },
+        {
+          name: 'logout',
+          icon: 'signOutAlt',
+          title: 'Log out',
+        },
+      ]
+      if (this.isAdmin === false) {
+        menuItems = menuUser
+      } else {
+        menuItems = menuAdmin.concat(menuUser)
+      }
+      return menuItems
+    }
   },
 }
 </script>

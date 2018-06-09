@@ -1,29 +1,57 @@
 module.exports = {
   root: true,
-  excludedFiles: 'app.config.js',
-  'parser': "vue-eslint-parser",
   parserOptions: {
-    parser: 'babel-eslint',
-    sourceType: 'module',
+    sourceType: 'script',
   },
   env: {
-    node: true,
-    jest: true
+    node: true
   },
-  'extends': [
-    'plugin:vue/essential',
-    'eslint:recommended',
+  extends: [
+    // https://github.com/vuejs/eslint-plugin-vue#bulb-rules
+    'plugin:vue/recommended',
+    // https://github.com/standard/standard/blob/master/docs/RULES-en.md
+    '@vue/standard',
+    // https://github.com/prettier/eslint-config-prettier
+    'prettier',
     'prettier/standard',
   ],
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+    // Only allow debugger in development
+    'no-debugger': process.env.PRE_COMMIT ? 'error' : 'off',
+    // Only allow `console.log` in development
+    'no-console': process.env.PRE_COMMIT ?
+      ['error', {
+        allow: ['warn', 'error']
+      }] :
+      'off',
   },
-  globals: {
+  overrides: [{
+    files: ['src/**/*', 'tests/unit/**/*', 'tests/e2e/**/*'],
+    excludedFiles: 'app.config.js',
+    parserOptions: {
+      parser: 'babel-eslint',
+      sourceType: 'module',
+    },
+    env: {
+      browser: true,
+    },
+  },
+  {
+    files: ['**/*.unit.js'],
+    parserOptions: {
+      parser: 'babel-eslint',
+      sourceType: 'module',
+    },
+    env: {
+      jest: true
+    },
+    globals: {
       mount: false,
       shallowMount: false,
       shallowMountView: false,
       createComponentMocks: false,
       createModuleStore: false,
-  }
+    },
+  },
+],
 }

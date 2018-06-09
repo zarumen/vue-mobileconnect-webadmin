@@ -4,11 +4,11 @@ import Layout from '@layouts/main'
 export default {
   page() {
     return {
-      title: this.user.name,
+      title: this.user.firstName,
       meta: [
         {
           name: 'description',
-          content: `The user profile for ${this.user.name}.`,
+          content: `The user profile for ${this.user.firstName}.`,
         },
       ],
     }
@@ -28,7 +28,7 @@ export default {
     <v-content>
       <h1>
         <BaseIcon name="user"/>
-        {{ user.name }}
+        {{ user.firstName }} {{ user.lastName }}
         Profile
       </h1>
       <pre>{{ user }}</pre>
