@@ -49,7 +49,7 @@ export default {
       :headers="headers" 
       :items="items" 
       :search="search" 
-      :pagination="pagination"
+      :pagination.sync="pagination"
       class="elevation-1"
       hide-actions
     >
@@ -114,17 +114,17 @@ export default {
       </template>
     </v-data-table>
     <!-- footer page running page number -->
-    <div
+    <v-flex
       v-if="isNotEmpty"
       class="text-xs-center pt-2"
     >
-      <v-pagination 
+      <v-pagination
         v-model="pagination.page" 
-        :length="pagination.pages" 
-        :total-visible="5" 
+        :length="pagination.pages"
+        color="green"
         circle
       />
-    </div>
+    </v-flex>
   </div>
 </template>
 

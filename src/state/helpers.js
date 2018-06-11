@@ -11,8 +11,9 @@ export const authMethods = mapActions('auth', ['logIn', 'logOut'])
 
 export const orgComputed = {
   ...mapState('organizations', {
-    items: state => state.organizationList
-  })
+    items: state => state.organizationsList,
+  }),
+  ...mapGetters('organizations', ['hadList', 'getCompanyList', 'getDepartmentList', 'getBrandList'])
 }
 
-export const orgMethods = mapActions('organizations', 'getOrganizationsList')
+export const orgMethods = mapActions('organizations', ['getOrganizationsList', 'addCompanyToOrganization'])

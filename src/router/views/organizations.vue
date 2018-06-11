@@ -2,6 +2,8 @@
 import Layout from '@layouts/main'
 import FormAddOrganization from '@components/form-add-organization'
 import { orgMethods, orgComputed } from '@state/helpers'
+import { mapState } from 'vuex'
+import { debounce } from "lodash";
 
 export default {
   page: {
@@ -15,15 +17,6 @@ export default {
       dialog: '',
       dialogTitle: "Organization Delete Dialog",
       dialogText: "Do you want to delete this organization?",
-      rightDrawer: false,
-      right: true,
-      search: '',
-      loading: false,
-      pagination: {
-        page: 1,
-        totalItems: 3,
-        rowsPerPage: 10
-      },
       headers: [
         {
           text: 'Level',
@@ -40,25 +33,51 @@ export default {
           lastName: ''
         }
       },
+      // NOT USE! now
+      search: '',
+      rightDrawer: false,
+      right: true,
       query: "",
-      snackbarStatus: false,
       timeout: 2000,
-      quickSearchFilter: "",
+      quickSearchFilter: 'abc'
     }
   },
   computed: {
     ...orgComputed,
+    ...mapState('organizations', {
+      items: 'items',
+      pagination: 'pagination',
+      loading: 'loading',
+      mode: 'mode',
+      snackbar: 'snackbar',
+      notice: 'notice'
+    }),
+    quickSearch: {
+      get: () => {
+        return this.quickSearchFilter
+      },
+      set: (val) => {
+        this.quickSearchFilter = val
+        this.quickSearchFilter && this.quickSearchProducts()
+      }
+    }
   },
   watch: {
-
+    
   },
   created () {
-    this.reloadData()
+    if (this.hadList) {
+      this.reloadData()
+    }      
   },
   methods: {
     ...orgMethods,
     print () {
       window.print()
+    },
+    edit (item) {
+      // sending to editPage
+      // this.$router.push({ name: 'organization-edit', params: { id: item.id } })
     },
     remove (item) {
       this.orderId = item.id
@@ -72,11 +91,16 @@ export default {
       this.dialog = false
     },
     closeSnackbar () {
+      this.$store.commit('organizations/setSnackbar', { snackbar: false })
+      this.$store.commit('organizations/setNotice', { notice: '' })
 
     },
     reloadData () {
-       this.$store.dispatch('organizations/getOrganizationsList')
-    }
+      this.getOrganizationsList()
+    },
+    quickSearchProducts: debounce(() => {
+      console.log(this.quickSearchFilter)
+    }, 300)
   },
 }
 </script>
@@ -91,7 +115,6 @@ export default {
             <span class="title">
               Organization {{ pagination? "("+pagination.totalItems+")": "" }}
               <v-text-field
-                v-model="quickSearch"
                 append-icon="search"
                 label="Quick Search"
                 single-line
@@ -103,6 +126,7 @@ export default {
               flat 
               icon 
               color="green"
+              @click.native="reloadData()"
             >
               <BaseIcon name="syncAlt"/>            
             </v-btn>
@@ -164,7 +188,10 @@ export default {
     >
       <v-icon>add</v-icon>
     </v-btn>
-    <FormAddOrganization :add-dialog="addDialog"/>
+    <FormAddOrganization 
+      :add-dialog="addDialog" 
+      @emitCloseDialog="addDialog=arguments[0]"
+    />
   </Layout>
 </template>
 

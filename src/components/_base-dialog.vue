@@ -10,7 +10,7 @@ export default {
         default: '',
       },
       dialog: {
-        type: String,
+        type: [String, Boolean],
         default: '',
       },
   },
@@ -44,14 +44,14 @@ export default {
       <v-card-text>{{ dialogText }}</v-card-text>
       <v-card-actions>
         <v-btn 
-          class="green--text darken-1" 
+          color="red"
           flat
           @click.native="$emit('onConfirm')"
         >
           Confirm
         </v-btn>
         <v-btn 
-          class="orange--text darken-1" 
+          color="error"
           flat 
           @click.native="$emit('onCancel')"
         >

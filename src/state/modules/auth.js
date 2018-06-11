@@ -62,7 +62,6 @@ export const actions = {
           photoURL: firebaseUser.user.photoURL,
           email: firebaseUser.user.email,
           displayName: firebaseUser.user.displayName,
-          refreshToken: firebaseUser.user.refreshToken
         }
         commit ('SET_CURRENT_USER', user)
         
@@ -96,13 +95,12 @@ export const actions = {
           .then(querySnapshot => {
             console.log(querySnapshot)
             var updatedUser = {}
-            var userIsAdmin = {}
             querySnapshot.forEach(doc => {
               console.log(doc.data())
               updatedUser = doc.data()
               updatedUser['id'] = doc.id
             })
-            userIsAdmin = updatedUser.isAdmin
+            let userIsAdmin = updatedUser.isAdmin
             commit('setAdminRole', userIsAdmin)
             commit('setUserInfo', updatedUser)
             commit('SET_CURRENT_USER', user)

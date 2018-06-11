@@ -12,6 +12,7 @@ export default {
   data() {
     return {
       username: '',
+      ePass: true,
       password: '',
       authError: null,
       tryingToLogIn: false,
@@ -62,14 +63,19 @@ export default {
               :class="$style.form"
               @submit.prevent="tryToLogIn"
             >
-              <BaseInput
+              <v-text-field
                 v-model="username"
-                name="username"
+                label="E-mail"
               />
-              <BaseInput
+              <v-text-field
                 v-model="password"
-                name="password"
-                type="password"
+                :append-icon="ePass ? 'visibility' : 'visibility_off'"
+                :append-icon-cb="() => (ePass = !ePass)"
+                :type="ePass ? 'password' : 'text'"
+                label="Enter your password"
+                hint="At least 6 characters"
+                min="6"
+                counter
               />
               <BaseButton
                 :disabled="tryingToLogIn"
@@ -80,7 +86,7 @@ export default {
                   name="sync"
                   spin
                 />
-                <span v-else>Log in</span>
+                <span v-else>Log In</span>
               </BaseButton>
               <p v-if="authError">
                 There was an error logging in to your account.

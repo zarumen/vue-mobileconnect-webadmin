@@ -30,7 +30,10 @@ export default {
     >
       <v-icon>add</v-icon>
     </v-btn>
-    <FormAddUser :add-user-dialog="addUserDialog"/>
+    <FormAddUser 
+      :add-user-dialog="addUserDialog" 
+      @emitCloseUserDialog="addUserDialog=arguments[0]"
+    />
   </Layout>
 </template>
 
