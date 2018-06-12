@@ -73,9 +73,10 @@ export const mutations = {
 }
 
 export const actions = {
+  // ===
+  // CREAT Zone
+  // ===
   addCompanyToOrganization({ commit, dispatch }, organization) {
-    // check company is not Array () => NewValue()
-    // if(company instanceof Object) return Promise.resolve(null) 
 
     console.log('Company action!')
 
@@ -89,7 +90,7 @@ export const actions = {
         })
 
         console.log("Document written with ID: ", docRef.id);
-        dispatch('getOrganizationsList')
+        // dispatch('getOrganizationsList')
         sendSuccessNotice(commit, 'New Company has been added.')
       })
       .catch(error => {
@@ -100,9 +101,6 @@ export const actions = {
       })
   },
   addDepartmentToOrganization({ commit, dispatch }, organization) {
-    // check company is not Array () => NewValue() not valid return null
-
-    // if((company instanceof Object)) return Promise.resolve(null)
 
     console.log('Department Action')
 
@@ -116,7 +114,7 @@ export const actions = {
         })
 
         console.log("Document written with ID: ", docRef.id);
-        dispatch('getOrganizationsList')
+        // dispatch('getOrganizationsList')
         sendSuccessNotice(commit, 'New Department has been added.')
       })
       .catch(error => {
@@ -140,7 +138,7 @@ export const actions = {
         })
 
         console.log("Document written with ID: ", docRef.id);
-        dispatch('getOrganizationsList')
+        // dispatch('getOrganizationsList')
         sendSuccessNotice(commit, 'New Brand has been added.')
       })
       .catch(error => {
@@ -150,6 +148,9 @@ export const actions = {
         return error
       })
   },
+  // ===
+  // READ Zone
+  // ===
   getOrganizationById({ commit }, { id }) {
     console.log(id)
     return id
@@ -168,8 +169,10 @@ export const actions = {
       .then(querySnapshot => {
           let orgList = []
           querySnapshot.forEach(res => {
-            console.log(res.data())
-            orgList.push(res.data())
+            let data = {}
+            data = res.data()
+            data['id'] = res.id
+            orgList.push(data)
           })
 
           // Split Array Organization => Company, Deparment, Brand
@@ -196,12 +199,31 @@ export const actions = {
 
           commitPagination(commit, orgList)
           commit('setLoading', { loading: false })
+          sendSuccessNotice(commit, 'Organization Refresh!')
           return orgList
       })
       .catch(error => {
           commit('setLoading', { loading: false })
           console.log(error)
           return error
+      })
+  },
+  // ===
+  // DELETE Zone
+  // ===
+  deleteOrganization({ commit, dispatch }, organizationId) {
+
+    commit('setLoading', { loading: true })
+    return firestoreApp
+      .collection('organizations')
+      .doc(organizationId)
+      .delete()
+      .then(() => {
+        dispatch('getOrganizationsList')
+        sendSuccessNotice(commit, 'Organization Deleted!')
+      })
+      .catch(error => {
+        console.log("Error removing document: ", error)
       })
   },
 }

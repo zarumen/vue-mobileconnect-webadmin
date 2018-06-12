@@ -89,7 +89,6 @@ export default {
 
           // Prepare Object organization
           let org = {
-            displayName: tDepartment,
             organizationLevel1: tCompany.organizationLevel1,
             organizationLevel1Name: tCompany.organizationLevel1Name,
             organizationAuth: 'Level2',
@@ -99,10 +98,12 @@ export default {
 
           if (tDepartment instanceof Object) {
 
+            org['displayName'] = tDepartment.displayName
             org['organizationLevel2Name'] = tDepartment.organizationLevel2Name
 
           } else {
 
+            org['displayName'] = tDepartment
             org['organizationLevel2Name'] = tDepartment
 
           }
@@ -120,24 +121,34 @@ export default {
         } else if (tDepartment === null) {
           // HANDLE IF DEPARTMENT IS NULL 
 
-        } else if (tCompany.organizationLevel1 !== tDepartment.organizationLevel1) {
-          // HANDLE IF USE COMPANY AND DEPARTMENT MISMATCH
+        } else if (tCompany.organizationLevel1 !== tDepartment.organizationLevel1 || 
+                    tBrand.organizationLevel2 === tDepartment.organizationLevel2) {
+          // HANDLE IF USE COMPANY AND DEPARTMENT AND BRAND MISMATCH
 
         } else {
-
           // Prepare Object organization
           let org = {
-            displayName: tBrand,
-            organizationLevel1: tCompany.organizationLevel1,
-            organizationLevel1Name: tCompany.organizationLevel1Name,
-            organizationLevel2: tDepartment.organizationLevel2,
-            organizationLevel2Name: tDepartment.organizationLevel2Name,
-            organizationLevel3Name: tBrand,
-            organizationAuth: 'Level3',
-            organizationDisable: false,
-            picURL: 'undefine',
-          } 
+              organizationLevel1: tCompany.organizationLevel1,
+              organizationLevel1Name: tCompany.organizationLevel1Name,
+              organizationLevel2: tDepartment.organizationLevel2,
+              organizationLevel2Name: tDepartment.organizationLevel2Name,
+              organizationAuth: 'Level3',
+              organizationDisable: false,
+              picURL: 'undefine',
+            }
 
+          if (tBrand instanceof Object) {
+            
+            org['displayName'] = tBrand.displayName
+            org['organizationLevel3Name'] = tBrand.organizationLevel3Name
+
+          } else {
+
+            org['displayName'] = tBrand
+            org['organizationLevel2Name'] = tBrand
+
+          }
+          
           this.addBrandToOrganization(org)
           this.closeDialog()
         }
@@ -155,7 +166,7 @@ export default {
   <v-dialog 
     v-model="addDialog" 
     persistent
-    width="800px"
+    width="600px"
   >
     <v-card>
       <v-card-title class="grey lighten-4 py-4 title">
@@ -205,7 +216,7 @@ export default {
               v-model="company"
               :hint="`${company}`"
               :items="companyList"
-              :key="companyList.organizationLevel1"
+              :key="companyList.id"
               item-text="displayName"
               prepend-icon="business"
               label="Company Name"
@@ -222,7 +233,7 @@ export default {
               v-model="department"
               :hint="`${department}`"
               :items="departmentList"
-              :key="departmentList.organizationLevel2"
+              :key="departmentList.id"
               item-text="displayName"
               prepend-icon="business_center"
               label="Department Name"
@@ -268,7 +279,7 @@ export default {
               v-model="brand"
               :hint="`${brand}`"
               :items="brandList"
-              :key="brandList.organizationLevel3"
+              :key="brandList.id"
               item-text="displayName"
               prepend-icon="shopping_basket"
               label="Brand Name"
@@ -323,13 +334,11 @@ export default {
         >
           Cancel
         </v-btn>
-        <v-btn 
-          flat
-          color="indigo"
+        <BaseButton 
           @click="save()"
         >
           Save
-        </v-btn>
+        </BaseButton>
       </v-card-actions>
     </v-card>
   </v-dialog>

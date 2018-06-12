@@ -19,7 +19,7 @@ export function sendSuccessNotice (commit, notice) {
   })
 
   commit('setMode', {
-    mode: 'success',
+    mode: 'green',
   })
 }
 
@@ -33,7 +33,7 @@ export function sendErrorNotice (commit, notice) {
   })
 
   commit('setMode', {
-    mode: 'error',
+    mode: 'red',
   })
 }
 

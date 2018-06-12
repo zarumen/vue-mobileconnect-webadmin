@@ -33,10 +33,11 @@ export default {
           lastName: ''
         }
       },
+      organizationId: '',
       // NOT USE! now
       search: '',
       rightDrawer: false,
-      right: true,
+      left: true,
       query: "",
       timeout: 2000,
       quickSearchFilter: 'abc'
@@ -80,14 +81,18 @@ export default {
       // this.$router.push({ name: 'organization-edit', params: { id: item.id } })
     },
     remove (item) {
-      this.orderId = item.id
+      this.organizationId = item.id
+      console.log(this.organizationId)
       this.dialog = true
     },
     onConfirm () {
-
+      // send organizationId to Store dispatch (organizations/deleteOrganization)
+      this.$store.dispatch('organizations/deleteOrganization', this.organizationId)
+      // this.$store.commit('organizations/closeSnackBar', 2000)
+      this.dialog = false
     },
     onCancel () {
-      this.orderId = ""
+      this.organizationId = ''
       this.dialog = false
     },
     closeSnackbar () {
@@ -145,7 +150,7 @@ export default {
             v-if="loading===false"
             :headers="headers"
             :items="items"
-            :pagination="pagination"
+            :pagination.sync="pagination"
             @edit="edit"
             @remove="remove"
           />
@@ -161,7 +166,7 @@ export default {
       />
       <v-snackbar 
         v-if="loading===false" 
-        :right="true" 
+        :left="true" 
         :timeout="timeout" 
         :color="mode" 
         v-model="snackbar"

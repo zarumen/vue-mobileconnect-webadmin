@@ -54,7 +54,8 @@ export default {
 
 <template>
   <v-dialog 
-    v-model="addUserDialog" 
+    v-model="addUserDialog"
+    persistent
     width="800px"
   >
     <v-card>
@@ -65,7 +66,7 @@ export default {
         grid-list-sm 
         class="pa-4"
       >
-        <v-form v-model="valid">
+        <v-form>
           <v-layout 
             row 
             wrap
