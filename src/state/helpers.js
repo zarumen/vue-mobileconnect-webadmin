@@ -13,7 +13,18 @@ export const orgComputed = {
   ...mapState('organizations', {
     items: state => state.organizationsList,
   }),
-  ...mapGetters('organizations', ['hadList', 'getCompanyList', 'getDepartmentList', 'getBrandList'])
+  ...mapGetters('organizations', [
+    'hadList', 
+    'getCompanyList', 
+    'getDepartmentList', 
+    'getBrandList'
+  ])
 }
 
 export const orgMethods = mapActions('organizations', ['getOrganizationsList', 'addCompanyToOrganization'])
+
+export const userComputed = {
+
+}
+
+export const userMethods = {}

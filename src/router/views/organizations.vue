@@ -46,7 +46,6 @@ export default {
   computed: {
     ...orgComputed,
     ...mapState('organizations', {
-      items: 'items',
       pagination: 'pagination',
       loading: 'loading',
       mode: 'mode',

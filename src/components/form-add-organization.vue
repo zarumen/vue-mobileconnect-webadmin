@@ -117,13 +117,16 @@ export default {
       if (this.select.id === 3 && tCompany !== null && tBrand !== null) {
         if (!(tCompany instanceof Object)) {
           // handle error check if Company is String (use old Company only)
+          console.log('case 1')
 
         } else if (tDepartment === null) {
           // HANDLE IF DEPARTMENT IS NULL 
+          console.log('case 2')
 
         } else if (tCompany.organizationLevel1 !== tDepartment.organizationLevel1 || 
                     tBrand.organizationLevel2 === tDepartment.organizationLevel2) {
           // HANDLE IF USE COMPANY AND DEPARTMENT AND BRAND MISMATCH
+          console.log('case 3')
 
         } else {
           // Prepare Object organization
@@ -145,7 +148,7 @@ export default {
           } else {
 
             org['displayName'] = tBrand
-            org['organizationLevel2Name'] = tBrand
+            org['organizationLevel3Name'] = tBrand
 
           }
           
@@ -153,11 +156,7 @@ export default {
           this.closeDialog()
         }
       }
-        
-
-      
     },
-
   }
 }
 </script>
