@@ -7,20 +7,24 @@ import {
   sendErrorNotice,
   closeNotice,
   commitPagination,
+  getDefaultPagination,
 } from '@utils/pagination-util'
 
 export const state = {
+  // Data Table Initial Setup Variables
   items: [],
-  pagination: {},
+  pagination: getDefaultPagination(),
   loading: false,
   mode: '',
   snackbar: false,
   notice: '',
-  organization: {},
-  organizationsList: [],
+  // List of Company, Department, Brand Dropdown Setup Variables
   companyList: [],
   departmentList: [],
-  brandList: []
+  brandList: [],
+  // Search Result Variables
+  organization: {},
+  organizationsList: [],
 }
 
 export const getters = {
@@ -52,13 +56,16 @@ export const mutations = {
     state.brandList = newValue
   },
   setPagination (state, pagination) {
-    state.pagination = pagination;
+    state.pagination = pagination
+  },
+  // update Page
+  updatePage(state, paginationPage) {
+    state.pagination.page = paginationPage
   },
   setLoading(state, { loading }) {
     state.loading = loading
   },
   setNotice (state, { notice }) {
-    console.log(' notice .... ', notice)
     state.notice = notice
   },
   setSnackbar (state, { snackbar }) {
@@ -92,6 +99,7 @@ export const actions = {
         console.log("Document written with ID: ", docRef.id);
         // dispatch('getOrganizationsList')
         sendSuccessNotice(commit, 'New Company has been added.')
+        closeNotice(commit, 1500)
       })
       .catch(error => {
         console.log(error)
@@ -116,6 +124,7 @@ export const actions = {
         console.log("Document written with ID: ", docRef.id);
         // dispatch('getOrganizationsList')
         sendSuccessNotice(commit, 'New Department has been added.')
+        closeNotice(commit, 1500)
       })
       .catch(error => {
         console.log(error)
@@ -140,6 +149,7 @@ export const actions = {
         console.log("Document written with ID: ", docRef.id);
         // dispatch('getOrganizationsList')
         sendSuccessNotice(commit, 'New Brand has been added.')
+        closeNotice(commit, 1500)
       })
       .catch(error => {
         console.log(error)
@@ -162,6 +172,7 @@ export const actions = {
     if (!state.organizationsList) return Promise.resolve(null)
 
     commit('setLoading', { loading: true })
+
     return firestoreApp
       .collection('organizations')
       .orderBy('lastUpdated', 'desc')
@@ -195,11 +206,11 @@ export const actions = {
           commit('setCompanyList', orgLevel1List)
           commit('setDepartmentList', orgLevel2List)
           commit('setBrandList', orgLevel3List)
-          commit('setOrganizationsList', orgList)
 
           commitPagination(commit, orgList)
           commit('setLoading', { loading: false })
           sendSuccessNotice(commit, 'Organization Refresh!')
+          closeNotice(commit, 1500)
           return orgList
       })
       .catch(error => {
@@ -214,6 +225,7 @@ export const actions = {
   deleteOrganization({ commit, dispatch }, organizationId) {
 
     commit('setLoading', { loading: true })
+
     return firestoreApp
       .collection('organizations')
       .doc(organizationId)
@@ -221,11 +233,16 @@ export const actions = {
       .then(() => {
         dispatch('getOrganizationsList')
         sendSuccessNotice(commit, 'Organization Deleted!')
+        closeNotice(commit, 1500)
       })
       .catch(error => {
+        commit('setLoading', { loading: false })
         console.log("Error removing document: ", error)
       })
   },
+  closeSnackBar ({ commit }, timeout ) {
+    closeNotice(commit, timeout);
+  }
 }
 // ===
 // Private helpers

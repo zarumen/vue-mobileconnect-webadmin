@@ -8,7 +8,7 @@ export default {
 
 <template>
   <v-content>
-    <NavBar/>
+    <nav-bar/>
     <slot/>
   </v-content>
 </template>

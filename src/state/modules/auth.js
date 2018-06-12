@@ -58,14 +58,14 @@ export const actions = {
     // refresh all data in localStorage
     return fireauthApp.onAuthStateChanged(firebaseUser => {
       if (firebaseUser) {
-        let user = {
-          photoURL: firebaseUser.user.photoURL,
-          email: firebaseUser.user.email,
-          displayName: firebaseUser.user.displayName,
-        }
-        commit ('SET_CURRENT_USER', user)
+        // let user = {
+        //   photoURL: firebaseUser.user.photoURL,
+        //   email: firebaseUser.user.email,
+        //   displayName: firebaseUser.user.displayName,
+        // }
+        // commit ('SET_CURRENT_USER', user)
         
-        return user
+        return firebaseUser
       } else {
         return Promise.resolve(null)
       }
@@ -84,7 +84,6 @@ export const actions = {
           photoURL: firebaseUser.user.photoURL,
           email: firebaseUser.user.email,
           displayName: firebaseUser.user.displayName,
-          refreshToken: firebaseUser.user.refreshToken
         }
         // console.log(fireauthApp.currentUser)
 

@@ -2,7 +2,6 @@
 import Layout from '@layouts/main'
 import FormAddOrganization from '@components/form-add-organization'
 import { orgMethods, orgComputed } from '@state/helpers'
-import { mapState } from 'vuex'
 import { debounce } from "lodash";
 
 export default {
@@ -13,6 +12,7 @@ export default {
   components: { Layout, FormAddOrganization },
   data() {
     return {
+      baseModule: 'organizations',
       addDialog: '',
       dialog: '',
       dialogTitle: "Organization Delete Dialog",
@@ -27,17 +27,17 @@ export default {
         { text: 'Organization Level2', value: 'organizationLevel2Name' },
         { text: 'Organization Level3', value: 'organizationLevel3Name' },
       ],
+      organizationId: '',
+      left: true,
+      // NOT USE! now
       searchVm: {
         contains: {
           firstName: '',
           lastName: ''
         }
       },
-      organizationId: '',
-      // NOT USE! now
       search: '',
       rightDrawer: false,
-      left: true,
       query: "",
       timeout: 2000,
       quickSearchFilter: 'abc'
@@ -45,13 +45,6 @@ export default {
   },
   computed: {
     ...orgComputed,
-    ...mapState('organizations', {
-      pagination: 'pagination',
-      loading: 'loading',
-      mode: 'mode',
-      snackbar: 'snackbar',
-      notice: 'notice'
-    }),
     quickSearch: {
       get: () => {
         return this.quickSearchFilter
@@ -60,7 +53,7 @@ export default {
         this.quickSearchFilter = val
         this.quickSearchFilter && this.quickSearchProducts()
       }
-    }
+    },
   },
   watch: {
     
@@ -87,7 +80,7 @@ export default {
     onConfirm () {
       // send organizationId to Store dispatch (organizations/deleteOrganization)
       this.$store.dispatch('organizations/deleteOrganization', this.organizationId)
-      // this.$store.commit('organizations/closeSnackBar', 2000)
+      this.$store.commit('organizations/closeSnackBar', 2000)
       this.dialog = false
     },
     onCancel () {
@@ -97,7 +90,6 @@ export default {
     closeSnackbar () {
       this.$store.commit('organizations/setSnackbar', { snackbar: false })
       this.$store.commit('organizations/setNotice', { notice: '' })
-
     },
     reloadData () {
       this.getOrganizationsList()
@@ -149,7 +141,8 @@ export default {
             v-if="loading===false"
             :headers="headers"
             :items="items"
-            :pagination.sync="pagination"
+            :pagination="pagination"
+            :basemodule="baseModule"
             @edit="edit"
             @remove="remove"
           />
@@ -192,7 +185,7 @@ export default {
     >
       <v-icon>add</v-icon>
     </v-btn>
-    <FormAddOrganization 
+    <form-add-organization 
       :add-dialog="addDialog" 
       @emitCloseDialog="addDialog=arguments[0]"
     />

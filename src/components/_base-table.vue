@@ -13,6 +13,10 @@ export default {
       type: [Object, String],
       default: '',
     },
+    basemodule: {
+      type: String,
+      default: '',
+    }
   },
   data () {
     return {
@@ -22,7 +26,18 @@ export default {
   computed: {
     isNotEmpty () {
       return this.items && this.items.length > 0;
-    }
+    },
+    page: {
+      get () {
+        return this.pagination.page
+      },
+      set (value) {
+        this.$store.commit(`${this.basemodule}/updatePage`, value)
+      }
+    },
+  },
+  created () {
+    console.log(this.pagination)
   },
   methods: {
     renderData: (item, header) => {
@@ -49,7 +64,7 @@ export default {
       :headers="headers" 
       :items="items" 
       :search="search" 
-      :pagination.sync="pagination"
+      :pagination="pagination"
       class="elevation-1"
       hide-actions
     >
@@ -119,7 +134,7 @@ export default {
       class="text-xs-center pt-2"
     >
       <v-pagination
-        v-model="pagination.page" 
+        v-model="page" 
         :length="pagination.pages"
         color="green"
         circle

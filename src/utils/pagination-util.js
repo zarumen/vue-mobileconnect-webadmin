@@ -56,7 +56,7 @@ export function setPagination (commit, page, totalItems, pages, rowsPerPage) {
 
 export function closeNotice (commit, timeout) {
   setTimeout(() => {
-    console.log(' Time out .... ', timeout)
+    // Set Close Snackbar always
     commit('setSnackbar', {
       snackbar: false
     })
