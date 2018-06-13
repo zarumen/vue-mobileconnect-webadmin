@@ -12,7 +12,7 @@ import {
 
 export const state = {
   // Data Table Initial Setup Variables
-  items: [],
+  items: null,
   pagination: getDefaultPagination(),
   loading: false,
   mode: '',
@@ -29,7 +29,7 @@ export const state = {
 
 export const getters = {
   hadList(state) {
-    return !!state.organizationsList
+    return !!state.items
   },
   getCompanyList(state) {
     return state.companyList
@@ -169,7 +169,7 @@ export const actions = {
 
   },
   getOrganizationsList({ commit, state }) {
-    if (!state.organizationsList) return Promise.resolve(null)
+    if (this.hadList) return Promise.resolve(null)
 
     commit('setLoading', { loading: true })
 
@@ -233,7 +233,7 @@ export const actions = {
       .then(() => {
         dispatch('getOrganizationsList')
         sendSuccessNotice(commit, 'Organization Deleted!')
-        closeNotice(commit, 1500)
+        closeNotice(commit, 2000)
       })
       .catch(error => {
         commit('setLoading', { loading: false })

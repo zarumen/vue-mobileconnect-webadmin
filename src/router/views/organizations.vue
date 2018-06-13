@@ -59,7 +59,8 @@ export default {
     
   },
   created () {
-    if (this.hadList) {
+    
+    if (!this.hadList) {
       this.reloadData()
     }      
   },
@@ -109,7 +110,7 @@ export default {
           <!-- Controller Tools Panels -->
           <v-card-title>
             <span class="title">
-              Organization {{ pagination? "("+pagination.totalItems+")": "" }}
+              Organizations {{ pagination? "("+pagination.totalItems+")": "" }}
               <v-text-field
                 append-icon="search"
                 label="Quick Search"

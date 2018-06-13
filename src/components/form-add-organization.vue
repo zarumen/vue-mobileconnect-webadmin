@@ -11,9 +11,11 @@ export default {
   },
   data() {
     return {
+      // Default Values
       company: null,
       department: null,
       brand: null,
+      // Drop down Selector
       select: { id: 1, state: 'Company', value: 'OrganizationLevel1' },
       levelItems: [
         { id: 1, state: 'Company', value: 'OrganizationLevel1' },
@@ -28,6 +30,9 @@ export default {
       departmentList: 'departmentList',
       brandList: 'brandList'
     }),
+    // ////////////////
+    //  Organization Dropdown Controller
+    // ////////////////
     enableLevel1() {
       if (!!this.select.value && this.select.id === 1) 
         return true
@@ -65,10 +70,15 @@ export default {
       const tDepartment = this.department
       const tBrand = this.brand
       
-      // Prepare Object Organization before add to Database
-      if (this.select.id === 1 && tCompany !== null ) {
+      // /////  Prepare Object Organization before add to Database  ////////
 
-        console.log(!(tCompany instanceof Object))
+      // /////////////////////
+      // Company: Organization >> Level1
+      // /////////////////////
+      if (this.select.id === 1 && 
+            tCompany !== null && 
+              tCompany instanceof String) {
+
         // Prepare Object organization
         let org = {
           displayName: tCompany,
@@ -82,7 +92,11 @@ export default {
         this.closeDialog()
       }
 
+      // /////////////////////
+      // Department: Organization >> Level2
+      // /////////////////////
       if (this.select.id === 2 && tDepartment !== null) {
+        
         if (tCompany instanceof String) {
           // handle error check if Company is String (use old Company only)
         } else {
@@ -113,7 +127,9 @@ export default {
         }
       }
         
-
+      // /////////////////////
+      // Brand: Organization >> Level3
+      // /////////////////////
       if (this.select.id === 3 && tCompany !== null && tBrand !== null) {
         if (!(tCompany instanceof Object)) {
           // handle error check if Company is String (use old Company only)

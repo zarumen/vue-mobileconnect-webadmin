@@ -34,7 +34,22 @@ export const orgComputed = {
 export const orgMethods = mapActions('organizations', ['getOrganizationsList', 'addCompanyToOrganization'])
 
 export const userComputed = {
-
+  ...mapState('users', {
+    // ListItem of Data Table 
+    items: state => state.items,
+    // Set Up Data Table Pagination & 
+    pagination: state => state.pagination,
+    page: state => state.pagination.page,
+    // Loading (Looking || Hiding) &
+    loading: state => state.loading,
+    // Snackbar Status and UI Set Up
+    mode: state => state.mode,
+    snackbar: state => state.snackbar,
+    notice: state => state.notice
+  }),
+  ...mapGetters('users', [
+    'hadUserList',
+  ])
 }
 
-export const userMethods = {}
+export const userMethods = mapActions('users', ['getAllUsers', 'fetchUser', 'createUser'])

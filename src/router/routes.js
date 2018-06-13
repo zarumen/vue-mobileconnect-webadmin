@@ -43,9 +43,9 @@ export default [
     },
     beforeEnter(routeTo, routeFrom, next) {
       store
-        // Try to fetch the user's information by their username
+        // Try to fetch the user's information by their username(email)
         .dispatch('users/fetchUser', {
-          username: routeTo.params.username,
+          username: routeTo.params.email,
         })
         .then(user => {
           // Add the user to the route params, so that it can
@@ -95,8 +95,7 @@ export default [
     component: () => lazyLoadView(import('@views/users')),
     meta: {
       authRequired: true,
-    },
-    // TODO check admin role to access
+    },  
   },
   {
     path: '/campaigns',
