@@ -107,6 +107,15 @@ export default [
     // TODO check admin role to access
   },
   {
+    path: '/regex',
+    name: 'regex',
+    component: () => lazyLoadView(import('@views/regex')),
+    meta: {
+      authRequired: true,
+    },
+    // TODO check admin role to access
+  },
+  {
     path: '/logout',
     name: 'logout',
     meta: {

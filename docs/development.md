@@ -62,7 +62,7 @@ API_BASE_URL=https://example.io yarn dev:e2e
 This project includes generators to speed up common development tasks. Commands include:
 
 ```bash
-# Generate a new component with adjacent unit test
+# Generate a new component with adjacent unit test, เช่น Widget, Navbar, Button เป็นต้น
 yarn new component
 
 # Generate a new view component with adjacent unit test
@@ -71,7 +71,7 @@ yarn new view
 # Generate a new layout component with adjacent unit test
 yarn new layout
 
-# Generate a new Vuex module with adjacent unit test
+# Generate a new Vuex module with adjacent unit test, vuex state module เป็น 1 Data Model.
 yarn new module
 
 # Generate a new utility function with adjacent unit test

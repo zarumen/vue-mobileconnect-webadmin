@@ -47,6 +47,11 @@ export default {
           title: 'User Manager',
         },
         {
+          name: 'regex',
+          icon: 'school',
+          title: 'Regex Manager',
+        },
+        {
           name: 'campaigns',
           icon: 'storeAlt',
           title: 'Campaigns Manager',
