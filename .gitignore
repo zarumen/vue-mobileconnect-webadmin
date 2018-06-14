@@ -21,3 +21,7 @@ yarn-error.log*
 *.sw*
 
 /src/utils/firebase.config.js
+
+# Pwin test Page
+/src/router/views/regex.vue
+/src/components/_base-test.vue

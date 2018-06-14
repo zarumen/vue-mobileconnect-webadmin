@@ -46,11 +46,11 @@ export default {
           icon: 'userFriends',
           title: 'User Manager',
         },
-        {
-          name: 'regex',
-          icon: 'school',
-          title: 'Regex Manager',
-        },
+        // {
+        //   name: 'regex',
+        //   icon: 'school',
+        //   title: 'Regex Manager',
+        // },
         {
           name: 'campaigns',
           icon: 'storeAlt',
