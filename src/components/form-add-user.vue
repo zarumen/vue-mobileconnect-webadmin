@@ -24,7 +24,7 @@ export default {
 
     return {
       // Default Values
-      form: Object.assign({}, defaultForm),
+      uform: Object.assign({}, defaultForm),
       company: null,
       department: null,
       brand: null,
@@ -83,13 +83,13 @@ export default {
       this.$emit('emitCloseUserDialog', false)
     },
     clearForm() {
-      this.form = Object.assign({}, this.defaultForm)
-      this.$refs.form.reset()
+      this.uform = Object.assign({}, this.defaultForm)
+      this.$refs.uform.reset()
     },
     saveUser() {
       // Initial Value in Form by v-model attribute
 
-      const newUser = this.form
+      const newUser = this.uform
       const tCompany = this.company
       const tDepartment = this.department
       const tBrand = this.brand 
@@ -158,7 +158,7 @@ export default {
     width="800px"
   >
     <v-form 
-      ref="form"
+      ref="uform"
       v-model="valid"
       lazy-validation
     >
@@ -272,7 +272,6 @@ export default {
                 prepend-icon="shopping_basket"
                 label="Brand Name"
                 persistent-hint
-                max-height="auto"
                 autocomplete
               >
                 <template 
@@ -306,7 +305,7 @@ export default {
             </v-flex>
             <v-flex xs8>
               <v-text-field
-                v-model="form.email"
+                v-model="uform.email"
                 :rules="emailRules"
                 prepend-icon="email"
                 label="Email"
@@ -316,7 +315,7 @@ export default {
             </v-flex>
             <v-flex xs5>
               <v-text-field
-                v-model="form.firstName"
+                v-model="uform.firstName"
                 :rules="nameRules"
                 prepend-icon="person"
                 label="First Name"
@@ -325,41 +324,41 @@ export default {
             </v-flex>
             <v-flex xs5>
               <v-text-field
-                v-model="form.lastName"
+                v-model="uform.lastName"
                 label="Last Name"
               />
             </v-flex>
             <v-flex xs2>
               <v-text-field
-                v-model="form.nickName"
+                v-model="uform.nickName"
                 mask="NNNNNNNNNN"
                 label="(Nick Name)"
               />
             </v-flex>
             <v-flex xs3>
               <v-text-field
-                v-model="form.age"
+                v-model="uform.age"
                 prepend-icon="sentiment_satisfied_alt"
                 label="Age"
               />
             </v-flex>
             <v-flex xs3>
               <v-select
-                v-model="form.gender"
+                v-model="uform.gender"
                 :items="genderItems"
                 label="Gender"
               />
             </v-flex>
             <v-flex xs6>
               <v-text-field
-                v-model="form.jobPosition"
+                v-model="uform.jobPosition"
                 prepend-icon="work"
                 label="Position"
               />
             </v-flex>
             <v-flex xs5>
               <v-text-field
-                v-model="form.mobileTelNumber"
+                v-model="uform.mobileTelNumber"
                 prepend-icon="phone_iphone"
                 mask="phone"
                 label="Mobile No."
@@ -367,7 +366,7 @@ export default {
             </v-flex>
             <v-flex xs5>
               <v-text-field
-                v-model="form.officeTelNumber"
+                v-model="uform.officeTelNumber"
                 prepend-icon="phone"
                 mask="phone"
                 label="Office Tel."
@@ -375,7 +374,7 @@ export default {
             </v-flex>
             <v-flex xs12>
               <v-text-field
-                v-model="form.addedNote"
+                v-model="uform.addedNote"
                 prepend-icon="notes"
                 multi-line
                 label="Note:"

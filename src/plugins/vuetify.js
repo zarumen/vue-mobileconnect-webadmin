@@ -12,5 +12,8 @@ Vue.use(Vuetify, {
     info: '#C4E5C5',
     success: '#1C8B2D'
   },
+  options: {
+    themeVariations: ['primary', 'secondary']
+  }
 })
 

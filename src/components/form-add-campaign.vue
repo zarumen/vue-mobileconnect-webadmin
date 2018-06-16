@@ -16,7 +16,32 @@ export default {
       form: Object.assign({}, defaultForm),
       brand: null,
       step: 1,
-
+      stepName: {
+        one: 'Campaign General Descriptions',
+        two: 'Campaign Settings',
+        three: 'Campaign Parser Configs',
+        four: 'Campaign Reply Service Configs',
+        five: 'Campaign Reward Configs'
+      },
+      validateTypeList: [
+        {id: 0, value: 'regex', condition: false},
+        {id: 1, value: 'coupon', condition: true},
+      ],
+      validateType: {},
+      rewardForm: null,
+      date: null,
+      date2: null,
+      time: null,
+      time2: null,
+      menu: false,
+      menu2: false,
+      menu3: false,
+      menu4: false,
+      menu5: false,
+      menu6: false,
+      switch1: false,
+      switch2: false,
+      loading1: false,
     }
   },
   computed: {
@@ -34,7 +59,8 @@ export default {
 
 <template>
   <v-layout 
-    row 
+    row
+    wrap 
     justify-center
   >
     <v-dialog 
@@ -45,7 +71,7 @@ export default {
       <v-card>
         <v-toolbar 
           dark 
-          color="green"
+          color="indigo"
         >
           <v-btn 
             icon 
@@ -72,68 +98,54 @@ export default {
         </v-toolbar>
         <!-- Content is here -->
         <v-stepper 
-          v-model="step" 
+          v-model="step"
+          light
           vertical
         >
           <v-stepper-step 
             :complete="step > 1" 
+            editable
             step="1"
           >
-            Select an app
-            <small>Summarize if needed</small>
+            {{ stepName.one }}
+            <small>ABC</small>
           </v-stepper-step>
           <v-stepper-content step="1">
-            <v-card 
-              color="grey lighten-1" 
-              class="mb-5" 
-              height="200px"
+            <v-card
+              color="grey lighten-4" 
+              class="mb-5"
             >
-              <p> Step : 1</p>
-              <v-flex xs4>
-                <v-select
-                  v-model="brand"
-                  :hint="`${brand}`"
-                  :items="brandList"
-                  :key="brandList.id"
-                  item-text="displayName"
-                  prepend-icon="shopping_basket"
-                  label="Brand Name"
-                  persistent-hint
-                  max-height="auto"
-                  autocomplete
-                >
-                  <template 
-                    slot="item" 
-                    slot-scope="data"
-                  >
-                    <template v-if="typeof data.item !== 'object'">
-                      <v-list-tile-content v-text="data.item"/>
-                    </template>
-                    <template v-else>
-                      <v-list-tile-content>
-                        <v-list-tile-title v-html="data.item.displayName"/>
-                        <v-list-tile-sub-title v-html="`${data.item.organizationLevel1Name} > ${data.item.organizationLevel2Name}`"/>
-                      </v-list-tile-content>
-                    </template>
-                    <template 
-                      slot="selection" 
-                      slot-scope="data"
-                    >
-                      <v-chip
-                        :selected="data.selected"
-                        :key="JSON.stringify(data.item)"
-                        close
-                        @input="data.parent.selectItem(data.item)"
-                      >
-                        {{ data.item.displayName }}
-                      </v-chip>
-                    </template>
-                  </template>
-                </v-select>
-              </v-flex>
+              <v-card-text>
+                <v-flex 
+                  xs6
+                  sm5 
+                  md3
+                > 
+                  <v-text-field 
+                    prepend-icon="fiber_new"
+                    label="Campaign Code"
+                  />
+                </v-flex>
+                <v-flex 
+                  xs6 
+                > 
+                  <v-text-field 
+                    prepend-icon="shop"
+                    label="Campaign Name"
+                  />
+                </v-flex>                
+                <v-flex xs8>
+                  <v-text-field
+                    prepend-icon="shop_two"
+                    label="Campaign Description"
+                    multi-line
+                  />
+                </v-flex>
+              </v-card-text>
             </v-card>
             <v-btn 
               color="blue" 
+              class="white--text"
               @click.native="step = 2"
             >
               Continue
@@ -142,20 +154,356 @@ export default {
           </v-stepper-content>
           <v-stepper-step 
             :complete="step > 2" 
+            editable
             step="2"
           >
-            Configure analytics for this app
+            {{ stepName.two }}
           </v-stepper-step>
           <v-stepper-content step="2">
             <v-card 
-              color="grey lighten-1" 
-              class="mb-5" 
-              height="200px"
+              color="grey lighten-4" 
+              class="mb-5"
             >
-              <p> Step : 2</p>
+              <v-card-text>
+                <v-flex 
+                  xs6
+                  sm5 
+                  md3
+                >
+                  <v-subheader><small>Campaign Owner Details:</small></v-subheader>
+                  <v-select
+                    v-model="brand"
+                    :hint="`${brand}`"
+                    :items="brandList"
+                    :key="brandList.key"
+                    item-text="displayName"
+                    prepend-icon="shopping_basket"
+                    label="Campaign Owners: Brand"
+                    persistent-hint
+                    autocomplete
+                  >
+                    <template 
+                      slot="item" 
+                      slot-scope="data"
+                    >
+                      <template v-if="typeof data.item !== 'object'">
+                        <v-list-tile-content v-text="data.item"/>
+                      </template>
+                      <template v-else>
+                        <v-list-tile-content>
+                          <v-list-tile-title v-html="data.item.displayName"/>
+                          <v-list-tile-sub-title v-html="`${data.item.organizationLevel1Name} > ${data.item.organizationLevel2Name}`"/>
+                        </v-list-tile-content>
+                      </template>
+                      <template 
+                        slot="selection" 
+                        slot-scope="data"
+                      >
+                        <v-chip
+                          :selected="data.selected"
+                          :key="JSON.stringify(data.item)"
+                          close
+                          @input="data.parent.selectItem(data.item)"
+                        >
+                          {{ data.item.displayName }}
+                        </v-chip>
+                      </template>
+                    </template>
+                  </v-select>
+                </v-flex>
+                <v-flex 
+                  xs6
+                  sm5 
+                  md3
+                > 
+                  <v-text-field 
+                    prepend-icon="text_fields"
+                    mask="NNNNNN"
+                    label="Keyword"
+                  />
+                </v-flex>
+                <v-flex 
+                  xs6
+                  sm5 
+                  md3
+                > 
+                  <v-text-field 
+                    prepend-icon="looks_6"
+                    mask="######"
+                    label="Shortcode"
+                  />
+                </v-flex>
+                <v-subheader>
+                  <small>Campaign Start Status:</small>
+                </v-subheader>
+                <v-radio-group 
+                  v-model="switch2"
+                  :hint="`${switch2}`"
+                  prepend-icon="slideshow"
+                  row
+                >
+                  <v-radio
+                    color="blue darken-3" 
+                    label="Active" 
+                    value="Active" 
+                  />
+                  <v-radio 
+                    color="red" 
+                    label="InActive" 
+                    value="InActive"
+                  />
+                  <v-radio 
+                    color="blue lighten-2" 
+                    label="Paused" 
+                    value="Paused"
+                  />
+                </v-radio-group>
+                <!-- START DATE PICKER -->
+                <v-flex>
+                  <v-subheader>Start Date</v-subheader>
+                </v-flex>
+                <v-layout
+                  row 
+                  wrap
+                >
+                  <v-flex 
+                    xs4 
+                    md4
+                  >
+                    <v-menu
+                      ref="menu"
+                      :close-on-content-click="false"
+                      v-model="menu"
+                      :nudge-right="40"
+                      :return-value.sync="date"
+                      lazy
+                      transition="scale-transition"
+                      offset-y
+                      full-width
+                      min-width="290px"
+                    >
+                      <v-text-field
+                        slot="activator"
+                        v-model="date"
+                        label="Date Picker"
+                        prepend-icon="event"
+                        readonly
+                      />
+                      <v-date-picker 
+                        v-model="date"
+                        no-title 
+                        scrollable
+                        color="blue"
+                      >
+                        <v-spacer/>
+                        <v-btn 
+                          flat
+                          color="blue" 
+                          @click="menu = false"
+                        >
+                          Cancel
+                        </v-btn>
+                        <v-btn 
+                          flat 
+                          color="blue" 
+                          @click="$refs.menu.save(date)"
+                        >
+                          OK
+                        </v-btn>
+                      </v-date-picker>
+                    </v-menu>
+                  </v-flex>
+                  <v-spacer/>
+                  <v-flex 
+                    xs4
+                    md4
+                  >
+                    <v-menu
+                      ref="menu2"
+                      :close-on-content-click="false"
+                      v-model="menu2"
+                      :nudge-right="40"
+                      :return-value.sync="date"
+                      lazy
+                      transition="scale-transition"
+                      offset-y
+                      full-width
+                      min-width="290px"
+                    >
+                      <v-text-field
+                        slot="activator"
+                        v-model="date"
+                        label="Date Picker without buttons"
+                        prepend-icon="event"
+                        readonly
+                      />
+                      <v-date-picker 
+                        v-model="date" 
+                        color="blue"
+                        @input="$refs.menu2.save(date)"
+                      />
+                    </v-menu>
+                  </v-flex>
+                  <v-spacer/>
+                  <v-flex 
+                    xs4 
+                    md4
+                  >
+                    <v-menu
+                      ref="menu3"
+                      :close-on-content-click="false"
+                      v-model="menu3"
+                      :nudge-right="40"
+                      :return-value.sync="time"
+                      lazy
+                      transition="scale-transition"
+                      offset-y
+                      full-width
+                      min-width="290px"
+                    >
+                      <v-text-field
+                        slot="activator"
+                        v-model="time"
+                        label="Time Picker"
+                        prepend-icon="access_time"
+                        readonly
+                      />
+                      <v-time-picker
+                        v-model="time"
+                        type="month"
+                        width="290"
+                        color="blue"
+                        @input="$refs.menu3.save(time)"
+                      />
+                    </v-menu>
+                  </v-flex>
+                </v-layout>
+                <!-- END DATE PICKER -->
+                <v-flex>
+                  <v-subheader>End Date</v-subheader>
+                </v-flex>
+                <v-layout
+                  row 
+                  wrap
+                >
+                  <v-flex 
+                    xs4 
+                    md4
+                  >
+                    <v-menu
+                      ref="menu4"
+                      :close-on-content-click="false"
+                      v-model="menu4"
+                      :nudge-right="40"
+                      :return-value.sync="date2"
+                      lazy
+                      transition="scale-transition"
+                      offset-y
+                      full-width
+                      min-width="290px"
+                    >
+                      <v-text-field
+                        slot="activator"
+                        v-model="date2"
+                        label="Date Picker"
+                        prepend-icon="event"
+                        readonly
+                      />
+                      <v-date-picker 
+                        v-model="date2"
+                        no-title 
+                        scrollable
+                        color="blue"
+                      >
+                        <v-spacer/>
+                        <v-btn 
+                          flat 
+                          color="blue" 
+                          @click="menu = false"
+                        >
+                          Cancel
+                        </v-btn>
+                        <v-btn 
+                          flat 
+                          color="blue" 
+                          @click="$refs.menu4.save(date2)"
+                        >
+                          OK
+                        </v-btn>
+                      </v-date-picker>
+                    </v-menu>
+                  </v-flex>
+                  <v-spacer/>
+                  <v-flex 
+                    xs4
+                    md4
+                  >
+                    <v-menu
+                      ref="menu5"
+                      :close-on-content-click="false"
+                      v-model="menu5"
+                      :nudge-right="40"
+                      :return-value.sync="date2"
+                      lazy
+                      transition="scale-transition"
+                      offset-y
+                      full-width
+                      min-width="290px"
+                    >
+                      <v-text-field
+                        slot="activator"
+                        v-model="date2"
+                        label="Date Picker without buttons"
+                        prepend-icon="event"
+                        readonly
+                      />
+                      <v-date-picker 
+                        v-model="date2" 
+                        color="blue"
+                        @input="$refs.menu5.save(date2)"
+                      />
+                    </v-menu>
+                  </v-flex>
+                  <v-spacer/>
+                  <v-flex 
+                    xs4 
+                    md4
+                  >
+                    <v-menu
+                      ref="menu6"
+                      :close-on-content-click="false"
+                      v-model="menu6"
+                      :nudge-right="40"
+                      :return-value.sync="time2"
+                      lazy
+                      transition="scale-transition"
+                      offset-y
+                      full-width
+                      min-width="290px"
+                    >
+                      <v-text-field
+                        slot="activator"
+                        v-model="time2"
+                        label="Time Picker"
+                        prepend-icon="access_time"
+                        readonly
+                      />
+                      <v-time-picker
+                        v-model="time2"
+                        type="month"
+                        width="290"
+                        color="blue"
+                        @input="$refs.menu6.save(time2)"
+                      />
+                    </v-menu>
+                  </v-flex>
+                  
+                </v-layout>
+              </v-card-text>
             </v-card>
             <v-btn 
               color="blue" 
+              class="white--text"
               @click.native="step = 3"
             >
               Continue
@@ -163,38 +511,243 @@ export default {
             <v-btn flat>Cancel</v-btn>
           </v-stepper-content>
           <v-stepper-step 
-            :complete="step > 3" 
+            :complete="step > 3"
+            editable
             step="3"
           >
-            Select an ad format and name ad unit
+            {{ stepName.three }}
           </v-stepper-step>
           <v-stepper-content step="3">
             <v-card 
-              color="grey lighten-1" 
-              class="mb-5" 
-              height="200px"
+              color="grey lighten-4" 
+              class="mb-5"
             >
-              <p> Step : 3</p>
+              <v-card-text>
+                <v-flex 
+                  xs6
+                  sm5 
+                  md3
+                > 
+                  <v-text-field 
+                    solo-inverted 
+                    label="Delimiter"
+                  />
+                </v-flex>
+                <p/>
+                <v-subheader>Context Parser: (In Parser Object)</v-subheader>
+                <v-btn 
+                  color="blue" 
+                  class="white--text"
+                  round
+                >
+                  <v-icon dark>add</v-icon>
+                  Add Parser
+                </v-btn>
+                <p/>
+                <v-flex 
+                  xs6
+                  sm5 
+                >
+                  <v-card>
+                    <v-subheader>Add Context Parser</v-subheader>
+                    <v-card-text>
+                      <v-text-field
+                        solo-inverted 
+                        label="Remove Character"
+                      />
+                      <v-text-field 
+                        prepend-icon="message"
+                        label="Invalid Format Message"
+                      />
+                      <v-select 
+                        v-model="validateType"
+                        :items="validateTypeList"
+                        :hint="`${validateType}`"
+                        item-text="value"
+                        item-value="condition"
+                        label="Condition Type"
+                        prepend-icon="assignment"
+                      />
+                      <v-text-field 
+                        :disabled="validateType"
+                        solo-inverted 
+                        label="Condition (Regular Expression)"
+                      />
+                    </v-card-text> 
+                  </v-card>
+                </v-flex>
+              </v-card-text>
             </v-card>
             <v-btn 
               color="blue" 
+              class="white--text"
               @click.native="step = 4"
             >
               Continue
             </v-btn>
             <v-btn flat>Cancel</v-btn>
           </v-stepper-content>
-          <v-stepper-step step="4">View setup instructions</v-stepper-step>
+          <v-stepper-step
+            :complete="step > 4" 
+            editable
+            step="4"
+          >
+            {{ stepName.four }}
+          </v-stepper-step>
           <v-stepper-content step="4">
             <v-card 
-              color="grey lighten-1" 
-              class="mb-5" 
-              height="200px"
+              color="grey lighten-4" 
+              class="mb-5"
             >
-              <p> Step : 4</p>
+              <v-card-text>
+                <v-flex 
+                  xs6
+                > 
+                  <v-text-field 
+                    prepend-icon="chat"
+                    label="Less Content Message"
+                  />
+                  <v-text-field 
+                    prepend-icon="chat"
+                    label="Over Content Message"
+                  />
+                  <v-text-field 
+                    prepend-icon="chat"
+                    label="Before Service Active Message"
+                  />
+                  <v-text-field 
+                    prepend-icon="chat"
+                    label="After Service Active Message"
+                  />
+                  <v-text-field 
+                    prepend-icon="chat"
+                    label="Pause Service Message"
+                  />
+                </v-flex>
+              </v-card-text>
             </v-card>
             <v-btn 
               color="blue" 
+              class="white--text"
+              @click.native="step = 5"
+            >
+              Continue
+            </v-btn>
+            <v-btn 
+              flat
+            >
+              Cancel
+            </v-btn>
+          </v-stepper-content>
+          <v-stepper-step step="5">{{ stepName.five }}</v-stepper-step>
+          <v-stepper-content
+            :complete="step > 5"
+            editable
+            step="5" 
+          >
+            <v-card 
+              color="grey lighten-4" 
+              class="mb-5"
+            >
+              <v-card-text>
+                <v-layout>
+                  <v-flex 
+                    xs6
+                  > 
+                    <v-flex>
+                      <v-subheader>Reward Validation:</v-subheader>
+                      <v-switch
+                        v-model="switch1"
+                        color="blue"
+                        label="is Sequential Reward"
+                      />
+                      <v-text-field 
+                        prepend-icon="phonelink_off"
+                        label="Limit Rewards"
+                      />
+                      <v-text-field 
+                        prepend-icon="chat_bubble"
+                        label="Fail Message"
+                      />
+                    </v-flex>
+                    <!--     In Reward: [Array]        -->
+                    <!-- <v-flex 
+                      xs6
+                    > 
+                      
+                    </v-flex> -->
+                    <v-btn 
+                      color="blue" 
+                      class="white--text"
+                      round
+                    >
+                      <v-icon dark>add</v-icon>
+                      Add Reward
+                    </v-btn>
+                    <v-card>
+                      <v-card-title>
+                        <v-subheader>Reward Validation Details:</v-subheader>
+                      </v-card-title>
+                      <v-card-actions>
+                        <p/>
+                        <v-switch
+                          v-model="switch1"
+                          color="blue"
+                          label="is Coupon"
+                        />
+                        <v-spacer/>
+                        <v-btn
+                          :disabled="!switch1"
+                          color="blue-grey"
+                          class="white--text"
+                          round
+                        >
+                          Generated
+                        </v-btn>
+                        <v-btn
+                          :loading="loading1"
+                          :disabled="!switch1"
+                          color="blue-grey"
+                          class="white--text"
+                          round
+                          @click.native="loader = 'loading1'"
+                        >
+                          <v-icon 
+                            left 
+                            dark
+                          >
+                            cloud_upload
+                          </v-icon>
+                          Upload
+                        </v-btn>
+                        <p/>
+                      </v-card-actions>
+                      <v-card-text>
+                        <v-text-field
+                          prepend-icon="phonelink"
+                          label="Reward Name"
+                        />
+                        <v-text-field 
+                          prepend-icon="phonelink_setup"
+                          label="Reward Condition Type"
+                        />
+                        <v-text-field 
+                          prepend-icon="phonelink_lock"
+                          label="Reward Condition Value"
+                        />
+                        <v-text-field 
+                          prepend-icon="chat_bubble_outline"
+                          label="Success Message"
+                        />
+                      </v-card-text>
+                    </v-card>
+                  </v-flex>
+                </v-layout>
+              </v-card-text>
+            </v-card>
+            <v-btn
+              color="blue" 
+              class="white--text"
               @click.native="step = 1"
             >
               Continue
@@ -212,6 +765,3 @@ export default {
   </v-layout>
 </template>
 
-<style lang="scss" module>
-@import '@design';
-</style>

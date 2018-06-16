@@ -74,15 +74,15 @@ export const actions = {
           newUser.email, 
           password
         )
-      // user.updateProfile({
-      //   displayName: `${newUser.firstName} (${newUser.nickName})`,
-      // })
+      
+      await fireauthApp.sendPasswordResetEmail(newUser.email)
 
       updatedUser = await firestoreApp
         .collection('users')
         .add(newUser)
        
     } catch (error) { console.log(error) }
+
 
     if (user && updatedUser) {
 
