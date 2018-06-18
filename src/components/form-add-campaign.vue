@@ -24,11 +24,14 @@ export default {
         five: 'Campaign Reward Configs'
       },
       validateTypeList: [
-        {id: 0, value: 'regex', condition: false},
-        {id: 1, value: 'coupon', condition: true},
+        {value: 'regex', condition: false},
+        {value: 'coupon', condition: true},
       ],
-      validateType: {},
+      validateType: true,
       rewardForm: null,
+      // ---------**-------------------------------------
+      // Test Value
+      // ---------**-------------------------------------
       date: null,
       date2: null,
       time: null,
@@ -42,6 +45,11 @@ export default {
       switch1: false,
       switch2: false,
       loading1: false,
+      cardOpen: false,
+      itemstest: [
+          { icon: 'code', iconClass: 'blue white--text', title: 'Invalid Format Message 1', subtitle: 'regex 1' },
+          { icon: 'code', iconClass: 'blue white--text', title: 'Invalid Format Message 2', subtitle: 'regex 2' }
+        ]
     }
   },
   computed: {
@@ -117,9 +125,8 @@ export default {
             >
               <v-card-text>
                 <v-flex 
-                  xs6
-                  sm5 
-                  md3
+                  xs12
+                  md4
                 > 
                   <v-text-field 
                     prepend-icon="fiber_new"
@@ -127,14 +134,18 @@ export default {
                   />
                 </v-flex>
                 <v-flex 
-                  xs6 
+                  xs12
+                  md8
                 > 
                   <v-text-field 
                     prepend-icon="shop"
                     label="Campaign Name"
                   />
                 </v-flex>                
-                <v-flex xs8>
+                <v-flex 
+                  xs12
+                  md8
+                >
                   <v-text-field
                     prepend-icon="shop_two"
                     label="Campaign Description"
@@ -166,8 +177,8 @@ export default {
             >
               <v-card-text>
                 <v-flex 
-                  xs6
-                  sm5 
+                  xs8
+                  sm6 
                   md3
                 >
                   <v-subheader><small>Campaign Owner Details:</small></v-subheader>
@@ -212,8 +223,8 @@ export default {
                   </v-select>
                 </v-flex>
                 <v-flex 
-                  xs6
-                  sm5 
+                  xs8
+                  sm6 
                   md3
                 > 
                   <v-text-field 
@@ -223,8 +234,8 @@ export default {
                   />
                 </v-flex>
                 <v-flex 
-                  xs6
-                  sm5 
+                  xs8
+                  sm6 
                   md3
                 > 
                   <v-text-field 
@@ -383,7 +394,7 @@ export default {
                   <v-subheader>End Date</v-subheader>
                 </v-flex>
                 <v-layout
-                  row 
+                  row
                   wrap
                 >
                   <v-flex 
@@ -524,31 +535,63 @@ export default {
             >
               <v-card-text>
                 <v-flex 
-                  xs6
-                  sm5 
+                  xs8
+                  sm6 
                   md3
                 > 
                   <v-text-field 
+                    mask="X"
                     solo-inverted 
                     label="Delimiter"
                   />
                 </v-flex>
-                <p/>
                 <v-subheader>Context Parser: (In Parser Object)</v-subheader>
+                <v-flex
+                  xs8
+                  md8
+                > 
+                  <v-list two-line>
+                    <!-- <v-subheader inset>List of Context Parsers</v-subheader> -->
+                    <v-list-tile 
+                      v-for="item in itemstest" 
+                      :key="item.key" 
+                      avatar
+                    >
+                      <v-list-tile-avatar>
+                        <v-icon :class="[item.iconClass]">{{ item.icon }}</v-icon>
+                      </v-list-tile-avatar>
+                      <v-list-tile-content>
+                        <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                        <v-list-tile-sub-title>{{ item.subtitle }}</v-list-tile-sub-title>
+                      </v-list-tile-content>
+                      <v-list-tile-action>
+                        <v-btn
+                          icon
+                          ripple
+                        >
+                          <v-icon color="grey lighten-1">info</v-icon>
+                        </v-btn>
+                      </v-list-tile-action>
+                    </v-list-tile>
+                  </v-list>
+                </v-flex>
+                <p/>
                 <v-btn 
                   color="blue" 
                   class="white--text"
                   round
+                  @click.native="cardOpen = !cardOpen"
                 >
                   <v-icon dark>add</v-icon>
                   Add Parser
                 </v-btn>
                 <p/>
                 <v-flex 
-                  xs6
-                  sm5 
+                  xs8
+                  sm6 
+                  md5
                 >
-                  <v-card>
+                  <v-card v-if="cardOpen">
                     <v-subheader>Add Context Parser</v-subheader>
                     <v-card-text>
                       <v-text-field
@@ -567,6 +610,7 @@ export default {
                         item-value="condition"
                         label="Condition Type"
                         prepend-icon="assignment"
+                        persistent-hint
                       />
                       <v-text-field 
                         :disabled="validateType"
@@ -574,6 +618,20 @@ export default {
                         label="Condition (Regular Expression)"
                       />
                     </v-card-text> 
+                    <v-card-actions>
+                      <v-spacer/>
+                      <v-btn 
+                        color="blue" 
+                        class="white--text"
+                      >
+                        Save
+                      </v-btn>
+                      <v-btn 
+                        flat
+                      >
+                        Cancel
+                      </v-btn>
+                    </v-card-actions>
                   </v-card>
                 </v-flex>
               </v-card-text>
@@ -601,7 +659,8 @@ export default {
             >
               <v-card-text>
                 <v-flex 
-                  xs6
+                  xs12
+                  md6
                 > 
                   <v-text-field 
                     prepend-icon="chat"
@@ -674,19 +733,20 @@ export default {
                     <!-- <v-flex 
                       xs6
                     > 
-                      
+                      <v-subheader>Reward Validation Details:</v-subheader>
                     </v-flex> -->
                     <v-btn 
                       color="blue" 
                       class="white--text"
                       round
+                      @click.native="cardOpen = !cardOpen"
                     >
                       <v-icon dark>add</v-icon>
                       Add Reward
                     </v-btn>
-                    <v-card>
+                    <v-card v-if="cardOpen">
                       <v-card-title>
-                        <v-subheader>Reward Validation Details:</v-subheader>
+                        <v-subheader>Add Reward Validation Details:</v-subheader>
                       </v-card-title>
                       <v-card-actions>
                         <p/>
@@ -740,6 +800,20 @@ export default {
                           label="Success Message"
                         />
                       </v-card-text>
+                      <v-card-actions>
+                        <v-spacer/>
+                        <v-btn 
+                          color="blue" 
+                          class="white--text"
+                        >
+                          Save
+                        </v-btn>
+                        <v-btn 
+                          flat
+                        >
+                          Cancel
+                        </v-btn>
+                      </v-card-actions>
                     </v-card>
                   </v-flex>
                 </v-layout>

@@ -138,7 +138,9 @@ export const actions = {
       .collection('users')
       .get()
       .then(querySnapshot => {
+
         let userList = []
+
         querySnapshot.forEach(doc => {
           let data = {}
           data = doc.data()
@@ -149,14 +151,14 @@ export const actions = {
         commitPagination(commit, userList)
         commit('setLoading', { loading: false })
         sendSuccessNotice(commit, 'Loading Finished!')
-        closeNotice(commit, 1500)
+        closeNotice(commit, 2000)
         return userList
       })
       .catch(error => {
         console.log(error)
         commit('setLoading', { loading: false })
         sendErrorNotice(commit, 'Load Failed!')
-        closeNotice(commit, 1500)
+        closeNotice(commit, 2000)
         return error
       })
   },
@@ -182,6 +184,9 @@ export const actions = {
         console.log("Error removing document: ", error)
       })
   },
+  // ===
+  // ETC. Zone
+  // ===
   closeSnackBar ({ commit }, timeout ) {
     closeNotice(commit, timeout)
   },

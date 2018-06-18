@@ -240,6 +240,9 @@ export const actions = {
         console.log("Error removing document: ", error)
       })
   },
+  // ===
+  // ETC. Zone
+  // ===
   closeSnackBar ({ commit }, timeout ) {
     closeNotice(commit, timeout);
   }

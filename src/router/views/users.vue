@@ -35,6 +35,7 @@ export default {
       ],
       userId: '',
       left: true,
+      timeout: 2000,
       // NOT USE! now
       searchVm: {
         contains: {
@@ -45,7 +46,6 @@ export default {
       search: '',
       rightDrawer: false,
       query: "",
-      timeout: 2000,
       quickSearchFilter: 'abc'
     }
   },
