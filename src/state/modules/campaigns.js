@@ -51,6 +51,55 @@ export const mutations = {
 
 export const actions = {
   // ===
+  // CREATE Zone
+  // ===
+  async createCampaign({ commit, dispatch }, { campaignObject, validationObject } = {}) {
+
+    commit('setLoading', { loading: true })
+    
+    let keyword = campaignObject.keyword
+    let shortcode = campaignObject.shortcode
+    let newCampaign = null
+    let newValidateCampaign = null
+
+    try {
+
+      newCampaign = await firestoreApp
+        .collection('campaigns')
+        .add(campaignObject)
+
+      newValidateCampaign = await firestoreApp
+        .collection('campaignValidate')
+        .doc(newCampaign.id)
+        .set(validationObject)
+
+      let data = {}
+      data[keyword] = newCampaign.id
+
+      await firestoreApp
+        .collection('campaignKeywordByShortcode')
+        .doc(shortcode)
+        .set(data)
+
+    } catch (error) { console.log(error)}
+
+    if (newCampaign && newValidateCampaign) {
+
+      sendSuccessNotice(commit, 'New Campaign has been added.')
+      closeNotice(commit, 3000)
+      commit('setLoading', { loading: false })
+      dispatch('getAllCampaigns')
+
+    } else {
+
+      commit('setLoading', { loading: false })
+      sendErrorNotice(commit, 'Create Campaign failed! Please try again later. ')
+      closeNotice(commit, 3000)
+
+    }
+
+  },
+  // ===
   // READ Zone
   // ===
   getAllCampaigns({ commit }) {

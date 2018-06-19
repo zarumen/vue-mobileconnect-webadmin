@@ -1,7 +1,10 @@
 <script>
 export default {
   props: {
-
+    addParserDialog: {
+      type: [String, Boolean],
+      default: ''
+    }
   },
   data () {
     return {

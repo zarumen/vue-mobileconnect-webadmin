@@ -65,7 +65,6 @@ export default {
     },
   },
   created() {
-    console.log(this.hadList)
 
     if(!this.hadList)
       this.getOrganizationsList()
