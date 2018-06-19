@@ -56,6 +56,8 @@ export const actions = {
   async createCampaign({ commit, dispatch }, { campaignObject, validationObject } = {}) {
 
     commit('setLoading', { loading: true })
+
+    console.log(campaignObject)
     
     let keyword = campaignObject.keyword
     let shortcode = campaignObject.shortcode
@@ -68,11 +70,6 @@ export const actions = {
         .collection('campaigns')
         .add(campaignObject)
 
-      newValidateCampaign = await firestoreApp
-        .collection('campaignValidate')
-        .doc(newCampaign.id)
-        .set(validationObject)
-
       let data = {}
       data[keyword] = newCampaign.id
 
@@ -81,9 +78,14 @@ export const actions = {
         .doc(shortcode)
         .set(data)
 
+      newValidateCampaign = await firestoreApp
+        .collection('campaignValidate')
+        .doc(newCampaign.id)
+        .set(validationObject)
+
     } catch (error) { console.log(error)}
 
-    if (newCampaign && newValidateCampaign) {
+    if (newValidateCampaign) {
 
       sendSuccessNotice(commit, 'New Campaign has been added.')
       closeNotice(commit, 3000)

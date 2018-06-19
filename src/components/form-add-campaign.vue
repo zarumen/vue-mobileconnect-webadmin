@@ -96,6 +96,8 @@ export default {
       if(this.brand !== null) {
 
         // --------------------- campaign Object ----------------------------------------
+        campaignNew['campaignAvailable'] = true
+
         campaignNew['organizationAuth'] = this.brand.organizationAuth
         campaignNew['organizationLevel1'] = this.brand.organizationLevel1
         campaignNew['organizationLevel1Name'] = this.brand.organizationLevel1Name
@@ -118,7 +120,13 @@ export default {
         campaignValidationNew['campaignDateEnd'] = new Date(endDate)
         campaignValidationNew['campaignActive'] = this.cActive
 
-        this.createCampaign(campaignNew, campaignValidationNew)
+        console.log(campaignNew)
+        console.log(campaignValidationNew)
+
+        this.createCampaign({
+          campaignObject: campaignNew,
+          validationObject: campaignValidationNew
+        })
         this.closeDialog()
       }
 
@@ -314,7 +322,7 @@ export default {
                     <v-text-field 
                       v-model="campaignForm.shortcode"
                       prepend-icon="looks_6"
-                      mask="######"
+                      mask="########"
                       label="Shortcode"
                     />
                   </v-flex>
