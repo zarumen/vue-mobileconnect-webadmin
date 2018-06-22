@@ -326,9 +326,7 @@ export default {
                   </v-subheader>
                   <v-radio-group 
                     v-model="cActive"
-                    :hint="`${cActive}`"
                     prepend-icon="slideshow"
-                    persistent-hint
                     row
                   >
                     <v-radio
