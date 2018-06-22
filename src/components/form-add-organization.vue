@@ -70,6 +70,7 @@ export default {
       const tDepartment = this.department
       const tBrand = this.brand
       
+      console.log(typeof tCompany)
       // /////  Prepare Object Organization before add to Database  ////////
 
       // /////////////////////
@@ -77,8 +78,8 @@ export default {
       // /////////////////////
       if (this.select.id === 1 && 
             tCompany !== null && 
-              tCompany instanceof String) {
-
+              typeof tCompany === "string") {
+        
         // Prepare Object organization
         let org = {
           displayName: tCompany,
@@ -97,7 +98,7 @@ export default {
       // /////////////////////
       if (this.select.id === 2 && tDepartment !== null) {
         
-        if (tCompany instanceof String) {
+        if (typeof tCompany === "string") {
           // handle error check if Company is String (use old Company only)
         } else {
 
@@ -248,7 +249,7 @@ export default {
               v-model="department"
               :hint="`${department}`"
               :items="departmentList"
-              :key="departmentList.id"
+              :key="departmentList.key"
               item-text="displayName"
               prepend-icon="business_center"
               label="Department Name"
@@ -294,7 +295,7 @@ export default {
               v-model="brand"
               :hint="`${brand}`"
               :items="brandList"
-              :key="brandList.id"
+              :key="brandList.key"
               item-text="displayName"
               prepend-icon="shopping_basket"
               label="Brand Name"

@@ -97,7 +97,7 @@ export const actions = {
         })
 
         console.log("Document written with ID: ", docRef.id);
-        // dispatch('getOrganizationsList')
+        dispatch('getOrganizationsList')
         sendSuccessNotice(commit, 'New Company has been added.')
         closeNotice(commit, 1500)
       })
@@ -122,7 +122,7 @@ export const actions = {
         })
 
         console.log("Document written with ID: ", docRef.id);
-        // dispatch('getOrganizationsList')
+        dispatch('getOrganizationsList')
         sendSuccessNotice(commit, 'New Department has been added.')
         closeNotice(commit, 1500)
       })
@@ -147,7 +147,7 @@ export const actions = {
         })
 
         console.log("Document written with ID: ", docRef.id);
-        // dispatch('getOrganizationsList')
+        dispatch('getOrganizationsList')
         sendSuccessNotice(commit, 'New Brand has been added.')
         closeNotice(commit, 1500)
       })

@@ -91,12 +91,16 @@ export default {
       // NOT FINISHED YET!
       
       // this.$store.dispatch('users/deleteUser', this.organizationId)
-      // this.$store.commit('users/closeSnackBar', 2000)
+      // this.$store.dispatch('users/closeSnackBar', 2000)
       // this.dialog = false
     },
     onCancel () {
       this.userId = ''
       this.dialog = false
+    },
+    exitSnackbar () {
+      this.$store.commit('users/setSnackbar', { snackbar: false })
+      this.$store.commit('users/setNotice', { notice: '' })
     },
     reloadData () {
       this.getAllUsers()
@@ -171,7 +175,7 @@ export default {
         <v-btn 
           dark 
           flat 
-          @click.native="closeSnackbar"
+          @click.native="exitSnackbar"
         >
           Close
         </v-btn>

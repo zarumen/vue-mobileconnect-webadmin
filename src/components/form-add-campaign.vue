@@ -32,7 +32,7 @@ export default {
       // Default Values
       campaignForm: Object.assign({}, defaultcForm),
       validateForm: Object.assign({}, defaultvForm),
-      cActive: '',
+      cActive: 'Active',
       brand: null,
       // Stepper Setups
       step: 1,
@@ -54,13 +54,11 @@ export default {
       // ---------**------------------------------------- 
       date: null,
       date2: null,
-      time: null,
-      time2: null,
+      time: '00:00',
+      time2: '00:00',
       menu: false,
-      menu2: false,
       menu3: false,
       menu4: false,
-      menu5: false,
       menu6: false,
       switch1: false,
       switch2: false,
@@ -119,9 +117,6 @@ export default {
         campaignValidationNew['campaignDateStart'] = new Date(startDate)
         campaignValidationNew['campaignDateEnd'] = new Date(endDate)
         campaignValidationNew['campaignActive'] = this.cActive
-
-        console.log(campaignNew)
-        console.log(campaignValidationNew)
 
         this.createCampaign({
           campaignObject: campaignNew,
@@ -333,6 +328,7 @@ export default {
                     v-model="cActive"
                     :hint="`${cActive}`"
                     prepend-icon="slideshow"
+                    persistent-hint
                     row
                   >
                     <v-radio
@@ -353,7 +349,7 @@ export default {
                   </v-radio-group>
                   <!-- START DATE PICKER -->
                   <v-flex>
-                    <v-subheader class="orange">Start Date :<small>(choose DatePicker 1 type withButton/ withoutButton)</small></v-subheader>
+                    <v-subheader>Start Date :</v-subheader>
                   </v-flex>
                   <v-layout
                     row 
@@ -406,38 +402,6 @@ export default {
                         </v-date-picker>
                       </v-menu>
                     </v-flex>
-                    <v-spacer/>
-                    <v-flex 
-                      xs4
-                      md4
-                    >
-                      <v-menu
-                        ref="menu2"
-                        :close-on-content-click="false"
-                        v-model="menu2"
-                        :nudge-right="40"
-                        :return-value.sync="date"
-                        lazy
-                        transition="scale-transition"
-                        offset-y
-                        full-width
-                        min-width="290px"
-                      >
-                        <v-text-field
-                          slot="activator"
-                          v-model="date"
-                          label="Date Picker without buttons"
-                          prepend-icon="event"
-                          readonly
-                        />
-                        <v-date-picker 
-                          v-model="date" 
-                          color="blue"
-                          @input="$refs.menu2.save(date)"
-                        />
-                      </v-menu>
-                    </v-flex>
-                    <v-spacer/>
                     <v-flex 
                       xs4 
                       md4
@@ -464,10 +428,28 @@ export default {
                         <v-time-picker
                           v-model="time"
                           type="month"
-                          width="290"
+                          width="320"
                           color="blue"
-                          @input="$refs.menu3.save(time)"
                         />
+                        <v-spacer/>
+                        <v-btn
+                          flat
+                          disabled
+                        />
+                        <v-btn 
+                          flat
+                          color="blue"
+                          @click="menu3 = false"
+                        >
+                          Cancel
+                        </v-btn>
+                        <v-btn 
+                          flat 
+                          color="blue" 
+                          @click="$refs.menu3.save(time)"
+                        >
+                          OK
+                        </v-btn>
                       </v-menu>
                     </v-flex>
                   </v-layout>
@@ -526,38 +508,6 @@ export default {
                         </v-date-picker>
                       </v-menu>
                     </v-flex>
-                    <v-spacer/>
-                    <v-flex 
-                      xs4
-                      md4
-                    >
-                      <v-menu
-                        ref="menu5"
-                        :close-on-content-click="false"
-                        v-model="menu5"
-                        :nudge-right="40"
-                        :return-value.sync="date2"
-                        lazy
-                        transition="scale-transition"
-                        offset-y
-                        full-width
-                        min-width="290px"
-                      >
-                        <v-text-field
-                          slot="activator"
-                          v-model="date2"
-                          label="Date Picker without buttons"
-                          prepend-icon="event"
-                          readonly
-                        />
-                        <v-date-picker 
-                          v-model="date2" 
-                          color="blue"
-                          @input="$refs.menu5.save(date2)"
-                        />
-                      </v-menu>
-                    </v-flex>
-                    <v-spacer/>
                     <v-flex 
                       xs4 
                       md4
@@ -584,10 +534,28 @@ export default {
                         <v-time-picker
                           v-model="time2"
                           type="month"
-                          width="290"
+                          width="320"
                           color="blue"
-                          @input="$refs.menu6.save(time2)"
                         />
+                        <v-spacer/>
+                        <v-btn
+                          flat
+                          disabled
+                        />
+                        <v-btn 
+                          flat
+                          color="blue"
+                          @click="menu6 = false"
+                        >
+                          Cancel
+                        </v-btn>
+                        <v-btn 
+                          flat 
+                          color="blue" 
+                          @click="$refs.menu6.save(time2)"
+                        >
+                          OK
+                        </v-btn>
                       </v-menu>
                     </v-flex>
                     

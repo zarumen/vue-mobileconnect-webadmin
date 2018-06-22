@@ -81,14 +81,14 @@ export default {
     onConfirm () {
       // send organizationId to Store dispatch (organizations/deleteOrganization)
       this.$store.dispatch('organizations/deleteOrganization', this.organizationId)
-      this.$store.commit('organizations/closeSnackBar', 2000)
+      this.$store.dispatch('organizations/closeSnackBar', 2000)
       this.dialog = false
     },
     onCancel () {
       this.organizationId = ''
       this.dialog = false
     },
-    closeSnackbar () {
+    exitSnackbar () {
       this.$store.commit('organizations/setSnackbar', { snackbar: false })
       this.$store.commit('organizations/setNotice', { notice: '' })
     },
@@ -168,7 +168,7 @@ export default {
         <v-btn 
           dark 
           flat 
-          @click.native="closeSnackbar"
+          @click.native="exitSnackbar"
         >
           Close
         </v-btn>

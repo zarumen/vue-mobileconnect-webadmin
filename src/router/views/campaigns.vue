@@ -82,7 +82,11 @@ export default {
     onCancel () {
       this.campaignId = ''
       this.dialog = false
-    }
+    },
+    exitSnackbar () {
+      this.$store.commit('campaigns/setSnackbar', { snackbar: false })
+      this.$store.commit('campaigns/setNotice', { notice: '' })
+    },
   },
 }
 </script>
@@ -153,7 +157,7 @@ export default {
         <v-btn 
           dark 
           flat 
-          @click.native="closeSnackbar"
+          @click.native="exitSnackbar"
         >
           Close
         </v-btn>
