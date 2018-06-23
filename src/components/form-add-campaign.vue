@@ -1,5 +1,6 @@
 <script>
 import { mapState, mapActions } from 'vuex'
+import { helperTH } from '@utils/campaign-create-helper'
 
 export default {
   props: {
@@ -41,7 +42,8 @@ export default {
         two: 'Campaign Settings',
         three: 'Campaign Parser Configs',
         four: 'Campaign Reply Service Configs',
-        five: 'Campaign Reward Configs'
+        five: 'Campaign Reward Configs',
+        six: 'Campaign Summary Page'
       },
       validateTypeList: [
         {value: 'regex', condition: false},
@@ -49,6 +51,9 @@ export default {
       ],
       validateType: true,
       valid: null,
+      locale: 'TH',
+      helper: false,
+      helperText: {},
       // ---------**-------------------------------------
       // Test Value
       // ---------**------------------------------------- 
@@ -74,6 +79,12 @@ export default {
     ...mapState('organizations', {
       brandList: 'brandList'
     }),
+  },
+  watch: {
+
+  },
+  created () {
+    this.mapHelper()
   },
   methods:{
     ...mapActions('campaigns', [
@@ -123,9 +134,12 @@ export default {
           validationObject: campaignValidationNew
         })
         this.closeDialog()
+      }     
+    },
+    mapHelper() {
+      if (this.locale === 'TH') {
+        this.helperText = helperTH
       }
-
-      
     }
   },
 }
@@ -166,10 +180,17 @@ export default {
             </v-toolbar-title>
             <v-spacer/>
             <v-toolbar-items>
+              <v-btn
+                dark
+                flat
+                @click.native="helper = !helper"
+              >
+                Helper: TH
+              </v-btn>
               <v-btn 
                 dark 
                 flat 
-                @click.native="saveCampaign()"
+                @click.native="closeDialog()"
               >
                 Save
               </v-btn>
@@ -182,7 +203,6 @@ export default {
             vertical
           >
             <v-stepper-step 
-              :complete="step > 1" 
               editable
               step="1"
             >
@@ -196,6 +216,9 @@ export default {
                 class="mb-5"
               >
                 <v-card-text>
+                  <v-flex v-if="helper">
+                    <v-subheader class="red--text">{{ helperText.campaignCode }}</v-subheader>
+                  </v-flex>
                   <v-flex 
                     xs12
                     md4
@@ -206,6 +229,9 @@ export default {
                       label="Campaign Code"
                     />
                   </v-flex>
+                  <v-flex v-if="helper">
+                    <v-subheader class="red--text">{{ helperText.campaignHeader }}</v-subheader>
+                  </v-flex>
                   <v-flex 
                     xs12
                     md8
@@ -215,7 +241,10 @@ export default {
                       prepend-icon="shop"
                       label="Campaign Name"
                     />
-                  </v-flex>                
+                  </v-flex> 
+                  <v-flex v-if="helper">
+                    <v-subheader class="red--text">{{ helperText.campaignDescription }}</v-subheader>
+                  </v-flex>               
                   <v-flex 
                     xs12
                     md8
@@ -236,10 +265,14 @@ export default {
               >
                 Continue
               </v-btn>
-              <v-btn flat>Cancel</v-btn>
+              <v-btn 
+                flat
+                @click.native="closeDialog()"
+              >
+                Cancel
+              </v-btn>
             </v-stepper-content>
             <v-stepper-step 
-              :complete="step > 2" 
               editable
               step="2"
             >
@@ -297,6 +330,9 @@ export default {
                       </template>
                     </v-select>
                   </v-flex>
+                  <v-flex v-if="helper">
+                    <v-subheader class="red--text">{{ helperText.keyword }}</v-subheader>
+                  </v-flex>  
                   <v-flex 
                     xs8
                     sm6 
@@ -309,6 +345,9 @@ export default {
                       label="Keyword"
                     />
                   </v-flex>
+                  <v-flex v-if="helper">
+                    <v-subheader class="red--text">{{ helperText.shortcode }}</v-subheader>
+                  </v-flex> 
                   <v-flex 
                     xs8
                     sm6 
@@ -324,6 +363,9 @@ export default {
                   <v-subheader>
                     <small>Campaign Start Status:</small>
                   </v-subheader>
+                  <v-flex v-if="helper">
+                    <v-subheader class="red--text">{{ helperText.campaignActive }}</v-subheader>
+                  </v-flex> 
                   <v-radio-group 
                     v-model="cActive"
                     prepend-icon="slideshow"
@@ -349,6 +391,9 @@ export default {
                   <v-flex>
                     <v-subheader>Start Date :</v-subheader>
                   </v-flex>
+                  <v-flex v-if="helper">
+                    <v-subheader class="red--text">{{ helperText.campaignDateStart }}</v-subheader>
+                  </v-flex> 
                   <v-layout
                     row 
                     wrap
@@ -455,6 +500,9 @@ export default {
                   <v-flex>
                     <v-subheader>End Date</v-subheader>
                   </v-flex>
+                  <v-flex v-if="helper">
+                    <v-subheader class="red--text">{{ helperText.campaignDateEnd }}</v-subheader>
+                  </v-flex> 
                   <v-layout
                     row
                     wrap
@@ -555,8 +603,7 @@ export default {
                           OK
                         </v-btn>
                       </v-menu>
-                    </v-flex>
-                    
+                    </v-flex>                    
                   </v-layout>
                 </v-card-text>
               </v-card>
@@ -567,10 +614,14 @@ export default {
               >
                 Continue
               </v-btn>
-              <v-btn flat>Cancel</v-btn>
+              <v-btn 
+                flat
+                @click.native="step = 1"
+              >
+                Cancel
+              </v-btn>
             </v-stepper-content>
             <v-stepper-step 
-              :complete="step > 3"
               editable
               step="3"
             >
@@ -582,6 +633,9 @@ export default {
                 class="mb-5"
               >
                 <v-card-text>
+                  <v-flex v-if="helper">
+                    <v-subheader class="red--text">{{ helperText.validateBoundaries }}</v-subheader>
+                  </v-flex> 
                   <v-flex 
                     xs8
                     sm6 
@@ -691,10 +745,14 @@ export default {
               >
                 Continue
               </v-btn>
-              <v-btn flat>Cancel</v-btn>
+              <v-btn 
+                flat
+                @click.native="step = 2"
+              >
+                Cancel
+              </v-btn>
             </v-stepper-content>
             <v-stepper-step
-              :complete="step > 4" 
               editable
               step="4"
             >
@@ -710,31 +768,49 @@ export default {
                     xs12
                     md6
                   > 
+                    <v-flex v-if="helper">
+                      <v-subheader class="red--text">{{ helperText.campaignNotAvailableMsg }}</v-subheader>
+                    </v-flex> 
                     <v-text-field 
                       v-model="validateForm.campaignNotAvailableMsg"
                       prepend-icon="chat"
                       label="Empty Message"
                     />
+                    <v-flex v-if="helper">
+                      <v-subheader class="red--text">{{ helperText.validateBoundariesLessErrMsg }}</v-subheader>
+                    </v-flex> 
                     <v-text-field 
                       v-model="validateForm.validateBoundariesLessErrMsg"
                       prepend-icon="chat"
                       label="Less Content Message"
                     />
+                    <v-flex v-if="helper">
+                      <v-subheader class="red--text">{{ helperText.validateBoundariesOverErrMsg }}</v-subheader>
+                    </v-flex> 
                     <v-text-field 
                       v-model="validateForm.validateBoundariesOverErrMsg"
                       prepend-icon="chat"
                       label="Over Content Message"
                     />
+                    <v-flex v-if="helper">
+                      <v-subheader class="red--text">{{ helperText.validateMsgBeforeStart }}</v-subheader>
+                    </v-flex>
                     <v-text-field 
                       v-model="validateForm.validateMsgBeforeStart"
                       prepend-icon="chat"
                       label="Before Service Active Message"
                     />
+                    <v-flex v-if="helper">
+                      <v-subheader class="red--text">{{ helperText.validateMsgAfterEnd }}</v-subheader>
+                    </v-flex>
                     <v-text-field 
                       v-model="validateForm.validateMsgAfterEnd"
                       prepend-icon="chat"
                       label="After Service Active Message"
                     />
+                    <v-flex v-if="helper">
+                      <v-subheader class="red--text">{{ helperText.validateMsgPausedService }}</v-subheader>
+                    </v-flex>
                     <v-text-field 
                       v-model="validateForm.validateMsgPausedService"
                       prepend-icon="chat"
@@ -752,14 +828,18 @@ export default {
               </v-btn>
               <v-btn 
                 flat
+                @click.native="step = 3"
               >
                 Cancel
               </v-btn>
             </v-stepper-content>
-            <v-stepper-step step="5">{{ stepName.five }}</v-stepper-step>
-            <v-stepper-content
-              :complete="step > 5"
+            <v-stepper-step 
               editable
+              step="5"
+            >
+              {{ stepName.five }}
+            </v-stepper-step>
+            <v-stepper-content
               step="5" 
             >
               <v-card 
@@ -773,16 +853,25 @@ export default {
                     > 
                       <v-flex>
                         <v-subheader>Reward Validation:</v-subheader>
+                        <v-flex v-if="helper">
+                          <v-subheader class="red--text">{{ helperText.rewardHasSequence }}</v-subheader>
+                        </v-flex> 
                         <v-switch
                           v-model="switch2"
                           color="blue"
                           label="is Sequential Reward"
                         />
+                        <v-flex v-if="helper">
+                          <v-subheader class="red--text">{{ helperText.limitReward }}</v-subheader>
+                        </v-flex> 
                         <v-text-field 
                           v-model="validateForm.limitReward"
                           prepend-icon="phonelink_off"
                           label="Limit Rewards"
                         />
+                        <v-flex v-if="helper">
+                          <v-subheader class="red--text">{{ helperText.failMsg }}</v-subheader>
+                        </v-flex> 
                         <v-text-field 
                           v-model="validateForm.failMsg"
                           prepend-icon="chat_bubble"
@@ -882,13 +971,52 @@ export default {
               <v-btn
                 color="blue" 
                 class="white--text"
+                @click.native="step = 6"
+              >
+                Continue
+              </v-btn>
+              <v-btn 
+                flat
+                @click.native="step = 4"
+              >
+                Cancel
+              </v-btn>
+            </v-stepper-content>
+            <v-stepper-step 
+              step="6" 
+              editable
+            >
+              {{ stepName.six }}
+            </v-stepper-step>
+            <v-stepper-content
+              step="6" 
+            >
+              <v-card 
+                color="grey lighten-4" 
+                class="mb-5"
+              >
+                <v-card-text>
+                  <v-layout>
+                    <v-flex 
+                      xs12
+                    > 
+                      <p>Step 6: Summary Page</p>
+                      <p>{{ campaignForm }}</p>
+                      <p>{{ validateForm }}</p>
+                    </v-flex>
+                  </v-layout>
+                </v-card-text>
+              </v-card>
+              <v-btn
+                color="blue" 
+                class="white--text"
                 @click.native="step = 1"
               >
                 Continue
               </v-btn>
               <v-btn 
                 flat
-                @click.native="closeDialog()"
+                @click.native="step = 5"
               >
                 Cancel
               </v-btn>

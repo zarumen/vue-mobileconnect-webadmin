@@ -1,4 +1,6 @@
 <script>
+import formatDate from '@utils/format-date'
+
 export default {
   props: {
     headers: {
@@ -37,7 +39,7 @@ export default {
     },
   },
   created () {
-    console.log(this.pagination)
+    // console.log(this.pagination)
   },
   methods: {
     renderData: (item, header) => {
@@ -50,6 +52,11 @@ export default {
       }
       if (typeof val === 'boolean') {
         val = val ? 'Yes' : 'No'
+      }
+      if (typeof val === 'object') {
+        // TODO: convert Date format before Render data
+        let object = item[header.value]
+        val = formatDate(object.seconds)
       }
       return val;
     }
@@ -94,11 +101,11 @@ export default {
           :key="index"
           :class="[ index === 0? 'text-xs-left': 'text-xs-center', 'body-2']"
         >
-          {{ renderData(props.item, header) }}
+          <small>{{ renderData(props.item, header) }}</small>
         </td>
         <td class="text-xs-right">
           <v-btn 
-            class="green" 
+            color="indigo" 
             flat
             icon
             @click.native="$emit('edit', props.item)"

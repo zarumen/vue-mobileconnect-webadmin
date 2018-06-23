@@ -23,11 +23,14 @@ export default {
           left: true,
           value: 'campaignCode'
         },
-        { text: 'Keyword', value: 'keyword' },
-        { text: 'Header', value: 'campaignHeader' },
         { text: 'Brand', value: 'organizationLevel3Name' },
-        { text: 'Status', value: 'campaignActive' },
+        { text: 'Header', value: 'campaignHeader' },
+        { text: 'Keyword', value: 'keyword' },
+        { text: 'Shortcode', value: 'shortcode' },
+        { text: 'Start Date', value: 'campaignDateStart' },
+        { text: 'End Date', value: 'campaignDateEnd' },
         { text: 'Reward', value: 'campaignAvailable' },
+        { text: 'Status', value: 'campaignActive' },
       ],
       campaignId: '',
       left: true,
@@ -39,7 +42,6 @@ export default {
     ...mapGetters('organizations', [
       'hadList',
     ]),
-
   },
   watch: {
 
