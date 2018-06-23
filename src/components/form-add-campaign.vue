@@ -283,7 +283,7 @@ export default {
             >
               {{ stepName.one }}
               <small>v.0.20 patch note: สามารถ Add campaign กรอกข้อมูล added Reward และ contextParser ได้แล้ว มีปุ่ม Helper ไว้แสดงข้อความช่วยเบื้องต้น </small>
-              <small>road map: ทำตัวช่วย กรอกในสิ่งที่เคยกรอกไปแล้ว (Template) ทั้งในส่วนของ Regex และ ข้อความ (Message Template) และหน้าสุดท้าย ไว้ดูสรุปข้อมูล ก่อน save</small>
+              <small>road map: ทำปุ่ม Generate Coupon และ Upload Coupon, ทำตัวช่วย กรอกในสิ่งที่เคยกรอกไปแล้ว (Template) ทั้งในส่วนของ Regex และ ข้อความ (Message Template) และหน้าสุดท้าย ไว้ดูสรุปข้อมูล ก่อน save</small>
             </v-stepper-step>
             <v-stepper-content step="1">
               <v-card
@@ -985,6 +985,7 @@ export default {
                         xs12
                         md12
                       > 
+                        <v-subheader>Rewards List:</v-subheader>
                         <v-list two-line>
                           <v-list-tile 
                             v-for="item in rewards" 
@@ -1071,6 +1072,9 @@ export default {
                               label="Reward Name"
                               required
                             />
+                            <v-flex v-if="helper">
+                              <v-subheader class="red--text">{{ helperText.name }}</v-subheader>
+                            </v-flex> 
                             <v-text-field 
                               v-model="anotherReward.rewardTotal"
                               :rules="[v => !!v || 'Item is required']"
@@ -1078,6 +1082,9 @@ export default {
                               label="Reward Total"
                               required
                             />
+                            <v-flex v-if="helper">
+                              <v-subheader class="red--text">{{ helperText.rewardTotal }}</v-subheader>
+                            </v-flex> 
                             <v-text-field 
                               v-model="anotherReward.rewardCondition"
                               :rules="[v => !!v || 'Item is required']"
@@ -1085,6 +1092,9 @@ export default {
                               label="Reward Condition Type"
                               required
                             />
+                            <v-flex v-if="helper">
+                              <v-subheader class="red--text">{{ helperText.rewardCondition }}</v-subheader>
+                            </v-flex> 
                             <v-text-field 
                               v-model="anotherReward.validateForm"
                               :rules="[v => !!v || 'Item is required']"
@@ -1092,6 +1102,9 @@ export default {
                               label="Reward Condition Value"
                               required
                             />
+                            <v-flex v-if="helper">
+                              <v-subheader class="red--text">{{ helperText.rewardvalidateForm }}</v-subheader>
+                            </v-flex>
                             <v-text-field 
                               v-model="anotherReward.winMsg"
                               :rules="[v => !!v || 'Item is required']"
@@ -1099,6 +1112,9 @@ export default {
                               label="Success Message"
                               required
                             />
+                            <v-flex v-if="helper">
+                              <v-subheader class="red--text">{{ helperText.winMsg }}</v-subheader>
+                            </v-flex>
                           </v-card-text>
                           <v-card-actions>
                             <v-spacer/>
