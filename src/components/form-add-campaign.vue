@@ -28,6 +28,20 @@ export default {
       validateMsgBeforeStart: '',
       validateMsgPausedService: '',
     })
+    const defaultpForm = Object.freeze({
+      exclude: '',
+      validateFailMsg: '',
+      validateForm: null,
+      validateType: 'coupon'
+    })
+    const defaultrForm = Object.freeze({
+      coupon: null,
+      name: '',
+      rewardCondition: '',
+      rewardTotal: '',
+      validateForm: null,
+      winMsg: ''
+    })
 
     return {
       // Default Values
@@ -45,15 +59,26 @@ export default {
         five: 'Campaign Reward Configs',
         six: 'Campaign Summary Page'
       },
+      valid: null,
+      // helper variable
+      locale: 'TH',
+      helper: false,
+      helperText: {},
+      // context parser variable
       validateTypeList: [
         {value: 'regex', condition: false},
         {value: 'coupon', condition: true},
       ],
       validateType: true,
-      valid: null,
-      locale: 'TH',
-      helper: false,
-      helperText: {},
+      contextParser: [],
+      parserValid: true,
+      // parser array
+      anotherParser: Object.assign({}, defaultpForm),
+      // rewards Variable
+      rewards: [],
+      rewardValid: true,
+      // reward array
+      anotherReward: Object.assign({}, defaultrForm),
       // ---------**-------------------------------------
       // Test Value
       // ---------**------------------------------------- 
@@ -121,6 +146,11 @@ export default {
         campaignNew['campaignActive'] = this.cActive
 
         // --------------------- campaignValidation Object ----------------------------------------
+        
+        // set Context Parsers
+        campaignValidationNew['contextParser'] = this.contextParser
+        // set Reward Array
+        campaignValidationNew['rewards'] = this.rewards
 
         campaignValidationNew['rewardHasSequence'] = this.switch2
         campaignValidationNew['campaignAvailable'] = true
@@ -140,6 +170,51 @@ export default {
       if (this.locale === 'TH') {
         this.helperText = helperTH
       }
+    },
+    addContextParser() {
+      if (this.$refs.anotherParser.validate()) {
+
+        let newParser = this.anotherParser
+
+        if (newParser.validateForm) {
+          newParser['validateType'] = 'regex'
+        } else {
+          newParser['validateType'] = 'coupon'
+        }
+
+        this.contextParser.push(newParser)
+        this.anotherParser = Object.assign({}, this.defaultpForm)
+        this.cardOpen = false
+      }
+    },
+    clearContextParser() {
+      this.$refs.anotherParser.reset()
+    },
+    deleteContextParser(excludeCharacter) {
+
+      this.contextParser = this.contextParser.filter(parser => {
+        return parser.exclude !== excludeCharacter
+      })
+    },
+    addReward() {
+      if(this.$refs.anotherReward.validate()) {
+
+        let newReward = this.anotherReward
+
+        newReward['coupon'] = this.switch1
+
+        this.rewards.push(newReward)
+        this.anotherReward = Object.assign({}, this.defaultrForm)
+        this.cardOpen = false
+      }
+    },
+    clearReward() {
+      this.$refs.anotherReward.reset()
+    },
+    deleteReward(name) {
+      this.rewards = this.rewards.filter(reward => {
+        return reward.name !== name
+      })
     }
   },
 }
@@ -190,7 +265,7 @@ export default {
               <v-btn 
                 dark 
                 flat 
-                @click.native="closeDialog()"
+                @click.native="saveCampaign()"
               >
                 Save
               </v-btn>
@@ -207,8 +282,8 @@ export default {
               step="1"
             >
               {{ stepName.one }}
-              <small>v.0.10 patch note: สามารถ Add campaign กรอกข้อมูลเบื้องต้นได้ </small>
-              <small>road map: ตอนนี้กำลังทำ function: add parser(เงื่อนไขการตัด), add reward (เพิ่มรางวัล) และคำอธิบายในการกรอก </small>
+              <small>v.0.20 patch note: สามารถ Add campaign กรอกข้อมูล added Reward และ contextParser ได้แล้ว มีปุ่ม Helper ไว้แสดงข้อความช่วยเบื้องต้น </small>
+              <small>road map: ทำตัวช่วย กรอกในสิ่งที่เคยกรอกไปแล้ว (Template) ทั้งในส่วนของ Regex และ ข้อความ (Message Template) และหน้าสุดท้าย ไว้ดูสรุปข้อมูล ก่อน save</small>
             </v-stepper-step>
             <v-stepper-content step="1">
               <v-card
@@ -216,9 +291,6 @@ export default {
                 class="mb-5"
               >
                 <v-card-text>
-                  <v-flex v-if="helper">
-                    <v-subheader class="red--text">{{ helperText.campaignCode }}</v-subheader>
-                  </v-flex>
                   <v-flex 
                     xs12
                     md4
@@ -230,7 +302,7 @@ export default {
                     />
                   </v-flex>
                   <v-flex v-if="helper">
-                    <v-subheader class="red--text">{{ helperText.campaignHeader }}</v-subheader>
+                    <v-subheader class="red--text">{{ helperText.campaignCode }}</v-subheader>
                   </v-flex>
                   <v-flex 
                     xs12
@@ -243,8 +315,8 @@ export default {
                     />
                   </v-flex> 
                   <v-flex v-if="helper">
-                    <v-subheader class="red--text">{{ helperText.campaignDescription }}</v-subheader>
-                  </v-flex>               
+                    <v-subheader class="red--text">{{ helperText.campaignHeader }}</v-subheader>
+                  </v-flex>
                   <v-flex 
                     xs12
                     md8
@@ -256,6 +328,9 @@ export default {
                       multi-line
                     />
                   </v-flex>
+                  <v-flex v-if="helper">
+                    <v-subheader class="red--text">{{ helperText.campaignDescription }}</v-subheader>
+                  </v-flex>               
                 </v-card-text>
               </v-card>
               <v-btn 
@@ -330,9 +405,6 @@ export default {
                       </template>
                     </v-select>
                   </v-flex>
-                  <v-flex v-if="helper">
-                    <v-subheader class="red--text">{{ helperText.keyword }}</v-subheader>
-                  </v-flex>  
                   <v-flex 
                     xs8
                     sm6 
@@ -346,8 +418,8 @@ export default {
                     />
                   </v-flex>
                   <v-flex v-if="helper">
-                    <v-subheader class="red--text">{{ helperText.shortcode }}</v-subheader>
-                  </v-flex> 
+                    <v-subheader class="red--text">{{ helperText.keyword }}</v-subheader>
+                  </v-flex>  
                   <v-flex 
                     xs8
                     sm6 
@@ -360,12 +432,12 @@ export default {
                       label="Shortcode"
                     />
                   </v-flex>
+                  <v-flex v-if="helper">
+                    <v-subheader class="red--text">{{ helperText.shortcode }}</v-subheader>
+                  </v-flex> 
                   <v-subheader>
                     <small>Campaign Start Status:</small>
                   </v-subheader>
-                  <v-flex v-if="helper">
-                    <v-subheader class="red--text">{{ helperText.campaignActive }}</v-subheader>
-                  </v-flex> 
                   <v-radio-group 
                     v-model="cActive"
                     prepend-icon="slideshow"
@@ -387,13 +459,13 @@ export default {
                       value="Paused"
                     />
                   </v-radio-group>
+                  <v-flex v-if="helper">
+                    <v-subheader class="red--text">{{ helperText.campaignActive }}</v-subheader>
+                  </v-flex> 
                   <!-- START DATE PICKER -->
                   <v-flex>
                     <v-subheader>Start Date :</v-subheader>
                   </v-flex>
-                  <v-flex v-if="helper">
-                    <v-subheader class="red--text">{{ helperText.campaignDateStart }}</v-subheader>
-                  </v-flex> 
                   <v-layout
                     row 
                     wrap
@@ -496,13 +568,13 @@ export default {
                       </v-menu>
                     </v-flex>
                   </v-layout>
+                  <v-flex v-if="helper">
+                    <v-subheader class="red--text">{{ helperText.campaignDateStart }}</v-subheader>
+                  </v-flex> 
                   <!-- END DATE PICKER -->
                   <v-flex>
                     <v-subheader>End Date</v-subheader>
                   </v-flex>
-                  <v-flex v-if="helper">
-                    <v-subheader class="red--text">{{ helperText.campaignDateEnd }}</v-subheader>
-                  </v-flex> 
                   <v-layout
                     row
                     wrap
@@ -605,6 +677,9 @@ export default {
                       </v-menu>
                     </v-flex>                    
                   </v-layout>
+                  <v-flex v-if="helper">
+                    <v-subheader class="red--text">{{ helperText.campaignDateEnd }}</v-subheader>
+                  </v-flex> 
                 </v-card-text>
               </v-card>
               <v-btn 
@@ -647,31 +722,31 @@ export default {
                       label="Delimiter"
                     />
                   </v-flex>
-                  <v-subheader class="red">Context Parser: (In Parser Object) still not working</v-subheader>
+                  <v-subheader>Context Parser: (In Parser Object)</v-subheader>
                   <v-flex
                     xs8
-                    md8
+                    md6
                   > 
                     <v-list two-line>
-                      <!-- <v-subheader inset>List of Context Parsers</v-subheader> -->
                       <v-list-tile 
-                        v-for="item in itemstest" 
+                        v-for="item in contextParser" 
                         :key="item.key" 
                         avatar
                       >
                         <v-list-tile-avatar>
-                          <v-icon :class="[item.iconClass]">{{ item.icon }}</v-icon>
+                          <v-icon class="blue white--text">code</v-icon>
                         </v-list-tile-avatar>
                         <v-list-tile-content>
-                          <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                          <v-list-tile-sub-title>{{ item.subtitle }}</v-list-tile-sub-title>
+                          <v-list-tile-title>{{ item.validateFailMsg }}</v-list-tile-title>
+                          <v-list-tile-sub-title>{{ item.validateType }}</v-list-tile-sub-title>
                         </v-list-tile-content>
                         <v-list-tile-action>
                           <v-btn
                             icon
                             ripple
+                            @click="deleteContextParser(item.exclude)"
                           >
-                            <v-icon color="grey lighten-1">info</v-icon>
+                            <v-icon color="grey lighten-1">delete_forever</v-icon>
                           </v-btn>
                         </v-list-tile-action>
                       </v-list-tile>
@@ -694,46 +769,74 @@ export default {
                     md5
                   >
                     <v-card v-if="cardOpen">
-                      <v-subheader>Add Context Parser</v-subheader>
-                      <v-card-text>
-                        <v-text-field
-                          solo-inverted 
-                          label="Remove Character"
-                        />
-                        <v-text-field 
-                          prepend-icon="message"
-                          label="Invalid Format Message"
-                        />
-                        <v-select 
-                          v-model="validateType"
-                          :items="validateTypeList"
-                          :hint="`${validateType}`"
-                          item-text="value"
-                          item-value="condition"
-                          label="Condition Type"
-                          prepend-icon="assignment"
-                          persistent-hint
-                        />
-                        <v-text-field 
-                          :disabled="validateType"
-                          solo-inverted 
-                          label="Condition (Regular Expression)"
-                        />
-                      </v-card-text> 
-                      <v-card-actions>
-                        <v-spacer/>
-                        <v-btn 
-                          color="blue" 
-                          class="white--text"
-                        >
-                          Save
-                        </v-btn>
-                        <v-btn 
-                          flat
-                        >
-                          Cancel
-                        </v-btn>
-                      </v-card-actions>
+                      <v-form 
+                        ref="anotherParser"
+                        v-model="parserValid"
+                        lazy-validation
+                      >
+                        <v-subheader>Add Context Parser</v-subheader>
+                        <v-card-text>
+                          <v-text-field
+                            v-model="anotherParser.exclude"
+                            :rules="[v => !!v || 'Item is required']"
+                            solo-inverted 
+                            label="Remove Character"
+                            required
+                          />
+                          <v-flex v-if="helper">
+                            <v-subheader class="red--text">{{ helperText.exclude }}</v-subheader>
+                          </v-flex>            
+                          <v-text-field 
+                            v-model="anotherParser.validateFailMsg"
+                            :rules="[v => !!v || 'Item is required']"
+                            prepend-icon="message"
+                            label="Invalid Format Message"
+                            required
+                          />
+                          <v-flex v-if="helper">
+                            <v-subheader class="red--text">{{ helperText.validateFailMsg }}</v-subheader>
+                          </v-flex> 
+                          <v-select 
+                            v-model="validateType"
+                            :items="validateTypeList"
+                            :hint="`${validateType}`"
+                            item-text="value"
+                            item-value="condition"
+                            label="Condition Type"
+                            prepend-icon="assignment"
+                            persistent-hint
+                          />
+                          <v-flex v-if="helper">
+                            <v-subheader class="red--text">{{ helperText.validateType }}</v-subheader>
+                          </v-flex> 
+                          <v-text-field 
+                            v-model="anotherParser.validateForm"
+                            :disabled="validateType"
+                            solo-inverted 
+                            label="Condition (Regular Expression)"
+                          />
+                          <v-flex v-if="helper">
+                            <v-subheader class="red--text">{{ helperText.validateForm }}</v-subheader>
+                          </v-flex>                      
+                        </v-card-text> 
+                        <v-card-actions>
+                          <v-spacer/>
+                          <v-btn 
+                            :disabled="!parserValid"
+                            color="blue" 
+                            class="white--text"
+                            @click.native="addContextParser()"
+                          >
+                            Save
+                          </v-btn>
+                          <v-btn 
+                            flat
+                            @click.native="clearContextParser()"
+                          >
+                            Cancel
+                          </v-btn>
+                        </v-card-actions>
+                      </v-form>
                     </v-card>
                   </v-flex>
                 </v-card-text>
@@ -878,12 +981,35 @@ export default {
                           label="Fail Message"
                         />
                       </v-flex>
-                      <!--     In Reward: [Array]        -->
-                      <!-- <v-flex 
-                        xs6
+                      <v-flex
+                        xs12
+                        md12
                       > 
-                        <v-subheader>Reward Validation Details:</v-subheader>
-                      </v-flex> -->
+                        <v-list two-line>
+                          <v-list-tile 
+                            v-for="item in rewards" 
+                            :key="item.key" 
+                            avatar
+                          >
+                            <v-list-tile-avatar>
+                              <v-icon class="blue white--text">redeem</v-icon>
+                            </v-list-tile-avatar>
+                            <v-list-tile-content>
+                              <v-list-tile-title>{{ item.name }}</v-list-tile-title>
+                              <v-list-tile-sub-title>{{ item.winMsg }}</v-list-tile-sub-title>
+                            </v-list-tile-content>
+                            <v-list-tile-action>
+                              <v-btn
+                                icon
+                                ripple
+                                @click="deleteReward(item.name)"
+                              >
+                                <v-icon color="grey lighten-1">delete_forever</v-icon>
+                              </v-btn>
+                            </v-list-tile-action>
+                          </v-list-tile>
+                        </v-list>
+                      </v-flex>
                       <v-btn 
                         color="blue" 
                         class="white--text"
@@ -893,76 +1019,105 @@ export default {
                         <v-icon dark>add</v-icon>
                         Add Reward
                       </v-btn>
+                      <p/>
                       <v-card v-if="cardOpen">
-                        <v-card-title>
-                          <v-subheader class="red">Add Reward Validation Details: still not working</v-subheader>
-                        </v-card-title>
-                        <v-card-actions>
-                          <p/>
-                          <v-switch
-                            v-model="switch1"
-                            color="blue"
-                            label="is Coupon"
-                          />
-                          <v-spacer/>
-                          <v-btn
-                            :disabled="!switch1"
-                            color="blue-grey"
-                            class="white--text"
-                            round
-                          >
-                            Generated
-                          </v-btn>
-                          <v-btn
-                            :loading="loading1"
-                            :disabled="!switch1"
-                            color="blue-grey"
-                            class="white--text"
-                            round
-                            @click.native="loader = 'loading1'"
-                          >
-                            <v-icon 
-                              left 
-                              dark
+                        <v-form
+                          ref="anotherReward"
+                          v-model="rewardValid"
+                          lazy-validation
+                        >
+                          <v-card-title>
+                            <v-subheader>Add Reward Validation Details:</v-subheader>
+                          </v-card-title>
+                          <v-card-actions>
+                            <p/>
+                            <v-switch
+                              v-model="switch1"
+                              color="blue"
+                              label="is Coupon"
+                            />
+                            <v-spacer/>
+                            <v-btn
+                              :disabled="!switch1"
+                              color="blue-grey"
+                              class="white--text"
+                              round
                             >
-                              cloud_upload
-                            </v-icon>
-                            Upload
-                          </v-btn>
-                          <p/>
-                        </v-card-actions>
-                        <v-card-text>
-                          <v-text-field
-                            prepend-icon="phonelink"
-                            label="Reward Name"
-                          />
-                          <v-text-field 
-                            prepend-icon="phonelink_setup"
-                            label="Reward Condition Type"
-                          />
-                          <v-text-field 
-                            prepend-icon="phonelink_lock"
-                            label="Reward Condition Value"
-                          />
-                          <v-text-field 
-                            prepend-icon="chat_bubble_outline"
-                            label="Success Message"
-                          />
-                        </v-card-text>
-                        <v-card-actions>
-                          <v-spacer/>
-                          <v-btn 
-                            color="blue" 
-                            class="white--text"
-                          >
-                            Save
-                          </v-btn>
-                          <v-btn 
-                            flat
-                          >
-                            Cancel
-                          </v-btn>
-                        </v-card-actions>
+                              Generated
+                            </v-btn>
+                            <v-btn
+                              :loading="loading1"
+                              :disabled="!switch1"
+                              color="blue-grey"
+                              class="white--text"
+                              round
+                              @click.native="loader = 'loading1'"
+                            >
+                              <v-icon 
+                                left 
+                                dark
+                              >
+                                cloud_upload
+                              </v-icon>
+                              Upload
+                            </v-btn>
+                            <p/>
+                          </v-card-actions>
+                          <v-card-text>
+                            <v-text-field
+                              v-model="anotherReward.name"
+                              :rules="[v => !!v || 'Item is required']"
+                              prepend-icon="phonelink"
+                              label="Reward Name"
+                              required
+                            />
+                            <v-text-field 
+                              v-model="anotherReward.rewardTotal"
+                              :rules="[v => !!v || 'Item is required']"
+                              prepend-icon="filter_9"
+                              label="Reward Total"
+                              required
+                            />
+                            <v-text-field 
+                              v-model="anotherReward.rewardCondition"
+                              :rules="[v => !!v || 'Item is required']"
+                              prepend-icon="phonelink_setup"
+                              label="Reward Condition Type"
+                              required
+                            />
+                            <v-text-field 
+                              v-model="anotherReward.validateForm"
+                              :rules="[v => !!v || 'Item is required']"
+                              prepend-icon="phonelink_lock"
+                              label="Reward Condition Value"
+                              required
+                            />
+                            <v-text-field 
+                              v-model="anotherReward.winMsg"
+                              :rules="[v => !!v || 'Item is required']"
+                              prepend-icon="chat_bubble_outline"
+                              label="Success Message"
+                              required
+                            />
+                          </v-card-text>
+                          <v-card-actions>
+                            <v-spacer/>
+                            <v-btn 
+                              :disabled="!rewardValid"
+                              color="blue" 
+                              class="white--text"
+                              @click.native="addReward()"
+                            >
+                              Save
+                            </v-btn>
+                            <v-btn 
+                              flat
+                              @click.native="clearReward()"
+                            >
+                              Cancel
+                            </v-btn>
+                          </v-card-actions>
+                        </v-form>
                       </v-card>
                     </v-flex>
                   </v-layout>
@@ -1003,6 +1158,8 @@ export default {
                       <p>Step 6: Summary Page</p>
                       <p>{{ campaignForm }}</p>
                       <p>{{ validateForm }}</p>
+                      <p>{{ contextParser }}</p>
+                      <p>{{ rewards }}</p>
                     </v-flex>
                   </v-layout>
                 </v-card-text>
