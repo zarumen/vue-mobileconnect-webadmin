@@ -190,10 +190,10 @@ export default {
     clearContextParser() {
       this.$refs.anotherParser.reset()
     },
-    deleteContextParser(excludeCharacter) {
+    deleteContextParser(validateFailMsg) {
 
       this.contextParser = this.contextParser.filter(parser => {
-        return parser.exclude !== excludeCharacter
+        return parser.validateFailMsg !== validateFailMsg
       })
     },
     addReward() {
@@ -724,7 +724,7 @@ export default {
                   </v-flex>
                   <v-subheader>Context Parser: (In Parser Object)</v-subheader>
                   <v-flex
-                    xs8
+                    xs12
                     md6
                   > 
                     <v-list two-line>
@@ -744,7 +744,7 @@ export default {
                           <v-btn
                             icon
                             ripple
-                            @click="deleteContextParser(item.exclude)"
+                            @click="deleteContextParser(item.validateFailMsg)"
                           >
                             <v-icon color="grey lighten-1">delete_forever</v-icon>
                           </v-btn>
@@ -764,9 +764,8 @@ export default {
                   </v-btn>
                   <p/>
                   <v-flex 
-                    xs8
-                    sm6 
-                    md5
+                    xs12
+                    md6
                   >
                     <v-card v-if="cardOpen">
                       <v-form 
@@ -952,7 +951,8 @@ export default {
                 <v-card-text>
                   <v-layout>
                     <v-flex 
-                      xs6
+                      xs12
+                      md6
                     > 
                       <v-flex>
                         <v-subheader>Reward Validation:</v-subheader>
@@ -1028,7 +1028,7 @@ export default {
                           lazy-validation
                         >
                           <v-card-title>
-                            <v-subheader>Add Reward Validation Details:</v-subheader>
+                            <v-subheader>Add Reward Validation Details: <small class="red--text"> ปุ่ม generate และ upload ยังใช้ไม่ได้</small></v-subheader>
                           </v-card-title>
                           <v-card-actions>
                             <p/>
@@ -1171,11 +1171,29 @@ export default {
                     <v-flex 
                       xs12
                     > 
-                      <p>Step 6: Summary Page</p>
-                      <p>{{ campaignForm }}</p>
-                      <p>{{ validateForm }}</p>
-                      <p>{{ contextParser }}</p>
-                      <p>{{ rewards }}</p>
+                      <p class="indigo--text"><strong>Step 6: Summary Page</strong></p>
+
+                      <p>compaign Code: <strong class="green--text">{{ campaignForm.campaignCode }}</strong></p>
+                      <p>compaign Name: <strong class="green--text">{{ campaignForm.campaignHeader }}</strong></p>
+                      <p>compaign Description: <strong class="green--text">{{ campaignForm.campaignDescription }}</strong></p>
+                      <p>compaign Keyword: <strong class="green--text">{{ campaignForm.keyword }}</strong></p>
+                      <p>compaign Shortcode: <strong class="green--text">{{ campaignForm.shortcode }}</strong></p>
+                      <!-- <p>compaign's Brand: <strong class="green- -text">{{ brand.organizationLevel3Name }}</strong></p> -->
+                      <p>compaign's Start Date: <strong class="green--text">{{ date }}</strong> Time: <strong class="green--text">{{ time }}</strong></p>
+                      <p>compaign's End Date: <strong class="green--text">{{ date2 }}</strong> Time: <strong class="green--text">{{ time2 }}</strong></p>
+                      <p>campaign Status: <strong class="green--text">{{ cActive }}</strong></p>
+                      <p>Empty Message: <strong class="green--text">{{ validateForm.campaignNotAvailableMsg }}</strong></p>
+                      <p>Fail Message: <strong class="green--text">{{ validateForm.failMsg }}</strong></p>
+                      <p>Limit Reward: <strong class="green--text">{{ validateForm.limitReward }}</strong></p>
+                      <p>Delimiter: <strong class="green--text">{{ validateForm.validateBoundaries }}</strong></p>
+                      <p>Less Content Message: <strong class="green--text">{{ validateForm.validateBoundariesLessErrMsg }}</strong></p>
+                      <p>Over Content Message: <strong class="green--text">{{ validateForm.validateBoundariesOverErrMsg }}</strong></p>
+                      <p>After Service Active: <strong class="green--text">{{ validateForm.validateMsgAfterEnd }}</strong></p>
+                      <p>Before Service Active: <strong class="green--text">{{ validateForm.validateMsgBeforeStart }}</strong></p>
+                      <p>Pause Service Message: <strong class="green--text">{{ validateForm.validateMsgPausedService }}</strong></p>
+                      <p class="indigo--text">------------------------------Still Workings--------------------------------</p>
+                      <p>contextParser: <strong class="green--text">{{ contextParser }}</strong></p>
+                      <p>rewards: {{ rewards }}</p>
                     </v-flex>
                   </v-layout>
                 </v-card-text>
