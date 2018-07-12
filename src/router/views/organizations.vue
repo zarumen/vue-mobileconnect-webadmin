@@ -23,9 +23,9 @@ export default {
           left: true,
           value: 'organizationAuth'
         },
-        { text: 'Organization Level1', value: 'organizationLevel1Name' },
-        { text: 'Organization Level2', value: 'organizationLevel2Name' },
-        { text: 'Organization Level3', value: 'organizationLevel3Name' },
+        { text: 'Company', value: 'organizationLevel1Name' },
+        { text: 'Department', value: 'organizationLevel2Name' },
+        { text: 'Brand', value: 'organizationLevel3Name' },
       ],
       organizationId: '',
       left: true,

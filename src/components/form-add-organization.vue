@@ -30,6 +30,13 @@ export default {
       departmentList: 'departmentList',
       brandList: 'brandList'
     }),
+    mutateDepartmentList() {
+      if(this.company) {
+        return this.mutateList(this.company.id)
+      } else {
+        return []
+      }
+    },
     // ////////////////
     //  Organization Dropdown Controller
     // ////////////////
@@ -78,7 +85,7 @@ export default {
       // /////////////////////
       if (this.select.id === 1 && 
             tCompany !== null && 
-              typeof tCompany === "string") {
+              typeof tCompany === 'string') {
         
         // Prepare Object organization
         let org = {
@@ -98,7 +105,7 @@ export default {
       // /////////////////////
       if (this.select.id === 2 && tDepartment !== null) {
         
-        if (typeof tCompany === "string") {
+        if (typeof tCompany === 'string') {
           // handle error check if Company is String (use old Company only)
         } else {
 
@@ -132,8 +139,8 @@ export default {
       // Brand: Organization >> Level3
       // /////////////////////
       if (this.select.id === 3 && tCompany !== null && tBrand !== null) {
-        if (!(tCompany instanceof Object)) {
-          // handle error check if Company is String (use old Company only)
+        if (typeof tCompany !== 'object') {
+          // HANDLE error check if Company is String (use old Company only)
           console.log('case 1')
 
         } else if (tDepartment === null) {
@@ -157,7 +164,7 @@ export default {
               picURL: 'undefine',
             }
 
-          if (tBrand instanceof Object) {
+          if (typeof tBrand === 'object') {
             
             org['displayName'] = tBrand.displayName
             org['organizationLevel3Name'] = tBrand.organizationLevel3Name
@@ -173,6 +180,9 @@ export default {
           this.closeDialog()
         }
       }
+    },
+    mutateList(companyListId) {
+        return this.departmentList.filter(org => org.organizationLevel1 === companyListId)
     },
   }
 }
@@ -228,34 +238,32 @@ export default {
           <v-flex
             xs12
           >
-            <v-select
+            <v-combobox
               v-model="company"
               :hint="`${company}`"
               :items="companyList"
-              :key="companyList.id"
+              :key="JSON.stringify(companyList.id)"
               item-text="displayName"
               prepend-icon="business"
               label="Company Name"
               persistent-hint
               chips
-              combobox
             />
           </v-flex>
           <v-flex
             v-if="enableLevel2 || enableLevel3"
             xs12
           >
-            <v-select
+            <v-combobox
               v-model="department"
               :hint="`${department}`"
-              :items="departmentList"
-              :key="departmentList.key"
+              :items="mutateDepartmentList"
+              :key="mutateDepartmentList.id"
               item-text="displayName"
               prepend-icon="business_center"
               label="Department Name"
               persistent-hint
               chips
-              combobox
             >
               <template 
                 slot="item" 
@@ -280,18 +288,21 @@ export default {
                     close
                     @input="data.parent.selectItem(data.item)"
                   >
+                    <!-- <v-avatar>
+                      <img :src="data.item.picURL">
+                    </v-avatar> -->
                     <!-- @input="data.parent.selectItem(data.item)" -->
                     {{ data.item.displayName }}
                   </v-chip>
                 </template>
               </template>
-            </v-select>
+            </v-combobox>
           </v-flex>
           <v-flex
             v-if="enableLevel3"
             xs12
           >
-            <v-select
+            <v-combobox
               v-model="brand"
               :hint="`${brand}`"
               :items="brandList"
@@ -301,22 +312,30 @@ export default {
               label="Brand Name"
               persistent-hint
               chips
-              combobox
             >
               <template 
                 slot="item" 
                 slot-scope="data"
               >
-                <template v-if="typeof data.item !== 'object'">
-                  <v-list-tile-content v-text="data.item"/>
-                </template>
-                <template v-else>
+                <template v-if="data.item.picURL === 'undefine'">
+                  <v-list-tile-avatar color="primary" class="green--text">
+                    {{ data.item.displayName.slice(0, 2).toUpperCase() }}
+                  </v-list-tile-avatar>
                   <v-list-tile-content>
                     <v-list-tile-title v-html="data.item.displayName"/>
                     <v-list-tile-sub-title v-html="data.item.organizationLevel2Name"/>
                   </v-list-tile-content>
                 </template>
-                <template 
+                <template v-else>
+                  <v-list-tile-avatar>
+                    <img :src="data.item.picURL">
+                  </v-list-tile-avatar>
+                  <v-list-tile-content>
+                    <v-list-tile-title v-html="data.item.displayName"/>
+                    <v-list-tile-sub-title v-html="data.item.organizationLevel2Name"/>
+                  </v-list-tile-content>
+                </template>
+                <template
                   slot="selection" 
                   slot-scope="data"
                 >
@@ -326,12 +345,15 @@ export default {
                     close
                     @input="data.parent.selectItem(data.item)"
                   >
+                    <v-avatar>
+                      <img :src="data.item.picURL">
+                    </v-avatar>
                     <!-- @input="data.parent.selectItem(data.item)" -->
                     {{ data.item.displayName }}
                   </v-chip>
                 </template>
               </template>
-            </v-select>
+            </v-combobox>
           </v-flex>
         </v-layout>
       </v-container>

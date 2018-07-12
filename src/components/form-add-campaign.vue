@@ -321,11 +321,10 @@ export default {
                     xs12
                     md8
                   >
-                    <v-text-field
+                    <v-textarea
                       v-model="campaignForm.campaignDescription"
                       prepend-icon="shop_two"
                       label="Campaign Description"
-                      multi-line
                     />
                   </v-flex>
                   <v-flex v-if="helper">
@@ -365,7 +364,7 @@ export default {
                     md3
                   >
                     <v-subheader><small>Campaign Owner Details:</small></v-subheader>
-                    <v-select
+                    <v-combobox
                       v-model="brand"
                       :hint="`${brand}`"
                       :items="brandList"
@@ -374,7 +373,7 @@ export default {
                       prepend-icon="shopping_basket"
                       label="Campaign Owners: Brand"
                       persistent-hint
-                      autocomplete
+                      chips
                     >
                       <template 
                         slot="item" 
@@ -403,7 +402,7 @@ export default {
                           </v-chip>
                         </template>
                       </template>
-                    </v-select>
+                    </v-combobox>
                   </v-flex>
                   <v-flex 
                     xs8

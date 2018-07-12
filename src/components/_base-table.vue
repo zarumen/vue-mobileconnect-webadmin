@@ -113,7 +113,7 @@ export default {
             <v-icon>edit</v-icon>
           </v-btn>
           <v-btn 
-            class="indigo" 
+            color="indigo" 
             flat
             icon 
             @click.native="$emit('remove', props.item)"

@@ -78,7 +78,13 @@ export default [
     meta: {
       authRequired: true,
     },
-    // TODO check admin role to access
+    beforeEnter: (routeTo, routeFrom, next) => {
+       // TODO check admin role to access
+       if (store.getters['auth/isAdmin']) {
+         next()
+       }
+    }
+   
   },
   {
     path: '/organizations',

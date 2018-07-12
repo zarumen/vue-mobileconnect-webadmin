@@ -9,12 +9,11 @@ export const state = {
 
 export const getters = {
   // Whether the user is currently logged in.
-  loggedIn(state) {
-    return !!state.currentUser
-  },
-  isAdmin(state) {
-    return state.isAdmin
-  }
+  loggedIn: state => !!state.currentUser,
+  // check Admin role
+  isAdmin: state => state.isAdmin,
+  // get User Email
+  getEmail: state => state.currentUser.email,
 }
 
 export const mutations = {
@@ -58,12 +57,17 @@ export const actions = {
     // refresh all data in localStorage
     return fireauthApp.onAuthStateChanged(firebaseUser => {
       if (firebaseUser) {
-        // let user = {
-        //   photoURL: firebaseUser.user.photoURL,
-        //   email: firebaseUser.user.email,
-        //   displayName: firebaseUser.user.displayName,
-        // }
-        // commit ('SET_CURRENT_USER', user)
+
+        // console.log(firebaseUser.email)
+
+        if (firebaseUser.email !== state.userInfo.email) {
+          let user = {
+            photoURL: firebaseUser.user.photoURL,
+            email: firebaseUser.user.email,
+            displayName: firebaseUser.user.displayName,
+          }
+          commit ('SET_CURRENT_USER', user)
+        }
         
         return firebaseUser
       } else {
@@ -118,9 +122,14 @@ export const actions = {
   },
 
   logOut({ commit }) {
+
     commit('SET_CURRENT_USER', null)
     commit('setUserInfo', null)
     commit('setAdminRole', false)
+
+    removeState('auth.currentUser')
+    removeState('auth.userInfo')
+    removeState('auth.admin')
   },
 }
 
@@ -134,4 +143,8 @@ function getSavedState(key) {
 
 function saveState(key, state) {
   window.localStorage.setItem(key, JSON.stringify(state))
+}
+
+function removeState(key) {
+  window.localStorage.removeItem(key)
 }

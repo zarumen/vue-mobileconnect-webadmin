@@ -34,7 +34,9 @@ export default {
           this.tryingToLogIn = false
 
           // Redirect to the originally requested page, or to the home page
-          this.$router.push(this.$route.query.redirectFrom || { name: 'home' })
+          this.$router.push(
+            this.$route.query.redirectFrom || { name: 'home' }
+            )
         })
         .catch(error => {
           console.log(error)
@@ -53,8 +55,8 @@ export default {
       justify-center
     >
       <v-flex
-        xs12
-        sm8
+        xs8
+        sm6
         md4
       >
         <v-card class="elevation-12">
@@ -70,12 +72,12 @@ export default {
               <v-text-field
                 v-model="password"
                 :append-icon="ePass ? 'visibility' : 'visibility_off'"
-                :append-icon-cb="() => (ePass = !ePass)"
                 :type="ePass ? 'password' : 'text'"
                 label="Enter your password"
                 hint="At least 6 characters"
                 min="6"
                 counter
+                @click:append="() => (ePass = !ePass)"
               />
               <BaseButton
                 :disabled="tryingToLogIn"

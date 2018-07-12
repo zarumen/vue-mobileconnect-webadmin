@@ -62,14 +62,20 @@ export default {
     // ////////////////
     //  Organization Dropdown Controller
     // ////////////////
+    enableLevel1() {
+      if (!!this.select.value && this.select.id === 1) 
+        return true
+      
+      return false
+    },
     enableLevel2 () {
-      if (!!this.select.value && this.select.value === 'OrganizationLevel2') 
+      if (!!this.select.value && this.select.id === 2) 
         return true
       
       return false
     },
     enableLevel3 () {
-      if (!!this.select.value && this.select.value === 'OrganizationLevel3') 
+      if (!!this.select.value && this.select.id === 3) 
         return true
       
       return false
@@ -164,7 +170,7 @@ export default {
     >
       <v-card>
         <v-card-title class="grey lighten-4 py-4 title">
-          Create New Organization
+          Create New User
         </v-card-title>
         <v-container 
           grid-list-sm 
@@ -202,8 +208,11 @@ export default {
                 />
               </v-layout>
             </v-flex>
-            <v-flex xs8>
-              <v-select
+            <v-flex 
+              v-if="enableLevel1"
+              xs8
+            >
+              <v-combobox
                 v-model="company"
                 :hint="`${company}`"
                 :items="companyList"
@@ -213,13 +222,14 @@ export default {
                 label="Company Name"
                 persistent-hint
                 required
+                chips
               />
             </v-flex>
             <v-flex
-              v-if="enableLevel2 || enableLevel3"
+              v-if="enableLevel2"
               xs8
             >
-              <v-select
+              <v-combobox
                 v-model="department"
                 :hint="`${department}`"
                 :items="departmentList"
@@ -228,7 +238,7 @@ export default {
                 prepend-icon="business_center"
                 label="Department Name"
                 persistent-hint
-                autocomplete
+                chips
               >
                 <template 
                   slot="item" 
@@ -257,13 +267,13 @@ export default {
                     </v-chip>
                   </template>
                 </template>
-              </v-select>
+              </v-combobox>
             </v-flex>
             <v-flex
               v-if="enableLevel3"
               xs8
             >
-              <v-select
+              <v-combobox
                 v-model="brand"
                 :hint="`${brand}`"
                 :items="brandList"
@@ -272,7 +282,7 @@ export default {
                 prepend-icon="shopping_basket"
                 label="Brand Name"
                 persistent-hint
-                autocomplete
+                chips
               >
                 <template 
                   slot="item" 
@@ -301,7 +311,7 @@ export default {
                     </v-chip>
                   </template>
                 </template>
-              </v-select>
+              </v-combobox>
             </v-flex>
             <v-flex xs8>
               <v-text-field
@@ -373,16 +383,15 @@ export default {
               />
             </v-flex>
             <v-flex xs12>
-              <v-text-field
+              <v-textarea
                 v-model="uform.addedNote"
                 prepend-icon="notes"
-                multi-line
                 label="Note:"
               >
                 <!-- <div slot="label">
                   Add Note: <small>(optional)</small>
                 </div> -->
-              </v-text-field>
+              </v-textarea>
             </v-flex>
           </v-layout>
         </v-container>
@@ -408,14 +417,12 @@ export default {
           >
             Cancel
           </v-btn>
-          <v-btn
+          <BaseButton
             :disabled="!valid"
-            color="green"
-            round
             @click="saveUser()"
           >
             Save
-          </v-btn>
+          </BaseButton>
         </v-card-actions>
       </v-card>
     </v-form>
