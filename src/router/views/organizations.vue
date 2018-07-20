@@ -23,7 +23,7 @@ export default {
           left: true,
           value: 'organizationAuth'
         },
-        { text: 'Company', value: 'organizationLevel1Name' },
+        { text: 'Company',left: true, value: 'organizationLevel1Name' },
         { text: 'Department', value: 'organizationLevel2Name' },
         { text: 'Brand', value: 'organizationLevel3Name' },
       ],

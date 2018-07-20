@@ -13,8 +13,8 @@ export default {
   data() {
     return {
       baseModule: 'campaigns',
-      dialog: '',
       addCampaignDialog: '',
+      dialog: '',
       dialogTitle: "Campaign Delete Dialog",
       dialogText: "Do you want to delete this campaign?",
       headers: [

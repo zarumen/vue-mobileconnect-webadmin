@@ -1,18 +1,18 @@
 <script>
 export default {
   props: {
-      dialogText: {
-        type: String,
-        default: '',
-      },
-      dialogTitle: {
-        type: String,
-        default: '',
-      },
-      dialog: {
-        type: [String, Boolean],
-        default: '',
-      },
+    dialogText: {
+      type: String,
+      default: '',
+    },
+    dialogTitle: {
+      type: String,
+      default: '',
+    },
+    dialog: {
+      type: [String, Boolean],
+      default: '',
+    },
   },
   data () {
     return {

@@ -6,6 +6,7 @@ export function getDefaultPagination () {
     totalItems: 0,
     rowsPerPage: DEFAULT_ROW_PER_PAGE,
     pages: 0,
+    sortBy: 'organizationAuth'
   }
 }
 

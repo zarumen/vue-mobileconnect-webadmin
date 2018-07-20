@@ -6,7 +6,7 @@ export default {
   components: { NavBarRoutes },
   data() {
     return {
-      drawer: null,
+      drawer: false,
       loggedInNavRoutes: [
         {
           name: 'profile',
@@ -85,7 +85,6 @@ export default {
     <v-navigation-drawer
       v-model="drawer"
       temporary
-      absolute
       app
     >
       <v-list>

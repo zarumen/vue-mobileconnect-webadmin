@@ -62,6 +62,13 @@ export const mutations = {
   updatePage(state, paginationPage) {
     state.pagination.page = paginationPage
   },
+  updateSortBy(state, paginationSortBy) {
+    state.pagination.sortBy = paginationSortBy
+  },
+  updateDescending(state, paginationDesc) {
+    state.pagination.descending = paginationDesc
+  },
+  // Mutate Value in Pagination
   setLoading(state, { loading }) {
     state.loading = loading
   },

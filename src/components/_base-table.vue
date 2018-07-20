@@ -37,12 +37,28 @@ export default {
         this.$store.commit(`${this.basemodule}/updatePage`, value)
       }
     },
+    paginationSort: {
+      get () {
+        return this.pagination.sortBy
+      },
+      set (value) {
+        this.$store.commit(`${this.basemodule}/updateSortBy`, value)
+      }
+    },
+    paginationDesc: {
+      get () {
+        return this.pagination.descending
+      },
+      set (value) {
+        this.$store.commit(`${this.basemodule}/updateDescending`, value)
+      }
+    }
   },
   created () {
     // console.log(this.pagination)
   },
   methods: {
-    renderData: (item, header) => {
+    renderData(item, header) {
       let val = ''
       if (header.value.includes('.')) {
         const vals = header.value.split('.')
@@ -59,7 +75,15 @@ export default {
         val = formatDate(object.seconds)
       }
       return val;
-    }
+    },
+    changeSorting(column) {
+      if (this.paginationSort === column) {
+        this.paginationDesc = !this.paginationDesc
+      } else {
+        this.paginationSort = column
+        this.paginationDesc = false
+      }
+    },
   },
   
 }
@@ -83,9 +107,17 @@ export default {
           <th 
             v-for="(header, index) in props.headers" 
             :key="header.text"
-            :class="['column', 'subheading' , index === 0? 'text-xs-left': 'text-xs-center']"
+            :class="[
+              'column sortable', 
+              paginationDesc ? 'desc' : 'asc',
+              header.value === paginationSort ? 'active' : '',
+              'subheading', 
+              index === 0? 'text-xs-left': 'text-xs-center'
+            ]" 
+            @click="changeSorting(header.value)"
           >
             {{ header.text }}
+            <v-icon small>arrow_upward</v-icon>
           </th>
           <th/>
         </tr>

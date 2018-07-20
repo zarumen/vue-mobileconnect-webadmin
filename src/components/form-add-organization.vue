@@ -318,7 +318,10 @@ export default {
                 slot-scope="data"
               >
                 <template v-if="data.item.picURL === 'undefine'">
-                  <v-list-tile-avatar color="primary" class="green--text">
+                  <v-list-tile-avatar 
+                    color="primary"
+                    class="green--text"
+                  >
                     {{ data.item.displayName.slice(0, 2).toUpperCase() }}
                   </v-list-tile-avatar>
                   <v-list-tile-content>
