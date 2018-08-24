@@ -95,7 +95,7 @@ export default {
       :headers="headers" 
       :items="items" 
       :search="search" 
-      :pagination="pagination"
+      :pagination.sync="pagination"
       class="elevation-1"
       hide-actions
     >
