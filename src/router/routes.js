@@ -96,6 +96,14 @@ export default [
     // TODO check admin role to access
   },
   {
+    path: '/shortcodes',
+    name: 'shortcodes',
+    component: () => lazyLoadView(import('@views/shortcodes')),
+    meta: {
+      authRequired: true,
+    },  
+  },
+  {
     path: '/users',
     name: 'users',
     component: () => lazyLoadView(import('@views/users')),

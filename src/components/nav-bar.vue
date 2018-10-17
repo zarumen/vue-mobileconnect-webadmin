@@ -42,6 +42,11 @@ export default {
           title: 'Organizations Manager',
         },
         {
+          name: 'shortcodes',
+          icon: 'addressCard',
+          title: 'Shortcodes Manager',
+        },
+        {
           name: 'users',
           icon: 'userFriends',
           title: 'User Manager',
