@@ -59,13 +59,13 @@ export const mutations = {
     state.pagination = pagination
   },
   // update Page
-  updatePage(state, paginationPage) {
+  setPage(state, paginationPage) {
     state.pagination.page = paginationPage
   },
-  updateSortBy(state, paginationSortBy) {
+  setSortBy(state, paginationSortBy) {
     state.pagination.sortBy = paginationSortBy
   },
-  updateDescending(state, paginationDesc) {
+  setDescending(state, paginationDesc) {
     state.pagination.descending = paginationDesc
   },
   // Mutate Value in Pagination
@@ -87,6 +87,17 @@ export const mutations = {
 }
 
 export const actions = {
+  // data-table Zone
+  updatePage({ commit }, paginationPage) {
+    commit('setPage', paginationPage)
+  },
+  updateSortBy({ commit }, paginationSortBy) {
+    commit('setSortBy', paginationSortBy)
+  },
+  updateDescending({ commit }, paginationDesc) {
+    commit('setDescending', paginationDesc)
+  },
+  
   // ===
   // CREAT Zone
   // ===

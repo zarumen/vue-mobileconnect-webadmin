@@ -83,7 +83,7 @@ export const actions = {
       await firestoreApp
         .collection('campaignKeywordByShortcode')
         .doc(shortcode)
-        .set(data)
+        .set(data, {merge: true})
 
       newValidateCampaign = await firestoreApp
         .collection('campaignValidate')
