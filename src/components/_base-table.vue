@@ -34,7 +34,7 @@ export default {
         return this.pagination.page
       },
       set (value) {
-        this.$store.dispatch(`${this.basemodule}/updatePage`, value)
+        this.$store.commit(`${this.basemodule}/updatePage`, value)
       }
     },
     paginationSort: {
@@ -42,7 +42,7 @@ export default {
         return this.pagination.sortBy
       },
       set (value) {
-        this.$store.dispatch(`${this.basemodule}/updateSortBy`, value)
+        this.$store.commit(`${this.basemodule}/updateSortBy`, value)
       }
     },
     paginationDesc: {
@@ -50,7 +50,7 @@ export default {
         return this.pagination.descending
       },
       set (value) {
-        this.$store.dispatch(`${this.basemodule}/updateDescending`, value)
+        this.$store.commit(`${this.basemodule}/updateDescending`, value)
       }
     }
   },
