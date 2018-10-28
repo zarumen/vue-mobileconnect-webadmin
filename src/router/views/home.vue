@@ -34,7 +34,7 @@ export default {
                 height="200"
               >
               <h1 class="white--text mb-2 display-1 text-xs-center">Mobile Connect</h1>
-              <div class="subheading mb-3 text-xs-center">Powered by Vuetify</div>
+              <div class="subheading mb-3 text-xs-center"></div>
               <v-btn
                 class="green mt-5"
                 dark
@@ -263,23 +263,11 @@ export default {
             align-center
           >
             <v-flex xs12>
+              <center>
               <div class="white--text ml-3">
-                Made with
-                <v-icon class="red--text">favorite</v-icon>
-                by <a
-                  class="white--text"
-                  href="https://vuetifyjs.com"
-                  target="_blank"
-                >
-                  Vuetify
-                </a>
-                and <a
-                  class="white--text"
-                  href="https://github.com/vwxyzjn"
-                >
-                  Costa Huang
-                </a>
+2018 © Copyright www.sms2mkt.com All rights Reserved.  
               </div>
+              </center>
             </v-flex>
           </v-layout>
         </v-footer>
