@@ -33,8 +33,8 @@ export default {
                 alt="Mobile Connect"
                 height="200"
               >
-              <h1 class="white--text mb-2 display-1 text-xs-center">Mobile Connect</h1>
-              <div class="subheading mb-3 text-xs-center"></div>
+              <h1 class="white--text mb-2 display-1 text-xs-center">2WAYS SMS</h1>
+              <!-- <div class="subheading mb-3 text-xs-center"></div> -->
               <v-btn
                 class="green mt-5"
                 dark
@@ -42,7 +42,7 @@ export default {
                 round
                 href="/login"
               >
-                Get Started
+                TEL. 06 5895 8328
               </v-btn>
             </v-layout>
           </v-parallax>
@@ -57,13 +57,14 @@ export default {
           >
             <v-flex
               xs12
+              md8
               sm4
               class="my-3"
             >
               <div class="text-xs-center">
-                <h2 class="headline">The best way to start developing</h2>
+                <h2 class="headline">ตัวอย่างแคมเปญ 2WAYS SMS</h2>
                 <span class="subheading">
-                  Cras facilisis mi vitae nunc
+                  จากองค์กรและแบรนด์สินค้าดัง ที่เราได้รับความไว้วางใจให้บริการ
                 </span>
               </div>
             </v-flex>
@@ -168,8 +169,8 @@ export default {
               align-center
               justify-center
             >
-              <div class="headline white--text mb-3 text-xs-center">Web development has never been easier</div>
-              <em>Kick-start your application today</em>
+              <div class="headline white--text mb-3 text-xs-center">หากสนใจและต้องการสอบถามข้อมูลเพิ่มเติม ติดต่อฝ่ายขาย</div>
+              <em>One Stop Service : เราคือ ผู้นำด้านให้บริการ 2Ways SMS ที่ดีที่สุด</em>
               <v-btn
                 class="indigo mt-5"
                 dark
@@ -177,7 +178,7 @@ export default {
                 round
                 href="/login"
               >
-                Get Started
+                TEL. 06 5895 8328
               </v-btn>
             </v-layout>
           </v-parallax>
@@ -203,9 +204,8 @@ export default {
                     <div class="headline">Company info</div>
                   </v-card-title>
                   <v-card-text>
-                    Cras facilisis mi vitae nunc lobortis pharetra. Nulla volutpat tincidunt ornare.
-                    Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-                    Nullam in aliquet odio. Aliquam eu est vitae tellus bibendum tincidunt. Suspendisse potenti.
+                    บริษัท โมบาย คอนเน็ค จำกัด เป็นผู้ให้บริการ Mobile Marketing & CRM แบบครบวงจร ด้วยทีมงานที่มีความ
+                    เชี่ยวชาญ และ มีประสบการณ์ให้บริการแก่องค์กรชั้นนำต่าง ๆ ทั้งในประเทศไทย และต่างประเทศ การันตีจากประสบการณ์ 18 ปี
                   </v-card-text>
                 </v-card>
               </v-flex>
@@ -222,7 +222,7 @@ export default {
                     <div class="headline">Contact us</div>
                   </v-card-title>
                   <v-card-text>
-                    Cras facilisis mi vitae nunc lobortis pharetra. Nulla volutpat tincidunt ornare.
+                    บริษัท โมบาย คอนเน็ค จำกัด 1111/84 ถนนลาดพร้าว, จันทรเกษม, จตุจักร, กรุงเทพมหานคร 10900
                   </v-card-text>
                   <v-list class="transparent">
                     <v-list-tile>
@@ -230,7 +230,7 @@ export default {
                         <v-icon class="blue--text text--lighten-2">phone</v-icon>
                       </v-list-tile-action>
                       <v-list-tile-content>
-                        <v-list-tile-title>777-867-5309</v-list-tile-title>
+                        <v-list-tile-title>06 5895 8328</v-list-tile-title>
                       </v-list-tile-content>
                     </v-list-tile>
                     <v-list-tile>
@@ -238,7 +238,7 @@ export default {
                         <v-icon class="blue--text text--lighten-2">place</v-icon>
                       </v-list-tile-action>
                       <v-list-tile-content>
-                        <v-list-tile-title>Chicago, US</v-list-tile-title>
+                        <v-list-tile-title>กรุงเทพมหานคร, ประเทศไทย</v-list-tile-title>
                       </v-list-tile-content>
                     </v-list-tile>
                     <v-list-tile>
@@ -246,7 +246,7 @@ export default {
                         <v-icon class="blue--text text--lighten-2">email</v-icon>
                       </v-list-tile-action>
                       <v-list-tile-content>
-                        <v-list-tile-title>john@vuetifyjs.com</v-list-tile-title>
+                        <v-list-tile-title>info@mobileconnect.co.th</v-list-tile-title>
                       </v-list-tile-content>
                     </v-list-tile>
                   </v-list>
@@ -264,9 +264,7 @@ export default {
           >
             <v-flex xs12>
               <center>
-              <div class="white--text ml-3">
-2018 © Copyright www.sms2mkt.com All rights Reserved.  
-              </div>
+                <div class="white--text ml-3">2018 © Copyright www.sms2mkt.com All Rights Reserved.</div>
               </center>
             </v-flex>
           </v-layout>
