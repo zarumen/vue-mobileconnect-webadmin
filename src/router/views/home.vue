@@ -34,7 +34,14 @@ export default {
                 height="200"
               >
               <h1 class="white--text mb-2 display-1 text-xs-center">2WAYS SMS</h1>
-              <!-- <div class="subheading mb-3 text-xs-center"></div> -->
+              <div class="thai18 mb-3 text-xs-center">พร้อมให้คำปรึกษาและให้บริการเกี่ยวกับ “กิจกรรมการตลาดผ่าน SMS” ในรูปแบบของ 2WAYS SMS และ USSD อย่างมืออาชีพ มากกว่า 800 แคมเปญต่อปี ที่เราได้ให้บริการอย่างมีประสิทธิภาพ
+เหมาะสำหรับกิจกรรม
+:: โหวต
+:: ตอบคำถาม
+:: ผลสำรวจ
+:: ชิงรางวัล
+:: ลงทะเบียน
+:: เช็คยอดคะแนนสะสม</div>
               <v-btn
                 class="green mt-5"
                 dark
@@ -169,7 +176,7 @@ export default {
               align-center
               justify-center
             >
-              <div class="headline white--text mb-3 text-xs-center">หากสนใจและต้องการสอบถามข้อมูลเพิ่มเติม ติดต่อฝ่ายขาย</div>
+              <div class="headline-white mb-3 text-xs-center">หากสนใจและต้องการสอบถามข้อมูลเพิ่มเติม ติดต่อฝ่ายขาย</div>
               <em>One Stop Service : เราคือ ผู้นำด้านให้บริการ 2Ways SMS ที่ดีที่สุด</em>
               <v-btn
                 class="indigo mt-5"

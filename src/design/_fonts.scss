@@ -1,6 +1,12 @@
+// Google Fonts
+@import url(http://fonts.googleapis.com/css?family=Mitr:400italic,700italic,400,700);
+// Font Variables
+
+$mitr-sans: 'Mitr', sans-serif;
+
 $system-default-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
   Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-  'Segoe UI Symbol';
+  'Segoe UI Symbol', 'Mitr';
 
 $heading-font-family: $system-default-font-family;
 $heading-font-weight: 600;
@@ -19,3 +25,10 @@ $content-font-weight: 400;
   font-weight: $content-font-weight;
   color: $color-text;
 }
+
+.headline-white {
+  font-family: $mitr-sans;
+  font-weight: $content-font-weight;
+  font-size: 18px;
+  color: white;  
+} 
