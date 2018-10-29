@@ -22,36 +22,42 @@ export default {
             src="/img/background.jpg"
             height="600"
           >
-            <v-layout
-              column
-              align-center
-              justify-center
-              class="white--text"
-            >
-              <img
-                src="@assets/images/mc-logo.png"
-                alt="Mobile Connect"
-                height="200"
+            <v-container>
+              <v-layout
+                column
+                align-center
+                justify-center
+                class="white--text"
+                xs12
+                md6
+                lg6
               >
-              <h1 class="white--text mb-2 display-1 text-xs-center">2WAYS SMS</h1>
-              <div class="thai18 mb-3 text-xs-center">พร้อมให้คำปรึกษาและให้บริการเกี่ยวกับ “กิจกรรมการตลาดผ่าน SMS” ในรูปแบบของ 2WAYS SMS และ USSD อย่างมืออาชีพ มากกว่า 800 แคมเปญต่อปี ที่เราได้ให้บริการอย่างมีประสิทธิภาพ
-เหมาะสำหรับกิจกรรม
-:: โหวต
-:: ตอบคำถาม
-:: ผลสำรวจ
-:: ชิงรางวัล
-:: ลงทะเบียน
-:: เช็คยอดคะแนนสะสม</div>
-              <v-btn
-                class="green mt-5"
-                dark
-                large
-                round
-                href="/login"
-              >
-                TEL. 06 5895 8328
-              </v-btn>
-            </v-layout>
+                <img
+                  src="@assets/images/mc-logo.png"
+                  alt="Mobile Connect"
+                  height="200"
+                >
+                
+                <h1 class="white--text mb-2 display-1 text-xs-center">2WAYS SMS</h1>
+                <div class="thai18 mb-3 text-xs-left ">พร้อมให้คำปรึกษาและให้บริการเกี่ยวกับ “กิจกรรมการตลาดผ่าน SMS” ในรูปแบบของ 2WAYS SMS และ USSD อย่างมืออาชีพ มากกว่า 800 แคมเปญต่อปี ที่เราได้ให้บริการอย่างมีประสิทธิภาพ
+                เหมาะสำหรับกิจกรรม<br>
+                  :: โหวต <br>
+                  :: ตอบคำถาม<br>
+                  :: ผลสำรวจ<br>
+                  :: ชิงรางวัล<br>
+                  :: ลงทะเบียน<br>
+                  :: เช็คยอดคะแนนสะสม</div>
+                <v-btn
+                  class="green mt-5"
+                  dark
+                  large
+                  round
+                  href="/login"
+                >
+                  TEL. 06 5895 8328
+                </v-btn>
+              </v-layout>
+            </v-container>  
           </v-parallax>
         </section>
 
@@ -67,14 +73,20 @@ export default {
               md8
               sm4
               class="my-3"
+              align-center
             >
               <div class="text-xs-center">
-                <h2 class="headline">ตัวอย่างแคมเปญ 2WAYS SMS</h2>
-                <span class="subheading">
+                <h2 class="headline-normal">2WAYS SMS</h2>
+                <!--                 <span class="subheading">
                   จากองค์กรและแบรนด์สินค้าดัง ที่เราได้รับความไว้วางใจให้บริการ
-                </span>
+                </span> -->
               </div>
+              <v-container>
+                <div class="thai18 text-xs-left ">คือกิจกรรมการตลาดผ่านทางโทรศัพท์มือถือ สามารถนำมาประยุกต์ใช้ได้กับหลากหลายธุรกิจ สร้างการสื่อสารแบบ SMS Interactive กับกลุ่มเป้าหมาย ช่วยเพิ่มกลุ่มลูกค้าใหม่ รักษาฐานลูกค้าเก่า (Acquire or Retain Customer), สร้างการรับรู้ผลิตภัณฑ์ (Brand Awareness) และเพิ่มรายได้ (Generate Revenue) สร้างความสัมพันธ์ที่ดีระหว่างลูกค้ากับองค์กร</div>
+              </v-container>
+              
             </v-flex>
+
             <v-flex xs12>
               <v-container grid-list-xl>
                 <v-layout
@@ -99,12 +111,10 @@ export default {
                         primary-title
                         class="layout justify-center"
                       >
-                        <div class="headline text-xs-center">Material Design</div>
+                        <div class="headline text-xs-center">สร้างสีสันทางการตลาด</div>
                       </v-card-title>
                       <v-card-text>
-                        Cras facilisis mi vitae nunc lobortis pharetra. Nulla volutpat tincidunt ornare.
-                        Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-                        Nullam in aliquet odio. Aliquam eu est vitae tellus bibendum tincidunt. Suspendisse potenti.
+                        เพิ่มลูกเล่นใหม่ที่ไม่ซ้ำใคร นำมาประยุกต์ใช้ให้เข้ากับธุรกิจที่มีหลากหลายรูปแบบ สร้างภาพลักษณ์ให้ดูทันสมัย ยืดหยุ่นและปรับลูกเล่นให้เหมาะสมตาม Concept ที่ต้องการได้
                       </v-card-text>
                     </v-card>
                   </v-flex>
@@ -125,12 +135,10 @@ export default {
                         primary-title
                         class="layout justify-center"
                       >
-                        <div class="headline">Fast development</div>
+                        <div class="headline">กระตุ้นยอดขาย</div>
                       </v-card-title>
                       <v-card-text>
-                        Cras facilisis mi vitae nunc lobortis pharetra. Nulla volutpat tincidunt ornare.
-                        Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-                        Nullam in aliquet odio. Aliquam eu est vitae tellus bibendum tincidunt. Suspendisse potenti.
+                        ด้วยวิธีการที่ง่ายและน่าสนใจ ทำให้กลุ่มเป้าหมาย มีความพอใจในการร่วมกิจกรรมสูง เกิดการกระตุ้น Brand Loyalty มากขึ้น สามารถวัดผลได้ว่าแคมเปญมีประสิทธิภาพเพียงใด ประหยัดเวลาและลดความยุ่งยากในการจัดแคมเปญ
                       </v-card-text>
                     </v-card>
                   </v-flex>
@@ -151,12 +159,10 @@ export default {
                         primary-title
                         class="layout justify-center"
                       >
-                        <div class="headline text-xs-center">Completely Open Sourced</div>
+                        <div class="headline text-xs-center">รักษาลูกค้าเก่า-เพิ่มลูกค้าใหม่</div>
                       </v-card-title>
                       <v-card-text>
-                        Cras facilisis mi vitae nunc lobortis pharetra. Nulla volutpat tincidunt ornare.
-                        Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-                        Nullam in aliquet odio. Aliquam eu est vitae tellus bibendum tincidunt. Suspendisse potenti.
+                        สามารถเข้าถึงกลุ่มคนทุกเพศ ทุกวัย ทุกสายอาชีพ ช่วยรักษากลุ่มลูกค้าเก่า-ขยายกลุ่มลูกค้าใหม่ได้ อีกทั้งยังช่วยเก็บข้อมูลเพื่อวิจัยตลาด ทำให้รับรู้ถึงพฤติกรรมและความต้องการของลูกค้า แล้วนำมาพัฒนาสินค้าและบริการในครั้งต่อ ๆ ไป
                       </v-card-text>
                     </v-card>
                   </v-flex>
@@ -165,7 +171,93 @@ export default {
             </v-flex>
           </v-layout>
         </section>
+        <section>
+          <v-container 
+            fluid 
+            grid-list-sm>
+            <v-layout>
+              <v-flex 
+                xs12 
+              >
+                <v-img
+                  src="http://www.mobileconnect.co.th/img/2way_pic01.jpg"
+                />
+              </v-flex>
+            </v-layout>
+          </v-container>              
+        </section>
+        <section>
+          <v-layout
+            column
+            wrap
+            class="my-5"
+            align-center
+          >
+            <v-flex
+              xs12
+              md8
+              sm4
+              class="my-3"
+            >
+              <div class="text-xs-center">
+                <h2 class="headline-normal">ตัวอย่างแคมเปญ 2WAYS SMS</h2>
+                <!--                 <span class="subheading">
+                  จากองค์กรและแบรนด์สินค้าดัง ที่เราได้รับความไว้วางใจให้บริการ
+                </span> -->
+              </div>
+              <div class="thai18 mb-3 text-xs-left ">จากองค์กรและแบรนด์สินค้าดัง ที่เราได้รับความไว้วางใจให้บริการ</div>
+            </v-flex>
+          </v-layout>
 
+          <v-flex xs12>
+            <v-container grid-list-xl>
+              <v-layout
+                row
+                wrap
+                align-center
+              >
+                <v-flex 
+                  xs12
+                  md4>
+                  <v-img
+                    src="http://www.mobileconnect.co.th/img/2way_ads/ex2ways/2waysp01_s.jpg"
+                  />
+                </v-flex>
+
+                <v-flex 
+                  xs12
+                  md4>
+                  <v-img src="http://www.mobileconnect.co.th/img/2way_ads/ex2ways/2waysp08_s.jpg"/>
+                </v-flex>
+
+                <v-flex 
+                  xs12
+                  md4>
+                  <v-img src="http://www.mobileconnect.co.th/img/2way_ads/ex2ways/2waysp03_s.jpg"/>
+                </v-flex>
+                <v-flex 
+                  xs12
+                  md4>
+                  <v-img
+                    src="http://www.mobileconnect.co.th/img/2way_ads/ex2ways/2waysp07_s.jpg"
+                  />
+                </v-flex>
+
+                <v-flex 
+                  xs12
+                  md4>
+                  <v-img src="http://www.mobileconnect.co.th/img/2way_ads/ex2ways/2waysp06_s.jpg"/>
+                </v-flex>
+
+                <v-flex 
+                  xs12
+                  md4>
+                  <v-img src="http://www.mobileconnect.co.th/img/2way_ads/exussd/ussd_p05s.jpg"/>
+                </v-flex>
+              </v-layout>  
+            </v-container>
+          </v-flex>       
+        </section>         
         <section>
           <v-parallax
             src="/img/technology.jpg"

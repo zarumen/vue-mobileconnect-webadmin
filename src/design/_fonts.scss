@@ -32,3 +32,10 @@ $content-font-weight: 400;
   font-size: 18px;
   color: white;  
 } 
+
+.headline-normal {
+  font-family: $mitr-sans;
+  font-weight: $content-font-weight;
+  font-size: 22px;
+  color: $color-text;  
+} 
