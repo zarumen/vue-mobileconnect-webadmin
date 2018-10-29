@@ -121,6 +121,14 @@ export default [
     // TODO check admin role to access
   },
   {
+    path: '/campaignwidget/:campaignId',
+    name: 'campaignswidget',
+    component: () => lazyLoadView(import('@views/campaignwidget')),
+    meta: {
+      authRequired: false,
+    }
+  },
+  {
     path: '/regex',
     name: 'regex',
     component: () => lazyLoadView(import('@views/regex')),
