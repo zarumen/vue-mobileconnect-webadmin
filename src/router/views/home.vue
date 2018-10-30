@@ -282,7 +282,13 @@ export default {
             </v-layout>
           </v-parallax>
         </section>
-
+        <section>
+          <iframe 
+            width="560" 
+            height="315" 
+            src="localhost:8080/campaignwidget/testid" 
+            frameborder="0"/>
+        </section>
         <section>
           <v-container grid-list-xl>
             <v-layout
