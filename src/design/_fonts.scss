@@ -1,5 +1,5 @@
 // Google Fonts
-@import url(http://fonts.googleapis.com/css?family=Mitr:400italic,700italic,400,700);
+@import url(https://fonts.googleapis.com/css?family=Mitr:400italic,700italic,400,700);
 // Font Variables
 
 $mitr-sans: 'Mitr', sans-serif;
@@ -15,27 +15,41 @@ $content-font-family: $system-default-font-family;
 $content-font-weight: 400;
 
 %font-heading {
-  font-family: $heading-font-family;
+  font-family: $mitr-sans;
   font-weight: $heading-font-weight;
   color: $color-heading-text;
 }
 
 %font-content {
-  font-family: $content-font-family;
+  font-family: $mitr-sans;
   font-weight: $content-font-weight;
   color: $color-text;
+  font-size: 14px;
+  line-height: 2em;
+  padding: 0.2em 0 0.02em 0;
 }
 
 .headline-white {
   font-family: $mitr-sans;
   font-weight: $content-font-weight;
-  font-size: 18px;
+  font-size: 16px;
   color: white;  
+  line-height: 2em;
+  padding: 0.2em 0 0.02em 0;
 } 
 
 .headline-normal {
   font-family: $mitr-sans;
   font-weight: $content-font-weight;
-  font-size: 22px;
+  font-size: 16px;
   color: $color-text;  
 } 
+
+.thai18 {
+  font-family: $mitr-sans;
+  font-weight: $content-font-weight;
+  font-size: 16px;
+  color: $color-text;
+  line-height: 2em;
+  padding: 0.2em 0 0.02em 0;    
+}

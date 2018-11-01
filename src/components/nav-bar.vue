@@ -121,8 +121,8 @@ export default {
         v-if="loggedIn"
         @click.stop="drawer = !drawer"
       />
-      <v-toolbar-title>
-        Mobile Connect
+      <v-toolbar-title justify-left>
+        <img src="@assets/images/logo.png">
       </v-toolbar-title>
       <v-spacer/>
       <v-toolbar-items>

@@ -32,14 +32,14 @@ export default {
                 md6
                 lg6
               >
-                <img
+                <!--                 <img
                   src="@assets/images/mc-logo.png"
                   alt="Mobile Connect"
                   height="200"
-                >
+                > -->
                 
-                <h1 class="white--text mb-2 display-1 text-xs-center">2WAYS SMS</h1>
-                <div class="thai18 mb-3 text-xs-left ">พร้อมให้คำปรึกษาและให้บริการเกี่ยวกับ “กิจกรรมการตลาดผ่าน SMS” ในรูปแบบของ 2WAYS SMS และ USSD อย่างมืออาชีพ มากกว่า 800 แคมเปญต่อปี ที่เราได้ให้บริการอย่างมีประสิทธิภาพ
+                <h1 class="font-weight-bold white--text mb-2 display-1 text-xs-center">2 Ways SMS Solution</h1>
+                <div class="headline-white text-xs-left ">ให้คำปรึกษาและให้บริการเกี่ยวกับ “กิจกรรมการตลาดผ่าน SMS” ในรูปแบบของ 2WAYS SMS อย่างมืออาชีพ มากกว่า 800 แคมเปญต่อปี ที่เราได้ให้บริการอย่างมีประสิทธิภาพ
                 เหมาะสำหรับกิจกรรม<br>
                   :: โหวต <br>
                   :: ตอบคำถาม<br>
@@ -111,7 +111,7 @@ export default {
                         primary-title
                         class="layout justify-center"
                       >
-                        <div class="headline text-xs-center">สร้างสีสันทางการตลาด</div>
+                        <div class="headline-normal text-xs-center">สร้างสีสันทางการตลาด</div>
                       </v-card-title>
                       <v-card-text>
                         เพิ่มลูกเล่นใหม่ที่ไม่ซ้ำใคร นำมาประยุกต์ใช้ให้เข้ากับธุรกิจที่มีหลากหลายรูปแบบ สร้างภาพลักษณ์ให้ดูทันสมัย ยืดหยุ่นและปรับลูกเล่นให้เหมาะสมตาม Concept ที่ต้องการได้
@@ -135,7 +135,7 @@ export default {
                         primary-title
                         class="layout justify-center"
                       >
-                        <div class="headline">กระตุ้นยอดขาย</div>
+                        <div class="headline-normal">กระตุ้นยอดขาย</div>
                       </v-card-title>
                       <v-card-text>
                         ด้วยวิธีการที่ง่ายและน่าสนใจ ทำให้กลุ่มเป้าหมาย มีความพอใจในการร่วมกิจกรรมสูง เกิดการกระตุ้น Brand Loyalty มากขึ้น สามารถวัดผลได้ว่าแคมเปญมีประสิทธิภาพเพียงใด ประหยัดเวลาและลดความยุ่งยากในการจัดแคมเปญ
@@ -159,7 +159,7 @@ export default {
                         primary-title
                         class="layout justify-center"
                       >
-                        <div class="headline text-xs-center">รักษาลูกค้าเก่า-เพิ่มลูกค้าใหม่</div>
+                        <div class="headline-normal text-xs-center">รักษาลูกค้าเก่า-เพิ่มลูกค้าใหม่</div>
                       </v-card-title>
                       <v-card-text>
                         สามารถเข้าถึงกลุ่มคนทุกเพศ ทุกวัย ทุกสายอาชีพ ช่วยรักษากลุ่มลูกค้าเก่า-ขยายกลุ่มลูกค้าใหม่ได้ อีกทั้งยังช่วยเก็บข้อมูลเพื่อวิจัยตลาด ทำให้รับรู้ถึงพฤติกรรมและความต้องการของลูกค้า แล้วนำมาพัฒนาสินค้าและบริการในครั้งต่อ ๆ ไป
@@ -187,28 +187,29 @@ export default {
           </v-container>              
         </section>
         <section>
-          <v-layout
-            column
-            wrap
-            class="my-5"
-            align-center
-          >
-            <v-flex
-              xs12
-              md8
-              sm4
-              class="my-3"
+          <v-container>
+            <v-layout
+              column
+              wrap
+              class="my-5"
+              align-center
             >
-              <div class="text-xs-center">
-                <h2 class="headline-normal">ตัวอย่างแคมเปญ 2WAYS SMS</h2>
-                <!--                 <span class="subheading">
-                  จากองค์กรและแบรนด์สินค้าดัง ที่เราได้รับความไว้วางใจให้บริการ
-                </span> -->
-              </div>
-              <div class="thai18 mb-3 text-xs-left ">จากองค์กรและแบรนด์สินค้าดัง ที่เราได้รับความไว้วางใจให้บริการ</div>
-            </v-flex>
-          </v-layout>
-
+              <v-flex
+                xs12
+                md8
+                sm4
+                class="my-3"
+              >
+                <div class="text-xs-center">
+                  <h2 class="headline-normal">ตัวอย่างแคมเปญ 2WAYS SMS</h2>
+                  <!--                 <span class="subheading">
+                    จากองค์กรและแบรนด์สินค้าดัง ที่เราได้รับความไว้วางใจให้บริการ
+                  </span> -->
+                </div>
+                <div class="thai18 mb-3 text-xs-left ">จากองค์กรและแบรนด์สินค้าดัง ที่เราได้รับความไว้วางใจให้บริการ</div>
+              </v-flex>
+            </v-layout>
+          </v-container>
           <v-flex xs12>
             <v-container grid-list-xl>
               <v-layout
@@ -281,13 +282,6 @@ export default {
               </v-btn>
             </v-layout>
           </v-parallax>
-        </section>
-        <section>
-          <iframe 
-            width="560" 
-            height="315" 
-            src="localhost:8080/campaignwidget/testid" 
-            frameborder="0"/>
         </section>
         <section>
           <v-container grid-list-xl>
