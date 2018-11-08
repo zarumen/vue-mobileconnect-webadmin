@@ -40,7 +40,7 @@ export default {
       rightDrawer: false,
       query: "",
       timeout: 2000,
-      quickSearchFilter: 'abc'
+      quickSearchFilter: 'ICC'
     }
   },
   computed: {
