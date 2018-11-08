@@ -136,7 +136,7 @@ export default {
           <small v-if="header.text!=='Widget'">{{ renderData(props.item, header) }}</small>
           <small v-else>
             <router-link 
-              :to="{ path: 'campaignwidget/'+props.item.id+'/edit', params: { mode: 'edit', campaignId: 'Z3Q4qZlSGixFHftPBNln' }}"
+              :to="{ path: 'campaignwidget/'+props.item.id, params: { mode: 'edit', campaignId: 'Z3Q4qZlSGixFHftPBNln' }}"
               color="indigo"
             >
               <v-icon>widgets</v-icon>

@@ -15,6 +15,7 @@ export default {
   data() {
     return {
       caption: '',
+      code:'',
       height: 300,
       width: 300,
       socketMessage: ''
@@ -33,6 +34,11 @@ export default {
       console.log(this.$socket)
 
 
+    }
+  },
+  watch:{
+    caption: function(val) {
+      this.code =  '<iframe src="https://sms2mkt.com/'+this.$route.params.campaignId+'/'+val+'"></iframe>'
     }
   },
   socket: {
@@ -98,7 +104,6 @@ export default {
       class="column" 
       fill-height>
       <section 
-        v-if="this.$route.params.mode=='edit'"
         style=" height: 200px;"
       >
         <v-layout
@@ -111,10 +116,8 @@ export default {
                 label="Caption"
               />
               <v-text-field
-                v-model="email"
-                :rules="emailRules"
-                label="E-mail"
-                required
+                v-model="code"
+                label="Embeded Code"
               />
             </v-form>
           </v-flex>

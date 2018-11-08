@@ -121,7 +121,7 @@ export default [
     // TODO check admin role to access
   },
   {
-    path: '/campaignwidget/:campaignId/:mode',
+    path: '/campaignwidget/:campaignId',
     name: 'campaignswidget',
     component: () => lazyLoadView(import('@views/campaignwidget')),
     meta: {
@@ -129,7 +129,7 @@ export default [
     }
   },
   {
-    path: '/campaignwidgetview/:campaignId',
+    path: '/campaignwidgetview/:campaignId/:caption',
     name: 'campaignswidgetview',
     component: () => lazyLoadView(import('@views/campaignwidgetview')),
     meta: {

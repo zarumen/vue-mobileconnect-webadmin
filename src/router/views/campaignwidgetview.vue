@@ -94,46 +94,46 @@ export default {
     fill-height
     fill-width
   >
-    <section>
-      <v-layout 
-        align-center 
-        justify-center 
-        column
-
-        style="    
-          width: 100%;
-          height: 300px;
-          border: 1px solid black;"
-      >
-        <v-flex>
-          <v-card light>
-            <h1 class="big">
-              {{ headerText }}
-            </h1>
-            <div class="text-xs-center">
-              <h1 class="superbig">{{ socketMessage }} </h1>
-            </div>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </section>
-    <br>
-    <section>
-      <v-layout 
-        class="pt-1" 
-        row 
-        wrap
-      >
-        <v-flex 
-          md4 
-          xs12
+    <v-layout column>
+      <section>
+        <v-layout 
+          align-center 
+          justify-center 
+          style="    
+            width: 100%;
+            height: 300px;
+            border: 1px solid black;"
         >
-          <v-card light>
-            <bar/>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </section>
+          <v-flex>
+            <v-card light>
+              <h1 class="big">
+                {{ this.$route.params.caption }}
+              </h1>
+              <div class="text-xs-center">
+                <h1 class="superbig">{{ socketMessage }} </h1>
+              </div>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </section>
+      <section>
+        <v-layout 
+          class="pt-1" 
+          row 
+          wrap
+        >
+          <v-flex 
+            md4 
+            xs12
+          >
+            <v-card light>
+              <bar/>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </section>
+    </v-layout>
+
   </v-container>
 
 
