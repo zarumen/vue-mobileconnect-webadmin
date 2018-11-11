@@ -31,7 +31,7 @@ export default [
       authRequired: true,
     },
     props: route => ({
-      user: store.state.auth.userInfo,
+      user: store.state.auth.userInfo || {}
     }),
   },
   {
