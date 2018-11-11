@@ -1,12 +1,13 @@
 <script>
 import { authComputed } from '@state/helpers'
-import NavBarRoutes from './nav-bar-routes.vue'
+import NavBarRoutes from './nav-bar-routes'
 
 export default {
   components: { NavBarRoutes },
   data() {
     return {
       drawer: false,
+      isActive: false,
       loggedInNavRoutes: [
         {
           name: 'profile',
@@ -38,7 +39,7 @@ export default {
         },
         {
           name: 'organizations',
-          icon: 'siteMap',
+          icon: 'sitemap',
           title: 'Organizations Manager',
         },
         {
@@ -98,6 +99,7 @@ export default {
           :key="i"
           :to="item.name"
           value="true"
+          exact-active-class
           exact
         >
           <v-list-tile-action>
@@ -139,7 +141,7 @@ export default {
   </v-layout>
 </template>
 
-<style lang="scss" module>
+<style lang="scss" module scoped>
 @import '@design';
 
 .container {
@@ -152,5 +154,9 @@ export default {
     display: inline-block;
     margin-right: $size-grid-padding;
   }
+}
+
+.active {
+  color: red;
 }
 </style>

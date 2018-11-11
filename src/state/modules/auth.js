@@ -58,7 +58,7 @@ export const actions = {
     return fireauthApp.onAuthStateChanged(firebaseUser => {
       if (firebaseUser) {
 
-        // console.log(firebaseUser.email)
+        // console.table([firebaseUser])
 
         if (firebaseUser.email !== state.userInfo.email) {
           let user = {
@@ -89,7 +89,7 @@ export const actions = {
           email: firebaseUser.user.email,
           displayName: firebaseUser.user.displayName,
         }
-        // console.log(fireauthApp.currentUser)
+        console.log(firebaseUser)
 
         firestoreApp
           .collection('users')
