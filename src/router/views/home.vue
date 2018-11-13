@@ -33,8 +33,8 @@ export default {
                 alt="Mobile Connect"
                 height="200"
               >
-              <h1 class="white--text mb-2 display-1 text-xs-center">2 Way SMS</h1>
-              <div class="subheading mb-3 text-xs-center">by Mobile Connect</div>
+              <h1 class="white--text mb-2 display-1 text-xs-center">Mobile Connnect</h1>
+              <!--               <div class="subheading mb-3 text-xs-center">by Mobile Connect</div> -->
               <v-btn
                 class="green mt-5"
                 dark
@@ -70,9 +70,9 @@ export default {
                   <v-flex
                     xs12
                   >
-                    <h1 class="headline-normal text-xs-center">2 Ways SMS Solution</h1>
-                    <div class="headline text-xs-left ">ให้คำปรึกษาและให้บริการเกี่ยวกับ “กิจกรรมการตลาดผ่าน SMS” ในรูปแบบของ 2WAYS SMS อย่างมืออาชีพ มากกว่า 800 แคมเปญต่อปี ที่เราได้ให้บริการอย่างมีประสิทธิภาพ
-                    เหมาะสำหรับกิจกรรม<br>
+                    <h1 class="headline-normal mb-2 display-1 text-xs-center">2 Ways SMS Solution</h1>
+                    <div class="headline-normal text-xs-left ">ให้คำปรึกษาและให้บริการเกี่ยวกับ “กิจกรรมการตลาดผ่าน SMS” ในรูปแบบของ 2WAYS SMS อย่างมืออาชีพ มากกว่า 800 แคมเปญต่อปี ที่เราได้ให้บริการอย่างมีประสิทธิภาพ
+                    เหมาะสำหรับกิจกรรม<br><br>
                       <v-icon>check_box</v-icon> โหวต <br>
                       <v-icon>check_box</v-icon> ตอบคำถาม<br>
                       <v-icon>check_box</v-icon> ผลสำรวจ<br>
