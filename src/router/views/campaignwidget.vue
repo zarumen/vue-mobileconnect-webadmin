@@ -124,15 +124,15 @@ export default {
                 <v-radio-group 
                   v-model="widgetTypeGroup"
                   row
-                  >
+                >
                   <v-radio
                     :label="`Totals`"
                     :value="1"
-                  ></v-radio>
+                  />
                   <v-radio
                     :label="`Keywords`"
                     :value="2"
-                  ></v-radio>
+                  />
                 </v-radio-group>
                 <v-text-field
                   v-model="totalOffset"

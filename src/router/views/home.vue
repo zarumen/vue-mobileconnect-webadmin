@@ -78,7 +78,7 @@ export default {
                       <v-icon>check_box</v-icon> ผลสำรวจ<br>
                       <v-icon>check_box</v-icon> ชิงรางวัล<br>
                       <v-icon>check_box</v-icon> ลงทะเบียน<br>
-                      <v-icon>check_box</v-icon> เช็คยอดคะแนนสะสม</div>
+                    <v-icon>check_box</v-icon> เช็คยอดคะแนนสะสม</div>
                     <p/>
 
                     <h2 class="headline-normal text-xs-center">2WAYS SMS</h2>
