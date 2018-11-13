@@ -322,6 +322,9 @@ export default {
                   <v-card-text>
                     บริษัท โมบาย คอนเน็ค จำกัด 1111/84 ถนนลาดพร้าว, จันทรเกษม, จตุจักร, กรุงเทพมหานคร 10900
                   </v-card-text>
+                  <v-card-text>
+                    Mobile Connect Co., Ltd. 1111/84 Ladprao Rd., Chankasem Chatuchak Bangkok 10900
+                  </v-card-text>
                   <v-list class="transparent">
                     <v-list-tile>
                       <v-list-tile-action>
