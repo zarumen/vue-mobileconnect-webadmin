@@ -1,4 +1,5 @@
 <script>
+import Layout from '@layouts/main'
 
 export default {
   page() {
@@ -12,13 +13,23 @@ export default {
         ],
       }
   }, 
+  components: { Layout },
   data() {
     return {
       caption: '',
       code:'',
       height: 300,
       width: 300,
-      socketMessage: ''
+      totals: '00',
+      units: '',
+      multiplier: 1,
+      fontColor: '#1CABE9',
+      widgetTypeGroup: 1
+    }
+  },
+  watch:{
+    caption: function(val) {
+      this.code =  '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview/'+this.$route.params.campaignId+'/'+val+'" frameborder="0"></iframe>'
     }
   },
   created() {
@@ -34,11 +45,6 @@ export default {
       console.log(this.$socket)
 
 
-    }
-  },
-  watch:{
-    caption: function(val) {
-      this.code =  '<iframe src="https://sms2mkt.com/'+this.$route.params.campaignId+'/'+val+'"></iframe>'
     }
   },
   socket: {
@@ -58,7 +64,7 @@ export default {
         },
         transaction(newdata) {
           console.log("trans:" + newdata)
-          this.socketMessage = newdata
+          this.totals = newdata * this.multiplier
         },
         
         connect() {
@@ -96,56 +102,98 @@ export default {
 </style>
 
 <template>
-  <v-container 
-    fluid 
-    fill-height
-  >
-    <v-layout 
-      class="column" 
-      fill-height>
-      <section 
-        style=" height: 200px;"
-      >
-        <v-layout
-          align-center>
-          <v-flex class="xs-12">
-            <v-form v-model="valid">
-              <v-text-field
-                v-model="caption"
-                :counter="40"
-                label="Caption"
-              />
-              <v-text-field
-                v-model="code"
-                label="Embeded Code"
-              />
-            </v-form>
-          </v-flex>
-        </v-layout>
-      </section>
-      <p/>
-      <section>
-        <v-layout 
-          align-center 
-          justify-center 
-          column
-          style="    
-            height: 300px;
-            border: 1px solid black;"
+  <Layout>
+    <v-container 
+      fluid 
+      fill-height
+      
+    >
+      <v-layout 
+        class="column" 
+        fill-height>
+        <section
+          align-center
         >
-          <v-flex>
-            <h1 class="big">
-              {{ caption }}
-            </h1>
-          </v-flex>
-          <v-flex xs-12>
-            <div class="text-xs-center">
-              <h1 class="superbig">{{ socketMessage }} </h1>
-            </div>
-          </v-flex>
-        </v-layout>
-      </section>
-    </v-layout>
-  </v-container>
+          <v-layout
+            align-center>
+            <v-flex 
+              xs-12
+              md-8>
+              <v-form v-model="valid">
+                <p>Widget Type</p>
+                <v-radio-group 
+                  v-model="widgetTypeGroup"
+                  row
+                  >
+                  <v-radio
+                    :label="`Totals`"
+                    :value="1"
+                  ></v-radio>
+                  <v-radio
+                    :label="`Keywords`"
+                    :value="2"
+                  ></v-radio>
+                </v-radio-group>
+                <v-text-field
+                  v-model="totalOffset"
+                  :counter="10"
+                  label="Offset Count"
+                />
+                <v-text-field
+                  v-model="caption"
+                  :counter="40"
+                  label="Caption"
+                />
+                <v-text-field
+                  v-model="units"
+                  :counter="10"
+                  label="Units"
+                />
+                <v-text-field
+                  v-model="multiplier"
+                  :counter="10"
+                  label="Multiplier"
+                />
+                <v-text-field
+                  v-model="fontColor"
+                  :counter="10"
+                  label="fontColor"
+                />
+                <v-textarea
+                  v-model="code"
+                  label="Message"
+                  counter
+                  full-width
+                  single-line
+                />
+              </v-form>
+            </v-flex>
+          </v-layout>
+        </section>
 
+        <section>
+          <v-layout 
+            align-center 
+            justify-center 
+            column
+            style="    
+              height: 315px;
+              width: 560px;
+              border: 1px solid black;"
+          >
+            <v-flex>
+              <h1 class="big">
+                {{ caption }}
+              </h1>
+            </v-flex>
+            <v-flex xs-12>
+              <div class="text-xs-center">
+                <h1 class="superbig">{{ totals }} {{ units }} </h1>
+              </div>
+            </v-flex>
+          </v-layout>
+        </section>
+      </v-layout>
+    </v-container>
+  </Layout>
 </template>
