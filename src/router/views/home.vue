@@ -22,45 +22,31 @@ export default {
             src="/img/background.jpg"
             height="600"
           >
-            <v-container>
-              <v-layout
-                column
-                align-center
-                justify-center
-                class="white--text"
-                xs12
-                md6
-                lg6
+            <v-layout
+              column
+              align-center
+              justify-center
+              class="white--text"
+            >
+              <img
+                src="@assets/images/mc-logo.png"
+                alt="Mobile Connect"
+                height="200"
               >
-                <!--                 <img
-                  src="@assets/images/mc-logo.png"
-                  alt="Mobile Connect"
-                  height="200"
-                > -->
-                
-                <h1 class="font-weight-bold white--text mb-2 display-1 text-xs-center">2 Ways SMS Solution</h1>
-                <div class="headline-white text-xs-left ">ให้คำปรึกษาและให้บริการเกี่ยวกับ “กิจกรรมการตลาดผ่าน SMS” ในรูปแบบของ 2WAYS SMS อย่างมืออาชีพ มากกว่า 800 แคมเปญต่อปี ที่เราได้ให้บริการอย่างมีประสิทธิภาพ
-                เหมาะสำหรับกิจกรรม<br>
-                  :: โหวต <br>
-                  :: ตอบคำถาม<br>
-                  :: ผลสำรวจ<br>
-                  :: ชิงรางวัล<br>
-                  :: ลงทะเบียน<br>
-                  :: เช็คยอดคะแนนสะสม</div>
-                <v-btn
-                  class="green mt-5"
-                  dark
-                  large
-                  round
-                  href="/login"
-                >
-                  TEL. 06 5895 8328
-                </v-btn>
-              </v-layout>
-            </v-container>  
+              <h1 class="white--text mb-2 display-1 text-xs-center">2 Way SMS</h1>
+              <div class="subheading mb-3 text-xs-center">by Mobile Connect</div>
+              <v-btn
+                class="green mt-5"
+                dark
+                large
+                round
+                href="/login"
+              >
+                TEL. 06 5895 8328
+              </v-btn>
+            </v-layout>
           </v-parallax>
         </section>
-
         <section>
           <v-layout
             column
@@ -75,18 +61,34 @@ export default {
               class="my-3"
               align-center
             >
-              <div class="text-xs-center">
-                <h2 class="headline-normal">2WAYS SMS</h2>
-                <!--                 <span class="subheading">
-                  จากองค์กรและแบรนด์สินค้าดัง ที่เราได้รับความไว้วางใจให้บริการ
-                </span> -->
-              </div>
               <v-container>
-                <div class="thai18 text-xs-left ">คือกิจกรรมการตลาดผ่านทางโทรศัพท์มือถือ สามารถนำมาประยุกต์ใช้ได้กับหลากหลายธุรกิจ สร้างการสื่อสารแบบ SMS Interactive กับกลุ่มเป้าหมาย ช่วยเพิ่มกลุ่มลูกค้าใหม่ รักษาฐานลูกค้าเก่า (Acquire or Retain Customer), สร้างการรับรู้ผลิตภัณฑ์ (Brand Awareness) และเพิ่มรายได้ (Generate Revenue) สร้างความสัมพันธ์ที่ดีระหว่างลูกค้ากับองค์กร</div>
+                <v-layout
+                  row
+                  wrap
+                  align-center
+                >
+                  <v-flex
+                    xs12
+                  >
+                    <h1 class="font-weight-bold headline text-xs-center">2 Ways SMS Solution</h1>
+                    <div class="headline text-xs-left ">ให้คำปรึกษาและให้บริการเกี่ยวกับ “กิจกรรมการตลาดผ่าน SMS” ในรูปแบบของ 2WAYS SMS อย่างมืออาชีพ มากกว่า 800 แคมเปญต่อปี ที่เราได้ให้บริการอย่างมีประสิทธิภาพ
+                    เหมาะสำหรับกิจกรรม<br>
+                      <v-icon>check_box</v-icon> โหวต <br>
+                      <v-icon>check_box</v-icon> ตอบคำถาม<br>
+                      <v-icon>check_box</v-icon> ผลสำรวจ<br>
+                      <v-icon>check_box</v-icon> ชิงรางวัล<br>
+                      <v-icon>check_box</v-icon> ลงทะเบียน<br>
+                      <v-icon>check_box</v-icon> เช็คยอดคะแนนสะสม</div>
+                    <p/>
+                    <div class="text-xs-center">
+                      <h2 class="headline-normal">2WAYS SMS</h2>
+                    </div>
+                    
+                    <div class="thai18 text-xs-left ">คือกิจกรรมการตลาดผ่านทางโทรศัพท์มือถือ สามารถนำมาประยุกต์ใช้ได้กับหลากหลายธุรกิจ สร้างการสื่อสารแบบ SMS Interactive กับกลุ่มเป้าหมาย ช่วยเพิ่มกลุ่มลูกค้าใหม่ รักษาฐานลูกค้าเก่า (Acquire or Retain Customer), สร้างการรับรู้ผลิตภัณฑ์ (Brand Awareness) และเพิ่มรายได้ (Generate Revenue) สร้างความสัมพันธ์ที่ดีระหว่างลูกค้ากับองค์กร</div>
+                  </v-flex>  
+                </v-layout>
               </v-container>
-              
-            </v-flex>
-
+            </v-flex> 
             <v-flex xs12>
               <v-container grid-list-xl>
                 <v-layout
