@@ -135,6 +135,7 @@ export default {
                   />
                 </v-radio-group>
                 <v-text-field
+                  v-if="widgetTypeGroup==1"
                   v-model="totalOffset"
                   :counter="10"
                   label="Offset Count"
