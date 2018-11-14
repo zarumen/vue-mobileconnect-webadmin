@@ -24,7 +24,8 @@ export default {
       units: '',
       multiplier: 1,
       fontColor: '#1CABE9',
-      widgetTypeGroup: 1
+      widgetTypeGroup: 1,
+      offset: 0
     }
   },
   watch:{
@@ -33,35 +34,15 @@ export default {
     }
   },
   created() {
-    console.log(this.campaignId)
     this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);  
   },
   methods: {
     socketRegister(){
-      console.log('param campaignId:'+this.campaignId)
       this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);
     },
-    test() {
-      console.log(this.$socket)
-
-
-    }
   },
   socket: {
-    // Prefix for event names
-    // prefix: "/counter/",
-    
-    // If you set `namespace`, it will create a new socket connection to the namespace instead of `/`
-    // namespace: "/counter",
-
     events: {
-
-        // Similar as this.$socket.on("changed", (msg) => { ... });
-        // If you set `prefix` to `/counter/`, the event name will be `/counter/changed`
-        //
-        reply(msg) {
-            console.log("Reply: " + msg);
-        },
         transaction(newdata) {
           console.log("trans:" + newdata)
           this.totals = newdata * this.multiplier
@@ -136,7 +117,7 @@ export default {
                 </v-radio-group>
                 <v-text-field
                   v-if="widgetTypeGroup==1"
-                  v-model="totalOffset"
+                  v-model="offset"
                   :counter="10"
                   label="Offset Count"
                 />
@@ -189,7 +170,7 @@ export default {
             </v-flex>
             <v-flex xs-12>
               <div class="text-xs-center">
-                <h1 class="superbig">{{ totals }} {{ units }} </h1>
+                <h1 class="superbig">{{ totals-offset }} {{ units }} </h1>
               </div>
             </v-flex>
           </v-layout>
