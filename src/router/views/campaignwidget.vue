@@ -152,7 +152,6 @@ export default {
             </v-flex>
           </v-layout>
         </section>
-
         <section>
           <v-layout 
             align-center 
