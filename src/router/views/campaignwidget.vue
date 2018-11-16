@@ -21,16 +21,16 @@ export default {
       height: 300,
       width: 300,
       totals: '00',
-      units: '',
+      units: ' ',
       multiplier: 1,
-      fontColor: '#1CABE9',
+      fontColor: '1CABE9',
       widgetTypeGroup: 1,
       offset: 0
     }
   },
   watch:{
     caption: function(val) {
-      this.code =  '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview/'+this.$route.params.campaignId+'/'+val+'" frameborder="0" style="color: '+this.fontColor+'"></iframe>'
+      this.code =  '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview/'+this.$route.params.campaignId+'/'+this.offset+'/'+this.caption+'/'+this.units+'/'+this.multiplier+'/'+this.fontColor+'" frameborder="0" ></iframe>'
     },
     fontColor:  function(val) {
       this.code =  '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview/'+this.$route.params.campaignId+'" frameborder="0" style="color: '+this.fontColor+'"></iframe>'
@@ -112,10 +112,10 @@ export default {
                     :label="`Totals`"
                     :value="1"
                   />
-                  <v-radio
+                  <!--v-radio
                     :label="`Keywords`"
                     :value="2"
-                  />
+                  /-->
                 </v-radio-group>
                 <v-text-field
                   v-if="widgetTypeGroup==1"
@@ -166,15 +166,18 @@ export default {
           >
             <v-flex>
               <p/>
-              <h1 class="big" :style="{color: fontColor}">
+              <h1 
+                :style="{color: '#'+fontColor}"
+                class="big" 
+              >
                 {{ caption }}
               </h1>
             </v-flex>
             <v-flex xs-12>
               <div class="text-xs-center">
                 <h1 
+                  :style="{color: '#'+fontColor}"
                   class="superbig"
-                  :style="{color: fontColor}"
                 >{{ totals-offset }} {{ units }}
                 </h1>
               </div>

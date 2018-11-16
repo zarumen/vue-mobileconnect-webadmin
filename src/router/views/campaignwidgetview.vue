@@ -51,7 +51,7 @@ export default {
         },
         transaction(newdata) {
           console.log("trans:" + newdata)
-          this.socketMessage = newdata
+          this.socketMessage = (newdata - this.$route.params.offset)  * this.$route.params.multiplier
         },
         
         connect() {
@@ -99,24 +99,32 @@ export default {
         <v-layout 
           align-center 
           justify-center 
+          column
           style="    
-            width: 100%;
-            height: 300px;
+            height: 315px;
             border: 1px solid black;"
         >
           <v-flex>
-            <v-card light>
-              <h1 class="big">
-                {{ this.$route.params.caption }}
+            <p/>
+            <h1 
+              :style="{color: '#'+this.$route.params.color}"
+              class="big" 
+            >
+              {{ this.$route.params.caption }}
+            </h1>
+          </v-flex>
+          <v-flex xs-12>
+            <div class="text-xs-center">
+              <h1 
+                :style="{color: '#'+this.$route.params.color}"
+                class="superbig"
+              >{{ socketMessage }} {{ this.$route.params.unit }}
               </h1>
-              <div class="text-xs-center">
-                <h1 class="superbig">{{ socketMessage }} </h1>
-              </div>
-            </v-card>
+            </div>
           </v-flex>
         </v-layout>
       </section>
-      <section>
+      <!--section>
         <v-layout 
           class="pt-1" 
           row 
@@ -131,7 +139,7 @@ export default {
             </v-card>
           </v-flex>
         </v-layout>
-      </section>
+      </section-->
     </v-layout>
 
   </v-container>
