@@ -30,8 +30,11 @@ export default {
   },
   watch:{
     caption: function(val) {
-      this.code =  '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview/'+this.$route.params.campaignId+'/'+val+'" frameborder="0"></iframe>'
-    }
+      this.code =  '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview/'+this.$route.params.campaignId+'/'+val+'" frameborder="0" style="color: '+this.fontColor+'"></iframe>'
+    },
+    fontColor:  function(val) {
+      this.code =  '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview/'+this.$route.params.campaignId+'" frameborder="0" style="color: '+this.fontColor+'"></iframe>'
+    },
   },
   created() {
     this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);  
@@ -66,7 +69,6 @@ export default {
 <style>
   .superbig {
     font-size: 70px;
-    color: #1CABE2;
     font-family: "Roboto",sans-serif;
   }
   .big {
@@ -163,13 +165,18 @@ export default {
               border: 1px solid black;"
           >
             <v-flex>
-              <h1 class="big">
+              <p/>
+              <h1 class="big" :style="{color: fontColor}">
                 {{ caption }}
               </h1>
             </v-flex>
             <v-flex xs-12>
               <div class="text-xs-center">
-                <h1 class="superbig">{{ totals-offset }} {{ units }} </h1>
+                <h1 
+                  class="superbig"
+                  :style="{color: fontColor}"
+                >{{ totals-offset }} {{ units }}
+                </h1>
               </div>
             </v-flex>
           </v-layout>
