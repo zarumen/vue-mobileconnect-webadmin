@@ -33,8 +33,8 @@ export default {
                 alt="Mobile Connect"
                 height="200"
               >
-              <h1 class="white--text mb-2 display-1 text-xs-center">2 Way SMS</h1>
-              <div class="subheading mb-3 text-xs-center">by Mobile Connect</div>
+              <h1 class="white--text mb-2 display-1 text-xs-center">Mobile Connnect</h1>
+              <!--               <div class="subheading mb-3 text-xs-center">by Mobile Connect</div> -->
               <v-btn
                 class="green mt-5"
                 dark
@@ -70,9 +70,9 @@ export default {
                   <v-flex
                     xs12
                   >
-                    <h1 class="headline-normal text-xs-center">2 Ways SMS Solution</h1>
-                    <div class="headline text-xs-left ">ให้คำปรึกษาและให้บริการเกี่ยวกับ “กิจกรรมการตลาดผ่าน SMS” ในรูปแบบของ 2WAYS SMS อย่างมืออาชีพ มากกว่า 800 แคมเปญต่อปี ที่เราได้ให้บริการอย่างมีประสิทธิภาพ
-                    เหมาะสำหรับกิจกรรม<br>
+                    <h1 class="headline-normal mb-2 display-1 text-xs-center">2 Ways SMS Solution</h1>
+                    <div class="headline-normal text-xs-left ">ให้คำปรึกษาและให้บริการเกี่ยวกับ “กิจกรรมการตลาดผ่าน SMS” ในรูปแบบของ 2WAYS SMS อย่างมืออาชีพ มากกว่า 800 แคมเปญต่อปี ที่เราได้ให้บริการอย่างมีประสิทธิภาพ
+                    เหมาะสำหรับกิจกรรม<br><br>
                       <v-icon>check_box</v-icon> โหวต <br>
                       <v-icon>check_box</v-icon> ตอบคำถาม<br>
                       <v-icon>check_box</v-icon> ผลสำรวจ<br>
@@ -80,9 +80,7 @@ export default {
                       <v-icon>check_box</v-icon> ลงทะเบียน<br>
                     <v-icon>check_box</v-icon> เช็คยอดคะแนนสะสม</div>
                     <p/>
-
                     <h2 class="headline-normal text-xs-center">2WAYS SMS</h2>
-                    
                     <div class="thai18 text-xs-left ">คือกิจกรรมการตลาดผ่านทางโทรศัพท์มือถือ สามารถนำมาประยุกต์ใช้ได้กับหลากหลายธุรกิจ สร้างการสื่อสารแบบ SMS Interactive กับกลุ่มเป้าหมาย ช่วยเพิ่มกลุ่มลูกค้าใหม่ รักษาฐานลูกค้าเก่า (Acquire or Retain Customer), สร้างการรับรู้ผลิตภัณฑ์ (Brand Awareness) และเพิ่มรายได้ (Generate Revenue) สร้างความสัมพันธ์ที่ดีระหว่างลูกค้ากับองค์กร</div>
                   </v-flex>  
                 </v-layout>
@@ -323,6 +321,9 @@ export default {
                   </v-card-title>
                   <v-card-text>
                     บริษัท โมบาย คอนเน็ค จำกัด 1111/84 ถนนลาดพร้าว, จันทรเกษม, จตุจักร, กรุงเทพมหานคร 10900
+                  </v-card-text>
+                  <v-card-text>
+                    Mobile Connect Co., Ltd. 1111/84 Ladprao Rd., Chankasem Chatuchak Bangkok 10900
                   </v-card-text>
                   <v-list class="transparent">
                     <v-list-tile>
