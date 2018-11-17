@@ -1,5 +1,6 @@
 <script>
 import Layout from '@layouts/main'
+import firestoreApp from "@utils/firestore.config"
 
 export default {
   page() {
@@ -25,30 +26,64 @@ export default {
       multiplier: 1,
       fontColor: '1CABE9',
       widgetTypeGroup: 1,
-      offset: 0
+      offset: 0,
+      campaignWidget: {
+        caption: '',
+        height: 300,
+        width: 300,
+        totals: '00',
+        units: ' ',
+        multiplier: 1,
+        fontColor: '1CABE9',
+        widgetTypeGroup: 1,
+        offset: 0,
+      }
     }
   },
   watch:{
-    caption: function(val) {
-      this.code =  '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview/'+this.$route.params.campaignId+'/'+this.offset+'/'+this.caption+'/'+this.units+'/'+this.multiplier+'/'+this.fontColor+'" frameborder="0" ></iframe>'
+    campaignWidget: {
+      handler(val) {
+        console.log(val.units)
+        this.code =  '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview/'+this.$route.params.campaignId+'/'+this.campaignWidget.offset+'/'+this.campaignWidget.caption+'/'+val.units+'/'+this.campaignWidget.multiplier+'/'+this.campaignWidget.fontColor+'" frameborder="0" ></iframe>'
+      },
+      deep: true
     },
-    fontColor:  function(val) {
-      this.code =  '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview/'+this.$route.params.campaignId+'" frameborder="0" style="color: '+this.fontColor+'"></iframe>'
-    },
+    
   },
   created() {
-    this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);  
+    this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);
+    this.getCampaignWidget(this.$route.params.campaignId) 
   },
   methods: {
     socketRegister(){
       this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);
+    },
+    getCampaignWidget(campaignId) {
+      
+      return firestoreApp
+        .collection('campaignWidget')
+        .doc(campaignId)
+        .get()
+        .then(doc => {
+
+          if (doc.exists) {
+              this.campaignWidget = doc.data()
+          } else {
+              // doc.data() will be undefined in this case
+              console.log("No such document!");
+          }
+        })
+        .catch(error => {
+          console.log(error)
+          return error
+        })
     },
   },
   socket: {
     events: {
         transaction(newdata) {
           console.log("trans:" + newdata)
-          this.totals = newdata * this.multiplier
+          this.totals = newdata * this.campaignWidget.multiplier
         },
         
         connect() {
@@ -102,7 +137,7 @@ export default {
             <v-flex 
               xs-12
               md-8>
-              <v-form v-model="valid">
+              <v-form >
                 <p>Widget Type</p>
                 <v-radio-group 
                   v-model="widgetTypeGroup"
@@ -119,27 +154,27 @@ export default {
                 </v-radio-group>
                 <v-text-field
                   v-if="widgetTypeGroup==1"
-                  v-model="offset"
+                  v-model="campaignWidget.offset"
                   :counter="10"
                   label="Offset Count"
                 />
                 <v-text-field
-                  v-model="caption"
+                  v-model="campaignWidget.caption"
                   :counter="40"
                   label="Caption"
                 />
                 <v-text-field
-                  v-model="units"
+                  v-model="campaignWidget.units"
                   :counter="10"
                   label="Units"
                 />
                 <v-text-field
-                  v-model="multiplier"
+                  v-model="campaignWidget.multiplier"
                   :counter="10"
                   label="Multiplier"
                 />
                 <v-text-field
-                  v-model="fontColor"
+                  v-model="campaignWidget.fontColor"
                   :counter="10"
                   label="fontColor"
                 />
@@ -167,18 +202,18 @@ export default {
             <v-flex>
               <p/>
               <h1 
-                :style="{color: '#'+fontColor}"
+                :style="{color: '#'+campaignWidget.fontColor}"
                 class="big" 
               >
-                {{ caption }}
+                {{ campaignWidget.caption }}
               </h1>
             </v-flex>
             <v-flex xs-12>
               <div class="text-xs-center">
                 <h1 
-                  :style="{color: '#'+fontColor}"
+                  :style="{color: '#'+campaignWidget.fontColor}"
                   class="superbig"
-                >{{ totals-offset }} {{ units }}
+                >{{ (totals - campaignWidget.offset) * campaignWidget.multiplier }} {{ campaignWidget.units }}
                 </h1>
               </div>
             </v-flex>
