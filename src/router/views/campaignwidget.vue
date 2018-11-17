@@ -17,25 +17,14 @@ export default {
   components: { Layout },
   data() {
     return {
-      caption: '',
-      code:'',
-      height: 300,
-      width: 300,
-      totals: '00',
-      units: ' ',
-      multiplier: 1,
-      fontColor: '1CABE9',
-      widgetTypeGroup: 1,
-      offset: 0,
+      totals: 0,
+      code: '',
       campaignWidget: {
         caption: '',
-        height: 300,
-        width: 300,
-        totals: '00',
         units: ' ',
         multiplier: 1,
         fontColor: '1CABE9',
-        widgetTypeGroup: 1,
+        type: 'totals',
         offset: 0,
       }
     }
@@ -43,12 +32,13 @@ export default {
   watch:{
     campaignWidget: {
       handler(val) {
-        console.log(val.units)
         this.code =  '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview/'+this.$route.params.campaignId+'/'+this.campaignWidget.offset+'/'+this.campaignWidget.caption+'/'+val.units+'/'+this.campaignWidget.multiplier+'/'+this.campaignWidget.fontColor+'" frameborder="0" ></iframe>'
+        firestoreApp.collection("campaignWidget").doc(this.$route.params.campaignId).set(this.campaignWidget).then(function() {
+          console.log("Campaign Widget Successfully Written!");
+        });
       },
       deep: true
     },
-    
   },
   created() {
     this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);
@@ -69,8 +59,10 @@ export default {
           if (doc.exists) {
               this.campaignWidget = doc.data()
           } else {
-              // doc.data() will be undefined in this case
               console.log("No such document!");
+              firestoreApp.collection("campaignWidget").doc(campaignId).set(this.campaignWidget).then(function() {
+                  console.log("New Campaign Widget Successfully Written!");
+              });
           }
         })
         .catch(error => {
@@ -140,23 +132,25 @@ export default {
               <v-form >
                 <p>Widget Type</p>
                 <v-radio-group 
-                  v-model="widgetTypeGroup"
+                  v-model="campaignWidget.type"
                   row
                 >
                   <v-radio
                     :label="`Totals`"
-                    :value="1"
+                    :value="'totals'"
+
                   />
-                  <!--v-radio
+                  <v-radio
                     :label="`Keywords`"
-                    :value="2"
-                  /-->
+                    :value="'keywords'"
+                  />
                 </v-radio-group>
                 <v-text-field
-                  v-if="widgetTypeGroup==1"
+                  v-if="campaignWidget.type=='totals'"
                   v-model="campaignWidget.offset"
                   :counter="10"
                   label="Offset Count"
+                  required
                 />
                 <v-text-field
                   v-model="campaignWidget.caption"
@@ -167,6 +161,7 @@ export default {
                   v-model="campaignWidget.units"
                   :counter="10"
                   label="Units"
+                  required
                 />
                 <v-text-field
                   v-model="campaignWidget.multiplier"
