@@ -140,10 +140,10 @@ export default {
                     :value="'totals'"
 
                   />
-                  <v-radio
+                  <!--v-radio
                     :label="`Keywords`"
                     :value="'keywords'"
-                  />
+                  /-->
                 </v-radio-group>
                 <v-text-field
                   v-if="campaignWidget.type=='totals'"
