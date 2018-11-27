@@ -25,3 +25,6 @@ yarn-error.log*
 # Pwin test Page
 /src/router/views/regex.vue
 /src/components/_base-test.vue
+
+# Firebase Cache
+.firebase
