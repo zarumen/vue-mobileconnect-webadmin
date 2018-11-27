@@ -1,6 +1,34 @@
 <script>
 import Layout from '@layouts/main'
 import firestoreApp from "@utils/firestore.config"
+import Chart from 'chart.js';
+
+
+let ChartData = {
+  type: 'bar',
+  data: {
+    labels: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    datasets: [{
+          label: '# message per min',
+          data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          backgroundColor:'rgba(31, 119, 180, 1)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+      }]
+  },
+  options: {
+    responsive: true,
+    lineTension: 1,
+    scales: {
+      yAxes: [{
+        ticks: {
+          beginAtZero: true,
+          padding: 25,
+        }
+      }]
+    }
+  }
+}
 
 export default {
   page() {
@@ -18,6 +46,7 @@ export default {
   data() {
     return {
       totals: 0,
+      totalsShow: 0,
       code: '',
       campaignWidget: {
         caption: '',
@@ -26,7 +55,8 @@ export default {
         fontColor: '1CABE9',
         type: 'totals',
         offset: 0,
-      }
+      },
+      ChartData: ChartData,
     }
   },
   watch:{
@@ -36,13 +66,18 @@ export default {
         firestoreApp.collection("campaignWidget").doc(this.$route.params.campaignId).set(this.campaignWidget).then(function() {
           console.log("Campaign Widget Successfully Written!");
         });
-      },
+        let data = (this.totals - this.campaignWidget.offset) * this.campaignWidget.multiplier
+        this.totalsShow = this.formatCurrency(data)
+        },
       deep: true
-    },
+    }
   },
   created() {
     this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);
     this.getCampaignWidget(this.$route.params.campaignId) 
+  },
+  mounted() {
+    this.createChart('widget-chart', this.ChartData);
   },
   methods: {
     socketRegister(){
@@ -55,7 +90,6 @@ export default {
         .doc(campaignId)
         .get()
         .then(doc => {
-
           if (doc.exists) {
               this.campaignWidget = doc.data()
           } else {
@@ -70,13 +104,27 @@ export default {
           return error
         })
     },
+    formatCurrency(value) {
+        // let val = (value/1).toFixed(2).replace(',', '.') เพิ่มจุดทศนิยม 2 ตำแหน่ง
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    },
+    createChart(chartId, chartData) {
+      const ctx = document.getElementById(chartId);
+      const myChart = new Chart(ctx, {
+        type: chartData.type,
+        data: chartData.data,
+        options: chartData.options,
+      });
+    }    
   },
   socket: {
     events: {
         transaction(newdata) {
           console.log("trans:" + newdata)
-          this.totals = newdata * this.campaignWidget.multiplier
-        },
+          this.totals =  newdata 
+          let data = (newdata - this.campaignWidget.offset) * this.campaignWidget.multiplier
+          this.totalsShow = this.formatCurrency(data)
+        },  
         
         connect() {
             console.log("Websocket connected to " + this.$socket.nsp);
@@ -208,8 +256,56 @@ export default {
                 <h1 
                   :style="{color: '#'+campaignWidget.fontColor}"
                   class="superbig"
-                >{{ (totals - campaignWidget.offset) * campaignWidget.multiplier }} {{ campaignWidget.units }}
+                >{{ totalsShow }} {{ campaignWidget.units }}
                 </h1>
+              </div>
+            </v-flex>
+          </v-layout>
+        </section>
+        <p/>
+        <section
+          align-center
+        >
+          <v-layout
+            align-center>
+            <v-flex 
+              xs-12
+              md-8>
+              <v-form >
+                <p>Realtime Barchart Widget</p>
+                <v-textarea
+                  v-model="code"
+                  label="Message"
+                  counter
+                  full-width
+                  single-line
+                />
+              </v-form>
+            </v-flex>
+          </v-layout>
+        </section>
+        <section>
+          <v-layout 
+            align-center 
+            justify-center 
+            column
+            style="    
+              height: 315px;
+              width: 560px;
+              border: 1px solid black;"
+          >
+            <v-flex>
+              <p/>
+              <h1 
+                :style="{color: '#'+campaignWidget.fontColor}"
+                class="big" 
+              >
+                {{ campaignWidget.caption }}
+              </h1>
+            </v-flex>
+            <v-flex xs-12>
+              <div class="text-xs-center">
+                <canvas id="widget-chart"/>
               </div>
             </v-flex>
           </v-layout>

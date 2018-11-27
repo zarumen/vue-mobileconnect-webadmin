@@ -20,13 +20,12 @@ export default {
       headerText: 'aaaa',
       height: 300,
       width: 300,
-      socketMessage: ''
+      socketMessage: '',
+      timeSeries: []
     }
   },
   created() {
-    console.log(this.$route.params.campaignId)
     this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);
-    this.headerText = "test"  
   },
   methods: {
     socketRegister(){
@@ -52,6 +51,7 @@ export default {
         transaction(newdata) {
           console.log("trans:" + newdata)
           this.socketMessage = (newdata - this.$route.params.offset)  * this.$route.params.multiplier
+          this.timeSeries.push('1')
         },
         
         connect() {

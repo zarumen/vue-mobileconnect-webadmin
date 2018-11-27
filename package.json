@@ -25,7 +25,7 @@
     "@fortawesome/fontawesome-free-solid": "^5.0.13",
     "@fortawesome/vue-fontawesome": "^0.0.22",
     "axios": "^0.18.0",
-    "chart.js": "2.7.x",
+    "chart.js": "^2.7.3",
     "firebase": "^5.0.4",
     "lodash": "^4.17.10",
     "nprogress": "^0.2.0",
