@@ -7,10 +7,10 @@ import Chart from 'chart.js';
 let ChartData = {
   type: 'bar',
   data: {
-    labels: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    labels: [0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     datasets: [{
           label: '# message per min',
-          data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          data: [0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
           backgroundColor:'rgba(31, 119, 180, 1)',
           borderColor: 'rgba(54, 162, 235, 1)',
           borderWidth: 1
@@ -19,7 +19,7 @@ let ChartData = {
     options: {
       title: {
           display: true,
-          text: 'Custom Chart Title'
+          text: ''
       },
       scales: {
           yAxes: [{
@@ -65,7 +65,7 @@ export default {
       },
       ChartData: ChartData,
       count: 0,
-      lastGroup: "",
+      lastGroup: "1",
       myChart: null
     }
   },
@@ -127,23 +127,38 @@ export default {
       });
     },
     addData(chart, number, label, isNew) {
-        // console.log(chart.data.datasets);
-        let mydata = chart.data.datasets[0].data;
-        let mylabels = chart.data.labels;
-        console.log("length "+mydata.length);
-        console.log("new "+isNew);
-        if(isNew){
-          if(mydata.length>30){
-            mydata.shift();
-            mylabels.shift();
+        // console.log(chart);
+        if(chart !== null){
+          let mydata = chart.data.datasets[0].data;
+          let mylabels = chart.data.labels;
+          // console.log("length "+mydata.length);
+          // console.log("new "+isNew);
+          if(isNew){
+            if(mydata.length>30){
+              mydata.shift();
+              mylabels.shift();
+            }
+            // console.log("push "+label);
+            mydata.push(number);
+            mylabels.push(label);
+          }else{
+            chart.data.datasets[0].data[29]=number;
           }
-          console.log("push "+label);
-          mydata.push(number);
-          mylabels.push(label);
-        }else{
-          chart.data.datasets[0].data[30]=number;
+          console.log(chart.data)
+          chart.update();
         }
-        chart.update();
+
+    },
+    addDataTest(sameGroup){
+      console.log("last group:"+this.lastGroup+" counter:"+ this.count)
+      if(sameGroup){
+        this.count = this.count+1
+        console.log(this.count)
+        this.addData(this.myChart,this.count,this.lastGroup,false)
+      }else{
+        this.addData(this.myChart,this.count,this.lastGroup,true)
+      }
+
     }    
   },
   socket: {
@@ -156,8 +171,8 @@ export default {
 
           // line chart
           let currentGroup = newdata.groupID;
-          console.log(currentGroup);
-          if(this.lastGroup !== currentGroup){
+          console.log("currentGroup:"+currentGroup);
+          if(this.lastGroup !== currentGroup && currentGroup !== undefined){
             this.count = 1;
             this.lastGroup = currentGroup;
             this.addData(this.myChart, this.count, currentGroup, true);
@@ -348,6 +363,8 @@ export default {
               <div class="text-xs-center">
                 <canvas id="widget-chart"/>
               </div>
+              <v-btn @click="addDataTest(true)">Add Data Same Minute</v-btn>
+              <v-btn @click="addDataTest(false)">Add Data New Minute</v-btn>
             </v-flex>
           </v-layout>
         </section>
