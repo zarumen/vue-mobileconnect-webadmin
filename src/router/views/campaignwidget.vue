@@ -16,18 +16,25 @@ let ChartData = {
           borderWidth: 1
       }]
   },
-  options: {
-    responsive: true,
-    lineTension: 1,
-    scales: {
-      yAxes: [{
-        ticks: {
-          beginAtZero: true,
-          padding: 25,
-        }
-      }]
+    options: {
+      title: {
+          display: true,
+          text: 'Custom Chart Title'
+      },
+      scales: {
+          yAxes: [{
+              ticks: {
+                  beginAtZero:true
+              }
+          }],
+          xAxes: [{
+            ticks: {
+              maxTicksLimit: 30,
+              stepSize: 1
+            }
+          }]
+      }
     }
-  }
 }
 
 export default {
@@ -57,6 +64,9 @@ export default {
         offset: 0,
       },
       ChartData: ChartData,
+      count: 0,
+      lastGroup: "",
+      myChart: null
     }
   },
   watch:{
@@ -110,11 +120,30 @@ export default {
     },
     createChart(chartId, chartData) {
       const ctx = document.getElementById(chartId);
-      const myChart = new Chart(ctx, {
+      this.myChart = new Chart(ctx, {
         type: chartData.type,
         data: chartData.data,
         options: chartData.options,
       });
+    },
+    addData(chart, number, label, isNew) {
+        // console.log(chart.data.datasets);
+        let mydata = chart.data.datasets[0].data;
+        let mylabels = chart.data.labels;
+        console.log("length "+mydata.length);
+        console.log("new "+isNew);
+        if(isNew){
+          if(mydata.length>30){
+            mydata.shift();
+            mylabels.shift();
+          }
+          console.log("push "+label);
+          mydata.push(number);
+          mylabels.push(label);
+        }else{
+          chart.data.datasets[0].data[30]=number;
+        }
+        chart.update();
     }    
   },
   socket: {
@@ -124,6 +153,18 @@ export default {
           this.totals =  newdata 
           let data = (newdata - this.campaignWidget.offset) * this.campaignWidget.multiplier
           this.totalsShow = this.formatCurrency(data)
+
+          // line chart
+          let currentGroup = newdata.groupID;
+          console.log(currentGroup);
+          if(this.lastGroup !== currentGroup){
+            this.count = 1;
+            this.lastGroup = currentGroup;
+            this.addData(this.myChart, this.count, currentGroup, true);
+          }else{
+            this.count++;
+            this.addData(this.myChart, this.count, currentGroup, false);
+          }
         },  
         
         connect() {
