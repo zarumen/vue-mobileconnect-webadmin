@@ -133,7 +133,15 @@ export default {
           :key="index"
           :class="[ index === 0? 'text-xs-left': 'text-xs-center', 'body-2']"
         >
-          <small>{{ renderData(props.item, header) }}</small>
+          <small v-if="header.text!=='Widget'">{{ renderData(props.item, header) }}</small>
+          <small v-else>
+            <router-link 
+              :to="{ path: 'campaignwidget/'+props.item.id, params: { mode: 'edit', campaignId: 'Z3Q4qZlSGixFHftPBNln' }}"
+              color="indigo"
+            >
+              <v-icon>widgets</v-icon>
+            </router-link>                      
+          </small>
         </td>
         <td class="text-xs-right">
           <v-btn 

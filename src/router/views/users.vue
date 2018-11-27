@@ -65,10 +65,9 @@ export default {
     },
   },
   created() {
-
     if(!this.hadList)
       this.getOrganizationsList()
-    
+      
     if(!this.hadUserList)
       this.getAllUsers()
   },
@@ -108,7 +107,6 @@ export default {
   }
 }
 </script>
-
 <template>
   <Layout>
     <v-container fluid>
