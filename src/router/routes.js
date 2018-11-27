@@ -121,6 +121,15 @@ export default [
     // TODO check admin role to access
   },
   {
+    path: '/campaignwidgets',
+    name: 'campaignwidgets',
+    component: () => lazyLoadView(import('@views/campaignwidgets')),
+    meta: {
+      authRequired: true,
+    },
+    // TODO check admin role to access
+  },
+  {
     path: '/campaignwidget/:campaignId',
     name: 'campaignswidget',
     component: () => lazyLoadView(import('@views/campaignwidget')),

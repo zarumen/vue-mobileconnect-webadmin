@@ -31,6 +31,7 @@ export default {
         { text: 'End Date', value: 'campaignDateEnd' },
         { text: 'Reward', value: 'campaignAvailable' },
         { text: 'Status', value: 'campaignActive' },
+        { text: 'Widget', value: 'google' },
       ],
       campaignId: '',
       left: true,
