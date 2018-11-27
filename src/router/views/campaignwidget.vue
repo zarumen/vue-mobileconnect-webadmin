@@ -2,6 +2,7 @@
 import Layout from '@layouts/main'
 import firestoreApp from "@utils/firestore.config"
 import Chart from 'chart.js';
+import formatCurrency from '@utils/format-number'
 
 
 let ChartData = {
@@ -77,7 +78,7 @@ export default {
           console.log("Campaign Widget Successfully Written!");
         });
         let data = (this.totals - this.campaignWidget.offset) * this.campaignWidget.multiplier
-        this.totalsShow = this.formatCurrency(data)
+        this.totalsShow = formatCurrency(data)
         },
       deep: true
     }
@@ -113,10 +114,6 @@ export default {
           console.log(error)
           return error
         })
-    },
-    formatCurrency(value) {
-        // let val = (value/1).toFixed(2).replace(',', '.') เพิ่มจุดทศนิยม 2 ตำแหน่ง
-        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     },
     createChart(chartId, chartData) {
       const ctx = document.getElementById(chartId);

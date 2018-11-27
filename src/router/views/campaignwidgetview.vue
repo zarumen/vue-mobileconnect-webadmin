@@ -1,5 +1,7 @@
 <script>
 import Bar from '@utils/chart/Bar'
+import formatCurrency from '@utils/format-number'
+
 export default {
   page() {
       return {
@@ -50,7 +52,7 @@ export default {
         },
         transaction(newdata) {
           console.log("trans:" + newdata)
-          this.socketMessage = (newdata - this.$route.params.offset)  * this.$route.params.multiplier
+          this.socketMessage = formatCurrency((newdata - this.$route.params.offset)  * this.$route.params.multiplier)
           this.timeSeries.push('1')
         },
         
@@ -100,10 +102,10 @@ export default {
           align-center 
           justify-center 
           column
-          style="    
-            height: 315px;
-            border: 1px solid black;"
+          style="height: 315px;" 
+          
         >
+          <!-- border: 1px solid black; -->
           <v-flex>
             <p/>
             <h1 
