@@ -57,6 +57,11 @@ export default {
           title: 'Regex Manager',
         },
         {
+          name: 'campaignwidgets',
+          icon: 'school',
+          title: 'Widget Manager',
+        },
+        {
           name: 'campaigns',
           icon: 'storeAlt',
           title: 'Campaigns Manager',
