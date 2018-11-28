@@ -8,10 +8,10 @@ import formatCurrency from '@utils/format-number'
 let ChartData = {
   type: 'bar',
   data: {
-    labels: [0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    labels: ['','','','','','','-26','','','','','-21','','','',-16,'','','','',-11,'','','','',-6,'','','','',-1],
     datasets: [{
           label: '# message per min',
-          data: [0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
           backgroundColor:'rgba(31, 119, 180, 1)',
           borderColor: 'rgba(54, 162, 235, 1)',
           borderWidth: 1
@@ -66,8 +66,9 @@ export default {
       },
       ChartData: ChartData,
       count: 0,
-      lastGroup: "1",
-      myChart: null
+      lastMinute: 0,
+      myChart: null,
+      timer: null
     }
   },
   watch:{
@@ -89,6 +90,11 @@ export default {
   },
   mounted() {
     this.createChart('widget-chart', this.ChartData);
+    this.timer = setInterval(() => {
+      let mydata = this.myChart.data.datasets[0].data;
+      mydata.shift()
+      this.myChart.update()
+    }, 10000);
   },
   methods: {
     socketRegister(){
@@ -131,32 +137,22 @@ export default {
           // console.log("length "+mydata.length);
           // console.log("new "+isNew);
           if(isNew){
-            if(mydata.length>30){
+            // if(mydata.length>29){
               mydata.shift();
-              mylabels.shift();
-            }
+              //mylabels.shift();
+            // }
             // console.log("push "+label);
             mydata.push(number);
-            mylabels.push(label);
+            //mylabels.push(label);
+
           }else{
-            chart.data.datasets[0].data[29]=number;
+            chart.data.datasets[0].data[28]=number;
           }
           console.log(chart.data)
           chart.update();
         }
 
-    },
-    addDataTest(sameGroup){
-      console.log("last group:"+this.lastGroup+" counter:"+ this.count)
-      if(sameGroup){
-        this.count = this.count+1
-        console.log(this.count)
-        this.addData(this.myChart,this.count,this.lastGroup,false)
-      }else{
-        this.addData(this.myChart,this.count,this.lastGroup,true)
-      }
-
-    }    
+    },  
   },
   socket: {
     events: {
@@ -164,18 +160,23 @@ export default {
           console.log("trans:" + newdata)
           this.totals =  newdata 
           let data = (newdata - this.campaignWidget.offset) * this.campaignWidget.multiplier
-          this.totalsShow = this.formatCurrency(data)
+          this.totalsShow = formatCurrency(data)
 
           // line chart
-          let currentGroup = newdata.groupID;
-          console.log("currentGroup:"+currentGroup);
-          if(this.lastGroup !== currentGroup && currentGroup !== undefined){
+
+          let d = new Date()
+          let currentMinute = d.getMinutes()
+          // if new minute add new bar
+          // else old minite plus newdata
+
+          console.log("currentGroup:"+currentMinute);
+          if(this.lastMinute !== currentMinute && currentMinute !== undefined){
             this.count = 1;
-            this.lastGroup = currentGroup;
-            this.addData(this.myChart, this.count, currentGroup, true);
+            this.lastMinute = currentMinute;
+            this.addData(this.myChart, this.count, currentMinute, true);
           }else{
             this.count++;
-            this.addData(this.myChart, this.count, currentGroup, false);
+            this.addData(this.myChart, this.count, currentMinute, false);
           }
         },  
         
@@ -356,12 +357,13 @@ export default {
                 {{ campaignWidget.caption }}
               </h1>
             </v-flex>
-            <v-flex xs-12>
-              <div class="text-xs-center">
+            <v-flex 
+              xs-12
+              style="width: 100%; padding-left: 20px; padding-bottom: 20px; padding-right: 20px;"        
+              >
+              <div class="text-xs-center" >
                 <canvas id="widget-chart"/>
               </div>
-              <v-btn @click="addDataTest(true)">Add Data Same Minute</v-btn>
-              <v-btn @click="addDataTest(false)">Add Data New Minute</v-btn>
             </v-flex>
           </v-layout>
         </section>
