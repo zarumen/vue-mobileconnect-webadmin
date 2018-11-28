@@ -8,10 +8,10 @@ import formatCurrency from '@utils/format-number'
 let ChartData = {
   type: 'bar',
   data: {
-    labels: ['','','','','','','-26','','','','','-21','','','',-16,'','','','',-11,'','','','',-6,'','','','',-1],
+    labels: ['','','','','-26','','','','','-21','','','',-16,'','','','',-11,'','','','',-6,'','','','',-1],
     datasets: [{
           label: '# message per min',
-          data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
           backgroundColor:'rgba(31, 119, 180, 1)',
           borderColor: 'rgba(54, 162, 235, 1)',
           borderWidth: 1
@@ -65,7 +65,7 @@ export default {
         offset: 0,
       },
       ChartData: ChartData,
-      count: 0,
+      smscount: 0,
       lastMinute: 0,
       myChart: null,
       timer: null
@@ -93,8 +93,9 @@ export default {
     this.timer = setInterval(() => {
       let mydata = this.myChart.data.datasets[0].data;
       mydata.shift()
+      this.smscount = 0
       this.myChart.update()
-    }, 10000);
+    }, 60000);
   },
   methods: {
     socketRegister(){
@@ -138,7 +139,7 @@ export default {
           // console.log("new "+isNew);
           if(isNew){
             // if(mydata.length>29){
-              mydata.shift();
+            mydata.shift();
               //mylabels.shift();
             // }
             // console.log("push "+label);
@@ -157,27 +158,37 @@ export default {
   socket: {
     events: {
         transaction(newdata) {
+          // line chart
+          if(this.totals !== newdata && this.totals != 0){
+            console.log(this.myChart.data.datasets[0].data)
+            this.smscount = this.smscount + (newdata - this.totals);
+            this.myChart.data.datasets[0].data[28] = this.smscount;
+            
+            this.myChart.update()  
+          }
+
           console.log("trans:" + newdata)
           this.totals =  newdata 
           let data = (newdata - this.campaignWidget.offset) * this.campaignWidget.multiplier
           this.totalsShow = formatCurrency(data)
 
-          // line chart
 
-          let d = new Date()
-          let currentMinute = d.getMinutes()
+          
+
+          //let d = new Date()
+          //let currentMinute = d.getMinutes()
           // if new minute add new bar
           // else old minite plus newdata
 
-          console.log("currentGroup:"+currentMinute);
-          if(this.lastMinute !== currentMinute && currentMinute !== undefined){
+          //console.log("currentGroup:"+currentMinute);
+/*           if(this.lastMinute !== currentMinute && currentMinute !== undefined){
             this.count = 1;
             this.lastMinute = currentMinute;
             this.addData(this.myChart, this.count, currentMinute, true);
           }else{
             this.count++;
             this.addData(this.myChart, this.count, currentMinute, false);
-          }
+          } */
         },  
         
         connect() {
