@@ -130,65 +130,24 @@ export default {
         options: chartData.options,
       });
     },
-    addData(chart, number, label, isNew) {
-        // console.log(chart);
-        if(chart !== null){
-          let mydata = chart.data.datasets[0].data;
-          let mylabels = chart.data.labels;
-          // console.log("length "+mydata.length);
-          // console.log("new "+isNew);
-          if(isNew){
-            // if(mydata.length>29){
-            mydata.shift();
-              //mylabels.shift();
-            // }
-            // console.log("push "+label);
-            mydata.push(number);
-            //mylabels.push(label);
-
-          }else{
-            chart.data.datasets[0].data[28]=number;
-          }
-          console.log(chart.data)
-          chart.update();
-        }
-
-    },  
   },
   socket: {
     events: {
         transaction(newdata) {
-          // line chart
-          if(this.totals !== newdata && this.totals != 0){
+          // line chart widget
+          if(this.totals !== newdata && this.totals !== 0){
             console.log(this.myChart.data.datasets[0].data)
             this.smscount = this.smscount + (newdata - this.totals);
             this.myChart.data.datasets[0].data[28] = this.smscount;
-            
             this.myChart.update()  
           }
 
+          // totals widget
           console.log("trans:" + newdata)
           this.totals =  newdata 
           let data = (newdata - this.campaignWidget.offset) * this.campaignWidget.multiplier
           this.totalsShow = formatCurrency(data)
 
-
-          
-
-          //let d = new Date()
-          //let currentMinute = d.getMinutes()
-          // if new minute add new bar
-          // else old minite plus newdata
-
-          //console.log("currentGroup:"+currentMinute);
-/*           if(this.lastMinute !== currentMinute && currentMinute !== undefined){
-            this.count = 1;
-            this.lastMinute = currentMinute;
-            this.addData(this.myChart, this.count, currentMinute, true);
-          }else{
-            this.count++;
-            this.addData(this.myChart, this.count, currentMinute, false);
-          } */
         },  
         
         connect() {
@@ -371,7 +330,7 @@ export default {
             <v-flex 
               xs-12
               style="width: 100%; padding-left: 20px; padding-bottom: 20px; padding-right: 20px;"        
-              >
+            >
               <div class="text-xs-center" >
                 <canvas id="widget-chart"/>
               </div>
