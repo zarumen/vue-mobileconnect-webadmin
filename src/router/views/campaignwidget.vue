@@ -56,6 +56,7 @@ export default {
       totals: 0,
       totalsShow: 0,
       code: '',
+      code2: '',
       campaignWidget: {
         caption: '',
         units: ' ',
@@ -75,6 +76,8 @@ export default {
     campaignWidget: {
       handler(val) {
         this.code =  '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview/'+this.$route.params.campaignId+'/'+this.campaignWidget.offset+'/'+this.campaignWidget.caption+'/'+val.units+'/'+this.campaignWidget.multiplier+'/'+this.campaignWidget.fontColor+'" frameborder="0" ></iframe>'
+        this.code2 =  '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview2/'+this.$route.params.campaignId+'/'+this.campaignWidget.offset+'/'+this.campaignWidget.caption+'/'+val.units+'/'+this.campaignWidget.multiplier+'/'+this.campaignWidget.fontColor+'" frameborder="0" ></iframe>'
+        
         firestoreApp.collection("campaignWidget").doc(this.$route.params.campaignId).set(this.campaignWidget).then(function() {
           console.log("Campaign Widget Successfully Written!");
         });
@@ -298,7 +301,7 @@ export default {
               <v-form >
                 <p>Realtime Barchart Widget</p>
                 <v-textarea
-                  v-model="code"
+                  v-model="code2"
                   label="Message"
                   counter
                   full-width

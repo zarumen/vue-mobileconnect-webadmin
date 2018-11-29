@@ -1,6 +1,39 @@
 <script>
-import Bar from '@utils/chart/Bar'
+import Chart from 'chart.js';
 import formatCurrency from '@utils/format-number'
+
+let ChartData = {
+  type: 'bar',
+  data: {
+    labels: ['','','','','-26','','','','','-21','','','',-16,'','','','',-11,'','','','',-6,'','','','',-1],
+    datasets: [{
+          label: '# message per min',
+          data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          backgroundColor:'rgba(31, 119, 180, 1)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+      }]
+  },
+    options: {
+      title: {
+          display: true,
+          text: ''
+      },
+      scales: {
+          yAxes: [{
+              ticks: {
+                  beginAtZero:true
+              }
+          }],
+          xAxes: [{
+            ticks: {
+              maxTicksLimit: 30,
+              stepSize: 1
+            }
+          }]
+      }
+    }
+}
 
 export default {
   page() {
@@ -14,25 +47,45 @@ export default {
         ],
       }
   }, 
-  components: { 
-    Bar,
-  },
   data() {
     return {
       headerText: 'aaaa',
       height: 300,
       width: 300,
       socketMessage: '',
-      timeSeries: []
+      timeSeries: [],
+      totals: 0,
+      ChartData: ChartData,
+      smscount: 0,
+      lastMinute: 0,
+      myChart: null,
+      timer: null
     }
   },
   created() {
     this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);
   },
+  mounted() {
+    this.createChart('widget-chart', this.ChartData);
+    this.timer = setInterval(() => {
+      let mydata = this.myChart.data.datasets[0].data;
+      mydata.shift()
+      this.smscount = 0
+      this.myChart.update()
+    }, 60000);
+  },
   methods: {
     socketRegister(){
       console.log('param campaignId:'+this.campaignId)
       this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);
+    },
+    createChart(chartId, chartData) {
+      const ctx = document.getElementById(chartId);
+      this.myChart = new Chart(ctx, {
+        type: chartData.type,
+        data: chartData.data,
+        options: chartData.options,
+      });
     },
   },
   socket: {
@@ -51,9 +104,17 @@ export default {
             console.log("Reply: " + msg);
         },
         transaction(newdata) {
+          // line chart widget
+          if(this.totals !== newdata && this.totals !== 0){
+            console.log(this.myChart.data.datasets[0].data)
+            this.smscount = this.smscount + (newdata - this.totals);
+            this.myChart.data.datasets[0].data[28] = this.smscount;
+            this.myChart.update()  
+          }
+
           console.log("trans:" + newdata)
+          this.totals =  newdata 
           this.socketMessage = formatCurrency((newdata - this.$route.params.offset)  * this.$route.params.multiplier)
-          this.timeSeries.push('1')
         },
         
         connect() {
@@ -102,10 +163,7 @@ export default {
           align-center 
           justify-center 
           column
-          style="height: 315px;" 
-          
         >
-          <!-- border: 1px solid black; -->
           <v-flex>
             <p/>
             <h1 
@@ -115,36 +173,18 @@ export default {
               {{ this.$route.params.caption }}
             </h1>
           </v-flex>
-          <v-flex xs-12>
-            <div class="text-xs-center">
-              <h1 
-                :style="{color: '#'+this.$route.params.color}"
-                class="superbig"
-              >{{ socketMessage }} {{ this.$route.params.unit }}
-              </h1>
+        </v-layout>
+        <v-layout> 
+          <v-flex 
+            xs-12
+            style="width: 100%; padding-left: 20px; padding-bottom: 20px; padding-right: 20px;"        
+          >
+            <div class="text-xs-center" >
+              <canvas id="widget-chart"/>
             </div>
           </v-flex>
         </v-layout>
       </section>
-      <!--section>
-        <v-layout 
-          class="pt-1" 
-          row 
-          wrap
-        >
-          <v-flex 
-            md4 
-            xs12
-          >
-            <v-card light>
-              <bar/>
-            </v-card>
-          </v-flex>
-        </v-layout>
-      </section-->
     </v-layout>
-
   </v-container>
-
-
 </template>
