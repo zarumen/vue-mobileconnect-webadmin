@@ -6,18 +6,19 @@ import { campaignComputed } from '@state/helpers'
 
 export default {
   page: {
-    title: 'Campaigns',
-    meta: [{ name: 'description', content: 'Campaigns' }],
+    title: 'Widgets',
+    meta: [{ name: 'description', content: 'Campaign Widgets' }],
   },
   components: { Layout, FormAddCampaign },
   data() {
     return {
-      baseModule: 'campaigns',
+      baseModule: 'campaignwidgets',
       addCampaignDialog: '',
       dialog: '',
       dialogTitle: "Campaign Delete Dialog",
       dialogText: "Do you want to delete this campaign?",
       headers: [
+        { text: 'Widget', value: 'google' },
         {
           text: 'Code',
           left: true,
@@ -31,7 +32,6 @@ export default {
         { text: 'End Date', value: 'campaignDateEnd' },
         { text: 'Reward', value: 'campaignAvailable' },
         { text: 'Status', value: 'campaignActive' },
-        { text: 'Widget', value: 'google' },
       ],
       campaignId: '',
       left: true,

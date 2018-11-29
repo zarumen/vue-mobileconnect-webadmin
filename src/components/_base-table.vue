@@ -55,7 +55,7 @@ export default {
     }
   },
   created () {
-    // console.log(this.pagination)
+     console.log(this.basemodule)
   },
   methods: {
     renderData(item, header) {
@@ -145,6 +145,7 @@ export default {
         </td>
         <td class="text-xs-right">
           <v-btn 
+            v-if="basemodule != 'campaignwidgets'" 
             color="indigo" 
             flat
             icon
@@ -152,7 +153,8 @@ export default {
           >
             <v-icon>edit</v-icon>
           </v-btn>
-          <v-btn 
+          <v-btn
+            v-if="basemodule != 'campaignwidgets'" 
             color="indigo" 
             flat
             icon 
