@@ -146,6 +146,14 @@ export default [
     }
   },
   {
+    path: '/campaignwidgetview2/:campaignId/:offset/:caption/:unit/:multiplier/:color',
+    name: 'campaignswidgetview',
+    component: () => lazyLoadView(import('@views/campaignwidgetview')),
+    meta: {
+      authRequired: false,
+    }
+  },
+  {
     path: '/regex',
     name: 'regex',
     component: () => lazyLoadView(import('@views/regex')),
