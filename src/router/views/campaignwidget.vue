@@ -92,6 +92,68 @@ export default {
     this.getCampaignWidget(this.$route.params.campaignId) 
   },
   mounted() {
+    let MS_PER_MINUTE = 60000;
+    let d = new Date();
+    let stime = d.toLocaleTimeString()
+    this.ChartData.data.labels[28] = stime
+    let tmp_time = new Date(d - 1 * MS_PER_MINUTE)
+    this.ChartData.data.labels[27] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 2 * MS_PER_MINUTE)
+    this.ChartData.data.labels[26] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 3 * MS_PER_MINUTE)
+    this.ChartData.data.labels[25] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 4 * MS_PER_MINUTE)
+    this.ChartData.data.labels[24] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 5 * MS_PER_MINUTE)
+    this.ChartData.data.labels[23] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 6 * MS_PER_MINUTE)
+    this.ChartData.data.labels[22] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 7 * MS_PER_MINUTE)
+    this.ChartData.data.labels[21] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 8 * MS_PER_MINUTE)
+    this.ChartData.data.labels[20] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 9 * MS_PER_MINUTE)
+    this.ChartData.data.labels[19] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 10 * MS_PER_MINUTE)
+    this.ChartData.data.labels[18] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 11 * MS_PER_MINUTE)
+    this.ChartData.data.labels[17] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 12 * MS_PER_MINUTE)
+    this.ChartData.data.labels[16] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 13 * MS_PER_MINUTE)
+    this.ChartData.data.labels[15] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 14 * MS_PER_MINUTE)
+    this.ChartData.data.labels[14] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 15 * MS_PER_MINUTE)
+    this.ChartData.data.labels[13] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 16 * MS_PER_MINUTE)
+    this.ChartData.data.labels[12] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 17 * MS_PER_MINUTE)
+    this.ChartData.data.labels[11] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 18 * MS_PER_MINUTE)
+    this.ChartData.data.labels[10] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 19 * MS_PER_MINUTE)
+    this.ChartData.data.labels[9] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 20 * MS_PER_MINUTE)
+    this.ChartData.data.labels[8] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 21 * MS_PER_MINUTE)
+    this.ChartData.data.labels[7] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 22 * MS_PER_MINUTE)
+    this.ChartData.data.labels[6] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 23 * MS_PER_MINUTE)
+    this.ChartData.data.labels[5] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 24 * MS_PER_MINUTE)
+    this.ChartData.data.labels[4] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 25 * MS_PER_MINUTE)
+    this.ChartData.data.labels[3] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 26 * MS_PER_MINUTE)
+    this.ChartData.data.labels[2] = tmp_time.toLocaleTimeString()
+    tmp_time = new Date(d - 27 * MS_PER_MINUTE)
+    this.ChartData.data.labels[1] = tmp_time.toLocaleTimeString()
+
+    //this.ChartData.data.labels[26] = stimeminus2.toLocaleTimeString()
+
+    console.log(this.ChartData.data.labels)
     this.createChart('widget-chart', this.ChartData);
     this.timer = setInterval(() => {
       let mydata = this.myChart.data.datasets[0].data;
@@ -139,6 +201,10 @@ export default {
         transaction(newdata) {
           // line chart widget
           if(this.totals !== newdata && this.totals !== 0){
+            var d = new Date();
+            var stime = d.toLocaleTimeString();
+            this.ChartData.data.labels[28] = stime 
+            console.log(this.ChartData.data.labels)
             console.log(this.myChart.data.datasets[0].data)
             this.smscount = this.smscount + (newdata - this.totals);
             this.myChart.data.datasets[0].data[28] = this.smscount;
