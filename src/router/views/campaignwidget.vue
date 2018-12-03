@@ -3,16 +3,16 @@ import Layout from '@layouts/main'
 import firestoreApp from "@utils/firestore.config"
 import Chart from 'chart.js';
 import formatCurrency from '@utils/format-number'
-import { genTimeSeries } from '@utils/format-date'
+import { genTimeSeries, genEmptyArray } from '@utils/rgt-array'
 
 
 let ChartData = {
   type: 'bar',
   data: {
-    labels: ['','','','','-26','','','','','-21','','','',-16,'','','','',-11,'','','','',-6,'','','','',-1],
+    labels: [],
     datasets: [{
           label: '# message per min',
-          data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          data: [],
           backgroundColor:'rgba(31, 119, 180, 1)',
           borderColor: 'rgba(54, 162, 235, 1)',
           borderWidth: 1
@@ -70,7 +70,8 @@ export default {
       smscount: 0,
       lastMinute: 0,
       myChart: null,
-      timer: null
+      timer: null,
+      minutes: 10
     }
   },
   watch:{
@@ -94,13 +95,17 @@ export default {
   },
   mounted() {
     let d = new Date();
-    this.ChartData.data.labels = genTimeSeries(d,59)
+    this.ChartData.data.labels = genTimeSeries(d,this.minutes-1)
+    this.ChartData.data.datasets[0].data = genEmptyArray(this.minutes-1)
 
-    console.log(this.ChartData.data.labels)
     this.createChart('widget-chart', this.ChartData);
     this.timer = setInterval(() => {
-      let mydata = this.myChart.data.datasets[0].data;
-      mydata.shift()
+      // let mydata = this.myChart.data.datasets[0].data;
+      d = new Date();
+      let stime = d.toLocaleTimeString("th",{hour: '2-digit', minute:'2-digit'})
+      this.ChartData.data.labels.shift()
+      this.ChartData.data.labels[this.minutes-1] = stime
+      this.myChart.data.datasets[0].data.shift()
       this.smscount = 0
       this.myChart.update()
     }, 60000);
@@ -145,12 +150,12 @@ export default {
           // line chart widget
           if(this.totals !== newdata && this.totals !== 0){
             var d = new Date();
-            var stime = d.toLocaleTimeString();
-            this.ChartData.data.labels[28] = stime 
-            console.log(this.ChartData.data.labels)
-            console.log(this.myChart.data.datasets[0].data)
+            var stime = d.toLocaleTimeString("th",{hour: '2-digit', minute:'2-digit'})
+            this.ChartData.data.labels[this.minutes-1] = stime 
+            // console.log(this.ChartData.data.labels)
+            // console.log(this.myChart.data.datasets[0].data)
             this.smscount = this.smscount + (newdata - this.totals);
-            this.myChart.data.datasets[0].data[28] = this.smscount;
+            this.myChart.data.datasets[0].data[this.minutes-1] = this.smscount;
             this.myChart.update()  
           }
 
