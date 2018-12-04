@@ -7,7 +7,7 @@ import '@utils/registerServiceWorker'
 import '@components/_globals'
 import VueSocketIO from 'vue-socket-io';
 
-//Config socketIO Connection 
+// Config socketIO Connection 
 Vue.use(VueSocketIO, 'https://app.sms2mkt.com:2096', {secure: true})
 
 // Don't warn about using the dev version of Vue in development

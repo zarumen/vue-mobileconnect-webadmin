@@ -10,7 +10,7 @@ export function genTimeSeries(startDateTime,num) {
   let count = 1
   let tmpTime = null
 
-  let stime = d.toLocaleTimeString("th",{hour: '2-digit', minute:'2-digit'})
+  // let stime = d.toLocaleTimeString("th",{hour: '2-digit', minute:'2-digit'})
 
   for(count = 0; count <= num; count++){
     tmpTime = new Date(d - count * MS_PER_MINUTE)
