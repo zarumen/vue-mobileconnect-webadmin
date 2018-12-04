@@ -176,7 +176,9 @@ export const actions = {
 
   },
   getOrganizationsList({ commit, state }) {
+    
     if (this.hadList) return Promise.resolve(null)
+
 
     commit('setLoading', { loading: true })
 

@@ -55,7 +55,7 @@ export default {
     }
   },
   created () {
-    // console.log(this.pagination)
+     console.log(this.basemodule)
   },
   methods: {
     renderData(item, header) {
@@ -133,10 +133,20 @@ export default {
           :key="index"
           :class="[ index === 0? 'text-xs-left': 'text-xs-center', 'body-2']"
         >
-          <small>{{ renderData(props.item, header) }}</small>
+          <small v-if="header.text!=='Widget'">{{ renderData(props.item, header) }}</small>
+          <small v-else>
+<!--             <router-link 
+              :to="{ path: 'campaignwidget/'+props.item.id}"
+              color="indigo"
+            >
+              <v-icon>widgets</v-icon>
+            </router-link> -->
+            <a :href="'/campaignwidget/'+props.item.id"><v-icon>widgets</v-icon></a>                      
+          </small>
         </td>
         <td class="text-xs-right">
           <v-btn 
+            v-if="basemodule != 'campaignwidgets'" 
             color="indigo" 
             flat
             icon
@@ -144,7 +154,8 @@ export default {
           >
             <v-icon>edit</v-icon>
           </v-btn>
-          <v-btn 
+          <v-btn
+            v-if="basemodule != 'campaignwidgets'" 
             color="indigo" 
             flat
             icon 
