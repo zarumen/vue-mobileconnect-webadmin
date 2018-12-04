@@ -27,7 +27,6 @@ export default {
   components: {
     FontAwesomeIcon,
   },
-  inheritAttrs: false,
   props: {
     source: {
       type: String,

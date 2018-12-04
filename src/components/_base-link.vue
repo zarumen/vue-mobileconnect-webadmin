@@ -1,6 +1,5 @@
 <script>
 export default {
-  inheritAttrs: false,
   props: {
     href: {
       type: String,
