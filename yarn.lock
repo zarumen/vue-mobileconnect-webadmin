@@ -13708,10 +13708,10 @@ vue-chartjs@^3.3.1:
   resolved "https://registry.yarnpkg.com/vue-chartjs/-/vue-chartjs-3.4.0.tgz#669e4453be0676605fc9290b3b581867ccd15c88"
   integrity sha512-uikAXl66g49rawH7Uto3gKh/7vxflcd5xyYbnQVGKSYEh9VI9JGMZ1KNPAEr+8ViRd2FX1hPDVevKBONK6v1fw==
 
-vue-cli-plugin-vuetify@^0.1.4:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/vue-cli-plugin-vuetify/-/vue-cli-plugin-vuetify-0.1.6.tgz#915a47c5d4f9d4fee44c826f5cf9e9596badb52d"
-  integrity sha512-PHiVGYLckWlqG78UN9YyrigEYZeCpu2toI4vPBPGOhcpfEvwRtwr5bEu0mR+/GDoTbJMTDDoIj0EP1hJKoqIcQ==
+vue-cli-plugin-vuetify@^0.4.6:
+  version "0.4.6"
+  resolved "https://registry.yarnpkg.com/vue-cli-plugin-vuetify/-/vue-cli-plugin-vuetify-0.4.6.tgz#91c4534d17bc04bbd6f41eacdb6ff49be0f59f2b"
+  integrity sha512-vkai2B3XqanmscUYSioIjJkU7bzBZGl9mCuIISEZtaDy3qWEkF143UGdJ72u/rGuOytLxpV+9B+FNoV93qlnag==
 
 vue-eslint-parser@^2.0.3:
   version "2.0.3"

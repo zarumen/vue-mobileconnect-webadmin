@@ -44,7 +44,7 @@ export default {
         },
         {
           name: 'shortcodes',
-          icon: 'addressCard',
+          icon: 'diceSix',
           title: 'Shortcodes Manager',
         },
         {

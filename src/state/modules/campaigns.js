@@ -29,14 +29,8 @@ export const mutations = {
     state.pagination = pagination
   },
     // update Page
-  updatePage(state, paginationPage) {
+  setPage(state, paginationPage) {
     state.pagination.page = paginationPage
-  },
-  updateSortBy(state, paginationSortBy) {
-    state.pagination.sortBy = paginationSortBy
-  },
-  updateDescending(state, paginationDesc) {
-    state.pagination.descending = paginationDesc
   },
   // Mutate Value in Pagination
   setLoading(state, { loading }) {
@@ -142,6 +136,12 @@ export const actions = {
         closeNotice(commit, 2000)
         return error
       })
+  },
+  // ===
+  // UPDATE Zone
+  // ===
+  updatePage({ commit }, { pageNumber }) {
+    commit('setPage', pageNumber)
   },
   // ===
   // DELETE Zone

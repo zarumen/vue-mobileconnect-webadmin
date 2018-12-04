@@ -20,6 +20,10 @@ fontAwesomeIconLibrary.add(
   require('@fortawesome/free-solid-svg-icons/faUserCircle').definition,
   require('@fortawesome/free-solid-svg-icons/faSchool').definition,
   require('@fortawesome/free-solid-svg-icons/faSignOutAlt').definition,
+  require('@fortawesome/free-solid-svg-icons/faCaretLeft').definition,
+  require('@fortawesome/free-solid-svg-icons/faCaretRight').definition,
+  require('@fortawesome/free-solid-svg-icons/faSortNumericDown').definition,
+  require('@fortawesome/free-solid-svg-icons/faDiceSix').definition,
   // brands
 )
 
@@ -27,6 +31,7 @@ export default {
   components: {
     FontAwesomeIcon,
   },
+  inheritAttrs: false,
   props: {
     source: {
       type: String,
@@ -48,7 +53,7 @@ export default {
     },
     // Gets a CSS module class, e.g. iconCustomLogo
     customIconClass () {
-      return this.$style[camelCase('icon-custom-' + this.name)]
+      return this.$style[camelCase('mdi-' + this.name)]
     },
   },
 }
@@ -64,5 +69,6 @@ export default {
   <span
     v-else-if="source === 'custom'"
     :class="customIconClass"
+    v-bind="$attrs"
   />
 </template>

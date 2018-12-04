@@ -22,43 +22,20 @@ export default {
   },
   data () {
     return {
-      search: ''
+      search: '',
+      mutablePagination: this.pagination
     }
   },
   computed: {
     isNotEmpty () {
       return this.items && this.items.length > 0;
     },
-    page: {
-      get () {
-        return this.pagination.page
-      },
-      set (value) {
-        this.$store.commit(`${this.basemodule}/updatePage`, value)
-      }
-    },
-    paginationSort: {
-      get () {
-        return this.pagination.sortBy
-      },
-      set (value) {
-        this.$store.commit(`${this.basemodule}/updateSortBy`, value)
-      }
-    },
-    paginationDesc: {
-      get () {
-        return this.pagination.descending
-      },
-      set (value) {
-        this.$store.commit(`${this.basemodule}/updateDescending`, value)
-      }
-    }
   },
   created () {
      console.log(this.basemodule)
   },
   methods: {
-    renderData(item, header) {
+    renderData (item, header) {
       let val = ''
       if (header.value.includes('.')) {
         const vals = header.value.split('.')
@@ -76,14 +53,9 @@ export default {
       }
       return val;
     },
-    changeSorting(column) {
-      if (this.paginationSort === column) {
-        this.paginationDesc = !this.paginationDesc
-      } else {
-        this.paginationSort = column
-        this.paginationDesc = false
-      }
-    },
+    nextPage (newValue) {
+      return this.$store.dispatch(`${this.basemodule}/updatePage`, newValue)
+    }
   },
   
 }
@@ -95,33 +67,11 @@ export default {
       :headers="headers" 
       :items="items" 
       :search="search" 
-      :pagination.sync="pagination"
+      :pagination.sync="mutablePagination"
+      sort-icon="fa-angle-up"
       class="elevation-1"
       hide-actions
     >
-      <template 
-        slot="headers" 
-        slot-scope="props"
-      >
-        <tr>
-          <th 
-            v-for="(header, index) in props.headers" 
-            :key="header.text"
-            :class="[
-              'column sortable', 
-              paginationDesc ? 'desc' : 'asc',
-              header.value === paginationSort ? 'active' : '',
-              'subheading', 
-              index === 0? 'text-xs-left': 'text-xs-center'
-            ]" 
-            @click="changeSorting(header.value)"
-          >
-            {{ header.text }}
-            <v-icon small>arrow_upward</v-icon>
-          </th>
-          <th/>
-        </tr>
-      </template>
       <template 
         slot="items" 
         slot-scope="props"
@@ -131,13 +81,11 @@ export default {
           v-for="(header, index) in headers"
           v-if="header.value!==''"
           :key="index"
-          :class="[ index === 0? 'text-xs-left': 'text-xs-center', 'body-2']"
         >
           <small v-if="header.text!=='Widget'">{{ renderData(props.item, header) }}</small>
           <small v-else>
             <router-link 
               :to="{ path: 'campaignwidget/'+props.item.id}"
-              color="indigo"
             >
               <v-icon>widgets</v-icon>
             </router-link>
@@ -184,10 +132,13 @@ export default {
       class="text-xs-center pt-2"
     >
       <v-pagination
-        v-model="page" 
-        :length="pagination.pages"
+        v-model="mutablePagination.page" 
+        :length="mutablePagination.pages"
+        next-icon="fas fa-caret-right"
+        prev-icon="fas fa-caret-left"
         color="green"
         circle
+        @input="nextPage"
       />
     </v-flex>
   </div>
