@@ -135,12 +135,12 @@ export default {
         >
           <small v-if="header.text!=='Widget'">{{ renderData(props.item, header) }}</small>
           <small v-else>
-<!--             <router-link 
+            <router-link 
               :to="{ path: 'campaignwidget/'+props.item.id}"
               color="indigo"
             >
               <v-icon>widgets</v-icon>
-            </router-link> -->
+            </router-link>
             <a :href="'/campaignwidget/'+props.item.id"><v-icon>widgets</v-icon></a>                      
           </small>
         </td>

@@ -135,7 +135,7 @@ export default [
     name: 'campaignswidget',
     component: () => lazyLoadView(import('@views/campaignwidget')),
     meta: {
-      authRequired: false,
+      authRequired: true,
     }
   },
   {
