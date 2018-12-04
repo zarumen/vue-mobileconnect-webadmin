@@ -71,7 +71,7 @@ export default {
       lastMinute: 0,
       myChart: null,
       timer: null,
-      minutes: 10
+      minutes: 120
     }
   },
   watch:{

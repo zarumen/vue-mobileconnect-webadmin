@@ -11,8 +11,7 @@ export function genTimeSeries(startDateTime,num) {
   let tmpTime = null
 
   let stime = d.toLocaleTimeString("th",{hour: '2-digit', minute:'2-digit'})
-/*   timeSeries[num] = stime
-  num = num-1  */
+
   for(count = 0; count <= num; count++){
     tmpTime = new Date(d - count * MS_PER_MINUTE)
     timeSeries[num-count] = tmpTime.toLocaleTimeString("th",{hour: '2-digit', minute:'2-digit'})
