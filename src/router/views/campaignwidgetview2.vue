@@ -1,6 +1,7 @@
 <script>
 import Chart from 'chart.js';
 import formatCurrency from '@utils/format-number'
+import { genTimeSeries, genEmptyArray } from '@utils/rgt-array'
 
 let ChartData = {
   type: 'bar',
@@ -59,13 +60,18 @@ export default {
       smscount: 0,
       lastMinute: 0,
       myChart: null,
-      timer: null
+      timer: null,
+      minutes: 60
     }
   },
   created() {
     this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);
   },
   mounted() {
+    let d = new Date();
+    this.ChartData.data.labels = genTimeSeries(d,this.minutes-1)
+    this.ChartData.data.datasets[0].data = genEmptyArray(this.minutes-1)
+
     this.createChart('widget-chart', this.ChartData);
     this.timer = setInterval(() => {
       let mydata = this.myChart.data.datasets[0].data;
@@ -106,11 +112,16 @@ export default {
         transaction(newdata) {
           // line chart widget
           if(this.totals !== newdata && this.totals !== 0){
-            console.log(this.myChart.data.datasets[0].data)
+            var d = new Date();
+            var stime = d.toLocaleTimeString("th",{hour: '2-digit', minute:'2-digit'})
+            this.ChartData.data.labels[this.minutes-1] = stime 
+            // console.log(this.ChartData.data.labels)
+            // console.log(this.myChart.data.datasets[0].data)
             this.smscount = this.smscount + (newdata - this.totals);
-            this.myChart.data.datasets[0].data[28] = this.smscount;
+            this.myChart.data.datasets[0].data[this.minutes-1] = this.smscount;
             this.myChart.update()  
           }
+
 
           console.log("trans:" + newdata)
           this.totals =  newdata 
