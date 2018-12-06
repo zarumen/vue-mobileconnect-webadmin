@@ -72,6 +72,15 @@ export default {
       class="elevation-1"
       hide-actions
     >
+      <template
+        slot="headerCell"
+        slot-scope="{ header }"
+      >
+        <span
+          class="subheading font-weight-light text--darken-3"
+          v-text="header.text"
+        />
+      </template>
       <template 
         slot="items" 
         slot-scope="props"

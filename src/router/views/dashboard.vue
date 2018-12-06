@@ -15,248 +15,243 @@ export default {
     Doughnut,
     LineChart
   },
+  data () {
+    return {
+      test: 'test in data',
+      dailySalesChart: {
+        info: {
+          labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+          series: [
+            [12, 17, 7, 17, 23, 18, 38]
+          ]
+        },
+        options: {
+          lineSmooth: this.$chartist.Interpolation.cardinal({
+            tension: 0
+          }),
+          low: 0,
+          high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+          chartPadding: {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0
+          }
+        }
+      },
+      dataCompletedTasksChart: {
+        data: {
+          labels: ['12am', '3pm', '6pm', '9pm', '12pm', '3am', '6am', '9am'],
+          series: [
+            [230, 750, 450, 300, 280, 240, 200, 190]
+          ]
+        },
+        options: {
+          lineSmooth: this.$chartist.Interpolation.cardinal({
+            tension: 0
+          }),
+          low: 0,
+          high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+          chartPadding: {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0
+          }
+        }
+      },
+      emailsSubscriptionChart: {
+        data: {
+          labels: ['Ja', 'Fe', 'Ma', 'Ap', 'Mai', 'Ju', 'Jul', 'Au', 'Se', 'Oc', 'No', 'De'],
+          series: [
+            [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]
+
+          ]
+        },
+        options: {
+          axisX: {
+            showGrid: false
+          },
+          low: 0,
+          high: 1000,
+          chartPadding: {
+            top: 0,
+            right: 5,
+            bottom: 0,
+            left: 0
+          }
+        },
+        responsiveOptions: [
+          ['screen and (max-width: 640px)', {
+            seriesBarDistance: 5,
+            axisX: {
+              labelInterpolationFnc: function (value) {
+                return value[0]
+              }
+            }
+          }]
+        ]
+      },
+    }
+  }
 }
 </script>
 
 <template>
   <Layout>
-    <v-container 
-      id="dashboard" 
-      fluid 
-      grid-list-lg 
-      class="mx-0 pa-0"
+    <v-container
+      fill-height
+      fluid
+      grid-list-xl
     >
-      <v-layout 
-        row 
-        wrap
-      >
+      <v-layout wrap>
         <v-flex 
-          md3 
-          sm6 
+          sm6
           xs12
+          md6
+          lg3
         >
-          <v-card 
-            class="cyan darken-3" 
-            light
-          >
-            <v-container 
-              fluid 
-              grid-list-sm 
-              class="cyan darken-3" 
-              light
-            >
-              <v-layout 
-                class="mt-2 mb-0" 
-                row 
-                wrap
-              >
-                <v-flex xs2>
-                  <v-icon 
-                    class="mx-1" 
-                    x-large 
-                    light
-                  >
-                    card_membership
-                  </v-icon>
-                </v-flex>
-                <v-flex 
-                  md6 
-                  sm10
-                >
-                  <div class="mx-1">
-                    <div class="subheading">SMS Transactions</div>
-                    <strong>84,568,445</strong>
-                  </div>
-                </v-flex>
-                <v-flex 
-                  class="text-xs-right" 
-                  sm12 
-                  md4
-                >
-                  <v-btn 
-                    fab 
-                    dark 
-                    class="white--text darken-1" 
-                    flat
-                  >
-                    <v-icon>
-                      more
-                    </v-icon>
-                  </v-btn>
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card>
+          <base-stats-card
+            color="green"
+            icon="store"
+            title="SMS Transactions"
+            value="84,568,445"
+            sub-icon="alarm"
+            sub-text="Last 24 Hours"
+          />
         </v-flex>
         <v-flex 
-          md3 
-          sm6 
+          sm6
           xs12
+          md6
+          lg3
         >
-          <v-card 
-            class="deep-orange  lighten-3" 
-            light
-          >
-            <v-container 
-              fluid 
-              grid-list-sm
-            >
-              <v-layout 
-                class="mt-2 mb-0" 
-                row 
-                wrap
-              >
-                <v-flex xs2>
-                  <v-icon 
-                    class="mx-4" 
-                    x-large 
-                    light
-                  >
-                    card_membership
-                  </v-icon>
-                </v-flex>
-                <v-flex 
-                  md6 
-                  sm10
-                >
-                  <div class="mx-4">
-                    <div class="subheadingfont">SMS Registrations</div>
-                    <strong>78,049</strong>
-                  </div>
-                </v-flex>
-                <v-flex 
-                  class="text-xs-right" 
-                  sm12 
-                  md4
-                >
-                  <v-btn 
-                    fab 
-                    dark 
-                    class="white--text darken-1" 
-                    flat
-                  >
-                    <v-icon>
-                      more
-                    </v-icon>
-                  </v-btn>
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card>
+          <base-stats-card
+            color="orange"
+            icon="store"
+            title="SMS Registration"
+            value="78,049"
+            sub-icon="alarm"
+            sub-text="Last 24 Hours"
+          />
         </v-flex>
         <v-flex 
-          md3 
-          sm6 
+          sm6
           xs12
+          md6
+          lg3
         >
-          <v-card 
-            class="blue-grey darken-1" 
-            light
-          >
-            <v-container 
-              fluid 
-              grid-list-sm
-            >
-              <v-layout 
-                class="mt-2 mb-0" 
-                row 
-                wrap>
-                <v-flex xs2>
-                  <v-icon 
-                    class="mx-4" 
-                    x-large 
-                    light
-                  >
-                    card_membership
-                  </v-icon>
-                </v-flex>
-                <v-flex 
-                  md6 
-                  sm10
-                >
-                  <div class="mx-4">
-                    <div class="subheadingfont">Campaigns Launched</div>
-                    <strong>78</strong>
-                  </div>
-                </v-flex>
-                <v-flex 
-                  class="text-xs-right" 
-                  sm12 
-                  md4
-                >
-                  <v-btn 
-                    fab 
-                    dark 
-                    class="white--text darken-1" 
-                    flat
-                  >
-                    <v-icon>
-                      more
-                    </v-icon>
-                  </v-btn>
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card>
+          <base-stats-card
+            color="blue"
+            icon="store"
+            title="Campaigns Launched"
+            value="945"
+            sub-icon="alarm"
+            sub-text="Last 24 Hours"
+          />
         </v-flex>
         <v-flex 
-          md3 
-          sm6 
+          sm6
           xs12
+          md6
+          lg3
         >
-          <v-card 
-            class="pink lighten-4" 
-            light
+          <base-stats-card
+            color="purple"
+            icon="money"
+            title="Revenue"
+            value="$34,245"
+            sub-icon="alarm"
+            sub-text="Last 24 Hours"
+          />
+        </v-flex>
+        <v-flex
+          md12
+          sm12
+          lg4
+        >
+          <base-chart-card
+            :data="dailySalesChart.info"
+            :options="dailySalesChart.options"
+            color="info"
+            type="Line"
           >
-            <v-container 
-              fluid 
-              grid-list-sm
-            >
-              <v-layout 
-                class="mt-2 mb-0" 
-                row 
-                wrap
+            <h4 class="title font-weight-light">Daily Sales</h4>
+            <p class="category d-inline-flex font-weight-light">
+              <v-icon
+                color="green"
+                small
               >
-                <v-flex xs2>
-                  <v-icon 
-                    class="mx-4" 
-                    x-large 
-                    light
-                  >
-                    card_membership
-                  </v-icon>
-                </v-flex>
-                <v-flex 
-                  md6 
-                  sm10
-                >
-                  <div class="mx-4">
-                    <div class="subheadingfont">Bounce Rate</div>
-                    <strong>53%</strong>
-                  </div>
-                </v-flex>
-                <v-flex 
-                  class="text-xs-right" 
-                  sm12 
-                  md4
-                >
-                  <v-btn 
-                    fab 
-                    dark 
-                    class="white--text darken-1" 
-                    flat
-                  >
-                    <v-icon>
-                      more
-                    </v-icon>
-                  </v-btn>
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card>
+                mdi-arrow-up
+              </v-icon>
+              <span class="green--text">55%</span>&nbsp;
+              increase in today's sales
+            </p>
+
+            <template slot="actions">
+              <v-icon
+                class="mr-2"
+                small
+              >
+                access_time
+              </v-icon>
+              <span class="caption grey--text font-weight-light">updated 4 minutes ago</span>
+            </template>
+          </base-chart-card>
+        </v-flex>
+        <v-flex
+          md12
+          sm12
+          lg4
+        >
+          <base-chart-card
+            :data="emailsSubscriptionChart.data"
+            :options="emailsSubscriptionChart.options"
+            :responsive-options="emailsSubscriptionChart.responsiveOptions"
+            color="red"
+            type="Bar"
+          >
+            <h4 class="title font-weight-light">Email Subscription</h4>
+            <p class="category d-inline-flex font-weight-light">Last Campaign Performance</p>
+
+            <template slot="actions">
+              <v-icon
+                class="mr-2"
+                small
+              >
+                access_time
+              </v-icon>
+              <span class="caption grey--text font-weight-light">updated 10 minutes ago</span>
+            </template>
+          </base-chart-card>
+        </v-flex>
+        <v-flex
+          md12
+          sm12
+          lg4
+        >
+          <base-chart-card
+            :data="dataCompletedTasksChart.data"
+            :options="dataCompletedTasksChart.options"
+            color="green"
+            type="Line"
+          >
+            <h3 class="title font-weight-light">Completed Tasks</h3>
+            <p class="category d-inline-flex font-weight-light">Last Last Campaign Performance</p>
+
+            <template slot="actions">
+              <v-icon
+                class="mr-2"
+                small
+              >
+                access_time
+              </v-icon>
+              <span class="caption grey--text font-weight-light">campaign sent 26 minutes ago</span>
+            </template>
+          </base-chart-card>
         </v-flex>
       </v-layout>
-      <v-layout 
+      <!-- <v-layout 
         class="pt-1" 
         row 
         wrap
@@ -288,7 +283,7 @@ export default {
             <line-chart/>
           </v-card>
         </v-flex>
-      </v-layout>
+      </v-layout> -->
     </v-container>
   </Layout>
 </template>

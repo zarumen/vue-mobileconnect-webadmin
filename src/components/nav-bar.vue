@@ -34,7 +34,8 @@ export default {
       let menuAdmin = [
         {
           name: 'dashboard',
-          icon: 'chartPie',
+          icon: 'dashboard',
+          source: 'custom',
           title: 'Dashboard',
         },
         {
@@ -108,7 +109,10 @@ export default {
           exact
         >
           <v-list-tile-action>
-            <BaseIcon :name="item.icon"/>
+            <BaseIcon 
+              :name="item.icon" 
+              :source="item.source"
+            />
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>

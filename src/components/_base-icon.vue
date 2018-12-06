@@ -66,9 +66,10 @@ export default {
     :icon="nameChanged"
     v-bind="$attrs"
   />
-  <span
+  <v-icon
     v-else-if="source === 'custom'"
-    :class="customIconClass"
     v-bind="$attrs"
-  />
+  >
+    {{ name }}
+  </v-icon>
 </template>

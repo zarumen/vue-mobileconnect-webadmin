@@ -33,7 +33,7 @@ export default {
                 alt="Mobile Connect"
                 height="200"
               >
-              <h1 class="white--text mb-2 display-1 text-xs-center">Mobile Connnect</h1>
+              <h1 class="white--text mb-2 display-1 text-xs-center">Mobile Connect</h1>
               <!--               <div class="subheading mb-3 text-xs-center">by Mobile Connect</div> -->
               <v-btn
                 class="green mt-5"
