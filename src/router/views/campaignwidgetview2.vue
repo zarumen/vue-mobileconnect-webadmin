@@ -61,7 +61,7 @@ export default {
       lastMinute: 0,
       myChart: null,
       timer: null,
-      minutes: 60
+      minutes: 120
     }
   },
   created() {
@@ -74,6 +74,9 @@ export default {
 
     this.createChart('widget-chart', this.ChartData);
     this.timer = setInterval(() => {
+    d = new Date();
+    this.ChartData.data.labels = genTimeSeries(d,this.minutes-1)
+
       let mydata = this.myChart.data.datasets[0].data;
       mydata.shift()
       this.smscount = 0
