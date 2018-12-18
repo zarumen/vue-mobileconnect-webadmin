@@ -369,8 +369,9 @@ export default {
         </v-btn> -->
         <v-spacer/>
         <v-btn 
-          flat 
-          color="indigo" 
+          class="v-btn--simple"
+          round 
+          color="success"  
           @click="closeDialog()"
         >
           Cancel

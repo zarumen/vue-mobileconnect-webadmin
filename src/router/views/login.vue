@@ -59,7 +59,12 @@ export default {
         sm6
         md4
       >
-        <v-card class="elevation-12">
+        <base-card
+          prepend-icon="dashboard"
+          title="Mobile Connect Web Admin"
+          color="green" 
+          class="elevation-12"
+        >
           <v-card-text>
             <v-form
               :class="$style.form"
@@ -95,7 +100,7 @@ export default {
               </p>
             </v-form>
           </v-card-text>
-        </v-card>
+        </base-card>
       </v-flex>
     </v-layout>
   </Layout>

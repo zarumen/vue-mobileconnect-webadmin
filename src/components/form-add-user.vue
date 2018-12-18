@@ -335,6 +335,7 @@ export default {
             <v-flex xs5>
               <v-text-field
                 v-model="uform.lastName"
+                class="purple-input"
                 label="Last Name"
               />
             </v-flex>
@@ -356,6 +357,7 @@ export default {
               <v-select
                 v-model="uform.gender"
                 :items="genderItems"
+                prepend-icon="wc"
                 label="Gender"
               />
             </v-flex>
@@ -410,19 +412,22 @@ export default {
           >
             Clear
           </v-btn> -->
-          <v-btn 
-            flat 
-            color="indigo" 
+          <v-btn
+            class="v-btn--simple"
+            round 
+            color="success" 
             @click="closeDialog()"
           >
-            Cancel
+            CANCEL
           </v-btn>
-          <BaseButton
+          <v-btn
             :disabled="!valid"
+            round
+            color="success"
             @click="saveUser()"
           >
-            Save
-          </BaseButton>
+            SAVE
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-form>

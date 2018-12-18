@@ -1,9 +1,15 @@
+<script>
+export default {
+  props: {
+
+  }
+  
+}
+</script>
+
 <template>
   <v-btn
-    depressed
-    dark
-    round
-    color="green"
+    color="success"
     v-on="$listeners"
   >
     <slot/>

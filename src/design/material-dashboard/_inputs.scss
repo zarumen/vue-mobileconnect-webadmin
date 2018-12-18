@@ -1,4 +1,5 @@
 .theme--light.v-text-field .v-input__slot:before {
+  color: $input-color;
   border-color: $input-color !important;
 }
 
@@ -26,9 +27,9 @@
   font-size: $font-size-default;
 }
 
+// ใช้กำหนดสี โดย กำหนดจาก class="purple-input"
 @include inputs-color($brand-primary, 'purple');
 @include inputs-color($brand-warning, 'orange');
 @include inputs-color($brand-info, 'info');
 @include inputs-color($brand-danger, 'danger');
 @include inputs-color($brand-success, 'success');
-@include inputs-color($brand-success, 'primary');

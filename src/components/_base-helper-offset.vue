@@ -1,13 +1,3 @@
-<template>
-  <div
-    :style="styles"
-    :class="classes"
-    class="v-offset"
-  >
-    <slot />
-  </div>
-</template>
-
 <script>
 export default {
   props: {
@@ -36,6 +26,16 @@ export default {
   }
 }
 </script>
+
+<template>
+  <div
+    :style="styles"
+    :class="classes"
+    class="v-offset"
+  >
+    <slot />
+  </div>
+</template>
 
 <style>
 .v-offset {

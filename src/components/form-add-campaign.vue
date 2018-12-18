@@ -250,7 +250,7 @@ export default {
                 close
               </v-icon>
             </v-btn>
-            <v-toolbar-title>
+            <v-toolbar-title class="white--text">
               Add New Campaign
             </v-toolbar-title>
             <v-spacer/>
@@ -335,12 +335,15 @@ export default {
               <v-btn 
                 color="blue" 
                 class="white--text"
+                round
                 @click.native="step = 2"
               >
                 Continue
               </v-btn>
               <v-btn 
-                flat
+                class="v-btn--simple"
+                color="default"
+                round
                 @click.native="closeDialog()"
               >
                 Cancel
@@ -496,19 +499,22 @@ export default {
                           v-model="date"
                           no-title 
                           scrollable
+                          dark
                           color="blue"
                         >
                           <v-spacer/>
                           <v-btn 
-                            flat
-                            color="blue" 
+                            class="v-btn--simple"
+                            round
+                            color="default" 
                             @click="menu = false"
                           >
                             Cancel
                           </v-btn>
                           <v-btn 
-                            flat 
-                            color="blue" 
+                            class="v-btn--simple"
+                            color="blue"
+                            round
                             @click="$refs.menu.save(date)"
                           >
                             OK
@@ -551,14 +557,16 @@ export default {
                           disabled
                         />
                         <v-btn 
-                          flat
-                          color="blue"
+                          class="v-btn--simple"
+                          round
+                          color="default"
                           @click="menu3 = false"
                         >
                           Cancel
                         </v-btn>
                         <v-btn 
-                          flat 
+                          class="v-btn--simple"
+                          round 
                           color="blue" 
                           @click="$refs.menu3.save(time)"
                         >
@@ -684,12 +692,15 @@ export default {
               <v-btn 
                 color="blue" 
                 class="white--text"
+                round
                 @click.native="step = 3"
               >
                 Continue
               </v-btn>
               <v-btn 
-                flat
+                class="v-btn--simple"
+                color="default"
+                round
                 @click.native="step = 1"
               >
                 Cancel
@@ -842,12 +853,15 @@ export default {
               <v-btn 
                 color="blue" 
                 class="white--text"
+                round
                 @click.native="step = 4"
               >
                 Continue
               </v-btn>
               <v-btn 
-                flat
+                class="v-btn--simple"
+                color="default"
+                round
                 @click.native="step = 2"
               >
                 Cancel
@@ -923,12 +937,15 @@ export default {
               <v-btn 
                 color="blue" 
                 class="white--text"
+                round
                 @click.native="step = 5"
               >
                 Continue
               </v-btn>
               <v-btn 
-                flat
+                class="v-btn--simple"
+                color="default"
+                round
                 @click.native="step = 3"
               >
                 Cancel
@@ -1139,14 +1156,16 @@ export default {
                 </v-card-text>
               </v-card>
               <v-btn
-                color="blue" 
-                class="white--text"
+                color="blue"
+                round
                 @click.native="step = 6"
               >
                 Continue
               </v-btn>
               <v-btn 
-                flat
+                class="v-btn--simple"
+                color="default"
+                round
                 @click.native="step = 4"
               >
                 Cancel
@@ -1200,12 +1219,15 @@ export default {
               <v-btn
                 color="blue" 
                 class="white--text"
+                round
                 @click.native="step = 1"
               >
                 Continue
               </v-btn>
               <v-btn 
-                flat
+                class="v-btn--simple"
+                color="default"
+                round
                 @click.native="step = 5"
               >
                 Cancel

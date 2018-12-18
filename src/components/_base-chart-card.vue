@@ -61,10 +61,10 @@ export default {
   .v-card--material-chart {
     .v-card--material__header {
       .ct-label {
-        color: inherit;
-        opacity: .7;
         font-size: 0.975rem;
         font-weight: 100;
+        color: inherit;
+        opacity: .7;
       }
 
       .ct-grid{

@@ -68,8 +68,8 @@ export default {
       :items="items" 
       :search="search" 
       :pagination.sync="mutablePagination"
-      sort-icon="fa-angle-up"
-      class="elevation-1"
+      sort-icon="keyboard_arrow_down"
+      class="elevation-1 pa-2"
       hide-actions
     >
       <template
@@ -101,21 +101,24 @@ export default {
             <a :href="'/campaignwidget/'+props.item.id"><v-icon>widgets</v-icon></a>                      
           </small>
         </td>
-        <td class="text-xs-right">
+        <td 
+          v-if="basemodule != 'campaignwidgets'"
+          class="text-xs-right"
+        >
           <v-btn 
-            v-if="basemodule != 'campaignwidgets'" 
-            color="indigo" 
-            flat
+            class="v-btn--simple"
+            color="primary"
+            circle
             icon
             @click.native="$emit('edit', props.item)"
           >
             <v-icon>edit</v-icon>
           </v-btn>
           <v-btn
-            v-if="basemodule != 'campaignwidgets'" 
-            color="indigo" 
-            flat
-            icon 
+            class="v-btn--simple" 
+            color="danger" 
+            circle
+            icon
             @click.native="$emit('remove', props.item)"
           >
             <v-icon>delete</v-icon>
@@ -143,8 +146,8 @@ export default {
       <v-pagination
         v-model="mutablePagination.page" 
         :length="mutablePagination.pages"
-        next-icon="fas fa-caret-right"
-        prev-icon="fas fa-caret-left"
+        next-icon="arrow_right"
+        prev-icon="arrow_left"
         color="green"
         circle
         @input="nextPage"
@@ -153,6 +156,7 @@ export default {
   </div>
 </template>
 
-<style lang="scss" module>
+<style lang="scss" module scoped>
 @import '@design';
+
 </style>

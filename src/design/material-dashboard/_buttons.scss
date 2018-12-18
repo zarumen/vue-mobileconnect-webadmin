@@ -1,9 +1,9 @@
 .v-btn {
-  margin: $margin-small 1px;
+  height: auto;
   padding: $padding-small + 2 $padding-general + 15;
+  margin: $margin-small 1px;
   font-size: $font-size-small;
   font-weight: $font-weight-base !important;
-  height: auto;
   line-height: $line-height-base;
   color: $white !important;
   cursor: pointer;
@@ -59,7 +59,11 @@
   }
 
   &.primary {
-    @include button-color($brand-primary);
+    @include button-color($indigo-900);
+  }
+
+  &.secondary {
+    @include button-color($green-900);
   }
 
   &.warning {
@@ -80,17 +84,17 @@
 }
 
 .v-btn--fixed {
-  border-radius: $border-radius-base + 3;
-  border-bottom-right-radius: 0;
-  border-top-right-radius: 0;
-  background-color: rgba($black, .3) !important;
   right: 0;
-  padding: 0;
   width: $btn-fixed-width;
+  padding: 0;
+  background-color: rgba($black, .3) !important;
+  border-radius: $border-radius-base + 3;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 
   .v-icon {
-    font-size: $btn-fixed-icon-size;
     padding: $padding-small;
+    font-size: $btn-fixed-icon-size;
   }
 }
 

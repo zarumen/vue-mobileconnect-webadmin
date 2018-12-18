@@ -6,8 +6,12 @@ export default {
   components: { NavBarRoutes },
   data() {
     return {
-      drawer: false,
+      drawer: true,
       isActive: false,
+      responsive: false,
+      logo: '@assets/images/mc-logo.png',
+      color: 'green white--text',
+      image: 'https://demos.creative-tim.com/vue-material-dashboard/img/sidebar-2.32103624.jpg',
       loggedInNavRoutes: [
         {
           name: 'profile',
@@ -15,13 +19,13 @@ export default {
         },
         {
           name: 'logout',
-          title: 'Log out',
+          title: 'Logout',
         },
       ],
       loggedOutNavRoutes: [
         {
           name: 'login',
-          title: 'Log in',
+          title: 'Login',
         },
       ],
     }
@@ -40,45 +44,46 @@ export default {
         },
         {
           name: 'organizations',
-          icon: 'sitemap',
+          icon: 'business',
           title: 'Organizations Manager',
         },
         {
           name: 'shortcodes',
-          icon: 'diceSix',
+          icon: 'looks_6',
           title: 'Shortcodes Manager',
         },
         {
+          name: 'campaigns',
+          icon: 'store',
+          title: 'Campaigns Manager',
+        },
+        {
           name: 'users',
-          icon: 'userFriends',
-          title: 'User Manager',
+          icon: 'supervisor_account',
+          title: 'Users Manager',
         },
         {
           name: 'regex',
-          icon: 'school',
+          icon: 'priority_high',
           title: 'Regex Manager',
         },
         {
           name: 'campaignwidgets',
-          icon: 'school',
-          title: 'Widget Manager',
-        },
-        {
-          name: 'campaigns',
-          icon: 'storeAlt',
-          title: 'Campaigns Manager',
+          icon: 'widgets',
+          source: 'custom',
+          title: 'Widgets Manager',
         },
       ]
       let menuUser = [
         {
           name: 'profile',
-          icon: 'userCircle',
+          icon: 'person',
           title: 'Profile',
         },
         {
           name: 'logout',
-          icon: 'signOutAlt',
-          title: 'Log out',
+          icon: 'exit_to_app',
+          title: 'Logout',
         },
       ]
       if (this.isAdmin === false) {
@@ -89,83 +94,110 @@ export default {
       return menuItems
     }
   },
+  methods: {
+    onResponsiveInverted () {
+      if (window.innerWidth < 991) {
+        this.responsive = true
+      } else {
+        this.responsive = false
+      }
+    }
+  }
 }
 </script>
 
 <template>
   <v-layout>
     <v-navigation-drawer
+      id="app-drawer"
       v-model="drawer"
-      temporary
       app
-    >
-      <v-list>
-        <v-list-tile
-          v-for="(item, i) in menuItems"
-          :key="i"
-          :to="item.name"
-          value="true"
-          exact-active-class
-          exact
-        >
-          <v-list-tile-action>
-            <BaseIcon 
-              :name="item.icon" 
-              :source="item.source"
-            />
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>
-              {{ item.title }}
-            </v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
-    <v-toolbar
-      :clipped-left="$vuetify.breakpoint.mdAndUp"
       dark
-      color="green darken-2"
-      app
+      floating
+      persistent
+      mobile-break-point="991"
+      width="260"
     >
-      <v-toolbar-side-icon
-        v-if="loggedIn"
-        @click.stop="drawer = !drawer"
-      />
-      <v-toolbar-title justify-left>
-        <img src="@assets/images/logo.png">
-      </v-toolbar-title>
-      <v-spacer/>
-      <v-toolbar-items>
-        <NavBarRoutes
-          v-if="loggedIn"
-          :routes="loggedInNavRoutes"
-        />
-        <NavBarRoutes
-          v-else
-          :routes="loggedOutNavRoutes"
-        />
-      </v-toolbar-items>
-    </v-toolbar>
+      <v-img
+        :src="image"
+        height="100%"
+      >
+        <v-layout
+          class="fill-height"
+          tag="v-list"
+          column
+        >
+          <v-list-tile avatar>
+            <v-list-tile-avatar
+              color="white"
+            >
+              <v-img
+                src="https://api.adorable.io/avatars/285/abott@adorable.png"
+                height="34"
+                contain
+              />
+            </v-list-tile-avatar>
+            <v-list-tile-title class="title">
+              Mobile Connect
+            </v-list-tile-title>
+          </v-list-tile>
+          <v-divider/>
+          <v-list-tile
+            v-if="responsive"
+          >
+            <v-text-field
+              class="purple-input search-input"
+              label="Search..."
+              color="purple"
+            />
+          </v-list-tile>
+          <v-list-tile
+            v-for="(item, i) in menuItems"
+            :key="i"
+            :to="item.name"
+            :active-class="color"
+            avatar
+            class="v-list-item"
+          >
+            <v-list-tile-action>
+              <v-icon> 
+                {{ item.icon }}
+              </v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title class="white--text">
+                {{ item.title }}
+              </v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-layout>
+      </v-img>
+    </v-navigation-drawer>
   </v-layout>
 </template>
 
-<style lang="scss" module scoped>
+<style lang="scss" scoped>
 @import '@design';
 
-.container {
-  padding: 0;
-  margin: 0 0 $size-grid-padding;
-  text-align: center;
-  list-style-type: none;
+#app-drawer {
+    .v-list__tile {
+      border-radius: 4px;
 
-  > li {
-    display: inline-block;
-    margin-right: $size-grid-padding;
+      &--buy {
+        margin-top: auto;
+        margin-bottom: 17px;
+      }
+    }
+
+    .v-image__image--contain {
+      top: 9px;
+      height: 60%;
+    }
+
+    .search-input {
+      padding-right: 15px;
+      padding-left: 15px;
+      margin-bottom: 30px !important;
+    }
   }
-}
-
-.active {
-  color: red;
-}
 </style>

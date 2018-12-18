@@ -4,17 +4,17 @@
 
   .sidebar-filter {
     height: 30px;
-    line-height: 25px;
     font-size: $font-size-small !important;
     font-weight: $font-weight-bolder + 100;
+    line-height: 25px;
     color: $black-color;
   }
 
   .v-responsive {
-    max-height: 100px;
-    border-radius: $border-radius-dropdown;
     max-width: 50px;
+    max-height: 100px;
     margin: 0 auto;
+    border-radius: $border-radius-dropdown;
   }
 
   .container.grid-list-xl .layout .flex {
