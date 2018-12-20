@@ -100,32 +100,19 @@ export default {
       :items="items" 
       :search="search" 
       :pagination.sync="mutablePagination"
+      sort-icon="keyboard_arrow_down"
       class="elevation-1"
       hide-actions
     >
-      <template 
-        slot="headers" 
-        slot-scope="props"
+      <template
+        slot="headerCell"
+        slot-scope="{ header }"
       >
-        <tr>
-          <th 
-            v-for="(header, index) in props.headers" 
-            :key="header.text"
-            :class="[
-              'column sortable', 
-              paginationDesc ? 'desc' : 'asc',
-              header.value === paginationSort ? 'active' : '',
-              'subheading', 
-              index === 0? 'text-xs-left': 'text-xs-center'
-            ]" 
-            @click="changeSorting(header.value)"
-          >
-            {{ header.text }}
-            <v-icon small>arrow_upward</v-icon>
-          </th>
-          <th/>
-        </tr>
-      </template>
+        <span
+          class="subheading font-weight-light text--darken-3"
+          v-text="header.text"
+        />
+      </template>    
       <template 
         slot="items" 
         slot-scope="props"
