@@ -1,5 +1,5 @@
 <script>
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+import { FontAwesomeIcon}  from '@fortawesome/vue-fontawesome'
 import camelCase from 'lodash/camelCase'
 
 export default {
@@ -29,6 +29,7 @@ export default {
         syncAlt: require('@fortawesome/fontawesome-free-solid/faSyncAlt'),
         siteMap: require('@fortawesome/fontawesome-free-solid/faSitemap'),
         storeAlt: require('@fortawesome/fontawesome-free-solid/faStoreAlt'),
+        fileAlt: require('@fortawesome/fontawesome-free-solid/faFileAlt'),
         user: require('@fortawesome/fontawesome-free-solid/faUser'),
         userFriends: require('@fortawesome/fontawesome-free-solid/faUserFriends'),
         userCircle: require('@fortawesome/fontawesome-free-solid/faUserCircle'),

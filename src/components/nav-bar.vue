@@ -62,6 +62,11 @@ export default {
           title: 'Widget Manager',
         },
         {
+          name: 'report',
+          icon: 'fileAlt',
+          title: 'Report Export',
+        },
+        {
           name: 'campaigns',
           icon: 'storeAlt',
           title: 'Campaigns Manager',
