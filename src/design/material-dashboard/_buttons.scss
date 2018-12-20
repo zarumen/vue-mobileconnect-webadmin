@@ -10,7 +10,7 @@
   border-radius: $border-radius-base;
 
   &.v-btn--round,
-  &.v-btn--round:after {
+  &.v-btn--round::after {
     border-radius: $btn-round-padding;
   }
 
@@ -29,8 +29,8 @@
   }
 
   &.v-btn--large {
-    font-size: $font-size-general;
     padding: $btn-y-large-padding $btn-x-large-padding !important;
+    font-size: $font-size-general;
     line-height: $btn-large-line-height;
   }
 
@@ -42,8 +42,8 @@
   &.v-btn--icon {
     width: $btn-icon-dim;
     height: $btn-icon-dim;
-    line-height: $btn-icon-dim;
     padding: 0;
+    line-height: $btn-icon-dim;
 
     &.v-btn--round {
       border-radius: 50%;
@@ -98,8 +98,8 @@
   }
 }
 
-.v-btn--active:before,
-.v-btn:focus:before,
-.v-btn:hover:before {
+.v-btn--active::before,
+.v-btn:focus::before,
+.v-btn:hover::before {
   background-color: transparent;
 }

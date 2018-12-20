@@ -2,16 +2,18 @@
   border-radius: $border-radius-base;
 
   .v-list__tile {
-    border-radius: $border-radius-base - 1;
-    color: #333 !important;
     display: flex;
+    padding: $padding-small 1.5rem;
+    margin: 0 $margin-small - 5;
     font-size: $font-size-dropdown;
     font-weight: $font-weight-base;
-    margin: 0 $margin-small - 5;
-    padding: $padding-small 1.5rem;
+    color: #333 !important;
     text-transform: none;
-    @include transition-except-props(.15s linear, color, background-color, box-shadow 0ms);
+
     white-space: nowrap;
+    border-radius: $border-radius-base - 1;
+
+    @include transition-except-props(.15s linear, color, background-color, box-shadow 0ms);
 
     .v-list__tile__title {
       transition: none;

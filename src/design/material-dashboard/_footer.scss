@@ -1,17 +1,17 @@
 .theme--light.v-footer {
-  border-top: $footer-border-top;
-  background: transparent;
   padding: $padding-general $padding-x-footer;
+  background: transparent;
+  border-top: $footer-border-top;
 }
 
 .v-footer {
   .footer-links {
+    padding: $padding-general;
+    font-size: $font-size-small;
     font-weight: $font-weight-bolder;
+    line-height: $line-height-footer-items;
     text-decoration: none;
     text-transform: uppercase;
-    font-size: $font-size-small;
-    padding: $padding-general;
-    line-height: $line-height-footer-items;
 
     &:hover,
     &:focus,
@@ -36,8 +36,8 @@
 
 @media all and (max-width: 991px) {
   .v-footer {
-    height: auto !important;
     flex-direction: column;
+    height: auto !important;
   }
 
   .footer-items,

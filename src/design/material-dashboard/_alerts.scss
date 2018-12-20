@@ -1,7 +1,7 @@
 .v-alert {
   .v-alert__dismissible .v-icon {
-    color: rgba($white, .5);
     font-size: $font-size-default + 2;
+    color: rgba($white, .5);
   }
 
   .v-alert__icon.v-icon {
@@ -12,8 +12,8 @@
 
 .v-snack {
   .v-icon:not(:first-child) {
-    color: rgba($white, .5);
     margin-left: $margin-general + 1;
+    color: rgba($white, .5);
   }
 
   .v-icon:first-child {
@@ -21,8 +21,8 @@
   }
 
   .v-snack__content {
-    padding: $padding-general $padding-general + 5;
     height: auto;
+    padding: $padding-general $padding-general + 5;
   }
 
   .v-snack__wrapper {

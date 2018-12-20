@@ -31,19 +31,19 @@ h4, .h4{
     line-height: $line-height-base !important;
 }
 h5, .h5 {
+    margin-bottom: $margin-general;
     font-size: $font-size-h5 !important;
     line-height: 1.55em !important;
-    margin-bottom: $margin-general;
 }
 h6, .h6{
     font-size: $font-size-h6 !important;
-    text-transform: uppercase;
     font-weight: $font-weight-bolder;
+    text-transform: uppercase;
 }
 
 p{
-    font-size: $font-paragraph !important;
     margin: 0 0 $margin-small;
+    font-size: $font-paragraph !important;
 }
 
 h2.title{

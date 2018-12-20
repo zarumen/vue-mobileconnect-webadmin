@@ -1,55 +1,57 @@
 .v-tooltip__content {
-  background: $white;
-  padding: $padding-small $padding-general;
   min-width: $tooltip-min-width;
   max-width: $tooltip-max-width;
-  color: $gray !important;
+  padding: $padding-small $padding-general;
   font-size: $font-size-small;
   font-weight: $font-weight-base;
-  @include shadow-8dp();
-  text-align: center;
+  color: $gray !important;
 
-  &:after{
+  text-align: center;
+  background: $white;
+
+  @include shadow-8dp();
+
+  &::after{
     position: absolute;
-    bottom: -$tooltip-border;
-    height: 0;
-    left: 0;
     right: 0;
-    margin-left: auto;
-    margin-right: auto;
+    bottom: -$tooltip-border;
+    left: 0;
     width: $tooltip-border;
+    height: 0;
+    margin-right: auto;
+    margin-left: auto;
     vertical-align: $tooltip-arrow-align;
     content: "";
   }
 
-  &.top:after {
+  &.top::after {
     border-top: $tooltip-border solid $white;
     border-right: $tooltip-border solid transparent;
     border-bottom: 0;
     border-left: $tooltip-border solid transparent;
   }
 
-  &.bottom:after{
+  &.bottom::after{
     top: -$tooltip-border;
     border-top: 0;
     border-right: $tooltip-border solid transparent;
     border-bottom: $tooltip-border solid $white;
     border-left: $tooltip-border solid transparent;
   }
-  &.left:after{
-    margin-right: 0;
-    right: -$tooltip-border;
+  &.left::after{
     top: $tooltip-top-border-pos;
+    right: -$tooltip-border;
+    margin-right: 0;
     border-top: $tooltip-border solid transparent;
     border-bottom: $tooltip-border solid transparent;
     border-left: $tooltip-border solid $white;
   }
-  &.right:after{
-    margin-left: 0;
-    left: -$tooltip-border;
+  &.right::after{
     top: $tooltip-top-border-pos;
+    left: -$tooltip-border;
+    margin-left: 0;
     border-top: $tooltip-border solid transparent;
-    border-bottom: $tooltip-border solid transparent;
     border-right: $tooltip-border solid $white;
+    border-bottom: $tooltip-border solid transparent;
   }
 }

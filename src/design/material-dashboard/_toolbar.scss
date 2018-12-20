@@ -1,7 +1,7 @@
 .v-toolbar {
   min-height: $toolbar-min-height;
-  border-radius: $border-radius-base;
   margin-bottom: $margin-general;
+  border-radius: $border-radius-base;
 
   &:not(.v-toolbar--fixed) .v-toolbar__content {
     margin-left: $toolbar-margin-left;
@@ -24,13 +24,13 @@
 
   .v-toolbar__content {
     min-height: $toolbar-min-height;
-    padding-bottom: $padding-small;
     padding-top: $padding-small;
+    padding-bottom: $padding-small;
 
     .v-toolbar__title {
       font-size: $font-size-toolbar-title;
-      letter-spacing: unset;
       color: $black-color;
+      letter-spacing: unset;
     }
 
     .v-toolbar__items {
@@ -39,21 +39,21 @@
       }
 
       .toolbar-items{
-        align-items: center;
-        border-radius: $border-radius-base;
         display: flex;
+        align-items: center;
         min-height: $list-item-height;
         padding: $padding-small $padding-general;
+        border-radius: $border-radius-base;
 
         .v-badge__badge {
-          border: $badge-border !important;
-          font-size: $font-size-mini;
-          height: $badge-dimension;
-          line-height: normal;
-          right: -7px;
           top: -12px;
+          right: -7px;
           width: $badge-dimension;
+          height: $badge-dimension;
+          font-size: $font-size-mini;
           font-weight: $font-weight-base;
+          line-height: normal;
+          border: $badge-border !important;
         }
 
         .v-icon {
@@ -62,8 +62,8 @@
       }
 
       .v-input {
-        margin: 0 !important;
         padding: 0;
+        margin: 0 !important;
       }
     }
   }

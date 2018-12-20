@@ -500,6 +500,7 @@ export default {
                           no-title 
                           scrollable
                           dark
+                          locale="th"
                           color="blue"
                         >
                           <v-spacer/>

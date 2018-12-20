@@ -3,12 +3,12 @@
 }
 
 a {
-  text-transform: none;
   text-decoration: none;
+  text-transform: none;
 }
 
 html {
-  font-size: $font-size-general + 2!important;
+  font-size: $font-size-general + 2 !important;
 }
 
 .category {
@@ -28,8 +28,8 @@ blockquote {
 
   p {
     font-style: italic;
-    color: $blockquote-color;
     font-weight: $font-weight-bolder;
+    color: $blockquote-color;
   }
 
   small {

@@ -2,8 +2,8 @@
   @include shadow-big();
 
   .v-list {
-    background: $sidebar-bg;
     padding: 0;
+    background: $sidebar-bg;
 
     .v-list-item {
       &:not(:nth-child(3)){
@@ -24,15 +24,15 @@
         }
 
         .v-list__tile__title {
+          padding: 0;
           font-size: $font-size-general !important;
           font-weight: $font-weight-lighter;
-          padding: 0;
         }
       }
 
       .v-list__tile__action {
-        margin-right: $margin-general;
         min-width: unset;
+        margin-right: $margin-general;
 
         i {
           width: $icon-width;
@@ -54,24 +54,24 @@
     }
 
     .v-list__tile__avatar {
-      margin-left: $margin-list-left;
-      margin-right: $margin-list-right;
       min-width: unset;
+      margin-right: $margin-list-right;
+      margin-left: $margin-list-left;
     }
 
     .v-list__tile__title {
-      line-height: $line-height;
-      padding: $padding-avatar-title 0;
       height: unset;
+      padding: $padding-avatar-title 0;
       font-size: $font-size-avatar-title !important;
       font-weight: $font-weight-base;
+      line-height: $line-height;
       letter-spacing: unset !important;
     }
 
     .v-divider {
-      border-color: $black-opacity-3;
-      margin: $divider-margins auto $divider-margins + 25;
       width: $divider-width;
+      margin: $divider-margins auto $divider-margins + 25;
+      border-color: $black-opacity-3;
 
     }
 

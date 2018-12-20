@@ -13,7 +13,7 @@ export default {
 
 <template>
   <Layout>
-    <v-content>
+    <div>
       <v-container
         fluid
       >
@@ -389,6 +389,6 @@ export default {
           </v-layout>
         </v-footer>
       </v-container>
-    </v-content>
+    </div>
   </Layout>
 </template>

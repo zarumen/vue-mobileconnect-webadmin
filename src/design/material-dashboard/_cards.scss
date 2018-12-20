@@ -8,17 +8,17 @@
 
   .title {
     margin-top: 0;
+    margin-bottom: $card-title-margin !important;
+    font-size: $font-size-h4 !important;
     line-height: $line-height-base !important;
     letter-spacing: 0 !important;
-    font-size: $font-size-h4 !important;
-    margin-bottom: $card-title-margin !important;
   }
 
   .v-divider {
-    border-top: $divider-border;
-    margin-left: $card-content-x-padding !important;
     margin-right: $card-content-x-padding !important;
     margin-bottom: 1px;
+    margin-left: $card-content-x-padding !important;
+    border-top: $divider-border;
   }
 
   .v-offset {
@@ -35,8 +35,8 @@
   }
 
   .v-card__actions {
-    margin: 0 $card-actions-y-margin 0;
     padding: $padding-small 0 $padding-small;
+    margin: 0 $card-actions-y-margin 0;
     line-height: $line-height-higher;
   }
 }
@@ -47,9 +47,9 @@
   }
 
   .v-card--material__header{
-    border-radius: $border-radius-base + 3;
     min-height: $card-chart-min-height;
     padding: 0 !important;
+    border-radius: $border-radius-base + 3;
 
     .ct-label {
       font-size: $font-size-chart-label;
@@ -90,35 +90,35 @@
     .v-card {
       max-width: $card-stats-offset;
       max-height: $card-stats-offset;
-      line-height: $card-stats-offset;
       padding: $padding-general !important;
+      line-height: $card-stats-offset;
 
       i {
-        font-size: $font-size-big !important;
-        line-height: $line-height-high;
         width: $card-stats-icons-dim;
         height: $card-stats-icons-dim;
+        font-size: $font-size-big !important;
+        line-height: $line-height-high;
       }
     }
   }
 
   .v-card__text {
-    text-align: right;
-    padding-top: $padding-small;
     position: relative;
+    padding-top: $padding-small;
+    text-align: right;
   }
 
   .title {
     margin: 0 !important;
+    font-size: $font-size-h3 !important;
     line-height: $line-height-base !important;
     letter-spacing: 0 !important;
-    font-size: $font-size-h3 !important;
 
     small {
-      color: $gray-light;
       font-size: $font-size-small-tag;
-      line-height: 1;
       font-weight: $font-weight-base;
+      line-height: 1;
+      color: $gray-light;
     }
   }
 
@@ -140,8 +140,8 @@
 
   .v-offset {
     top: unset !important;
-    margin-bottom: unset !important;
     margin-top: $card-profile-avatar-pos;
+    margin-bottom: unset !important;
   }
 
   .v-card__text .v-card__text {

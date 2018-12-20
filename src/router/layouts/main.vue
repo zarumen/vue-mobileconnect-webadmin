@@ -1,5 +1,5 @@
 <script>
-import NavBar from '@components/nav-bar'
+import NavBar from '@components/core/nav-bar'
 
 export default {
   components: { NavBar },
