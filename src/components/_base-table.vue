@@ -22,14 +22,15 @@ export default {
   },
   data () {
     return {
-      search: ''
+      search: '',
+      mutablePagination: this.pagination
     }
   },
   computed: {
     isNotEmpty () {
       return this.items && this.items.length > 0;
     },
-    page: {
+/*     page: {
       get () {
         return this.pagination.page
       },
@@ -52,7 +53,7 @@ export default {
       set (value) {
         this.$store.commit(`${this.basemodule}/updateDescending`, value)
       }
-    }
+    } */
   },
   created () {
      console.log(this.basemodule)
@@ -76,14 +77,17 @@ export default {
       }
       return val;
     },
-    changeSorting(column) {
+    nextPage (newValue) {
+      return this.$store.dispatch(`${this.basemodule}/updatePage`, newValue)
+    },
+/*     changeSorting(column) {
       if (this.paginationSort === column) {
         this.paginationDesc = !this.paginationDesc
       } else {
         this.paginationSort = column
         this.paginationDesc = false
       }
-    },
+    }, */
   },
   
 }
@@ -95,7 +99,7 @@ export default {
       :headers="headers" 
       :items="items" 
       :search="search" 
-      :pagination.sync="pagination"
+      :pagination.sync="mutablePagination"
       class="elevation-1"
       hide-actions
     >
@@ -184,10 +188,13 @@ export default {
       class="text-xs-center pt-2"
     >
       <v-pagination
-        v-model="page" 
-        :length="pagination.pages"
+        v-model="mutablePagination.page" 
+        :length="mutablePagination.pages"
+        next-icon="arrow_right"
+        prev-icon="arrow_left"
         color="green"
         circle
+        @input="nextPage"
       />
     </v-flex>
   </div>
