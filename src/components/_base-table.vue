@@ -30,30 +30,6 @@ export default {
     isNotEmpty () {
       return this.items && this.items.length > 0;
     },
-/*     page: {
-      get () {
-        return this.pagination.page
-      },
-      set (value) {
-        this.$store.commit(`${this.basemodule}/updatePage`, value)
-      }
-    },
-    paginationSort: {
-      get () {
-        return this.pagination.sortBy
-      },
-      set (value) {
-        this.$store.commit(`${this.basemodule}/updateSortBy`, value)
-      }
-    },
-    paginationDesc: {
-      get () {
-        return this.pagination.descending
-      },
-      set (value) {
-        this.$store.commit(`${this.basemodule}/updateDescending`, value)
-      }
-    } */
   },
   created () {
      console.log(this.basemodule)
@@ -80,14 +56,6 @@ export default {
     nextPage (newValue) {
       return this.$store.dispatch(`${this.basemodule}/updatePage`, newValue)
     },
-/*     changeSorting(column) {
-      if (this.paginationSort === column) {
-        this.paginationDesc = !this.paginationDesc
-      } else {
-        this.paginationSort = column
-        this.paginationDesc = false
-      }
-    }, */
   },
   
 }
@@ -124,16 +92,13 @@ export default {
           :key="index"
           :class="[ index === 0? 'text-xs-left': 'text-xs-center', 'body-2']"
         >
-          <small v-if="header.text!=='Widget'">{{ renderData(props.item, header) }}</small>
-          <small v-else>
-<!--             <router-link 
-              :to="{ path: 'campaignwidget/'+props.item.id}"
-              color="indigo"
-            >
-              <v-icon>widgets</v-icon>
-            </router-link> -->
+          <small v-if="header.text==='Widget'">
             <a :href="'/campaignwidget/'+props.item.id"><v-icon>widgets</v-icon></a>                      
           </small>
+          <small v-if="header.text==='Report'">
+            <a :href="'/campaignwidget/'+props.item.id"><v-icon>description</v-icon></a>                      
+          </small>
+          <small v-else>{{ renderData(props.item, header) }}</small>
         </td>
         <td class="text-xs-right">
           <v-btn 
