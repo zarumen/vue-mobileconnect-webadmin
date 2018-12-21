@@ -1,17 +1,16 @@
 <script>
-import NavBarRoutes from './nav-bar-routes'
 import Toolbar from './tool-bar'
 import Drawer from './drawer'
 
 export default {
-  components: { NavBarRoutes, Toolbar, Drawer },
+  components: { Toolbar, Drawer },
   data() {
     return {
       drawer: true,
     }
   },
   computed: {
-    lock() {
+    showDrawer() {
       // check ว่า เป็นหน้า home หรือ login รึเปล่า ถ้าไม่ใช่ return true
       if (this.$route.name === 'home')
         return false
@@ -37,7 +36,7 @@ export default {
   <v-layout>    
     <toolbar />
 
-    <drawer v-if="lock"/>
+    <drawer v-if="showDrawer"/>
   </v-layout>
 </template>
 

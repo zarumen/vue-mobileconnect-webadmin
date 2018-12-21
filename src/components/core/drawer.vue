@@ -6,7 +6,7 @@ export default {
   data() {
     return {
       responsive: false,
-      color: 'green white--text',
+      color: 'secondary white--text',
       logo: '@assets/images/mc-logo.png',
       image: 'http://www.mobileconnect.co.th/img/slider/revolution/moblie-slider1.jpg',
       avatar: 'https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png'
@@ -22,9 +22,18 @@ export default {
         this.setDrawer(val)
       }
     },
-    menuItems () {
+  },
+  methods: {
+    ...mapMutations('app', ['setDrawer', 'toggleDrawer']),
+    onResponsiveInverted () {
+      if (window.innerWidth < 991) {
+        this.responsive = true
+      } else {
+        this.responsive = false
+      }
+    },
+    selectedMenuItem (value) {
       // init menu Items by use 'auth/isAdmin' role
-      var menuItems =  []
       let menuAdmin = [
         {
           name: 'dashboard',
@@ -53,21 +62,42 @@ export default {
         },
         {
           name: 'regex',
-          icon: 'priority_high',
+          icon: 'code',
           title: 'Regex Manager',
         },
         {
           name: 'campaignwidgets',
           icon: 'widgets',
-          source: 'custom',
           title: 'Widgets Manager',
         },
       ]
       let menuUser = [
         {
+          name: 'reportViewer',
+          icon: 'assignment',
+          title: 'Reports',
+        },
+        {
+          name: 'campaignsViewer',
+          icon: 'store',
+          title: 'Campaigns',
+        },
+        {
+          name: 'campaignWidgetsViewer',
+          icon: 'widgets',
+          title: 'Widgets',
+        },
+      ]
+      let menuDefault = [
+        {
           name: 'profile',
-          icon: 'person',
+          icon: 'face',
           title: 'Profile',
+        },
+        {
+          name: 'settings',
+          icon: 'settings',
+          title: 'Settings',
         },
         {
           name: 'logout',
@@ -75,21 +105,12 @@ export default {
           title: 'Logout',
         },
       ]
-      if (this.isAdmin === false) {
-        menuItems = menuUser
+      if(value === 1 && this.isAdmin === true) {
+        return menuAdmin
+      } else if (value === 2) {
+        return menuUser
       } else {
-        menuItems = menuAdmin.concat(menuUser)
-      }
-      return menuItems
-    }
-  },
-  methods: {
-    ...mapMutations('app', ['setDrawer', 'toggleDrawer']),
-    onResponsiveInverted () {
-      if (window.innerWidth < 991) {
-        this.responsive = true
-      } else {
-        this.responsive = false
+        return menuDefault
       }
     }
   }
@@ -131,34 +152,100 @@ export default {
           </v-list-tile-title>
         </v-list-tile>
         <v-divider/>
-        <v-list-tile
+        <!-- <v-list-tile
           v-if="responsive"
         >
           <v-text-field
             class="purple-input search-input"
             label="Search..."
-            color="purple"
+            color="primary"
           />
-        </v-list-tile>
-        <v-list-tile
-          v-for="(item, i) in menuItems"
-          :key="i"
-          :to="item.name"
-          :active-class="color"
-          avatar
-          class="v-list-item"
-        >
-          <v-list-tile-action>
-            <v-icon>
-              {{ item.icon }}
-            </v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title class="white--text">
-              {{ item.title }}
-            </v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
+        </v-list-tile> -->
+        <!-- -->
+        <v-list>
+          <v-list-group
+            v-if="isAdmin"
+            prepend-icon="supervised_user_circle"
+            value="true"
+          >
+            <v-list-tile slot="activator">
+              <v-list-tile-title>Administrator</v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile
+              v-for="(item, i) in selectedMenuItem(1)"
+              :key="i"
+              :to="item.name"
+              :active-class="color"
+              avatar
+              class="v-list-item"
+            >
+              <v-list-tile-action>
+                <v-icon>
+                  {{ item.icon }}
+                </v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title class="white--text">
+                  {{ item.title }}
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile> 
+          </v-list-group>
+          <v-list-group
+            prepend-icon="account_circle"
+            value="true"
+          >
+            <v-list-tile slot="activator">
+              <v-list-tile-title>User</v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile
+              v-for="(item, i) in selectedMenuItem(2)"
+              :key="i"
+              :to="item.name"
+              :active-class="color"
+              avatar
+              class="v-list-item"
+            >
+              <v-list-tile-action>
+                <v-icon>
+                  {{ item.icon }}
+                </v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title class="white--text">
+                  {{ item.title }}
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile> 
+          </v-list-group>
+          <v-list-group
+            prepend-icon="check_circle"
+            value="true"
+          >
+            <v-list-tile slot="activator">
+              <v-list-tile-title>Actions</v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile
+              v-for="(item, i) in selectedMenuItem(3)"
+              :key="i"
+              :to="item.name"
+              :active-class="color"
+              avatar
+              class="v-list-item"
+            >
+              <v-list-tile-action>
+                <v-icon>
+                  {{ item.icon }}
+                </v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title class="white--text">
+                  {{ item.title }}
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list-group>
+        </v-list>
       </v-layout>
     </v-img>
   </v-navigation-drawer>

@@ -48,6 +48,7 @@ strong {
 }
 
 @include drawer-active-colors('primary', $brand-primary);
+@include drawer-active-colors('secondary', $brand-secondary);
 @include drawer-active-colors('success', $brand-success);
 @include drawer-active-colors('danger', $brand-danger);
 @include drawer-active-colors('info', $brand-info);

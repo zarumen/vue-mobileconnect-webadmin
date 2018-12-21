@@ -44,7 +44,7 @@ export default {
             md8
           >
             <base-card
-              color="green"
+              color="purple"
               title="Edit Profile"
               text="Complete your profile"
             >
@@ -135,7 +135,7 @@ export default {
                     >
                       <v-btn
                         class="mx-0 font-weight-light"
-                        color="success"
+                        color="primary"
                       >
                         Update Profile
                       </v-btn>
@@ -164,7 +164,7 @@ export default {
                 <h4 class="card-title font-weight-light">{{ profileName }}</h4>
                 <p class="card-description font-weight-light">Don't be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...</p>
                 <v-btn
-                  color="success"
+                  color="primary"
                   round
                   class="font-weight-light"
                 >
