@@ -1,6 +1,7 @@
 <script>
 import { authComputed } from '@state/helpers'
 import NavBarRoutes from './nav-bar-routes'
+import { mapMutations } from 'vuex'
 
 export default {
   components: { NavBarRoutes },
@@ -26,6 +27,12 @@ export default {
   },
   computed: {
     ...authComputed,
+  },
+  methods: {
+    ...mapMutations('app', ['setDrawer', 'toggleDrawer']),
+    onClickBtn () {
+      this.setDrawer(!this.$store.state.app.drawer)
+    },
   }
 }
 </script>
@@ -38,10 +45,10 @@ export default {
   >
     <v-toolbar-side-icon
       v-if="loggedIn"
-      @click.stop="drawer = !drawer"
+      @click.stop="onClickBtn"
     />
     <v-toolbar-title justify-left>
-      <img src="@assets/images/logo.png">
+      TITLE
     </v-toolbar-title>
     <v-spacer/>
     <v-toolbar-items>
@@ -61,6 +68,6 @@ export default {
 @import '@design';
 
 #core-toolbar {
-  background-color: #eee;
+  background-color: rgba(238, 238, 238, 0);
 }
 </style>

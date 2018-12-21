@@ -1,3 +1,5 @@
+import { set, toggle } from '@state/helpers'
+
 export const state = {
   drawer: null,
   color: 'green',
@@ -5,5 +7,6 @@ export const state = {
 }
 
 export const mutations = {
-  
+  setDrawer: set('drawer'),
+  toggleDrawer: toggle('drawer')
 }

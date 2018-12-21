@@ -59,11 +59,11 @@
   }
 
   &.primary {
-    @include button-color($indigo-900);
+    @include button-color($deep-purple);
   }
 
   &.secondary {
-    @include button-color($green-900);
+    @include button-color($yellow-green);
   }
 
   &.warning {

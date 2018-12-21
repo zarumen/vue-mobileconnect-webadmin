@@ -156,7 +156,7 @@ export default {
                 size="150"
               >
                 <img
-                  src="https://demos.creative-tim.com/vue-material-dashboard/img/marc.aba54d65.jpg"
+                  src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png"
                 >
               </v-avatar>
               <v-card-text class="text-xs-center">

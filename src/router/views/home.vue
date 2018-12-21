@@ -8,6 +8,10 @@ export default {
     meta: [{ name: 'description', content: appConfig.description }],
   },
   components: { Layout },
+  data: () => ({
+    image: 'http://www.mobileconnect.co.th/img/slider/revolution/moblie-slider1.jpg',
+    image2: 'http://www.mobileconnect.co.th/img/slider/revolution/moblie-slider3.jpg'
+  })
 }
 </script>
 
@@ -19,7 +23,7 @@ export default {
       >
         <section>
           <v-parallax
-            src="/img/background.jpg"
+            :src="image"
             height="600"
           >
             <v-layout
@@ -260,7 +264,7 @@ export default {
         </section>         
         <section>
           <v-parallax
-            src="/img/technology.jpg"
+            :src="image2"
             height="380"
           >
             <v-layout

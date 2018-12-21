@@ -1,18 +1,27 @@
 <script>
 import { authComputed } from '@state/helpers'
+import { mapMutations } from 'vuex'
 
 export default {
   data() {
     return {
-      drawer: true,
       responsive: false,
       color: 'green white--text',
       logo: '@assets/images/mc-logo.png',
-      image: 'https://demos.creative-tim.com/vue-material-dashboard/img/sidebar-2.32103624.jpg',
+      image: 'http://www.mobileconnect.co.th/img/slider/revolution/moblie-slider1.jpg',
+      avatar: 'https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png'
     }
   },
   computed: {
     ...authComputed,
+    inputValue: {
+      get () {
+        return this.$store.state.app.drawer
+      },
+      set (val) {
+        this.setDrawer(val)
+      }
+    },
     menuItems () {
       // init menu Items by use 'auth/isAdmin' role
       var menuItems =  []
@@ -75,6 +84,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations('app', ['setDrawer', 'toggleDrawer']),
     onResponsiveInverted () {
       if (window.innerWidth < 991) {
         this.responsive = true
@@ -89,11 +99,12 @@ export default {
 <template>
   <v-navigation-drawer
     id="app-drawer"
-    v-model="drawer"
+    v-model="inputValue"
     app
     dark
     floating
     persistent
+    class="elevation-4"
     mobile-break-point="991"
     width="260"
   >
@@ -111,13 +122,12 @@ export default {
             color="white"
           >
             <v-img
-              :src="logo"
-              height="34"
+              :src="avatar"
               contain
             />
           </v-list-tile-avatar>
           <v-list-tile-title class="title">
-            Mobile Connect
+            <img src="@assets/images/logo.png">
           </v-list-tile-title>
         </v-list-tile>
         <v-divider/>
