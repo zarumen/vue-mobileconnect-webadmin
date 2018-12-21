@@ -74,6 +74,11 @@ export default {
       ]
       let menuUser = [
         {
+          name: 'report',
+          icon: 'fileAlt',
+          title: 'Report Export',
+        },
+        {
           name: 'profile',
           icon: 'userCircle',
           title: 'Profile',
