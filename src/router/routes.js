@@ -15,7 +15,7 @@ export default [
         // If the user is already logged in
         if (store.getters['auth/loggedIn']) {
           // Redirect to the home page instead
-          next({ name: 'home' })
+          next({ name: 'profile' })
         } else {
           // Continue to the login page
           next()

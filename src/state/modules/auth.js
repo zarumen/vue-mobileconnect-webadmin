@@ -58,13 +58,13 @@ export const actions = {
     return fireauthApp.onAuthStateChanged(firebaseUser => {
       if (firebaseUser) {
 
-        // console.table([firebaseUser])
-
-        if (firebaseUser.email !== state.userInfo.email) {
+        // refresh new ID Token when token expired
+        if (firebaseUser.qa !== state.currentUser.idToken) {
           let user = {
-            photoURL: firebaseUser.user.photoURL,
-            email: firebaseUser.user.email,
-            displayName: firebaseUser.user.displayName,
+            photoURL: firebaseUser.photoURL,
+            email: firebaseUser.email,
+            displayName: firebaseUser.displayName,
+            idToken: firebaseUser.qa
           }
           commit ('SET_CURRENT_USER', user)
         }
@@ -88,25 +88,23 @@ export const actions = {
           photoURL: firebaseUser.user.photoURL,
           email: firebaseUser.user.email,
           displayName: firebaseUser.user.displayName,
+          idToken: firebaseUser.user.qa
         }
-        console.log(firebaseUser)
+        commit('SET_CURRENT_USER', user)
 
         firestoreApp
           .collection('users')
           .where('email', '==', user.email)
           .get()
           .then(querySnapshot => {
-            console.log(querySnapshot)
             var updatedUser = {}
             querySnapshot.forEach(doc => {
-              console.log(doc.data())
               updatedUser = doc.data()
               updatedUser['id'] = doc.id
             })
             let userIsAdmin = updatedUser.isAdmin
             commit('setAdminRole', userIsAdmin)
             commit('setUserInfo', updatedUser)
-            commit('SET_CURRENT_USER', user)
             return updatedUser
           })
           .catch(error => {
