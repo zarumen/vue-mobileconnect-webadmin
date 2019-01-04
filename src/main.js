@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import './plugins/chartist'
 import './plugins/vuetify'
-// import './plugins/vueSocketIO'
+import './plugins/vueSocketIO'
 import App from './App'
 import router from '@router'
 import store from '@state/store'

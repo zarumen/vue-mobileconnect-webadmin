@@ -31,13 +31,10 @@ export default {
         password: this.password,
       })
         .then(user => {
-          
-          // Redirect to the originally requested page, or to the home page
-          this.$router.push(
-            { name: 'profile' }
-            )
-          
           this.tryingToLogIn = false
+          // Redirect to the originally requested page, or to the home page
+          this.$router.push(this.$route.query.redirect || '/profile')
+          console.log('push finished')
         })
         .catch(error => {
           console.log(error)

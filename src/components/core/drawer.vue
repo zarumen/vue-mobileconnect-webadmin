@@ -169,10 +169,37 @@ export default {
             value="true"
           >
             <v-list-tile slot="activator">
-              <v-list-tile-title>Administrator</v-list-tile-title>
+              <v-list-tile-title>2Way Admin</v-list-tile-title>
             </v-list-tile>
             <v-list-tile
               v-for="(item, i) in selectedMenuItem(1)"
+              :key="i"
+              :to="item.name"
+              :active-class="color"
+              avatar
+              class="v-list-item"
+            >
+              <v-list-tile-action>
+                <v-icon>
+                  {{ item.icon }}
+                </v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title class="white--text">
+                  {{ item.title }}
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile> 
+          </v-list-group>
+          <v-list-group
+            prepend-icon="message"
+            value="true"
+          >
+            <v-list-tile slot="activator">
+              <v-list-tile-title>2Way User</v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile
+              v-for="(item, i) in selectedMenuItem(2)"
               :key="i"
               :to="item.name"
               :active-class="color"
@@ -196,34 +223,7 @@ export default {
             value="true"
           >
             <v-list-tile slot="activator">
-              <v-list-tile-title>User</v-list-tile-title>
-            </v-list-tile>
-            <v-list-tile
-              v-for="(item, i) in selectedMenuItem(2)"
-              :key="i"
-              :to="item.name"
-              :active-class="color"
-              avatar
-              class="v-list-item"
-            >
-              <v-list-tile-action>
-                <v-icon>
-                  {{ item.icon }}
-                </v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title class="white--text">
-                  {{ item.title }}
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile> 
-          </v-list-group>
-          <v-list-group
-            prepend-icon="check_circle"
-            value="true"
-          >
-            <v-list-tile slot="activator">
-              <v-list-tile-title>Actions</v-list-tile-title>
+              <v-list-tile-title>Account</v-list-tile-title>
             </v-list-tile>
             <v-list-tile
               v-for="(item, i) in selectedMenuItem(3)"
