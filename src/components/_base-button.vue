@@ -9,7 +9,7 @@ export default {
 
 <template>
   <v-btn
-    color="success"
+    color="primary"
     v-on="$listeners"
   >
     <slot/>

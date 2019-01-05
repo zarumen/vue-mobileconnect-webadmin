@@ -169,7 +169,7 @@ export default {
       lazy-validation
     >
       <v-card>
-        <v-card-title class="grey lighten-4 py-4 title">
+        <v-card-title class="light-green lighten-4 py-4 title">
           Create New User
         </v-card-title>
         <v-container 
@@ -317,6 +317,7 @@ export default {
               <v-text-field
                 v-model="uform.email"
                 :rules="emailRules"
+                class="purple-input"
                 prepend-icon="email"
                 label="Email"
                 type="email"
@@ -327,6 +328,7 @@ export default {
               <v-text-field
                 v-model="uform.firstName"
                 :rules="nameRules"
+                class="purple-input"
                 prepend-icon="person"
                 label="First Name"
                 required
@@ -342,6 +344,7 @@ export default {
             <v-flex xs2>
               <v-text-field
                 v-model="uform.nickName"
+                class="purple-input"
                 mask="NNNNNNNNNN"
                 label="(Nick Name)"
               />
@@ -349,6 +352,7 @@ export default {
             <v-flex xs3>
               <v-text-field
                 v-model="uform.age"
+                class="purple-input"
                 prepend-icon="sentiment_satisfied_alt"
                 label="Age"
               />
@@ -357,6 +361,7 @@ export default {
               <v-select
                 v-model="uform.gender"
                 :items="genderItems"
+                class="purple-input"
                 prepend-icon="wc"
                 label="Gender"
               />
@@ -364,6 +369,7 @@ export default {
             <v-flex xs6>
               <v-text-field
                 v-model="uform.jobPosition"
+                class="purple-input"
                 prepend-icon="work"
                 label="Position"
               />
@@ -371,6 +377,7 @@ export default {
             <v-flex xs5>
               <v-text-field
                 v-model="uform.mobileTelNumber"
+                class="purple-input"
                 prepend-icon="phone_iphone"
                 mask="phone"
                 label="Mobile No."
@@ -379,6 +386,7 @@ export default {
             <v-flex xs5>
               <v-text-field
                 v-model="uform.officeTelNumber"
+                class="purple-input"
                 prepend-icon="phone"
                 mask="phone"
                 label="Office Tel."
@@ -387,13 +395,10 @@ export default {
             <v-flex xs12>
               <v-textarea
                 v-model="uform.addedNote"
+                class="purple-input"
                 prepend-icon="notes"
                 label="Note:"
-              >
-                <!-- <div slot="label">
-                  Add Note: <small>(optional)</small>
-                </div> -->
-              </v-textarea>
+              />
             </v-flex>
           </v-layout>
         </v-container>
@@ -415,7 +420,7 @@ export default {
           <v-btn
             class="v-btn--simple"
             round 
-            color="success" 
+            color="primary" 
             @click="closeDialog()"
           >
             CANCEL
@@ -423,7 +428,7 @@ export default {
           <v-btn
             :disabled="!valid"
             round
-            color="success"
+            color="primary"
             @click="saveUser()"
           >
             SAVE

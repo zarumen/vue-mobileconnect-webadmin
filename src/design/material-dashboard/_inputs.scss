@@ -19,6 +19,14 @@
     font-weight: $font-weight-base;
     color: $label-color !important;
   }
+
+  .v-label--active {
+    color: $brand-primary !important;
+  }
+}
+
+.v-messages__message {
+  color: $brand-primary;
 }
 
 .theme--light.v-input:not(.v-input--is-disabled) input,

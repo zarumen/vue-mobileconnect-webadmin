@@ -1,6 +1,6 @@
 <script>
 import Layout from '@layouts/main'
-import FormAddUser from '@components/form-add-user'
+import FormAddUser from '@components/form/form-add-user'
 import { mapGetters, mapActions } from 'vuex'
 import { 
   userMethods, 
@@ -46,7 +46,7 @@ export default {
       search: '',
       rightDrawer: false,
       query: "",
-      quickSearchFilter: 'abc'
+      quickSearchFilter: ''
     }
   },
   computed: {
@@ -117,6 +117,8 @@ export default {
             <span class="title">
               Users {{ pagination? "("+pagination.totalItems+")": "" }}
               <v-text-field
+                v-model="quickSearchFilter"
+                class="purple-input"
                 append-icon="search"
                 label="Quick Search"
                 single-line
@@ -147,6 +149,7 @@ export default {
             v-if="loading===false"
             :headers="headers"
             :items="items"
+            :search="quickSearchFilter"
             :pagination="pagination"
             :basemodule="baseModule"
             @edit="edit"
@@ -184,8 +187,7 @@ export default {
       fab
       bottom
       right
-      color="indigo"
-      dark
+      color="primary"
       fixed
       @click.stop="addUserDialog = !addUserDialog"
     >

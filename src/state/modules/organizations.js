@@ -254,6 +254,15 @@ export const actions = {
   // ===
   closeSnackBar ({ commit }, timeout ) {
     closeNotice(commit, timeout);
+  },
+  openSnackBar ({ commit }, { mode, text, timeout }) {
+    if(mode === 'success') {
+      sendSuccessNotice(commit, text)
+      closeNotice(commit, timeout)
+    } else if(mode === 'error') {
+      sendErrorNotice(commit, text)
+      closeNotice(commit, timeout)
+    }
   }
 }
 // ===

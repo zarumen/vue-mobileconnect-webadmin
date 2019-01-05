@@ -11,7 +11,7 @@
       }
 
       &:nth-child(3) {
-        margin: 0 $margin-general;
+        margin: $margin-small $margin-general;
       }
 
       & > .v-list__tile {

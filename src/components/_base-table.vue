@@ -15,6 +15,10 @@ export default {
       type: [Object, String],
       default: '',
     },
+    search: {
+      type: String,
+      default: '',
+    },
     basemodule: {
       type: String,
       default: '',
@@ -22,7 +26,6 @@ export default {
   },
   data () {
     return {
-      search: '',
       mutablePagination: this.pagination
     }
   },
@@ -88,7 +91,6 @@ export default {
       >
         <td  
           v-for="(header, index) in headers"
-          v-if="header.value!==''"
           :key="index"
         >
           <small v-if="header.text!=='Widget'">{{ renderData(props.item, header) }}</small>
@@ -148,7 +150,7 @@ export default {
         :length="mutablePagination.pages"
         next-icon="arrow_right"
         prev-icon="arrow_left"
-        color="green"
+        color="light-green"
         circle
         @input="nextPage"
       />

@@ -1,6 +1,6 @@
 <script>
 import Layout from '@layouts/main'
-import FormAddOrganization from '@components/form-add-organization'
+import FormAddOrganization from '@components/form/form-add-organization'
 import { orgMethods, orgComputed } from '@state/helpers'
 import { debounce } from "lodash";
 
@@ -40,7 +40,7 @@ export default {
       rightDrawer: false,
       query: "",
       timeout: 2000,
-      quickSearchFilter: 'ICC'
+      quickSearchFilter: ''
     }
   },
   computed: {
@@ -75,7 +75,6 @@ export default {
     },
     remove (item) {
       this.organizationId = item.id
-      console.log(this.organizationId)
       this.dialog = true
     },
     onConfirm () {
@@ -115,6 +114,8 @@ export default {
               <span class="title">
                 Organizations {{ pagination? "("+pagination.totalItems+")": "" }}
                 <v-text-field
+                  v-model="quickSearchFilter"
+                  class="purple-input"
                   append-icon="search"
                   label="Quick Search"
                   single-line
@@ -149,6 +150,7 @@ export default {
                 v-if="loading===false"
                 :headers="headers"
                 :items="items"
+                :search="quickSearchFilter"
                 :pagination="pagination"
                 :basemodule="baseModule"
                 @edit="edit"

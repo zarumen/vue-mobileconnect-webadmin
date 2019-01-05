@@ -46,6 +46,11 @@ export default {
           title: 'Organizations Manager',
         },
         {
+          name: 'users',
+          icon: 'supervisor_account',
+          title: 'Users Manager',
+        },
+        {
           name: 'shortcodes',
           icon: 'looks_6',
           title: 'Shortcodes Manager',
@@ -54,11 +59,6 @@ export default {
           name: 'campaigns',
           icon: 'store',
           title: 'Campaigns Manager',
-        },
-        {
-          name: 'users',
-          icon: 'supervisor_account',
-          title: 'Users Manager',
         },
         {
           name: 'regex',
