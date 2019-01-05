@@ -102,7 +102,6 @@ export default {
           align-center 
           justify-center 
           column
-          style="height: 315px;" 
           
         >
           <!-- border: 1px solid black; -->

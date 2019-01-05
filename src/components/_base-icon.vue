@@ -30,7 +30,7 @@ export default {
         siteMap: require('@fortawesome/fontawesome-free-solid/faSitemap'),
         storeAlt: require('@fortawesome/fontawesome-free-solid/faStoreAlt'),
         fileAlt: require('@fortawesome/fontawesome-free-solid/faFileAlt'),
-        //pollAlt: require('@fortawesome/fontawesome-free-solid/faPollAlt'),
+        // pollAlt: require('@fortawesome/fontawesome-free-solid/faPollAlt'),
         user: require('@fortawesome/fontawesome-free-solid/faUser'),
         userFriends: require('@fortawesome/fontawesome-free-solid/faUserFriends'),
         userCircle: require('@fortawesome/fontawesome-free-solid/faUserCircle'),
