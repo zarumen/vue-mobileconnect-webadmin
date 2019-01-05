@@ -2,7 +2,6 @@
 import Layout from '@layouts/main'
 import FormAddOrganization from '@components/form/form-add-organization'
 import { orgMethods, orgComputed } from '@state/helpers'
-import { debounce } from "lodash";
 
 export default {
   page: {
@@ -30,13 +29,6 @@ export default {
       organizationId: '',
       left: true,
       // NOT USE! now
-      searchVm: {
-        contains: {
-          firstName: '',
-          lastName: ''
-        }
-      },
-      search: '',
       rightDrawer: false,
       query: "",
       timeout: 2000,
@@ -45,21 +37,12 @@ export default {
   },
   computed: {
     ...orgComputed,
-    quickSearch: {
-      get: () => {
-        return this.quickSearchFilter
-      },
-      set: (val) => {
-        this.quickSearchFilter = val
-        this.quickSearchFilter && this.quickSearchProducts()
-      }
-    },
   },
   watch: {
     
   },
   created () {
-    
+    // initial Data Table from OrganizationList query from firestore
     if (!this.hadList) {
       this.reloadData()
     }      
@@ -94,9 +77,6 @@ export default {
     reloadData () {
       this.getOrganizationsList()
     },
-    quickSearchProducts: debounce(() => {
-      console.log(this.quickSearchFilter)
-    }, 300)
   },
 }
 </script>
