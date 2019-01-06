@@ -94,11 +94,11 @@ export default {
           icon: 'face',
           title: 'Profile',
         },
-        {
+/*         {
           name: 'settings',
           icon: 'settings',
           title: 'Settings',
-        },
+        }, */
         {
           name: 'logout',
           icon: 'exit_to_app',
