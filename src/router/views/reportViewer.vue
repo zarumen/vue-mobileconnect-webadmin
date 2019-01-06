@@ -1,6 +1,5 @@
 <script>
 import Layout from '@layouts/main'
-import FormAddCampaign from '@components/form-add-campaign'
 import { mapGetters, mapActions } from 'vuex'
 import { campaignComputed } from '@state/helpers'
 
@@ -9,7 +8,13 @@ export default {
     title: 'Reports',
     meta: [{ name: 'description', content: 'Campaigns Report Viewer' }],
   },
-  components: { Layout, FormAddCampaign },
+  components: { Layout },
+  props: {
+    user: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
       baseModule: 'reportViewer',
@@ -42,48 +47,25 @@ export default {
     ...mapGetters('organizations', [
       'hadList',
     ]),
+
   },
   watch: {
 
   },
   created () {
-
-    if(!this.hadList)
-      this.getOrganizationsList()
-
-    if(!this.hadCampaignList)
-      this.getAllCampaigns()
+      this.getAllCampaignsByOrg(this.user.organizationLevel1,this.user.organizationLevel2,this.user.organizationLevel3)
   },
   methods: {
     ...mapActions('campaigns', [
-      'getAllCampaigns',
+      'getAllCampaignsByOrg',
       'deleteCampaign',
       'closeSnackBar',
-    ]),
-    ...mapActions('organizations', [
-      'getOrganizationsList'
     ]),
     print() {
       window.print()
     },
     reloadData () {
-      this.getAllCampaigns()
-    },
-    edit(item) {
-
-    },
-    remove(item) {
-      this.campaignId = item.id
-      this.dialog = true
-    },
-    onConfirm () {
-      this.deleteCampaign(this.campaignId)
-      this.closeSnackbar(2000)
-      this.dialog = false
-    },
-    onCancel () {
-      this.campaignId = ''
-      this.dialog = false
+      this.getAllCampaignsByOrg(this.user.organizationLevel1,this.user.organizationLevel2,this.user.organizationLevel3)
     },
     exitSnackbar () {
       this.$store.commit('campaigns/setSnackbar', { snackbar: false })
@@ -129,23 +111,58 @@ export default {
             </v-btn>
           </v-card-title>
           <!-- Insert in Base-Table Component -->
-          <BaseTable
-            v-if="loading===false"
-            :headers="headers"
-            :items="items"
-            :pagination="pagination"
-            :basemodule="baseModule"
-          />
+          <base-card
+            class="card-tabs"
+            color="green"
+          >
+            <v-list three-line v-for="(item, index) in items">
+              <v-list-tile @click="complete(2)">
+                <!--            <v-list-tile-action>
+                  <v-checkbox
+                    :value="list[2]"
+                    color="green"
+                  />
+                </v-list-tile-action> -->
+                <v-layout column="1">
+                  <v-list-title>{{ item.campaignCode }}</v-list-title>
+                  <v-list-tile-title >
+                    {{ item.campaignHeader }}
+                  </v-list-tile-title> 
+                </v-layout>
+
+                <div class="d-flex">
+                  <v-tooltip
+                    top
+                    content-class="top">
+                    <v-btn
+                      slot="activator"
+                      class="v-btn--simple"
+                      color="secondary"
+                      icon
+                    >
+                      <v-icon >save_alt</v-icon>
+                    </v-btn>
+                    <span>Excel</span>
+                  </v-tooltip>
+                  <v-tooltip
+                    top
+                    content-class="top">
+                    <v-btn
+                      slot="activator"
+                      class="v-btn--simple"
+                      color="secondary"
+                      icon
+                    >
+                      <v-icon >save_alt</v-icon>
+                    </v-btn>
+                    <span>Json</span>
+                  </v-tooltip>
+                </div>
+              </v-list-tile>
+            </v-list>
+          </base-card>
         </v-card>
       </v-flex>
-      <!-- Pop up Panels -->
-      <BaseDialog 
-        :dialog="dialog" 
-        :dialog-title="dialogTitle" 
-        :dialog-text="dialogText"
-        @onConfirm="onConfirm" 
-        @onCancel="onCancel"
-      />
       <v-snackbar 
         v-if="loading===false" 
         :left="true" 
@@ -163,22 +180,6 @@ export default {
         </v-btn>
       </v-snackbar>
     </v-container>
-    <!-- FAB panel -->
-    <v-btn
-      fab
-      bottom
-      right
-      color="indigo"
-      dark
-      fixed
-      @click.stop="addCampaignDialog = !addCampaignDialog"
-    >
-      <v-icon>add</v-icon>
-    </v-btn>
-    <form-add-campaign
-      :add-campaign-dialog="addCampaignDialog"
-      @emitCloseCampaignDialog="addCampaignDialog=arguments[0]"
-    />
   </Layout>
 </template>
 

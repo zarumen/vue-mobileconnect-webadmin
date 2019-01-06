@@ -141,7 +141,23 @@ export default [
     component: () => lazyLoadView(import('@views/reportViewer')),
     meta: {
       authRequired: true,
+      beforeEach: (routeTo, routeFrom, next) => {
+        console.log('Log: redirect from '+JSON.stringify(routeFrom))
+        // If the user is already logged in
+        if (store.getters['auth/loggedIn']) {
+          // Redirect to the home page instead
+          console.log('go to profile page')
+          next()
+        } else {
+          console.log('go back to login')
+          // Continue to the login page
+          next({ name: 'login' })
+        }
+      }
     },
+    props: (route) => ({
+      user: store.state.auth.userInfo || {}
+    }),
     // TODO check admin role to access
   },
   {
