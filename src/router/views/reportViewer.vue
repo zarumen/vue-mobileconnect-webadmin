@@ -18,26 +18,6 @@ export default {
   data() {
     return {
       baseModule: 'reportViewer',
-      addCampaignDialog: '',
-      dialog: '',
-      dialogTitle: "Campaign Delete Dialog",
-      dialogText: "Do you want to delete this campaign?",
-      headers: [
-        {
-          text: 'Code',
-          left: true,
-          value: 'campaignCode'
-        },
-        { text: 'Brand', value: 'organizationLevel3Name' },
-        { text: 'Header', value: 'campaignHeader' },
-        { text: 'Keyword', value: 'keyword' },
-        { text: 'Shortcode', value: 'shortcode' },
-        { text: 'Start Date', value: 'campaignDateStart' },
-        { text: 'End Date', value: 'campaignDateEnd' },
-        { text: 'Reward', value: 'campaignAvailable' },
-        { text: 'Status', value: 'campaignActive' },
-      ],
-      campaignId: '',
       left: true,
       timeout: 2000,
     }
@@ -53,11 +33,11 @@ export default {
 
   },
   created () {
-      this.getAllCampaignsByOrg(this.user.organizationLevel1,this.user.organizationLevel2,this.user.organizationLevel3)
+      this.getCampaignsByOrg(this.user.organizationLevel1,this.user.organizationLevel2,this.user.organizationLevel3)
   },
   methods: {
     ...mapActions('campaigns', [
-      'getAllCampaignsByOrg',
+      'getCampaignsByOrg',
       'deleteCampaign',
       'closeSnackBar',
     ]),
@@ -65,7 +45,7 @@ export default {
       window.print()
     },
     reloadData () {
-      this.getAllCampaignsByOrg(this.user.organizationLevel1,this.user.organizationLevel2,this.user.organizationLevel3)
+      this.getCampaignsByOrg(this.user.organizationLevel1,this.user.organizationLevel2,this.user.organizationLevel3)
     },
     exitSnackbar () {
       this.$store.commit('campaigns/setSnackbar', { snackbar: false })
@@ -115,8 +95,12 @@ export default {
             class="card-tabs"
             color="green"
           >
-            <v-list three-line v-for="(item, index) in items">
-              <v-list-tile @click="complete(2)">
+            <v-list 
+              v-for="(item,index) in items" 
+              :key="index"
+              three-line
+            >
+              <v-list-tile >
                 <!--            <v-list-tile-action>
                   <v-checkbox
                     :value="list[2]"

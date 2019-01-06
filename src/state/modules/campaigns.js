@@ -137,7 +137,7 @@ export const actions = {
         return error
       })
   },
-  getAllCampaignsByOrg({ commit }, organizationLevel1, organizationLevel2, organizationLevel3) {
+  getCampaignsByOrg({ commit }, organizationLevel1, organizationLevel2, organizationLevel3) {
     
     console.log(organizationLevel1)
     commit('setLoading', { loading: true })
@@ -152,7 +152,7 @@ export const actions = {
         querySnapshot.forEach(doc => {
           let data = {}
           data = doc.data()
-          if(data.organizationLevel1 == organizationLevel1 || data.organizationLevel2 == organizationLevel2 || data.organizationLevel3 == organizationLevel3){
+          if(data.organizationLevel1 === organizationLevel1 || data.organizationLevel2 === organizationLevel2 || data.organizationLevel3 === organizationLevel3){
             data['id'] = doc.id
             campaignList.push(data)
           }
