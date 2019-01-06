@@ -80,7 +80,7 @@ export default {
         slot-scope="{ header }"
       >
         <span
-          class="subheading font-weight-light text--darken-3"
+          class="subheading font-weight-light light-green--text text--darken-1"
           v-text="header.text"
         />
       </template>
@@ -109,7 +109,7 @@ export default {
         >
           <v-btn 
             class="v-btn--simple"
-            color="primary"
+            color="secondary"
             circle
             icon
             @click.native="$emit('edit', props.item)"
@@ -123,7 +123,7 @@ export default {
             icon
             @click.native="$emit('remove', props.item)"
           >
-            <v-icon>delete</v-icon>
+            <v-icon>close</v-icon>
           </v-btn>
         </td>
       </template>

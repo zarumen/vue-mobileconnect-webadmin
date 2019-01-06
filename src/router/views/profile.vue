@@ -1,5 +1,6 @@
 <script>
 import Layout from '@layouts/main'
+import fireauth from '@utils/fireauth.config'
 
 export default {
   page() {
@@ -24,7 +25,10 @@ export default {
     profileName() {
       return `${this.user.firstName} ${this.user.lastName}`
     }
-  }
+  },
+  created () {
+    console.log(fireauth.currentUser)
+  },
 }
 </script>
 
@@ -44,7 +48,7 @@ export default {
             md8
           >
             <base-card
-              color="purple"
+              color="deep-purple"
               title="Edit Profile"
               text="Complete your profile"
             >
