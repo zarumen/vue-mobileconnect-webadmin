@@ -136,6 +136,15 @@ export default [
     // TODO check admin role to access
   },
   {
+    path: '/reportViewer',
+    name: 'reportViewer',
+    component: () => lazyLoadView(import('@views/reportViewer')),
+    meta: {
+      authRequired: true,
+    },
+    // TODO check admin role to access
+  },
+  {
     path: '/campaignwidgets',
     name: 'campaignwidgets',
     component: () => lazyLoadView(import('@views/campaignwidgets')),

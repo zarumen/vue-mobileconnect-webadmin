@@ -77,7 +77,7 @@ export default {
           icon: 'assignment',
           title: 'Reports',
         },
-        {
+/*         {
           name: 'campaignsViewer',
           icon: 'store',
           title: 'Campaigns',
@@ -86,7 +86,7 @@ export default {
           name: 'campaignWidgetsViewer',
           icon: 'widgets',
           title: 'Widgets',
-        },
+        }, */
       ]
       let menuDefault = [
         {
