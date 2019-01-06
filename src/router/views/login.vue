@@ -58,11 +58,23 @@ export default {
         md4
       >
         <base-card
-          prepend-icon="dashboard"
-          title="Mobile Connect Web Admin"
-          color="green" 
+          color="deep-purple lighten-1" 
           class="elevation-12"
         >
+          <v-layout
+            slot="header"
+            row
+            wrap
+          >
+            <v-flex>
+              <img src="@assets/images/logo.png">
+            </v-flex>
+            <v-flex
+              class="title"
+            >
+              <h4 class="font-weight-medium white--text">Mobile Connect Web Admin</h4>
+            </v-flex>
+          </v-layout>
           <v-card-text>
             <v-form
               :class="$style.form"
@@ -70,6 +82,7 @@ export default {
             >
               <v-text-field
                 v-model="username"
+                class="purple-input"
                 label="E-mail"
               />
               <v-text-field
@@ -78,6 +91,7 @@ export default {
                 :type="ePass ? 'password' : 'text'"
                 label="Enter your password"
                 hint="At least 6 characters"
+                class="purple-input"
                 min="6"
                 counter
                 @click:append="() => (ePass = !ePass)"

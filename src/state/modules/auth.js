@@ -14,7 +14,7 @@ export const getters = {
   // check Admin role
   isAdmin: state => state.isAdmin,
   // get User Email
-  getEmail: state => state.currentUser.email,
+  // getEmail: state => state.currentUser.email,
 }
 
 export const mutations = {

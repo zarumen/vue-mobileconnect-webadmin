@@ -66,7 +66,6 @@ export const actions = {
     console.log(`Create User ${newUser.firstName}`)
 
     let user = null
-    let updatedUser = null
     let password = generatePass()
 
     try {
@@ -75,17 +74,18 @@ export const actions = {
           newUser.email, 
           password
         )
-      
+
       await fireauthApp.sendPasswordResetEmail(newUser.email)
 
-      updatedUser = await firestoreApp
+      await firestoreApp
         .collection('users')
-        .add(newUser)
-       
+        .doc(user.user.uid)
+        .set(newUser)
+
     } catch (error) { console.log(error) }
 
 
-    if (user && updatedUser) {
+    if (user) {
 
       sendSuccessNotice(commit, 'New User has been added.')
       closeNotice(commit, 3000)

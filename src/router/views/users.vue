@@ -37,13 +37,6 @@ export default {
       left: true,
       timeout: 2000,
       // NOT USE! now
-      searchVm: {
-        contains: {
-          firstName: '',
-          lastName: ''
-        }
-      },
-      search: '',
       rightDrawer: false,
       query: "",
       quickSearchFilter: ''
@@ -111,51 +104,62 @@ export default {
   <Layout>
     <v-container fluid>
       <v-flex xs12>
-        <v-card>
-          <!-- Controller Tools Panels -->
-          <v-card-title>
-            <span class="title">
-              Users {{ pagination? "("+pagination.totalItems+")": "" }}
-              <v-text-field
-                v-model="quickSearchFilter"
-                class="purple-input"
-                append-icon="search"
-                label="Quick Search"
-                single-line
-                hide-details
+        <base-helper-offset
+          :offset="10"
+        >
+          <base-card>
+            <!-- Controller Tools Panels -->
+            <v-card-title>
+              <span class="title">
+                Users {{ pagination? "("+pagination.totalItems+")": "" }}
+                <v-text-field
+                  v-model="quickSearchFilter"
+                  class="purple-input"
+                  append-icon="search"
+                  label="Quick Search"
+                  single-line
+                  hide-details
+                />
+              </span>
+              <v-spacer/>
+              <v-btn 
+                class="v-btn--simple"
+                color="primary"
+                circle
+                icon
+                @click.native="reloadData()"
+              >
+                <BaseIcon name="syncAlt"/>            
+              </v-btn>
+              <v-btn 
+                class="v-btn--simple"
+                color="primary"
+                circle
+                icon
+              >
+                <v-icon>
+                  print
+                </v-icon>
+              </v-btn>
+            </v-card-title>
+            <br>
+            <base-helper-offset
+              :offset="10"
+            >
+              <!-- Insert in Base-Table Component -->
+              <BaseTable
+                v-if="loading===false"
+                :headers="headers"
+                :items="items"
+                :search="quickSearchFilter"
+                :pagination="pagination"
+                :basemodule="baseModule"
+                @edit="edit"
+                @remove="remove"
               />
-            </span>
-            <v-spacer/>
-            <v-btn 
-              flat 
-              icon 
-              color="green"
-              @click.native="reloadData()"
-            >
-              <BaseIcon name="syncAlt"/>            
-            </v-btn>
-            <v-btn 
-              flat 
-              icon 
-              color="indigo"
-            >
-              <v-icon>
-                print
-              </v-icon>
-            </v-btn>
-          </v-card-title>
-          <!-- Insert in Base-Table Component -->
-          <BaseTable
-            v-if="loading===false"
-            :headers="headers"
-            :items="items"
-            :search="quickSearchFilter"
-            :pagination="pagination"
-            :basemodule="baseModule"
-            @edit="edit"
-            @remove="remove"
-          />
-        </v-card>
+            </base-helper-offset>
+          </base-card>
+        </base-helper-offset>
       </v-flex>
       <!-- Pop up Panels -->
       <BaseDialog 

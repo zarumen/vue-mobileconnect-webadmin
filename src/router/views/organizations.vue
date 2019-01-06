@@ -90,8 +90,8 @@ export default {
         >
           <base-card>
             <!-- Controller Tools Panels -->
-            <v-card-title>
-              <span class="title">
+            <v-card-title class="title">
+              <span>
                 Organizations {{ pagination? "("+pagination.totalItems+")": "" }}
                 <v-text-field
                   v-model="quickSearchFilter"
@@ -104,17 +104,21 @@ export default {
               </span>
               <v-spacer/>
               <v-btn 
-                flat 
-                icon 
-                color="green"
+                class="v-btn--simple"
+                color="primary"
+                circle
+                icon
                 @click.native="reloadData()"
               >
-                <BaseIcon name="syncAlt"/>            
+                <v-icon>
+                  refresh
+                </v-icon>      
               </v-btn>
               <v-btn 
-                flat 
-                icon 
-                color="indigo"
+                class="v-btn--simple"
+                color="primary"
+                circle
+                icon
               >
                 <v-icon>
                   print
