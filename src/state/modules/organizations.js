@@ -169,7 +169,7 @@ export const actions = {
   getOrganizationsListById({ commit }, { authLevel, id }) {
 
   },
-  getOrganizationsList({ commit, state }) {
+  getOrganizationsList({ commit }) {
     
     if (this.hadList) return Promise.resolve(null)
 

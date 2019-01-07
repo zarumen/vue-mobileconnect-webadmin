@@ -24,33 +24,47 @@ export default {
   },
   computed: {
     ...campaignComputed,
-    ...mapGetters('organizations', [
-      'hadList',
+    ...mapGetters('campaigns', [
+      'hadCampaignList',
     ]),
-
+    authLevel () {
+      // set Auth Level before send to Query
+      if(this.user.organizationAuth === 'Level1')
+        return this.user.organizationLevel1
+      
+      if(this.user.organizationAuth === 'Level2')
+        return this.user.organizationLevel2
+      
+      if(this.user.organizationAuth === 'Level3')
+        return this.user.organizationLevel3
+    }
   },
   watch: {
 
   },
   created () {
-      this.getCampaignsByOrg(this.user.organizationLevel1,this.user.organizationLevel2,this.user.organizationLevel3)
+    // query by auth user specific
+    if(!this.hadCampaignList) {
+      this.reloadData()
+    }
   },
   methods: {
     ...mapActions('campaigns', [
       'getCampaignsByOrg',
-      'deleteCampaign',
-      'closeSnackBar',
     ]),
     print() {
       window.print()
-    },
-    reloadData () {
-      this.getCampaignsByOrg(this.user.organizationLevel1,this.user.organizationLevel2,this.user.organizationLevel3)
     },
     exitSnackbar () {
       this.$store.commit('campaigns/setSnackbar', { snackbar: false })
       this.$store.commit('campaigns/setNotice', { notice: '' })
     },
+    reloadData () {
+      this.getCampaignsByOrg({
+        auth: this.user.organizationAuth, 
+        orgId: this.authLevel
+      })
+    }
   },
 }
 </script>
@@ -59,7 +73,11 @@ export default {
   <Layout>
     <v-container fluid>
       <v-flex xs12>
-        <v-card>
+        <base-card
+          color="light-green"
+          title="Report All Campaign"
+          text="Complete your profile"
+        >
           <!-- Controller Tools Panels -->
           <v-card-title>
             <span class="title">
@@ -73,79 +91,69 @@ export default {
             </span>
             <v-spacer/>
             <v-btn 
-              flat 
-              icon 
-              color="green"
+              class="v-btn--simple"
+              color="primary"
+              circle
+              icon
               @click.native="reloadData()"
             >
               <BaseIcon name="syncAlt"/>            
             </v-btn>
-            <v-btn 
-              flat 
-              icon 
-              color="indigo"
-            >
-              <v-icon>
-                print
-              </v-icon>
-            </v-btn>
           </v-card-title>
           <!-- Insert in Base-Table Component -->
-          <base-card
-            class="card-tabs"
-            color="green"
-          >
-            <v-list 
-              v-for="(item,index) in items" 
-              :key="index"
-              three-line
-            >
-              <v-list-tile >
-                <!--            <v-list-tile-action>
-                  <v-checkbox
-                    :value="list[2]"
-                    color="green"
-                  />
-                </v-list-tile-action> -->
-                <v-layout column="1">
-                  <v-list-title>{{ item.campaignCode }}</v-list-title>
-                  <v-list-tile-title >
-                    {{ item.campaignHeader }}
-                  </v-list-tile-title> 
-                </v-layout>
-
-                <div class="d-flex">
-                  <v-tooltip
-                    top
-                    content-class="top">
-                    <v-btn
-                      slot="activator"
-                      class="v-btn--simple"
-                      color="secondary"
-                      icon
-                    >
-                      <v-icon >save_alt</v-icon>
-                    </v-btn>
-                    <span>Excel</span>
-                  </v-tooltip>
-                  <v-tooltip
-                    top
-                    content-class="top">
-                    <v-btn
-                      slot="activator"
-                      class="v-btn--simple"
-                      color="secondary"
-                      icon
-                    >
-                      <v-icon >save_alt</v-icon>
-                    </v-btn>
-                    <span>Json</span>
-                  </v-tooltip>
-                </div>
-              </v-list-tile>
+          <v-card-text>
+            <v-list three-line>
+              <template
+                v-for="(item,index) in items"
+              >
+                <v-list-tile
+                  :key="index"
+                >
+                  <v-list-tile-content>
+                    <v-list-tile-title>
+                      {{ item.campaignName }} : {{ item.campaignCode }}
+                    </v-list-tile-title>
+                    <v-list-tile-sub-title >
+                      {{ item.id }}
+                    </v-list-tile-sub-title>
+                  </v-list-tile-content>      
+                  <div class="d-flex">
+                    <v-tooltip
+                      top
+                      content-class="top">
+                      <v-btn
+                        slot="activator"
+                        class="v-btn--simple"
+                        color="secondary"
+                        icon
+                      >
+                        <v-icon>view_comfy</v-icon>
+                      </v-btn>
+                      <span>Excel</span>
+                    </v-tooltip>
+                    <v-tooltip
+                      top
+                      content-class="top">
+                      <v-btn
+                        slot="activator"
+                        class="v-btn--simple"
+                        color="secondary"
+                        icon
+                      >
+                        <v-icon>settings_ethernet</v-icon>
+                      </v-btn>
+                      <span>Json</span>
+                    </v-tooltip>
+                  </div>
+                </v-list-tile>
+                <v-divider 
+                  v-if="index + 1 < items.length" 
+                  :key="`divider-${index}`"
+                />
+              </template>
             </v-list>
-          </base-card>
-        </v-card>
+          </v-card-text>
+        </base-card>
       </v-flex>
       <v-snackbar 
         v-if="loading===false" 

@@ -60,9 +60,9 @@ export default {
                       md4
                     >
                       <v-text-field
+                        v-model="user.organizationLevel1Name"
                         label="Company"
                         disabled
-                        v-model=this.user.organizationLevel1Name
                       />
                     </v-flex>
                     <v-flex
@@ -79,20 +79,9 @@ export default {
                       md4
                     >
                       <v-text-field
+                        v-model="user.email"
                         label="Email Address"
                         class="purple-input"
-                        v-model=this.user.email
-                        />
-                        
-                    </v-flex>
-                    <v-flex
-                      xs12
-                      md6
-                    >
-                      <v-text-field
-                        label="First Name"
-                        class="purple-input"
-                        v-model=this.user.firstName
                       />
                     </v-flex>
                     <v-flex
@@ -100,9 +89,19 @@ export default {
                       md6
                     >
                       <v-text-field
+                        v-model="user.firstName"
+                        label="First Name"
+                        class="purple-input"
+                      />
+                    </v-flex>
+                    <v-flex
+                      xs12
+                      md6
+                    >
+                      <v-text-field
+                        v-model="user.lastName"  
                         label="Last Name"
                         class="purple-input"
-                        v-model=this.user.lastName  
                       />
                     </v-flex>
                     <v-flex
@@ -136,13 +135,6 @@ export default {
                         label="Postal Code"
                         type="number"/>
                     </v-flex>
-<!--                     <v-flex xs12>
-                      <v-textarea
-                        class="purple-input"
-                        label="About Me"
-                        value="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-                      />
-                    </v-flex> -->
                     <v-flex
                       xs12
                       text-xs-right
@@ -173,17 +165,19 @@ export default {
                   src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png"
                 >
               </v-avatar>
-              <v-card-text class="text-xs-center" style="width:200px">
-                <h6 class="category text-gray font-weight-thin mb-3">{{ this.user.jobPosition }}</h6>
+              <v-card-text 
+                class="text-xs-center" 
+                style="width:200px"
+              >
+                <h6 class="category text-gray font-weight-thin mb-3">{{ user.jobPosition }}</h6>
                 <h4 class="card-title font-weight-light">{{ profileName }}</h4>
-<!--                 <p class="card-description font-weight-light">Don't be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...</p>
- --><!--                 <v-btn
+                <v-btn
                   color="primary"
                   round
                   class="font-weight-light"
                 >
                   Follow
-                </v-btn> -->
+                </v-btn>
               </v-card-text>
             </base-card>
           </v-flex>

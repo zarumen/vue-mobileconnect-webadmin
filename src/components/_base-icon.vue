@@ -25,6 +25,8 @@ fontAwesomeIconLibrary.add(
   require('@fortawesome/free-solid-svg-icons/faSortNumericDown').definition,
   require('@fortawesome/free-solid-svg-icons/faDiceSix').definition,
   // brands
+  require('@fortawesome/free-solid-svg-icons/faFileExcel').definition,
+  require('@fortawesome/free-solid-svg-icons/faFileCode').definition,
 )
 
 export default {
