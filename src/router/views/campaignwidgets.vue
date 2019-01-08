@@ -3,6 +3,8 @@ import Layout from '@layouts/main'
 import FormAddCampaign from '@components/form-add-campaign'
 import { mapGetters, mapActions } from 'vuex'
 import { campaignComputed } from '@state/helpers'
+// import formatDate from '@utils/format-date'
+
 
 export default {
   page: {
@@ -36,6 +38,9 @@ export default {
       campaignId: '',
       left: true,
       timeout: 2000,
+      pagination: {
+          rowsPerPage: 10
+        },
     }
   },
   computed: {
@@ -129,16 +134,27 @@ export default {
               </v-icon>
             </v-btn>
           </v-card-title>
-          <!-- Insert in Base-Table Component -->
-          <BaseTable
-            v-if="loading===false"
+          <v-data-table
             :headers="headers"
             :items="items"
-            :pagination="pagination"
-            :basemodule="baseModule"
-            @edit="edit"
-            @remove="remove"
-          />
+            :pagination.sync="pagination"
+            class="elevation-1"
+          >
+            <template 
+              slot="items" 
+              slot-scope="props">
+              <td><a :href="`campaignwidget/${props.item.id}`"><v-icon>widgets</v-icon></a></td>
+              <td>{{ props.item.campaignCode }}</td>
+              <td>{{ props.item.organizationLevel3Name }}</td>
+              <td>{{ props.item.campaignHeader }}</td>
+              <td>{{ props.item.keyword }}</td>
+              <td>{{ props.item.shortcode }}</td>
+              <td>{{ props.item.campaignDateStart }}</td>
+              <td>{{ props.item.campaignDateEnd }}</td>
+              <td>{{ props.item.campaignAvailable }}</td>
+              <td>{{ props.item.campaignActive }}</td>
+            </template>
+          </v-data-table>
         </v-card>
       </v-flex>
       <!-- Pop up Panels -->
