@@ -38,7 +38,7 @@ export default {
       campaignId: '',
       left: true,
       timeout: 2000,
-      pagination: {
+      paging: {
           rowsPerPage: 10
         },
     }
@@ -137,7 +137,7 @@ export default {
           <v-data-table
             :headers="headers"
             :items="items"
-            :pagination.sync="pagination"
+            :pagination.sync="paging"
             class="elevation-1"
           >
             <template 

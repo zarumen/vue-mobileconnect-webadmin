@@ -2,6 +2,7 @@
 import Layout from '@layouts/main'
 import { mapGetters, mapActions } from 'vuex'
 import { campaignComputed } from '@state/helpers'
+import firestoreApp from "@utils/firestore.config"
 
 export default {
   page: {
@@ -20,6 +21,7 @@ export default {
       baseModule: 'reportViewer',
       left: true,
       timeout: 2000,
+      exportJobs: []
     }
   },
   computed: {
@@ -64,7 +66,29 @@ export default {
         auth: this.user.organizationAuth, 
         orgId: this.authLevel
       })
-    }
+    },
+    async getExportJobsByCampaign(campaignId) {
+      let tmp
+      try {
+      tmp = await firestoreApp
+        .collection('exportJobs').doc(campaignId).collection('jobs')
+        .get()
+
+        } catch (error) { console.log(error)}
+
+        this.exportJobs[campaignId] = []
+        let jobtmp = []
+        tmp.forEach(function(item) {
+          jobtmp.push(item.data());
+        });
+
+        this.exportJobs[campaignId].push(jobtmp) 
+        this.exportJobs['test'] = "test"
+
+        console.log(this.exportJobs[campaignId])
+        this.$forceUpdate()
+    },
+
   },
 }
 </script>
@@ -76,7 +100,6 @@ export default {
         <base-card
           color="light-green"
           title="Report All Campaign"
-          text="Complete your profile"
         >
           <!-- Controller Tools Panels -->
           <v-card-title>
@@ -103,11 +126,12 @@ export default {
           <!-- Insert in Base-Table Component -->
           <v-card-text>
             <v-list three-line>
-              <template
+              <v-list-group
                 v-for="(item,index) in items"
+                :key="index"
               >
-                <v-list-tile
-                  :key="index"
+                <v-list-tile 
+                  slot="activator" 
                 >
                   <v-list-tile-content>
                     <v-list-tile-title>
@@ -126,6 +150,7 @@ export default {
                         class="v-btn--simple"
                         color="secondary"
                         icon
+                        @click="getExportJobsByCampaign(item.id)"
                       >
                         <v-icon>view_comfy</v-icon>
                       </v-btn>
@@ -139,6 +164,7 @@ export default {
                         class="v-btn--simple"
                         color="secondary"
                         icon
+                        @click="test(item.id)"
                       >
                         <v-icon>settings_ethernet</v-icon>
                       </v-btn>
@@ -150,9 +176,19 @@ export default {
                   v-if="index + 1 < items.length" 
                   :key="`divider-${index}`"
                 />
-              </template>
+                <!--  subList -->
+                <v-list-tile 
+                  v-for="job in exportJobs[item.id]" 
+                  :key="job.id"
+                  class="text-xs-right">
+                  <v-list-tile-content >
+                    <v-list-tile-sub-title >Type: {{ job[0].type }} Filename: {{ job[0].fileName }}</v-list-tile-sub-title >
+                  </v-list-tile-content>
+                </v-list-tile >
+              </v-list-group>
             </v-list>
           </v-card-text>
+
         </base-card>
       </v-flex>
       <v-snackbar 
