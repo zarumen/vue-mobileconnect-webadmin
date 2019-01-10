@@ -31,6 +31,7 @@ export const orgComputed = {
   ])
 }
 
+
 export const orgMethods = mapActions('organizations', ['getOrganizationsList', 'addCompanyToOrganization'])
 
 export const userComputed = {

@@ -143,7 +143,7 @@ export default {
             <template 
               slot="items" 
               slot-scope="props">
-              <td><a :href="`campaignwidget/${props.item.id}`"><v-icon>widgets</v-icon></a></td>
+              <td class="text-xs-center"><a :href="`campaignwidget/${props.item.id}`"><v-icon>widgets</v-icon></a></td>
               <td>{{ props.item.campaignCode }}</td>
               <td>{{ props.item.organizationLevel3Name }}</td>
               <td>{{ props.item.campaignHeader }}</td>
@@ -182,18 +182,6 @@ export default {
         </v-btn>
       </v-snackbar>
     </v-container>
-    <!-- FAB panel -->
-    <v-btn
-      fab
-      bottom
-      right
-      color="indigo"
-      dark
-      fixed
-      @click.stop="addCampaignDialog = !addCampaignDialog"
-    >
-      <v-icon>add</v-icon>
-    </v-btn>
     <form-add-campaign
       :add-campaign-dialog="addCampaignDialog"
       @emitCloseCampaignDialog="addCampaignDialog=arguments[0]"

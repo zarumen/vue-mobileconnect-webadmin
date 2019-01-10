@@ -161,6 +161,13 @@ export const actions = {
         querySnapshot.forEach(doc => {
             let data = doc.data()
             data['id'] = doc.id
+            
+            let exportJobs = getExportJobsByCampaign(doc.id)
+            data['exportJobs'] = exportJobs
+
+
+
+            console.log(data)
             campaignList.push(data)
         })
 
@@ -178,6 +185,7 @@ export const actions = {
         return error
       })
   },
+
   // ===
   // UPDATE Zone
   // ===
@@ -214,4 +222,27 @@ export const actions = {
   clearItem ({ commit }) {
     commit('setItems', null)
   }
+}
+
+function   getExportJobsByCampaign(campaignId) {
+  
+  return firestoreApp
+    .collection('exportJobs').doc(campaignId).collection('jobs')
+    .get()
+    .then(querySnapshot => {
+
+      let exportJobs = []
+
+      querySnapshot.forEach(doc => {
+        let data = {}
+        data = doc.data()
+        data['id'] = doc.id
+        exportJobs.push(data)
+      })
+      return exportJobs
+    })
+    .catch(error => {
+      console.log(error)
+      return error
+    })
 }
