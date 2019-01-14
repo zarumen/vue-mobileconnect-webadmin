@@ -89,9 +89,9 @@ export default {
           console.log(this.parsedData.output)
 
           let exportJobObject = {"fileName": this.parsedData.output.S3FileName,"type": type }
-          let result = [] 
+
           try{
-              result = firestoreApp
+              firestoreApp
                 .collection('exportJobs').doc(campaignId).collection('jobs')
                 .add(exportJobObject)
 
@@ -102,11 +102,11 @@ export default {
           this.errors.push(e)
         })
     },
-    async getAWSExportJobsListByCampaign(campaignId){
-      // 2Do: ทำ API Config สำหรับ Config Staging Version
-      //JobsList[campainId][filename][key for path]
+    getAWSExportJobsListByCampaign(campaignId){
+      // 2Do: ทำ API Config สำหรับ Config ${staging} Version
+      // JobsList[campainId][filename][key for path]
       
-      return await axios.post(`https://api.sms2mkt.com/2waysms/staging/jobs/${campaignId}/list`,
+      return axios.post(`https://api.sms2mkt.com/2waysms/staging/jobs/${campaignId}/list`,
           {
             "maxFile":100,
             "prefixFile": "",
@@ -138,7 +138,6 @@ export default {
     },
     getS3DownloadLink(campaignId,key){
       // 2Do: ทำ API Config สำหรับ Config Staging Version
-      //JobsList[campainId][filename][key for path]
       
       axios.get(`https://api.sms2mkt.com/2waysms/staging/jobs/${campaignId}/download?downloadKey=${key}`)
         .then(response => {
@@ -146,9 +145,8 @@ export default {
           this.parsedData = response.data
           console.log(this.parsedData.output.link)
 
+          // Download file to Client
           window.location = this.parsedData.output.link
-
-          //return  this.parsedData.output.link
         })
         .catch(e => {
           console.log(e)
@@ -232,8 +230,8 @@ export default {
                 >
                   <v-list-tile-content 
                     @click="getAWSExportJobsListByCampaign(item.id).then((result)=>{
-                              getFirebaseExportJobsByCampaign(item.id,result)
-                            })"
+                      getFirebaseExportJobsByCampaign(item.id,result)
+                    })"
                   >
                     <v-list-tile-title>
                       {{ item.campaignName }} : {{ item.campaignCode }}
@@ -257,7 +255,7 @@ export default {
                       </v-btn>
                       <span>Excel</span>
                     </v-tooltip>
-                    <!--                     <v-tooltip
+                    <!--<v-tooltip
                       top
                       content-class="top">
                       <v-btn
@@ -279,17 +277,22 @@ export default {
                 />
                 <!--  subList -->
                 <template v-if="exportJobs[item.id]">
-                    <v-list-tile-content 
-                      v-for="(job) in exportJobs[item.id][0]" 
-                      :key="job.id"
-                    >
+                  <v-list-tile-content 
+                    v-for="(job) in exportJobs[item.id][0].sort((a,b)=>{
+                          
+                      var x = a.fileName; var y = b.fileName
+                      return ((x < y) ? 1 : ((x > y) ? -1 : 0))
+                         
+                    })" 
+                    :key="job.id"
+                  >
                     <div class="d-flex">
-                      <v-list-tile-sub-title>
+                      <v-list-tile-sub-title style="display: flex; align-items: center; justify-content: center">
                         Type: {{ job.type }}
                       </v-list-tile-sub-title >
-                      <v-list-tile-sub-title class="d-flex">
+                      <v-list-tile-sub-title style="display: flex; align-items: center; justify-content: center">
                         {{ job.fileName }}
-                      </v-list-tile-sub-title>
+                      </v-list-tile-sub-title >
                       <v-tooltip
                         top
                         content-class="top">
@@ -301,7 +304,7 @@ export default {
                           icon
                           @click="getS3DownloadLink(item.id,job.key)"
                         >
-                          <v-icon>widgets</v-icon>
+                          <v-icon>cloud_download</v-icon>
                         </v-btn>
                         <span>Download</span>
                       </v-tooltip>
