@@ -4,6 +4,9 @@ import { mapGetters, mapActions } from 'vuex'
 import { campaignComputed } from '@state/helpers'
 import firestoreApp from "@utils/firestore.config"
 import axios from 'axios';
+import version from "@utils/aws-api.config"
+
+// 2Do: Delete Job Button
 
 export default {
   page: {
@@ -72,7 +75,7 @@ export default {
     createExportJob(campaignId,filename,maxRow,type){
       // สั่งให้สร้าง Zip file ใหม่
       // 2Do: ทำ API Config สำหรับ Config Staging Version
-      axios.post(`https://api.sms2mkt.com/2waysms/staging/jobs/${campaignId}/export`,
+      axios.post(`https://api.sms2mkt.com/2waysms/${version}/jobs/${campaignId}/export`,
           {
                   "maxRow": maxRow,
                   "exportType": type,
@@ -103,10 +106,9 @@ export default {
         })
     },
     getAWSExportJobsListByCampaign(campaignId){
-      // 2Do: ทำ API Config สำหรับ Config ${staging} Version
       // JobsList[campainId][filename][key for path]
       
-      return axios.post(`https://api.sms2mkt.com/2waysms/staging/jobs/${campaignId}/list`,
+      return axios.post(`https://api.sms2mkt.com/2waysms/${version}/jobs/${campaignId}/list`,
           {
             "maxFile":100,
             "prefixFile": "",
@@ -137,9 +139,8 @@ export default {
         })
     },
     getS3DownloadLink(campaignId,key){
-      // 2Do: ทำ API Config สำหรับ Config Staging Version
       
-      axios.get(`https://api.sms2mkt.com/2waysms/staging/jobs/${campaignId}/download?downloadKey=${key}`)
+      axios.get(`https://api.sms2mkt.com/2waysms/${version}/jobs/${campaignId}/download?downloadKey=${key}`)
         .then(response => {
           // JSON responses are automatically parsed.
           this.parsedData = response.data
