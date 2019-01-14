@@ -3,6 +3,7 @@ import Layout from '@layouts/main'
 import { mapGetters, mapActions } from 'vuex'
 import { campaignComputed } from '@state/helpers'
 import firestoreApp from "@utils/firestore.config"
+import axios from 'axios';
 
 export default {
   page: {
@@ -21,7 +22,8 @@ export default {
       baseModule: 'reportViewer',
       left: true,
       timeout: 2000,
-      exportJobs: []
+      exportJobs: [],
+      s3downloadlink: ''
     }
   },
   computed: {
@@ -67,7 +69,93 @@ export default {
         orgId: this.authLevel
       })
     },
-    async getExportJobsByCampaign(campaignId) {
+    createExportJob(campaignId,filename,maxRow,type){
+      // สั่งให้สร้าง Zip file ใหม่
+      // 2Do: ทำ API Config สำหรับ Config Staging Version
+      axios.post(`https://api.sms2mkt.com/2waysms/staging/jobs/${campaignId}/export`,
+          {
+                  "maxRow": maxRow,
+                  "exportType": type,
+                  "fileName": filename
+          }
+        ,{
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => {
+          // JSON responses are automatically parsed.
+          this.parsedData = response.data
+          console.log(this.parsedData.output)
+
+          let exportJobObject = {"fileName": this.parsedData.output.S3FileName,"type": type }
+          let result = [] 
+          try{
+              result = firestoreApp
+                .collection('exportJobs').doc(campaignId).collection('jobs')
+                .add(exportJobObject)
+
+                this.getFirebaseExportJobsByCampaign(campaignId)
+          } catch (error) { console.log(error)}
+        })
+        .catch(e => {
+          this.errors.push(e)
+        })
+    },
+    async getAWSExportJobsListByCampaign(campaignId){
+      // 2Do: ทำ API Config สำหรับ Config Staging Version
+      //JobsList[campainId][filename][key for path]
+      
+      return await axios.post(`https://api.sms2mkt.com/2waysms/staging/jobs/${campaignId}/list`,
+          {
+            "maxFile":100,
+            "prefixFile": "",
+            "startAfter": ""
+          }
+        ,{
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => {
+          // JSON responses are automatically parsed.
+          this.parsedData = response.data
+
+          let joblist = []
+          this.parsedData.output.File.Contents.forEach(function(item) {
+
+            let filename = item.Key.substr(39,item.Key.length-39)
+
+            joblist[filename] = []
+            joblist[filename] = item.Key
+          });
+
+          return joblist
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    },
+    getS3DownloadLink(campaignId,key){
+      // 2Do: ทำ API Config สำหรับ Config Staging Version
+      //JobsList[campainId][filename][key for path]
+      
+      axios.get(`https://api.sms2mkt.com/2waysms/staging/jobs/${campaignId}/download?downloadKey=${key}`)
+        .then(response => {
+          // JSON responses are automatically parsed.
+          this.parsedData = response.data
+          console.log(this.parsedData.output.link)
+
+          window.location = this.parsedData.output.link
+
+          //return  this.parsedData.output.link
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    },
+    async getFirebaseExportJobsByCampaign(campaignId,awsjoblist) {
+      // Get generated files list from firebase
       let tmp
       try {
       tmp = await firestoreApp
@@ -79,16 +167,25 @@ export default {
         this.exportJobs[campaignId] = []
         let jobtmp = []
         tmp.forEach(function(item) {
-          jobtmp.push(item.data());
+          let data = {}
+          data = item.data()
+          data['id'] = item.id
+          if(awsjoblist[data.fileName]){
+            data['key'] = awsjoblist[data.fileName]  
+          }
+          
+          jobtmp.push(data);
         });
 
-        this.exportJobs[campaignId].push(jobtmp) 
-        this.exportJobs['test'] = "test"
-
-        console.log(this.exportJobs[campaignId])
+        this.exportJobs[campaignId].push(jobtmp)  
         this.$forceUpdate()
-    },
 
+    },
+    test(campaignId){
+      this.getAWSExportJobsListByCampaign(campaignId).then((result)=>{
+        console.log(result)
+      })
+    }
   },
 }
 </script>
@@ -133,7 +230,11 @@ export default {
                 <v-list-tile 
                   slot="activator" 
                 >
-                  <v-list-tile-content>
+                  <v-list-tile-content 
+                    @click="getAWSExportJobsListByCampaign(item.id).then((result)=>{
+                              getFirebaseExportJobsByCampaign(item.id,result)
+                            })"
+                  >
                     <v-list-tile-title>
                       {{ item.campaignName }} : {{ item.campaignCode }}
                     </v-list-tile-title>
@@ -150,13 +251,13 @@ export default {
                         class="v-btn--simple"
                         color="secondary"
                         icon
-                        @click="getExportJobsByCampaign(item.id)"
+                        @click="createExportJob(item.id,item.campaignCode,100000,'XLSX')"
                       >
                         <v-icon>view_comfy</v-icon>
                       </v-btn>
                       <span>Excel</span>
                     </v-tooltip>
-                    <v-tooltip
+                    <!--                     <v-tooltip
                       top
                       content-class="top">
                       <v-btn
@@ -169,7 +270,7 @@ export default {
                         <v-icon>settings_ethernet</v-icon>
                       </v-btn>
                       <span>Json</span>
-                    </v-tooltip>
+                    </v-tooltip> -->
                   </div>
                 </v-list-tile>
                 <v-divider 
@@ -177,14 +278,36 @@ export default {
                   :key="`divider-${index}`"
                 />
                 <!--  subList -->
-                <v-list-tile 
-                  v-for="job in exportJobs[item.id]" 
-                  :key="job.id"
-                  class="text-xs-right">
-                  <v-list-tile-content >
-                    <v-list-tile-sub-title >Type: {{ job[0].type }} Filename: {{ job[0].fileName }}</v-list-tile-sub-title >
+                <template v-if="exportJobs[item.id]">
+                    <v-list-tile-content 
+                      v-for="(job) in exportJobs[item.id][0]" 
+                      :key="job.id"
+                    >
+                    <div class="d-flex">
+                      <v-list-tile-sub-title>
+                        Type: {{ job.type }}
+                      </v-list-tile-sub-title >
+                      <v-list-tile-sub-title class="d-flex">
+                        {{ job.fileName }}
+                      </v-list-tile-sub-title>
+                      <v-tooltip
+                        top
+                        content-class="top">
+                        <v-btn
+                          slot="activator"
+                          :disabled="!job.key"
+                          class="v-btn--simple"
+                          color="secondary"
+                          icon
+                          @click="getS3DownloadLink(item.id,job.key)"
+                        >
+                          <v-icon>widgets</v-icon>
+                        </v-btn>
+                        <span>Download</span>
+                      </v-tooltip>
+                    </div>
                   </v-list-tile-content>
-                </v-list-tile >
+                </template>
               </v-list-group>
             </v-list>
           </v-card-text>
