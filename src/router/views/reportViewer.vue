@@ -240,7 +240,7 @@ export default {
                     <v-list-tile-sub-title >
                       {{ item.id }}
                     </v-list-tile-sub-title>
-                  </v-list-tile-content>      
+                  </v-list-tile-content>   
                   <div class="d-flex">
                     <v-tooltip
                       top
@@ -254,7 +254,7 @@ export default {
                       >
                         <v-icon>view_comfy</v-icon>
                       </v-btn>
-                      <span>Excel</span>
+                      <span>Create Excel Export Job</span>
                     </v-tooltip>
                     <!--<v-tooltip
                       top
@@ -279,11 +279,9 @@ export default {
                 <!--  subList -->
                 <template v-if="exportJobs[item.id]">
                   <v-list-tile-content 
-                    v-for="(job) in exportJobs[item.id][0].sort((a,b)=>{
-                          
+                    v-for="(job) in exportJobs[item.id][0].sort((a,b)=>{     
                       var x = a.fileName; var y = b.fileName
-                      return ((x < y) ? 1 : ((x > y) ? -1 : 0))
-                         
+                      return ((x < y) ? 1 : ((x > y) ? -1 : 0))     
                     })" 
                     :key="job.id"
                   >
@@ -340,5 +338,6 @@ export default {
 
 <style lang="scss" module>
 @import '@design';
+
 </style>
 
