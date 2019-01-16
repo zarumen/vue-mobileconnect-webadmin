@@ -48,7 +48,7 @@ export default {
       @click.stop="onClickBtn"
     />
     <v-toolbar-title justify-left>
-      TITLE
+      Mobile Connect
     </v-toolbar-title>
     <v-spacer/>
     <v-toolbar-items>

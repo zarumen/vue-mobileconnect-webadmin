@@ -1,6 +1,5 @@
 <script>
 import Layout from '@layouts/main'
-import FormAddCampaign from '@components/form-add-campaign'
 import { mapGetters, mapActions } from 'vuex'
 import { campaignComputed } from '@state/helpers'
 // import formatDate from '@utils/format-date'
@@ -11,11 +10,10 @@ export default {
     title: 'Widgets',
     meta: [{ name: 'description', content: 'Campaign Widgets' }],
   },
-  components: { Layout, FormAddCampaign },
+  components: { Layout },
   data() {
     return {
       baseModule: 'campaignwidgets',
-      addCampaignDialog: '',
       dialog: '',
       dialogTitle: "Campaign Delete Dialog",
       dialogText: "Do you want to delete this campaign?",
@@ -38,9 +36,10 @@ export default {
       campaignId: '',
       left: true,
       timeout: 2000,
-      paging: {
+        /*       paging: {
           rowsPerPage: 10
-        },
+        }, */
+      mutablePagination: ''
     }
   },
   computed: {
@@ -48,22 +47,24 @@ export default {
     ...mapGetters('organizations', [
       'hadList',
     ]),
+    isNotEmpty () {
+      return this.items && this.items.length > 0;
+    },
   },
   watch: {
 
   },
   created () {
 
-    if(!this.hadList)
-      this.getOrganizationsList()
+    if(!this.hadList) this.getOrganizationsList()
 
-    if(!this.hadCampaignList)
-      this.getAllCampaigns()
+    if(!this.hadCampaignList) this.getAllCampaigns()
+
+    this.mutablePagination = this.pagination
   },
   methods: {
     ...mapActions('campaigns', [
       'getAllCampaigns',
-      'deleteCampaign',
       'closeSnackBar',
     ]),
     ...mapActions('organizations', [
@@ -95,6 +96,9 @@ export default {
       this.$store.commit('campaigns/setSnackbar', { snackbar: false })
       this.$store.commit('campaigns/setNotice', { notice: '' })
     },
+    nextPage (newValue) {
+      return this.$store.dispatch('campaigns/updatePage', newValue)
+    }
   },
 }
 </script>
@@ -134,11 +138,14 @@ export default {
               </v-icon>
             </v-btn>
           </v-card-title>
+          <!-- :pagination.sync="paging" -->
           <v-data-table
             :headers="headers"
             :items="items"
-            :pagination.sync="paging"
-            class="elevation-1"
+            :pagination.sync="mutablePagination"
+            sort-icon="keyboard_arrow_down"
+            class="elevation-1 pa-2"
+            hide-actions
           >
             <template 
               slot="items" 
@@ -155,6 +162,20 @@ export default {
               <td>{{ props.item.campaignActive }}</td>
             </template>
           </v-data-table>
+          <v-flex
+            v-if="isNotEmpty"
+            class="text-xs-center pt-2"
+          >
+            <v-pagination
+              v-model="mutablePagination.page" 
+              :length="mutablePagination.pages"
+              next-icon="arrow_right"
+              prev-icon="arrow_left"
+              color="light-green"
+              circle
+              @input="nextPage"
+            />
+          </v-flex> 
         </v-card>
       </v-flex>
       <!-- Pop up Panels -->
@@ -182,10 +203,6 @@ export default {
         </v-btn>
       </v-snackbar>
     </v-container>
-    <form-add-campaign
-      :add-campaign-dialog="addCampaignDialog"
-      @emitCloseCampaignDialog="addCampaignDialog=arguments[0]"
-    />
   </Layout>
 </template>
 
