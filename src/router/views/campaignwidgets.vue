@@ -2,7 +2,7 @@
 import Layout from '@layouts/main'
 import { mapGetters, mapActions } from 'vuex'
 import { campaignComputed } from '@state/helpers'
-// import formatDate from '@utils/format-date'
+import formatDateData from '@utils/format-date'
 
 
 export default {
@@ -98,6 +98,9 @@ export default {
     },
     nextPage (newValue) {
       return this.$store.dispatch('campaigns/updatePage', newValue)
+    },
+    formatDate(dateData){
+        if(dateData) return formatDateData(dateData.seconds)
     }
   },
 }
@@ -156,8 +159,8 @@ export default {
               <td>{{ props.item.campaignHeader }}</td>
               <td>{{ props.item.keyword }}</td>
               <td>{{ props.item.shortcode }}</td>
-              <td>{{ props.item.campaignDateStart }}</td>
-              <td>{{ props.item.campaignDateEnd }}</td>
+              <td>{{ formatDate(props.item.campaignDateStart) }}</td>
+              <td>{{ formatDate(props.item.campaignDateEnd) }}</td>
               <td>{{ props.item.campaignAvailable }}</td>
               <td>{{ props.item.campaignActive }}</td>
             </template>
