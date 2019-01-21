@@ -150,19 +150,30 @@ export default {
             class="elevation-1 pa-2"
             hide-actions
           >
+            <template
+              slot="headerCell"
+              slot-scope="{ header }"
+            >
+              <span
+                class="subheading font-weight-light light-green--text text--darken-1"
+                v-text="header.text"
+              />
+            </template>          
             <template 
               slot="items" 
-              slot-scope="props">
+              slot-scope="props"
+              class="body-2" 
+            >
               <td class="text-xs-center"><a :href="`campaignwidget/${props.item.id}`"><v-icon>widgets</v-icon></a></td>
-              <td>{{ props.item.campaignCode }}</td>
-              <td>{{ props.item.organizationLevel3Name }}</td>
-              <td>{{ props.item.campaignHeader }}</td>
-              <td>{{ props.item.keyword }}</td>
-              <td>{{ props.item.shortcode }}</td>
-              <td>{{ formatDate(props.item.campaignDateStart) }}</td>
-              <td>{{ formatDate(props.item.campaignDateEnd) }}</td>
-              <td>{{ props.item.campaignAvailable }}</td>
-              <td>{{ props.item.campaignActive }}</td>
+              <td><small>{{ props.item.campaignCode }}</small></td>
+              <td><small>{{ props.item.organizationLevel3Name }}</small></td>
+              <td><small>{{ props.item.campaignHeader }}</small></td>
+              <td><small>{{ props.item.keyword }}</small></td>
+              <td><small>{{ props.item.shortcode }}</small></td>
+              <td><small>{{ formatDate(props.item.campaignDateStart) }}</small></td>
+              <td><small>{{ formatDate(props.item.campaignDateEnd) }}</small></td>
+              <td><small>{{ props.item.campaignAvailable }}</small></td>
+              <td><small>{{ props.item.campaignActive }}</small></td>
             </template>
           </v-data-table>
           <v-flex
