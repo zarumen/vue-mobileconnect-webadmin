@@ -36,10 +36,8 @@ export default {
       campaignId: '',
       left: true,
       timeout: 2000,
-        /*       paging: {
-          rowsPerPage: 10
-        }, */
-      mutablePagination: ''
+      mutablePagination: '',
+      searchCampaign: '',
     }
   },
   computed: {
@@ -52,7 +50,9 @@ export default {
     },
   },
   watch: {
-
+    searchCampaign: function(value){
+            console.log(value)
+    }
   },
   created () {
 
@@ -101,7 +101,7 @@ export default {
     },
     formatDate(dateData){
         if(dateData) return formatDateData(dateData.seconds)
-    }
+    },
   },
 }
 </script>
@@ -116,6 +116,7 @@ export default {
             <span class="title">
               Campaigns {{ pagination? "("+pagination.totalItems+")": "" }}
               <v-text-field
+                v-model.lazy="searchCampaign"
                 append-icon="search"
                 label="Quick Search"
                 single-line
@@ -124,9 +125,10 @@ export default {
             </span>
             <v-spacer/>
             <v-btn 
-              flat 
-              icon 
-              color="green"
+              class="v-btn--simple"
+              color="primary"
+              circle
+              icon
               @click.native="reloadData()"
             >
               <BaseIcon name="syncAlt"/>            
@@ -141,7 +143,6 @@ export default {
               </v-icon>
             </v-btn>
           </v-card-title>
-          <!-- :pagination.sync="paging" -->
           <v-data-table
             :headers="headers"
             :items="items"
