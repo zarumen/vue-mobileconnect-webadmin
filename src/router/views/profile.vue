@@ -49,8 +49,7 @@ export default {
           >
             <base-card
               color="deep-purple"
-              title="Edit Profile"
-              text="Complete your profile"
+              title="Profile"
             >
               <v-form>
                 <v-container py-0>
@@ -65,23 +64,25 @@ export default {
                         disabled
                       />
                     </v-flex>
-                    <v-flex
+                    <!--                     <v-flex
                       xs12
                       md4
                     >
                       <v-text-field
                         class="purple-input"
                         label="User Name"
+                        disabled
                       />
-                    </v-flex>
+                    </v-flex> -->
                     <v-flex
                       xs12
-                      md4
+                      md8
                     >
                       <v-text-field
                         v-model="user.email"
                         label="Email Address"
                         class="purple-input"
+                        disabled
                       />
                     </v-flex>
                     <v-flex
@@ -92,6 +93,7 @@ export default {
                         v-model="user.firstName"
                         label="First Name"
                         class="purple-input"
+                        disabled
                       />
                     </v-flex>
                     <v-flex
@@ -102,6 +104,7 @@ export default {
                         v-model="user.lastName"  
                         label="Last Name"
                         class="purple-input"
+                        disabled
                       />
                     </v-flex>
                     <v-flex
@@ -111,6 +114,7 @@ export default {
                       <v-text-field
                         label="Adress"
                         class="purple-input"
+                        disabled
                       />
                     </v-flex>
                     <v-flex
@@ -118,14 +122,18 @@ export default {
                       md4>
                       <v-text-field
                         label="City"
-                        class="purple-input"/>
+                        class="purple-input"
+                        disabled
+                      />
                     </v-flex>
                     <v-flex
                       xs12
                       md4>
                       <v-text-field
                         label="Country"
-                        class="purple-input"/>
+                        class="purple-input"
+                        disabled
+                      />
                     </v-flex>
                     <v-flex
                       xs12
@@ -133,18 +141,19 @@ export default {
                       <v-text-field
                         class="purple-input"
                         label="Postal Code"
-                        type="number"/>
+                        type="number"
+                        disabled/>
                     </v-flex>
                     <v-flex
                       xs12
                       text-xs-right
                     >
-                      <v-btn
+                      <!--                       <v-btn
                         class="mx-0 font-weight-light"
                         color="primary"
                       >
                         Update Profile
-                      </v-btn>
+                      </v-btn> -->
                     </v-flex>
                   </v-layout>
                 </v-container>

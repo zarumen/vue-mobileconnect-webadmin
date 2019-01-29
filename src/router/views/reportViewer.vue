@@ -236,32 +236,35 @@ export default {
                       getFirebaseExportJobsByCampaign(item.id,result)
                     })"
                   >
+                    <v-template style="width: 100%">
+                      <v-layout 
+                        justify-space-between 
+                        row >
+                        <v-flex 
+                          align-content-center 
+                          xs10>
+                          {{ item.campaignCode }}: {{ item.campaignName }} <br>
+                          <v-list-tile-sub-title>{{ item.campaignActive }}</v-list-tile-sub-title>
 
-                  <v-template style="width: 100%">
-                    <v-layout justify-space-between row >
-                      <v-flex align-content-center xs10>
-                        {{item.campaignCode}}: {{item.campaignName}} <br>
-                        <v-list-tile-sub-title>{{item.campaignActive}}</v-list-tile-sub-title>
-
-                      </v-flex>
-                      <v-flex xs2>
-                        <v-tooltip
-                          top
-                          content-class="top">
-                          <v-btn
-                            slot="activator"
-                            class="v-btn--simple"
-                            color="secondary"
-                            icon
-                            @click="createExportJob(item.id,item.campaignCode,100000,'XLSX')"
-                          >
-                            <v-icon>view_comfy</v-icon>
-                          </v-btn>
-                          <span>Create Excel Export Job</span>
-                        </v-tooltip>
-                      </v-flex>
-                    </v-layout>
-                  </v-template>
+                        </v-flex>
+                        <v-flex xs2>
+                          <v-tooltip
+                            top
+                            content-class="top">
+                            <v-btn
+                              slot="activator"
+                              class="v-btn--simple"
+                              color="secondary"
+                              icon
+                              @click="createExportJob(item.id,item.campaignCode,100000,'XLSX')"
+                            >
+                              <v-icon>view_comfy</v-icon>
+                            </v-btn>
+                            <span>Create Excel Export Job</span>
+                          </v-tooltip>
+                        </v-flex>
+                      </v-layout>
+                    </v-template>
                   </v-list-tile-content>
 
                 </v-list-tile>
@@ -309,7 +312,7 @@ export default {
                         content-class="top">
                         <v-btn
                           slot="activator"
-                          :disabled="job.key"
+                          :disabled="job.key != undefined"
                           class="v-btn--simple"
                           color="secondary"
                           icon
