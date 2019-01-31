@@ -25,7 +25,7 @@ export default {
           value: 'campaignCode'
         },
         { text: 'Brand', value: 'organizationLevel3Name' },
-        { text: 'Header', value: 'campaignHeader' },
+        { text: 'Name', value: 'campaignName' },
         { text: 'Keyword', value: 'keyword' },
         { text: 'Shortcode', value: 'shortcode' },
         { text: 'Start Date', value: 'campaignDateStart' },
@@ -37,7 +37,7 @@ export default {
       left: true,
       timeout: 2000,
       mutablePagination: '',
-      searchCampaign: '',
+      search: ''
     }
   },
   computed: {
@@ -48,6 +48,17 @@ export default {
     isNotEmpty () {
       return this.items && this.items.length > 0;
     },
+    filteredItems() {
+      return this.items.filter(item => {
+        if(!this.search){
+          return this.items
+        }else{
+          return (item.campaignCode.toLowerCase().includes(this.search.toLowerCase()) || 
+            item.campaignName.toLowerCase().includes(this.search.toLowerCase())  )
+
+        }
+      })
+    }
   },
   watch: {
     searchCampaign: function(value){
@@ -116,7 +127,7 @@ export default {
             <span class="title">
               Campaigns {{ pagination? "("+pagination.totalItems+")": "" }}
               <v-text-field
-                v-model.lazy="searchCampaign"
+                v-model.lazy="search"
                 append-icon="search"
                 label="Quick Search"
                 single-line
@@ -145,7 +156,7 @@ export default {
           </v-card-title>
           <v-data-table
             :headers="headers"
-            :items="items"
+            :items="filteredItems"
             :pagination.sync="mutablePagination"
             sort-icon="keyboard_arrow_down"
             class="elevation-1 pa-2"
@@ -168,7 +179,7 @@ export default {
               <td class="text-xs-center"><a :href="`campaignwidget/${props.item.id}`"><v-icon>widgets</v-icon></a></td>
               <td><small>{{ props.item.campaignCode }}</small></td>
               <td><small>{{ props.item.organizationLevel3Name }}</small></td>
-              <td><small>{{ props.item.campaignHeader }}</small></td>
+              <td><small>{{ props.item.campaignName }}</small></td>
               <td><small>{{ props.item.keyword }}</small></td>
               <td><small>{{ props.item.shortcode }}</small></td>
               <td><small>{{ formatDate(props.item.campaignDateStart) }}</small></td>
