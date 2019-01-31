@@ -26,7 +26,8 @@ export default {
       left: true,
       timeout: 2000,
       exportJobs: [],
-      s3downloadlink: ''
+      s3downloadlink: '',
+      search: ''
     }
   },
   computed: {
@@ -44,6 +45,16 @@ export default {
       
       if(this.user.organizationAuth === 'Level3')
         return this.user.organizationLevel3
+    },
+    filteredItems() {
+      return this.items.filter(item => {
+        if(!this.search){
+          return this.items
+        }else{
+          return (item.campaignCode.toLowerCase().includes(this.search.toLowerCase()) || 
+            item.campaignName.toLowerCase().includes(this.search.toLowerCase()) )
+        }
+      })
     }
   },
   watch: {
@@ -89,7 +100,6 @@ export default {
         .then(response => {
           // JSON responses are automatically parsed.
           this.parsedData = response.data
-          console.log(this.parsedData.output)
 
           let exportJobObject = {"fileName": this.parsedData.output.S3FileName,"type": type }
 
@@ -98,7 +108,10 @@ export default {
                 .collection('exportJobs').doc(campaignId).collection('jobs')
                 .add(exportJobObject)
 
-                this.getFirebaseExportJobsByCampaign(campaignId)
+                this.getAWSExportJobsListByCampaign(campaignId).then((result)=>{
+                  this.getFirebaseExportJobsByCampaign(campaignId,result)
+                })
+
           } catch (error) { console.log(error)}
         })
         .catch(e => {
@@ -202,6 +215,7 @@ export default {
             <span class="title">
               Campaigns {{ pagination? "("+pagination.totalItems+")": "" }}
               <v-text-field
+                v-model="search"
                 append-icon="search"
                 label="Quick Search"
                 single-line
@@ -224,7 +238,7 @@ export default {
           <v-card-text>
             <v-list three-line>
               <v-list-group
-                v-for="(item,index) in items"
+                v-for="(item,index) in filteredItems"
                 :key="index"
               >
                 <v-list-tile 
@@ -236,18 +250,17 @@ export default {
                       getFirebaseExportJobsByCampaign(item.id,result)
                     })"
                   >
-                    <v-template style="width: 100%">
+                    <div style="width: 100%">
                       <v-layout 
                         justify-space-between 
                         row >
                         <v-flex 
                           align-content-center 
-                          xs10>
+                          xs11>
                           {{ item.campaignCode }}: {{ item.campaignName }} <br>
                           <v-list-tile-sub-title>{{ item.campaignActive }}</v-list-tile-sub-title>
-
                         </v-flex>
-                        <v-flex xs2>
+                        <v-flex xs1>
                           <v-tooltip
                             top
                             content-class="top">
@@ -264,7 +277,7 @@ export default {
                           </v-tooltip>
                         </v-flex>
                       </v-layout>
-                    </v-template>
+                    </div>
                   </v-list-tile-content>
 
                 </v-list-tile>
@@ -306,23 +319,6 @@ export default {
                           <v-icon>cloud_download</v-icon>
                         </v-btn>
                         <span>Download</span>
-                      </v-tooltip>
-                      <v-tooltip 
-                        top
-                        content-class="top">
-                        <v-btn
-                          slot="activator"
-                          :disabled="job.key != undefined"
-                          class="v-btn--simple"
-                          color="secondary"
-                          icon
-                          @click="getAWSExportJobsListByCampaign(item.id).then((result)=>{
-                            getFirebaseExportJobsByCampaign(item.id,result)
-                          })"
-                        >
-                          <BaseIcon name="syncAlt"/>   
-                        </v-btn>
-                        <span>Check ready to download</span>
                       </v-tooltip>
                     </div>
                   </v-list-tile-content>
