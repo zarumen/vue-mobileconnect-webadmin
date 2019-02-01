@@ -26,7 +26,8 @@ export default {
       left: true,
       timeout: 2000,
       exportJobs: [],
-      s3downloadlink: ''
+      s3downloadlink: '',
+      search: ''
     }
   },
   computed: {
@@ -44,6 +45,16 @@ export default {
       
       if(this.user.organizationAuth === 'Level3')
         return this.user.organizationLevel3
+    },
+    filteredItems() {
+      return this.items.filter(item => {
+        if(!this.search){
+          return this.items
+        }else{
+          return (item.campaignCode.toLowerCase().includes(this.search.toLowerCase()) || 
+            item.campaignName.toLowerCase().includes(this.search.toLowerCase()) )
+        }
+      })
     }
   },
   watch: {
@@ -89,7 +100,6 @@ export default {
         .then(response => {
           // JSON responses are automatically parsed.
           this.parsedData = response.data
-          console.log(this.parsedData.output)
 
           let exportJobObject = {"fileName": this.parsedData.output.S3FileName,"type": type }
 
@@ -98,7 +108,10 @@ export default {
                 .collection('exportJobs').doc(campaignId).collection('jobs')
                 .add(exportJobObject)
 
-                this.getFirebaseExportJobsByCampaign(campaignId)
+                this.getAWSExportJobsListByCampaign(campaignId).then((result)=>{
+                  this.getFirebaseExportJobsByCampaign(campaignId,result)
+                })
+
           } catch (error) { console.log(error)}
         })
         .catch(e => {
@@ -202,6 +215,7 @@ export default {
             <span class="title">
               Campaigns {{ pagination? "("+pagination.totalItems+")": "" }}
               <v-text-field
+                v-model="search"
                 append-icon="search"
                 label="Quick Search"
                 single-line
@@ -219,63 +233,61 @@ export default {
               <BaseIcon name="syncAlt"/>            
             </v-btn>
           </v-card-title>
-          <!-- Insert in Base-Table Component -->
+
+
           <v-card-text>
             <v-list three-line>
               <v-list-group
-                v-for="(item,index) in items"
+                v-for="(item,index) in filteredItems"
                 :key="index"
               >
                 <v-list-tile 
                   slot="activator" 
                 >
+
                   <v-list-tile-content 
                     @click="getAWSExportJobsListByCampaign(item.id).then((result)=>{
                       getFirebaseExportJobsByCampaign(item.id,result)
                     })"
                   >
-                    <v-list-tile-title>
-                      {{ item.campaignName }} : {{ item.campaignCode }}
-                    </v-list-tile-title>
-                    <v-list-tile-sub-title >
-                      {{ item.id }}
-                    </v-list-tile-sub-title>
-                  </v-list-tile-content>   
-                  <div class="d-flex">
-                    <v-tooltip
-                      top
-                      content-class="top">
-                      <v-btn
-                        slot="activator"
-                        class="v-btn--simple"
-                        color="secondary"
-                        icon
-                        @click="createExportJob(item.id,item.campaignCode,100000,'XLSX')"
-                      >
-                        <v-icon>view_comfy</v-icon>
-                      </v-btn>
-                      <span>Create Excel Export Job</span>
-                    </v-tooltip>
-                    <!--<v-tooltip
-                      top
-                      content-class="top">
-                      <v-btn
-                        slot="activator"
-                        class="v-btn--simple"
-                        color="secondary"
-                        icon
-                        @click="test(item.id)"
-                      >
-                        <v-icon>settings_ethernet</v-icon>
-                      </v-btn>
-                      <span>Json</span>
-                    </v-tooltip> -->
-                  </div>
+                    <div style="width: 100%">
+                      <v-layout 
+                        justify-space-between 
+                        row >
+                        <v-flex 
+                          align-content-center 
+                          xs11>
+                          {{ item.campaignCode }}: {{ item.campaignName }} <br>
+                          <v-list-tile-sub-title>{{ item.campaignActive }}</v-list-tile-sub-title>
+                        </v-flex>
+                        <v-flex xs1>
+                          <v-tooltip
+                            top
+                            content-class="top">
+                            <v-btn
+                              slot="activator"
+                              class="v-btn--simple"
+                              color="secondary"
+                              icon
+                              @click="createExportJob(item.id,item.campaignCode,100000,'XLSX')"
+                            >
+                              <v-icon>view_comfy</v-icon>
+                            </v-btn>
+                            <span>Create Excel Export Job</span>
+                          </v-tooltip>
+                        </v-flex>
+                      </v-layout>
+                    </div>
+                  </v-list-tile-content>
+
                 </v-list-tile>
                 <v-divider 
                   v-if="index + 1 < items.length" 
                   :key="`divider-${index}`"
                 />
+
+  
+    
                 <!--  subList -->
                 <template v-if="exportJobs[item.id]">
                   <v-list-tile-content 
@@ -294,7 +306,8 @@ export default {
                       </v-list-tile-sub-title >
                       <v-tooltip
                         top
-                        content-class="top">
+                        content-class="top"
+                      >
                         <v-btn
                           slot="activator"
                           :disabled="!job.key"

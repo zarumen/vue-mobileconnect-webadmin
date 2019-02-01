@@ -217,7 +217,7 @@ export const actions = {
   }
 }
 
-function   getExportJobsByCampaign(campaignId) {
+function getExportJobsByCampaign(campaignId) {
   
   return firestoreApp
     .collection('exportJobs').doc(campaignId).collection('jobs')
