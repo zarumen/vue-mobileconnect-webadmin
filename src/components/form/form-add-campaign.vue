@@ -202,7 +202,6 @@ export default {
         }  
 
         this.contextParser.push(newParser)
-        console.log(this.contextParser)
 
         this.anotherParser = Object.assign({}, this.defaultpForm)
         this.subContextArray = []
