@@ -362,7 +362,7 @@ export default {
         >
           <base-card
             class="card-tabs"
-            color="green"
+            color="deep-purple darken-3"
           >
             <v-flex
               slot="header"
@@ -370,34 +370,69 @@ export default {
               <v-tabs
                 v-model="tabs"
                 color="transparent"
-                slider-color="deep-purple"
+                slider-color="light-green"
               >
                 <span
                   class="subheading font-weight-light mr-3"
                   style="align-self: center"
                 >
-                  Tasks:
+                  Shortcode:
                 </span>
                 <v-tab class="mr-3">
-                  <v-icon class="mr-2">bug_report</v-icon>
-                  Bugs
+                  <v-icon class="mr-2">list</v-icon>
+                  List
                 </v-tab>
                 <v-tab class="mr-3">
-                  <v-icon class="mr-2">code</v-icon>
-                  Website
+                  <v-icon class="mr-2">whatshot</v-icon>
+                  Keyword
                 </v-tab>
                 <v-tab>
-                  <v-icon class="mr-2">cloud</v-icon>
-                  Server
+                  <v-icon class="mr-2">star</v-icon>
+                  Reserved
                 </v-tab>
               </v-tabs>
+              
             </v-flex>
+            <v-card-title>
+              <span class="title">
+                ShortCode Totals 
+                <v-text-field
+                  append-icon="search"
+                  label="Quick Search"
+                  class="purple-input"
+                  single-line
+                  hide-details
+                />
+              </span>
+              <v-spacer/>
+              <v-btn 
+                v-if="tabs === 0"
+                class="v-btn--simple"
+                color="light-green darken-2"
+                round
+              >
+                +SHORTCODE            
+              </v-btn>
+              <v-btn 
+                v-if="tabs === 1"
+                class="v-btn--simple"
+                color="light-green darken-2"
+                round
+              >
+                +KEYWORD            
+              </v-btn>
+              <v-btn 
+                v-if="tabs === 2"
+                class="v-btn--simple"
+                color="light-green darken-2"
+                round
+              >
+                +KEYWORD RESERVED            
+              </v-btn>
+            </v-card-title>
 
             <v-tabs-items v-model="tabs">
-              <v-tab-item
-                v-for="n in 3"
-                :key="n"
-              >
+              <v-tab-item :value="0">
                 <v-list three-line>
                   <v-list-tile @click="complete(0)">
                     <v-list-tile-action>
@@ -522,6 +557,26 @@ export default {
                     </div>
                   </v-list-tile>
                 </v-list>
+              </v-tab-item>
+              <v-tab-item :value="1">
+                <v-card>
+                  <v-card-title>
+                    2
+                  </v-card-title>
+                </v-card>
+                <v-card>
+                  <v-card-title>
+                    3
+                  </v-card-title>
+                </v-card>
+                <v-card>
+                  <v-card-title>
+                    4
+                  </v-card-title>
+                </v-card>
+              </v-tab-item>
+              <v-tab-item :value="2">
+                3
               </v-tab-item>
             </v-tabs-items>
           </base-card>

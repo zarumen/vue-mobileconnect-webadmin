@@ -7,6 +7,7 @@ export default {
   components: { NavBarRoutes },
   data() {
     return {
+      isScrolling: false,
       loggedInNavRoutes: [
         {
           name: 'profile',
@@ -33,13 +34,21 @@ export default {
     onClickBtn () {
       this.setDrawer(!this.$store.state.app.drawer)
     },
+    onScroll () {
+      this.isScrolling = (window.pageYOffset ||
+        document.documentElement.scrollTop || 0) > 100
+    }
   }
 }
 </script>
 
 <template>
   <v-toolbar
+    v-scroll="onScroll"
     id="core-toolbar"
+    :color="!isScrolling ? 'transparent' : 'green lighten-5'"
+    :flat="!isScrolling"
+    app
     prominent
     class="elevation-0"
   >

@@ -5,7 +5,7 @@ import './plugins/vueSocketIO'
 import App from './App'
 import router from '@router'
 import store from '@state/store'
-import '@utils/registerServiceWorker'
+import '@utils/register-service-worker'
 import '@components/_globals'
 
 // Don't warn about using the dev version of Vue in development

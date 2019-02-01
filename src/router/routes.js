@@ -138,7 +138,7 @@ export default [
   {
     path: '/reportViewer',
     name: 'reportViewer',
-    component: () => lazyLoadView(import('@views/reportViewer')),
+    component: () => lazyLoadView(import('@views/report-viewer')),
     meta: {
       authRequired: true,
     },

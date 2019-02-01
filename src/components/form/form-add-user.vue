@@ -75,7 +75,7 @@ export default {
     // ////////////////
     //  Organization Dropdown Controller
     // ////////////////
-    enableLevel1() {
+    enableLevel1 () {
       if (!!this.select.value && this.select.id === 1) 
         return true
       
@@ -98,15 +98,15 @@ export default {
     ...mapActions('users', [
         'createUser'
     ]),
-    closeDialog() {
+    closeDialog () {
       this.$emit('emitCloseUserDialog', false)
     },
-    clearForm() {
+    clearForm () {
       this.uform = Object.assign({}, this.defaultForm)
       this.$refs.uform.reset()
       this.select = Object.assign({}, this.defaultDropdown)
     },
-    saveUser() {
+    saveUser () {
       // Initial Value in Form by v-model attribute
 
       let newUser = this.uform
@@ -179,7 +179,8 @@ export default {
 
       }
     },
-    openSnackBar(insertText) {
+    openSnackBar (insertText) {
+      this.valid = !this.valid
       this.textError = ''
       this.textError = insertText
       this.snackbar = true

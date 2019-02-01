@@ -1,6 +1,6 @@
 <script>
 import Layout from '@layouts/main'
-import FormAddCampaign from '@components/form-add-campaign'
+import FormAddCampaign from '@components/form/form-add-campaign'
 import { mapGetters, mapActions } from 'vuex'
 import { campaignComputed } from '@state/helpers'
 
@@ -24,13 +24,12 @@ export default {
           value: 'campaignCode'
         },
         { text: 'Brand', value: 'organizationLevel3Name' },
-        { text: 'Header', value: 'campaignHeader' },
+        { text: 'Header', value: 'campaignName' },
         { text: 'Keyword', value: 'keyword' },
         { text: 'Shortcode', value: 'shortcode' },
         { text: 'Start Date', value: 'campaignDateStart' },
         { text: 'End Date', value: 'campaignDateEnd' },
-        { text: 'Reward', value: 'campaignAvailable' },
-        { text: 'Status', value: 'campaignActive' },
+        { text: 'Status', value: 'campaignState' },
       ],
       campaignId: '',
       left: true,
@@ -111,9 +110,10 @@ export default {
             </span>
             <v-spacer/>
             <v-btn 
-              flat 
-              icon 
-              color="green"
+              class="v-btn--simple"
+              color="primary"
+              circle
+              icon
               @click.native="reloadData()"
             >
               <BaseIcon name="syncAlt"/>            
@@ -170,8 +170,7 @@ export default {
       fab
       bottom
       right
-      color="indigo"
-      dark
+      color="primary"
       fixed
       @click.stop="addCampaignDialog = !addCampaignDialog"
     >

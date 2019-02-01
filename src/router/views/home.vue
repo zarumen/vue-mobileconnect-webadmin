@@ -24,6 +24,7 @@ export default {
         <section>
           <v-parallax
             :src="image"
+            :gradient="`to top, rgba(13, 3, 29, .85), rgba(25, 25, 38, .85)`"
             height="600"
           >
             <v-layout
@@ -37,7 +38,13 @@ export default {
                 alt="Mobile Connect"
                 height="200"
               >
-              <h1 class="white--text mb-2 display-1 text-xs-center">Mobile Connect</h1>
+              <div 
+                id="fontTitle" 
+                class="white--text mb-1 text-xs-center" 
+                style="font-size: 40px;"
+              >
+                Mobile Connect
+              </div>
               <!--               <div class="subheading mb-3 text-xs-center">by Mobile Connect</div> -->
               <v-btn
                 class="green mt-5"
@@ -396,3 +403,7 @@ export default {
     </div>
   </Layout>
 </template>
+
+<style lang="scss" module>
+@import '@design';
+</style>

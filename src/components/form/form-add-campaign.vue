@@ -12,35 +12,38 @@ export default {
   data() {
     const defaultcForm = Object.freeze({
       campaignCode: '',
-      campaignHeader: '',
+      campaignName: '',
       campaignDescription: '',
       keyword: '',
       shortcode: '',
     })
     const defaultvForm = Object.freeze({
-      campaignNotAvailableMsg: '',
-      failMsg: '',
-      limitReward: '',
-      validateBoundaries: '',
-      validateBoundariesLessErrMsg: '',
-      validateBoundariesOverErrMsg: '',
-      validateMsgAfterEnd: '',
-      validateMsgBeforeStart: '',
+      messageCampaignNotAvailable: '',
+      messageRewardFailed: '',
+      rewardsLimit: '',
+      contextDelimiter: '',
+      messageBoundariesLessError: '',
+      messageBoundariesOverError: '',
+      messageAfterEnd: '',
+      messageBeforeStart: '',
       validateMsgPausedService: '',
     })
     const defaultpForm = Object.freeze({
-      exclude: '',
-      validateFailMsg: '',
-      validateForm: null,
-      validateType: 'coupon'
+      contextExclude: '',
+      messageContextFailed: '',
+      contextType: 'coupon'
+    })
+    const defaultspForm = Object.freeze({
+      contextSubForm: '',
+      messageContextFailed: ''
     })
     const defaultrForm = Object.freeze({
-      coupon: null,
-      name: '',
+      rewardHasCoupon: null,
+      rewardName: '',
       rewardCondition: '',
       rewardTotal: '',
-      validateForm: null,
-      winMsg: ''
+      rewardConditionForm: null,
+      messageRewardWin: ''
     })
 
     return {
@@ -67,18 +70,24 @@ export default {
       // context parser variable
       validateTypeList: [
         {value: 'regex', condition: false},
-        {value: 'coupon', condition: true},
+        {value: 'validate', condition: true},
+        {value: 'vote', condition: false},
+        {value: 'reward', condition: false},
       ],
-      validateType: true,
+      validateType: null,
+      conditionTypeValidate: false,
       contextParser: [],
       parserValid: true,
       // parser array
       anotherParser: Object.assign({}, defaultpForm),
+      subContextArray: [],
+      contextFailed: Object.assign({}, defaultspForm),
       // rewards Variable
       rewards: [],
       rewardValid: true,
       // reward array
       anotherReward: Object.assign({}, defaultrForm),
+      objectReward: false,
       // ---------**-------------------------------------
       // Test Value
       // ---------**------------------------------------- 
@@ -94,6 +103,7 @@ export default {
       switch2: false,
       loading1: false,
       cardOpen: false,
+      subcardOpen: false,
       itemstest: [
           { icon: 'code', iconClass: 'blue white--text', title: 'Invalid Format Message 1', subtitle: 'regex 1' },
           { icon: 'code', iconClass: 'blue white--text', title: 'Invalid Format Message 2', subtitle: 'regex 2' }
@@ -104,6 +114,12 @@ export default {
     ...mapState('organizations', {
       brandList: 'brandList'
     }),
+    regexDisable() {
+      if(this.validateType === 'regex')
+        return false
+
+      return true
+    }
   },
   watch: {
 
@@ -130,7 +146,10 @@ export default {
       if(this.brand !== null) {
 
         // --------------------- campaign Object ----------------------------------------
-        campaignNew['campaignAvailable'] = true
+        // Campaign Status
+        campaignNew['campaignAvailable'] = true // check campaign paused or unpaused
+        campaignNew['campaignActive'] = true // check campaign delete or not deleted
+        campaignNew['campaignState'] = this.cActive // check campaign status {test, production, close} 
 
         campaignNew['organizationAuth'] = this.brand.organizationAuth
         campaignNew['organizationLevel1'] = this.brand.organizationLevel1
@@ -143,7 +162,6 @@ export default {
         // set Date in here
         campaignNew['campaignDateStart'] = new Date(startDate)
         campaignNew['campaignDateEnd'] = new Date(endDate)
-        campaignNew['campaignActive'] = this.cActive
 
         // --------------------- campaignValidation Object ----------------------------------------
         
@@ -152,12 +170,12 @@ export default {
         // set Reward Array
         campaignValidationNew['rewards'] = this.rewards
 
-        campaignValidationNew['rewardHasSequence'] = this.switch2
+        campaignValidationNew['rewardsHaveSequence'] = this.switch2
         campaignValidationNew['campaignAvailable'] = true
+        campaignValidationNew['campaignState'] = this.cActive
 
         campaignValidationNew['campaignDateStart'] = new Date(startDate)
         campaignValidationNew['campaignDateEnd'] = new Date(endDate)
-        campaignValidationNew['campaignActive'] = this.cActive
 
         this.createCampaign({
           campaignObject: campaignNew,
@@ -176,24 +194,50 @@ export default {
 
         let newParser = this.anotherParser
 
-        if (newParser.validateForm) {
-          newParser['validateType'] = 'regex'
-        } else {
-          newParser['validateType'] = 'coupon'
-        }
+        newParser['contextType'] = this.validateType
+        newParser['contextFailed'] = this.subContextArray
+
+        if(this.conditionTypeValidate) {
+          this.validateForm.rewardsLimit = 1
+        }  
 
         this.contextParser.push(newParser)
+        console.log(this.contextParser)
+
         this.anotherParser = Object.assign({}, this.defaultpForm)
+        this.subContextArray = []
         this.cardOpen = false
       }
     },
     clearContextParser() {
       this.$refs.anotherParser.reset()
+      this.cardOpen = false
     },
     deleteContextParser(validateFailMsg) {
 
       this.contextParser = this.contextParser.filter(parser => {
-        return parser.validateFailMsg !== validateFailMsg
+        return parser.messageContextFailed !== validateFailMsg
+      })
+    },
+    // Specific contextFailed inside Context Parser
+    addSubContextArray() {
+      if (this.$refs.contextFailed.validate()) {
+
+        let newSpecific = this.contextFailed
+
+        this.subContextArray.push(newSpecific)
+        this.contextFailed = Object.assign({}, this.defaultspForm)
+        this.subcardOpen = false
+      }
+    },
+    clearSubContextArray() {
+      this.$refs.contextFailed.reset()
+      this.subcardOpen = false
+    },
+    deleteSubContextArray(validateFailMsg) {
+
+      this.subContextArray = this.subContextArray.filter(parser => {
+        return parser.messageContextFailed !== validateFailMsg
       })
     },
     addReward() {
@@ -201,7 +245,7 @@ export default {
 
         let newReward = this.anotherReward
 
-        newReward['coupon'] = this.switch1
+        newReward['rewardHasCoupon'] = this.switch1
 
         this.rewards.push(newReward)
         this.anotherReward = Object.assign({}, this.defaultrForm)
@@ -213,7 +257,7 @@ export default {
     },
     deleteReward(name) {
       this.rewards = this.rewards.filter(reward => {
-        return reward.name !== name
+        return reward.rewardName !== name
       })
     }
   },
@@ -309,13 +353,13 @@ export default {
                     md8
                   > 
                     <v-text-field 
-                      v-model="campaignForm.campaignHeader"
+                      v-model="campaignForm.campaignName"
                       prepend-icon="shop"
                       label="Campaign Name"
                     />
                   </v-flex> 
                   <v-flex v-if="helper">
-                    <v-subheader class="red--text">{{ helperText.campaignHeader }}</v-subheader>
+                    <v-subheader class="red--text">{{ helperText.campaignName }}</v-subheader>
                   </v-flex>
                   <v-flex 
                     xs12
@@ -333,8 +377,7 @@ export default {
                 </v-card-text>
               </v-card>
               <v-btn 
-                color="blue" 
-                class="white--text"
+                color="primary"
                 round
                 @click.native="step = 2"
               >
@@ -382,25 +425,43 @@ export default {
                         slot="item" 
                         slot-scope="data"
                       >
-                        <template v-if="typeof data.item !== 'object'">
-                          <v-list-tile-content v-text="data.item"/>
-                        </template>
-                        <template v-else>
+                        <template v-if="data.item.picURL === 'undefine'">
+                          <v-list-tile-avatar 
+                            color="primary"
+                            class="green--text"
+                          >
+                            {{ data.item.displayName.slice(0, 2).toUpperCase() }}
+                          </v-list-tile-avatar>
                           <v-list-tile-content>
                             <v-list-tile-title v-html="data.item.displayName"/>
-                            <v-list-tile-sub-title v-html="`${data.item.organizationLevel1Name} > ${data.item.organizationLevel2Name}`"/>
+                            <v-list-tile-sub-title v-html="data.item.organizationLevel2Name"/>
                           </v-list-tile-content>
                         </template>
-                        <template 
+                        <template v-else>
+                          <v-list-tile-avatar>
+                            <img :src="data.item.picURL">
+                          </v-list-tile-avatar>
+                          <v-list-tile-content>
+                            <v-list-tile-title v-html="data.item.displayName"/>
+                            <v-list-tile-sub-title v-html="data.item.organizationLevel2Name"/>
+                          </v-list-tile-content>
+                        </template>
+                        <template
                           slot="selection" 
                           slot-scope="data"
                         >
                           <v-chip
                             :selected="data.selected"
                             :key="JSON.stringify(data.item)"
+                            color="primary"
+                            text-color="white"
                             close
                             @input="data.parent.selectItem(data.item)"
                           >
+                            <v-avatar>
+                              <img :src="data.item.picURL">
+                            </v-avatar>
+                            <!-- @input="data.parent.selectItem(data.item)" -->
                             {{ data.item.displayName }}
                           </v-chip>
                         </template>
@@ -446,19 +507,14 @@ export default {
                     row
                   >
                     <v-radio
-                      color="blue darken-3" 
-                      label="Active" 
-                      value="Active" 
+                      color="deep-purple" 
+                      label="Test" 
+                      value="test" 
                     />
                     <v-radio 
-                      color="red" 
-                      label="InActive" 
-                      value="InActive"
-                    />
-                    <v-radio 
-                      color="blue lighten-2" 
-                      label="Paused" 
-                      value="Paused"
+                      color="light-green" 
+                      label="Production" 
+                      value="production"
                     />
                   </v-radio-group>
                   <v-flex v-if="helper">
@@ -501,20 +557,19 @@ export default {
                           scrollable
                           dark
                           locale="th"
-                          color="blue"
+                          color="deep-purple"
                         >
                           <v-spacer/>
                           <v-btn 
                             class="v-btn--simple"
                             round
-                            color="default" 
+                            color="primary" 
                             @click="menu = false"
                           >
                             Cancel
                           </v-btn>
                           <v-btn 
-                            class="v-btn--simple"
-                            color="blue"
+                            color="primary"
                             round
                             @click="$refs.menu.save(date)"
                           >
@@ -550,7 +605,7 @@ export default {
                           v-model="time"
                           type="month"
                           width="320"
-                          color="blue"
+                          color="deep-purple"
                         />
                         <v-spacer/>
                         <v-btn
@@ -560,15 +615,14 @@ export default {
                         <v-btn 
                           class="v-btn--simple"
                           round
-                          color="default"
+                          color="primary"
                           @click="menu3 = false"
                         >
                           Cancel
                         </v-btn>
                         <v-btn 
-                          class="v-btn--simple"
                           round 
-                          color="blue" 
+                          color="primary" 
                           @click="$refs.menu3.save(time)"
                         >
                           OK
@@ -614,19 +668,22 @@ export default {
                           v-model="date2"
                           no-title 
                           scrollable
-                          color="blue"
+                          dark
+                          locale="th"
+                          color="deep-purple"
                         >
                           <v-spacer/>
                           <v-btn 
-                            flat 
-                            color="blue" 
+                            class="v-btn--simple"
+                            round
+                            color="primary"
                             @click="menu = false"
                           >
                             Cancel
                           </v-btn>
                           <v-btn 
-                            flat 
-                            color="blue" 
+                            round
+                            color="primary" 
                             @click="$refs.menu4.save(date2)"
                           >
                             OK
@@ -661,7 +718,7 @@ export default {
                           v-model="time2"
                           type="month"
                           width="320"
-                          color="blue"
+                          color="deep-purple"
                         />
                         <v-spacer/>
                         <v-btn
@@ -669,15 +726,16 @@ export default {
                           disabled
                         />
                         <v-btn 
-                          flat
-                          color="blue"
+                          class="v-btn--simple"
+                          round
+                          color="primary" 
                           @click="menu6 = false"
                         >
                           Cancel
                         </v-btn>
                         <v-btn 
-                          flat 
-                          color="blue" 
+                          round 
+                          color="primary"  
                           @click="$refs.menu6.save(time2)"
                         >
                           OK
@@ -691,8 +749,7 @@ export default {
                 </v-card-text>
               </v-card>
               <v-btn 
-                color="blue" 
-                class="white--text"
+                color="primary"
                 round
                 @click.native="step = 3"
               >
@@ -720,7 +777,7 @@ export default {
               >
                 <v-card-text>
                   <v-flex v-if="helper">
-                    <v-subheader class="red--text">{{ helperText.validateBoundaries }}</v-subheader>
+                    <v-subheader class="red--text">{{ helperText.contextDelimiter }}</v-subheader>
                   </v-flex> 
                   <v-flex 
                     xs8
@@ -728,7 +785,8 @@ export default {
                     md3
                   > 
                     <v-text-field 
-                      v-model="validateForm.validateBoundaries"
+                      v-model="validateForm.contextDelimiter"
+                      prepend-icon="priority_high"
                       solo-inverted 
                       label="Delimiter"
                     />
@@ -748,14 +806,14 @@ export default {
                           <v-icon class="blue white--text">code</v-icon>
                         </v-list-tile-avatar>
                         <v-list-tile-content>
-                          <v-list-tile-title>{{ item.validateFailMsg }}</v-list-tile-title>
-                          <v-list-tile-sub-title>{{ item.validateType }}</v-list-tile-sub-title>
+                          <v-list-tile-title>{{ item.messageContextFailed }}</v-list-tile-title>
+                          <v-list-tile-sub-title>{{ item.contextType }}</v-list-tile-sub-title>
                         </v-list-tile-content>
                         <v-list-tile-action>
                           <v-btn
                             icon
                             ripple
-                            @click="deleteContextParser(item.validateFailMsg)"
+                            @click="deleteContextParser(item.messageContextFailed)"
                           >
                             <v-icon color="grey lighten-1">delete_forever</v-icon>
                           </v-btn>
@@ -765,8 +823,7 @@ export default {
                   </v-flex>
                   <p/>
                   <v-btn 
-                    color="blue" 
-                    class="white--text"
+                    color="primary" 
                     round
                     @click.native="cardOpen = !cardOpen"
                   >
@@ -787,8 +844,9 @@ export default {
                         <v-subheader>Add Context Parser</v-subheader>
                         <v-card-text>
                           <v-text-field
-                            v-model="anotherParser.exclude"
+                            v-model="anotherParser.contextExclude"
                             :rules="[v => !!v || 'Item is required']"
+                            prepend-icon="priority_high"
                             solo-inverted 
                             label="Remove Character"
                             required
@@ -797,7 +855,7 @@ export default {
                             <v-subheader class="red--text">{{ helperText.exclude }}</v-subheader>
                           </v-flex>            
                           <v-text-field 
-                            v-model="anotherParser.validateFailMsg"
+                            v-model="anotherParser.messageContextFailed"
                             :rules="[v => !!v || 'Item is required']"
                             prepend-icon="message"
                             label="Invalid Format Message"
@@ -809,41 +867,130 @@ export default {
                           <v-select 
                             v-model="validateType"
                             :items="validateTypeList"
-                            :hint="`${validateType}`"
                             item-text="value"
-                            item-value="condition"
+                            item-value="value"
                             label="Condition Type"
                             prepend-icon="assignment"
-                            persistent-hint
                           />
                           <v-flex v-if="helper">
                             <v-subheader class="red--text">{{ helperText.validateType }}</v-subheader>
                           </v-flex> 
                           <v-text-field 
-                            v-model="anotherParser.validateForm"
-                            :disabled="validateType"
+                            v-model="anotherParser.contextForm"
+                            :disabled="regexDisable"
+                            prepend-icon="priority_high"
                             solo-inverted 
                             label="Condition (Regular Expression)"
                           />
                           <v-flex v-if="helper">
                             <v-subheader class="red--text">{{ helperText.validateForm }}</v-subheader>
-                          </v-flex>                      
-                        </v-card-text> 
+                          </v-flex>
+                          <v-btn 
+                            color="primary" 
+                            round
+                            @click.native="subcardOpen = !subcardOpen"
+                          >
+                            <v-icon dark>add</v-icon>
+                            Add Specific Condition
+                          </v-btn>
+                          <v-subheader>Specific Condition: (In Parser Object)</v-subheader>
+                          <v-flex
+                            xs12
+                            md6
+                          > 
+                            <v-list two-line>
+                              <v-list-tile 
+                                v-for="item in subContextArray" 
+                                :key="item.key" 
+                                avatar
+                              >
+                                <v-list-tile-avatar>
+                                  <v-icon class="blue white--text">code</v-icon>
+                                </v-list-tile-avatar>
+                                <v-list-tile-content>
+                                  <v-list-tile-title>{{ item.messageContextFailed }}</v-list-tile-title>
+                                  <v-list-tile-sub-title>{{ item.contextSubForm }}</v-list-tile-sub-title>
+                                </v-list-tile-content>
+                                <v-list-tile-action>
+                                  <v-btn
+                                    icon
+                                    ripple
+                                    @click="deleteSubContextArray(item.messageContextFailed)"
+                                  >
+                                    <v-icon color="grey lighten-1">delete_forever</v-icon>
+                                  </v-btn>
+                                </v-list-tile-action>
+                              </v-list-tile>
+                            </v-list>
+                          </v-flex>
+                          <v-flex 
+                            xs12
+                            md6
+                          >
+                            <v-card v-if="subcardOpen">
+                              <v-form 
+                                ref="contextFailed"
+                                v-model="parserValid"
+                                lazy-validation
+                              >
+                                <v-card-text>
+                                  <v-subheader>Add Specific Conditions</v-subheader>
+                                  <v-text-field 
+                                    v-model="contextFailed.messageContextFailed"
+                                    :rules="[v => !!v || 'Item is required']"
+                                    prepend-icon="message"
+                                    label="Invalid Format Message Specific"
+                                    required
+                                  />
+                                  <v-text-field 
+                                    v-model="contextFailed.contextSubForm"
+                                    prepend-icon="priority_high"
+                                    solo-inverted 
+                                    label="Specific Condition (Regular Expression)"
+                                  />
+                                  <v-flex v-if="helper">
+                                    <v-subheader class="red--text">{{ helperText.validateFailMsg }}</v-subheader>
+                                  </v-flex>
+                                </v-card-text>
+                                <v-card-actions>
+                                  <v-spacer/>
+                                  <v-btn 
+                                    class="v-btn--simple"
+                                    color="primary"
+                                    round
+                                    @click.native="clearSubContextArray()"
+                                  >
+                                    Cancel
+                                  </v-btn>
+                                  <v-btn
+                                    color="primary"
+                                    round
+                                    @click.native="addSubContextArray()"
+                                  >
+                                    Save
+                                  </v-btn>
+                                </v-card-actions>
+                              </v-form>
+                            </v-card>
+                          </v-flex>                
+                        </v-card-text>
                         <v-card-actions>
                           <v-spacer/>
                           <v-btn 
-                            :disabled="!parserValid"
-                            color="blue" 
-                            class="white--text"
-                            @click.native="addContextParser()"
-                          >
-                            Save
-                          </v-btn>
-                          <v-btn 
-                            flat
+                            class="v-btn--simple"
+                            color="primary"
+                            round
                             @click.native="clearContextParser()"
                           >
                             Cancel
+                          </v-btn>
+                          <v-btn 
+                            :disabled="!parserValid"
+                            color="primary"
+                            round
+                            @click.native="addContextParser()"
+                          >
+                            Save
                           </v-btn>
                         </v-card-actions>
                       </v-form>
@@ -852,8 +999,7 @@ export default {
                 </v-card-text>
               </v-card>
               <v-btn 
-                color="blue" 
-                class="white--text"
+                color="primary" 
                 round
                 @click.native="step = 4"
               >
@@ -888,23 +1034,39 @@ export default {
                       <v-subheader class="red--text">{{ helperText.campaignNotAvailableMsg }}</v-subheader>
                     </v-flex> 
                     <v-text-field 
-                      v-model="validateForm.campaignNotAvailableMsg"
+                      v-model="validateForm.messageCampaignTestNotRegister"
                       prepend-icon="chat"
                       label="Empty Message"
                     />
                     <v-flex v-if="helper">
-                      <v-subheader class="red--text">{{ helperText.validateBoundariesLessErrMsg }}</v-subheader>
+                      <v-subheader class="red--text">{{ helperText.messageCampaignNotAvailable }}</v-subheader>
+                    </v-flex>
+                    <v-text-field 
+                      v-model="validateForm.messageCampaignNotAvailable"
+                      prepend-icon="chat"
+                      label="Pause Service Message"
+                    />
+                    <v-flex v-if="helper">
+                      <v-subheader class="red--text">{{ helperText.campaignNotAvailableMsg }}</v-subheader>
                     </v-flex> 
                     <v-text-field 
-                      v-model="validateForm.validateBoundariesLessErrMsg"
+                      v-model="validateForm.messageCheckMsisdnNotFound"
+                      prepend-icon="chat"
+                      label="Telephone Number Checked Error Message"
+                    />
+                    <v-flex v-if="helper">
+                      <v-subheader class="red--text">{{ helperText.messageBoundariesLessError }}</v-subheader>
+                    </v-flex> 
+                    <v-text-field 
+                      v-model="validateForm.messageBoundariesLessError"
                       prepend-icon="chat"
                       label="Less Content Message"
                     />
                     <v-flex v-if="helper">
-                      <v-subheader class="red--text">{{ helperText.validateBoundariesOverErrMsg }}</v-subheader>
+                      <v-subheader class="red--text">{{ helperText.messageBoundariesOverError }}</v-subheader>
                     </v-flex> 
                     <v-text-field 
-                      v-model="validateForm.validateBoundariesOverErrMsg"
+                      v-model="validateForm.messageBoundariesOverError"
                       prepend-icon="chat"
                       label="Over Content Message"
                     />
@@ -912,7 +1074,7 @@ export default {
                       <v-subheader class="red--text">{{ helperText.validateMsgBeforeStart }}</v-subheader>
                     </v-flex>
                     <v-text-field 
-                      v-model="validateForm.validateMsgBeforeStart"
+                      v-model="validateForm.messageBeforeStart"
                       prepend-icon="chat"
                       label="Before Service Active Message"
                     />
@@ -920,24 +1082,15 @@ export default {
                       <v-subheader class="red--text">{{ helperText.validateMsgAfterEnd }}</v-subheader>
                     </v-flex>
                     <v-text-field 
-                      v-model="validateForm.validateMsgAfterEnd"
+                      v-model="validateForm.messageAfterEnd"
                       prepend-icon="chat"
                       label="After Service Active Message"
-                    />
-                    <v-flex v-if="helper">
-                      <v-subheader class="red--text">{{ helperText.validateMsgPausedService }}</v-subheader>
-                    </v-flex>
-                    <v-text-field 
-                      v-model="validateForm.validateMsgPausedService"
-                      prepend-icon="chat"
-                      label="Pause Service Message"
                     />
                   </v-flex>
                 </v-card-text>
               </v-card>
               <v-btn 
-                color="blue" 
-                class="white--text"
+                color="primary" 
                 round
                 @click.native="step = 5"
               >
@@ -978,14 +1131,19 @@ export default {
                         </v-flex> 
                         <v-switch
                           v-model="switch2"
-                          color="blue"
+                          color="deep-purple"
                           label="is Sequential Reward"
+                        />
+                        <v-switch
+                          v-model="objectReward"
+                          color="deep-purple"
+                          label="Reward is Object?"
                         />
                         <v-flex v-if="helper">
                           <v-subheader class="red--text">{{ helperText.limitReward }}</v-subheader>
                         </v-flex> 
                         <v-text-field 
-                          v-model="validateForm.limitReward"
+                          v-model="validateForm.rewardsLimit"
                           prepend-icon="phonelink_off"
                           label="Limit Rewards"
                         />
@@ -993,7 +1151,7 @@ export default {
                           <v-subheader class="red--text">{{ helperText.failMsg }}</v-subheader>
                         </v-flex> 
                         <v-text-field 
-                          v-model="validateForm.failMsg"
+                          v-model="validateForm.messageRewardFailed"
                           prepend-icon="chat_bubble"
                           label="Fail Message"
                         />
@@ -1010,17 +1168,17 @@ export default {
                             avatar
                           >
                             <v-list-tile-avatar>
-                              <v-icon class="blue white--text">redeem</v-icon>
+                              <v-icon class="deep-purple white--text">redeem</v-icon>
                             </v-list-tile-avatar>
                             <v-list-tile-content>
-                              <v-list-tile-title>{{ item.name }}</v-list-tile-title>
-                              <v-list-tile-sub-title>{{ item.winMsg }}</v-list-tile-sub-title>
+                              <v-list-tile-title>{{ item.rewardName }}</v-list-tile-title>
+                              <v-list-tile-sub-title>{{ item.messageRewardWin }}</v-list-tile-sub-title>
                             </v-list-tile-content>
                             <v-list-tile-action>
                               <v-btn
                                 icon
                                 ripple
-                                @click="deleteReward(item.name)"
+                                @click="deleteReward(item.rewardName)"
                               >
                                 <v-icon color="grey lighten-1">delete_forever</v-icon>
                               </v-btn>
@@ -1029,8 +1187,7 @@ export default {
                         </v-list>
                       </v-flex>
                       <v-btn 
-                        color="blue" 
-                        class="white--text"
+                        color="primary"
                         round
                         @click.native="cardOpen = !cardOpen"
                       >
@@ -1045,13 +1202,13 @@ export default {
                           lazy-validation
                         >
                           <v-card-title>
-                            <v-subheader>Add Reward Validation Details: <small class="red--text"> ปุ่ม generate และ upload ยังใช้ไม่ได้</small></v-subheader>
+                            <v-subheader>Add Reward Validation Details: <small class="red--text">&nbsp; ปุ่ม generate และ upload ยังใช้ไม่ได้</small></v-subheader>
                           </v-card-title>
                           <v-card-actions>
                             <p/>
                             <v-switch
                               v-model="switch1"
-                              color="blue"
+                              color="deep-purple"
                               label="is Coupon"
                             />
                             <v-spacer/>
@@ -1083,7 +1240,12 @@ export default {
                           </v-card-actions>
                           <v-card-text>
                             <v-text-field
-                              v-model="anotherReward.name"
+                              v-model="anotherReward.rewardId"
+                              prepend-icon="atm"
+                              label="Reward ID"
+                            />
+                            <v-text-field
+                              v-model="anotherReward.rewardName"
                               :rules="[v => !!v || 'Item is required']"
                               prepend-icon="phonelink"
                               label="Reward Name"
@@ -1097,6 +1259,7 @@ export default {
                               :rules="[v => !!v || 'Item is required']"
                               prepend-icon="filter_9"
                               label="Reward Total"
+                              type="number"
                               required
                             />
                             <v-flex v-if="helper">
@@ -1113,7 +1276,7 @@ export default {
                               <v-subheader class="red--text">{{ helperText.rewardCondition }}</v-subheader>
                             </v-flex> 
                             <v-text-field 
-                              v-model="anotherReward.validateForm"
+                              v-model="anotherReward.rewardConditionForm"
                               :rules="[v => !!v || 'Item is required']"
                               prepend-icon="phonelink_lock"
                               label="Reward Condition Value"
@@ -1123,7 +1286,7 @@ export default {
                               <v-subheader class="red--text">{{ helperText.rewardvalidateForm }}</v-subheader>
                             </v-flex>
                             <v-text-field 
-                              v-model="anotherReward.winMsg"
+                              v-model="anotherReward.messageRewardWin"
                               :rules="[v => !!v || 'Item is required']"
                               prepend-icon="chat_bubble_outline"
                               label="Success Message"
@@ -1135,19 +1298,21 @@ export default {
                           </v-card-text>
                           <v-card-actions>
                             <v-spacer/>
-                            <v-btn 
-                              :disabled="!rewardValid"
-                              color="blue" 
-                              class="white--text"
-                              @click.native="addReward()"
-                            >
-                              Save
-                            </v-btn>
-                            <v-btn 
-                              flat
+                            <v-btn
+                              class="v-btn--simple" 
+                              round
+                              color="primary"
                               @click.native="clearReward()"
                             >
                               Cancel
+                            </v-btn>
+                            <v-btn 
+                              :disabled="!rewardValid"
+                              round
+                              color="primary"
+                              @click.native="addReward()"
+                            >
+                              Save
                             </v-btn>
                           </v-card-actions>
                         </v-form>
@@ -1157,7 +1322,7 @@ export default {
                 </v-card-text>
               </v-card>
               <v-btn
-                color="blue"
+                color="primary"
                 round
                 @click.native="step = 6"
               >
@@ -1193,14 +1358,14 @@ export default {
                       <p class="indigo--text"><strong>Step 6: Summary Page</strong></p>
 
                       <p>compaign Code: <strong class="green--text">{{ campaignForm.campaignCode }}</strong></p>
-                      <p>compaign Name: <strong class="green--text">{{ campaignForm.campaignHeader }}</strong></p>
+                      <p>compaign Name: <strong class="green--text">{{ campaignForm.campaignName }}</strong></p>
                       <p>compaign Description: <strong class="green--text">{{ campaignForm.campaignDescription }}</strong></p>
                       <p>compaign Keyword: <strong class="green--text">{{ campaignForm.keyword }}</strong></p>
                       <p>compaign Shortcode: <strong class="green--text">{{ campaignForm.shortcode }}</strong></p>
                       <!-- <p>compaign's Brand: <strong class="green- -text">{{ brand.organizationLevel3Name }}</strong></p> -->
                       <p>compaign's Start Date: <strong class="green--text">{{ date }}</strong> Time: <strong class="green--text">{{ time }}</strong></p>
                       <p>compaign's End Date: <strong class="green--text">{{ date2 }}</strong> Time: <strong class="green--text">{{ time2 }}</strong></p>
-                      <p>campaign Status: <strong class="green--text">{{ cActive }}</strong></p>
+                      <p>campaign State: <strong class="green--text">{{ cActive }}</strong></p>
                       <p>Empty Message: <strong class="green--text">{{ validateForm.campaignNotAvailableMsg }}</strong></p>
                       <p>Fail Message: <strong class="green--text">{{ validateForm.failMsg }}</strong></p>
                       <p>Limit Reward: <strong class="green--text">{{ validateForm.limitReward }}</strong></p>
@@ -1218,8 +1383,7 @@ export default {
                 </v-card-text>
               </v-card>
               <v-btn
-                color="blue" 
-                class="white--text"
+                color="primary"
                 round
                 @click.native="step = 1"
               >

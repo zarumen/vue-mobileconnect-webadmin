@@ -28,11 +28,14 @@ export const mutations = {
   setPagination (state, pagination) {
     state.pagination = pagination
   },
-    // update Page
+  // update Page
   setPage(state, paginationPage) {
     state.pagination.page = paginationPage
   },
   // Mutate Value in Pagination
+  setItems (state, items) {
+    state.items = items
+  },
   setLoading(state, { loading }) {
     state.loading = loading
   },
@@ -45,9 +48,6 @@ export const mutations = {
   setMode (state, { mode }) {
     state.mode = mode
   },
-  setItems (state, items) {
-    state.items = items
-  }
 }
 
 export const actions = {
@@ -161,13 +161,6 @@ export const actions = {
         querySnapshot.forEach(doc => {
             let data = doc.data()
             data['id'] = doc.id
-            
-            let exportJobs = getExportJobsByCampaign(doc.id)
-            data['exportJobs'] = exportJobs
-
-
-
-            console.log(data)
             campaignList.push(data)
         })
 
