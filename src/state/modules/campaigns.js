@@ -161,13 +161,6 @@ export const actions = {
         querySnapshot.forEach(doc => {
             let data = doc.data()
             data['id'] = doc.id
-            
-            let exportJobs = getExportJobsByCampaign(doc.id)
-            data['exportJobs'] = exportJobs
-
-
-
-            console.log(data)
             campaignList.push(data)
         })
 
