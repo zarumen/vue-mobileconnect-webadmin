@@ -18,15 +18,14 @@ export default {
       shortcode: '',
     })
     const defaultvForm = Object.freeze({
+      contextDelimiter: '',
       messageCampaignNotAvailable: '',
       messageRewardFailed: '',
-      rewardsLimit: '',
-      contextDelimiter: '',
       messageBoundariesLessError: '',
       messageBoundariesOverError: '',
       messageAfterEnd: '',
       messageBeforeStart: '',
-      validateMsgPausedService: '',
+      rewardsLimit: '',
     })
     const defaultpForm = Object.freeze({
       contextExclude: '',
@@ -1373,7 +1372,7 @@ export default {
                       <p>Over Content Message: <strong class="green--text">{{ validateForm.validateBoundariesOverErrMsg }}</strong></p>
                       <p>After Service Active: <strong class="green--text">{{ validateForm.validateMsgAfterEnd }}</strong></p>
                       <p>Before Service Active: <strong class="green--text">{{ validateForm.validateMsgBeforeStart }}</strong></p>
-                      <p>Pause Service Message: <strong class="green--text">{{ validateForm.validateMsgPausedService }}</strong></p>
+                      <p>Pause Service Message: <strong class="green--text">{{ validateForm.messageCampaignNotAvailable }}</strong></p>
                       <p class="indigo--text">------------------------------Still Workings--------------------------------</p>
                       <p>contextParser: <strong class="green--text">{{ contextParser }}</strong></p>
                       <p>rewards: {{ rewards }}</p>
