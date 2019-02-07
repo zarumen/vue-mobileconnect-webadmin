@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "mobile-connect-sms"
-    //"default": "smspromo-7b308"
+    "default": "mobile-connect-sms",
+    "production": "mobile-connect-sms"
   }
 }

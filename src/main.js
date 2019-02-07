@@ -12,6 +12,11 @@ import '@components/_globals'
 Vue.config.productionTip = process.env.NODE_ENV === 'production'
 
 new Vue({
+  sockets: {
+    connect() {
+      console.log('socket connected')
+    }
+  },  
   router,
   store,
   render: h => h(App),
