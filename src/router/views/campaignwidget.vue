@@ -91,7 +91,27 @@ export default {
   },
   created() {
     this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);
-    this.getCampaignWidget(this.$route.params.campaignId) 
+    this.getCampaignWidget(this.$route.params.campaignId)
+
+    this.$options.sockets.transaction = (newdata) => {
+      // line chart widget
+      if(this.totals !== newdata && this.totals !== 0){
+        var d = new Date();
+        var stime = d.toLocaleTimeString("th",{hour: '2-digit', minute:'2-digit'})
+        this.ChartData.data.labels[this.minutes-1] = stime 
+        // console.log(this.ChartData.data.labels)
+        // console.log(this.myChart.data.datasets[0].data)
+        this.smscount = this.smscount + (newdata - this.totals);
+        this.myChart.data.datasets[0].data[this.minutes-1] = this.smscount;
+        this.myChart.update()  
+      }
+
+      // totals widget
+      console.log("trans:" + newdata)
+      this.totals =  newdata 
+      let data = (newdata - this.campaignWidget.offset) * this.campaignWidget.multiplier
+      this.totalsShow = formatCurrency(data)
+    }     
   },
   mounted() {
     let d = new Date();
@@ -144,42 +164,6 @@ export default {
       });
     },
   },
-  socket: {
-    events: {
-        transaction(newdata) {
-          // line chart widget
-          if(this.totals !== newdata && this.totals !== 0){
-            var d = new Date();
-            var stime = d.toLocaleTimeString("th",{hour: '2-digit', minute:'2-digit'})
-            this.ChartData.data.labels[this.minutes-1] = stime 
-            // console.log(this.ChartData.data.labels)
-            // console.log(this.myChart.data.datasets[0].data)
-            this.smscount = this.smscount + (newdata - this.totals);
-            this.myChart.data.datasets[0].data[this.minutes-1] = this.smscount;
-            this.myChart.update()  
-          }
-
-          // totals widget
-          console.log("trans:" + newdata)
-          this.totals =  newdata 
-          let data = (newdata - this.campaignWidget.offset) * this.campaignWidget.multiplier
-          this.totalsShow = formatCurrency(data)
-
-        },  
-        
-        connect() {
-            console.log("Websocket connected to " + this.$socket.nsp);
-        },
-
-        disconnect() {
-            console.log("Websocket disconnected from " + this.$socket.nsp);
-        },
-
-        error(err) {
-            console.error("Websocket error!", err);
-        }
-    }
-  },
 }
 </script>
 <style>
@@ -205,7 +189,6 @@ export default {
     <v-container 
       fluid 
       fill-height
-      
     >
       <v-layout 
         class="column" 

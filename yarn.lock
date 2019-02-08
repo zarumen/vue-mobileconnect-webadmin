@@ -13614,6 +13614,7 @@ vue-socket-io@^0.3.2:
   dependencies:
     socket.io-client "1.5.1"
 
+<<<<<<< HEAD
 vue-socket.io-extended@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/vue-socket.io-extended/-/vue-socket.io-extended-3.2.1.tgz#a7a74c83fd7e6c0ab41b8a90b09c07c9524b62fc"
@@ -13622,6 +13623,8 @@ vue-socket.io-extended@^3.2.1:
     "@types/socket.io-client" "1.4.32"
     camelcase "5.0.0"
 
+=======
+>>>>>>> 54e9c4c719e4acd7d6b3a4d0cd926a8740a915f7
 vue-socket.io@^3.0.5:
   version "3.0.5"
   resolved "https://registry.yarnpkg.com/vue-socket.io/-/vue-socket.io-3.0.5.tgz#2923cbc601262577159080627828031d6ea0e10f"
