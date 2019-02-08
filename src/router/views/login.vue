@@ -1,7 +1,7 @@
 <script>
 import Layout from '@layouts/main'
 import { authMethods } from '@state/helpers'
-import appConfig from '@src/app.config'
+const appConfig = require('@/app.config')
 
 export default {
   page: {

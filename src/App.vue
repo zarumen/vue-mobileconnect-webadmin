@@ -1,5 +1,5 @@
 <script>
-import appConfig from '@src/app.config'
+const appConfig = require('@/app.config')
 
 export default {
   page: {
