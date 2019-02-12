@@ -44,8 +44,8 @@ export default {
 
 <template>
   <v-toolbar
-    v-scroll="onScroll"
     id="core-toolbar"
+    v-scroll="onScroll"
     :color="!isScrolling ? 'transparent' : 'green lighten-5'"
     :flat="!isScrolling"
     app
@@ -59,7 +59,7 @@ export default {
     <v-toolbar-title justify-left>
       Mobile Connect
     </v-toolbar-title>
-    <v-spacer/>
+    <v-spacer />
     <v-toolbar-items>
       <NavBarRoutes
         v-if="loggedIn"

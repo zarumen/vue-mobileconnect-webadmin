@@ -180,10 +180,10 @@ export default {
               >
                 <p>Please Enter Your Shortcode:</p>
                 <v-combobox
+                  :key="shortcodeList.id"
                   v-model="keyform.shortcode"
                   :hint="`${keyform.shortcode}`"
                   :items="shortcodeList"
-                  :key="shortcodeList.id"
                   :rules="firstRules"
                   item-text="shortcode"
                   prepend-icon="filter_6"
@@ -197,11 +197,11 @@ export default {
                     slot-scope="data"
                   >
                     <template v-if="typeof data.item !== 'object'">
-                      <v-list-tile-content v-text="data.item"/>
+                      <v-list-tile-content v-text="data.item" />
                     </template>
                     <template v-else>
                       <v-list-tile-content>
-                        <v-list-tile-title v-html="data.item.shortcode"/>
+                        <v-list-tile-title>{{ data.item.shortcode }}</v-list-tile-title>
                       </v-list-tile-content>
                     </template>
                     <template 
@@ -209,8 +209,8 @@ export default {
                       slot-scope="data"
                     >
                       <v-chip
-                        :selected="data.selected"
                         :key="JSON.stringify(data.item)"
+                        :selected="data.selected"
                         color="deep-purple"
                         close
                         @input="data.parent.selectItem(data.item)"
@@ -241,7 +241,9 @@ export default {
                 >
                   <template slot="no-data">
                     <v-list-tile>
-                      <span class="subheading">Create</span>
+                      <span class="subheading">
+                        Create
+                      </span>
                       <v-chip
                         :color="`${colors[nonce - 1]} lighten-3`"
                         label
@@ -268,7 +270,9 @@ export default {
                       <v-icon
                         small
                         @click="parent.selectItem(item)"
-                      >close</v-icon>
+                      >
+                        close
+                      </v-icon>
                     </v-chip>
                   </template>
                   <template
@@ -296,7 +300,7 @@ export default {
                         {{ item.text }}
                       </v-chip>
                     </v-list-tile-content>
-                    <v-spacer/>
+                    <v-spacer />
                     <v-list-tile-action @click.stop>
                       <v-btn
                         icon
@@ -312,7 +316,7 @@ export default {
           </v-container>
           <v-card-actions>
             <!-- Button Action in below card-->
-            <v-spacer/>
+            <v-spacer />
             <v-btn
               class="v-btn--simple"
               round 

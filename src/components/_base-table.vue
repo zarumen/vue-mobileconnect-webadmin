@@ -93,14 +93,18 @@ export default {
           v-for="(header, index) in headers"
           :key="index"
         >
-          <small v-if="header.text!=='Widget'">{{ renderData(props.item, header) }}</small>
+          <small v-if="header.text!=='Widget'">
+            {{ renderData(props.item, header) }}
+          </small>
           <small v-else>
             <router-link 
               :to="{ path: 'campaignwidget/'+props.item.id}"
             >
               <v-icon>widgets</v-icon>
             </router-link>
-            <a :href="'/campaignwidget/'+props.item.id"><v-icon>widgets</v-icon></a>                      
+            <a :href="'/campaignwidget/'+props.item.id">
+              <v-icon>widgets</v-icon>
+            </a>                      
           </small>
         </td>
         <td 
@@ -128,7 +132,7 @@ export default {
         </td>
       </template>
       <template slot="no-data">
-        <span >
+        <span>
           <p class="pt-2 blue--text subheading">   
             <v-icon 
               medium 
@@ -136,7 +140,8 @@ export default {
             >
               info
             </v-icon>
-            Sorry, nothing to display here :(</p>
+            Sorry, nothing to display here :(
+          </p>
         </span>
       </template>
     </v-data-table>

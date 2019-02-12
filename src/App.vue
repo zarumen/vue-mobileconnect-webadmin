@@ -19,7 +19,7 @@ export default {
     as distinct and create the component again.
     -->
     <v-fade-transition mode="out-in">
-      <router-view :key="$route.fullPath"/>
+      <router-view :key="$route.fullPath" />
     </v-fade-transition>
   </v-app>
 </template>

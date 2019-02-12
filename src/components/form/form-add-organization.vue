@@ -253,10 +253,10 @@ export default {
                   >
                 </v-avatar>
                 <v-select
+                  :key="levelItems.id"
                   v-model="select"
                   :hint="`${select.value}: ${select.state}`"
                   :items="levelItems"
-                  :key="levelItems.id"
                   class="purple-input"
                   item-text="state"
                   item-value="value"
@@ -271,10 +271,10 @@ export default {
               xs12
             >
               <v-combobox
+                :key="JSON.stringify(companyList.id)"
                 v-model="form.company"
                 :hint="`${form.company}`"
                 :items="companyList"
-                :key="JSON.stringify(companyList.id)"
                 item-text="displayName"
                 prepend-icon="business"
                 label="Company Name"
@@ -288,10 +288,10 @@ export default {
               xs12
             >
               <v-combobox
+                :key="mutateDepartmentList.id"
                 v-model="form.department"
                 :hint="`${form.department}`"
                 :items="mutateDepartmentList"
-                :key="mutateDepartmentList.id"
                 class="purple-input"
                 item-text="displayName"
                 prepend-icon="business_center"
@@ -304,12 +304,12 @@ export default {
                   slot-scope="data"
                 >
                   <template v-if="typeof data.item !== 'object'">
-                    <v-list-tile-content v-text="data.item"/>
+                    <v-list-tile-content v-text="data.item" />
                   </template>
                   <template v-else>
                     <v-list-tile-content>
-                      <v-list-tile-title v-html="data.item.displayName"/>
-                      <v-list-tile-sub-title v-html="data.item.organizationLevel1Name"/>
+                      <v-list-tile-title>{{ data.item.displayName }}</v-list-tile-title>
+                      <v-list-tile-sub-title>{{ data.item.organizationLevel1Name }}</v-list-tile-sub-title>
                     </v-list-tile-content>
                   </template>
                   <template 
@@ -317,8 +317,8 @@ export default {
                     slot-scope="data"
                   >
                     <v-chip
-                      :selected="data.selected"
                       :key="JSON.stringify(data.item)"
+                      :selected="data.selected"
                       color="primary"
                       text-color="white"
                       close
@@ -339,10 +339,10 @@ export default {
               xs12
             >
               <v-combobox
+                :key="brandList.key"
                 v-model="form.brand"
                 :hint="`${form.brand}`"
                 :items="brandList"
-                :key="brandList.key"
                 class="purple-input"
                 item-text="displayName"
                 prepend-icon="shopping_basket"
@@ -362,8 +362,8 @@ export default {
                       {{ data.item.displayName.slice(0, 2).toUpperCase() }}
                     </v-list-tile-avatar>
                     <v-list-tile-content>
-                      <v-list-tile-title v-html="data.item.displayName"/>
-                      <v-list-tile-sub-title v-html="data.item.organizationLevel2Name"/>
+                      <v-list-tile-title>{{ data.item.displayName }}</v-list-tile-title>
+                      <v-list-tile-sub-title>{{ data.item.organizationLevel2Name }}</v-list-tile-sub-title>
                     </v-list-tile-content>
                   </template>
                   <template v-else>
@@ -371,8 +371,8 @@ export default {
                       <img :src="data.item.picURL">
                     </v-list-tile-avatar>
                     <v-list-tile-content>
-                      <v-list-tile-title v-html="data.item.displayName"/>
-                      <v-list-tile-sub-title v-html="data.item.organizationLevel2Name"/>
+                      <v-list-tile-title>{{ data.item.displayName }}</v-list-tile-title>
+                      <v-list-tile-sub-title>{{ data.item.organizationLevel2Name }}</v-list-tile-sub-title>
                     </v-list-tile-content>
                   </template>
                   <template
@@ -380,8 +380,8 @@ export default {
                     slot-scope="data"
                   >
                     <v-chip
-                      :selected="data.selected"
                       :key="JSON.stringify(data.item)"
+                      :selected="data.selected"
                       color="primary"
                       text-color="white"
                       close
@@ -406,7 +406,7 @@ export default {
           >
             More
           </v-btn> -->
-          <v-spacer/>
+          <v-spacer />
           <v-btn 
             class="v-btn--simple"
             round 

@@ -180,10 +180,10 @@ export default {
                 xs8
               >
                 <v-combobox
+                  :key="companyList.key"
                   v-model="company"
                   :hint="`${company}`"
                   :items="companyList"
-                  :key="companyList.key"
                   item-text="displayName"
                   prepend-icon="business"
                   label="Company Name"
@@ -197,10 +197,10 @@ export default {
                 xs8
               >
                 <v-combobox
+                  :key="departmentList.id"
                   v-model="department"
                   :hint="`${department}`"
                   :items="departmentList"
-                  :key="departmentList.id"
                   item-text="displayName"
                   prepend-icon="business_center"
                   label="Department Name"
@@ -212,12 +212,12 @@ export default {
                     slot-scope="data"
                   >
                     <template v-if="typeof data.item !== 'object'">
-                      <v-list-tile-content v-text="data.item"/>
+                      <v-list-tile-content v-text="data.item" />
                     </template>
                     <template v-else>
                       <v-list-tile-content>
-                        <v-list-tile-title v-html="data.item.displayName"/>
-                        <v-list-tile-sub-title v-html="data.item.organizationLevel1Name"/>
+                        <v-list-tile-title>{{ data.item.displayName }}</v-list-tile-title>
+                        <v-list-tile-sub-title>{{ data.item.organizationLevel1Name }}</v-list-tile-sub-title>
                       </v-list-tile-content>
                     </template>
                     <template 
@@ -225,8 +225,8 @@ export default {
                       slot-scope="data"
                     >
                       <v-chip
-                        :selected="data.selected"
                         :key="JSON.stringify(data.item)"
+                        :selected="data.selected"
                         close
                         @input="data.parent.selectItem(data.item)"
                       >
@@ -241,10 +241,10 @@ export default {
                 xs8
               >
                 <v-combobox
+                  :key="brandList.id"
                   v-model="brand"
                   :hint="`${brand}`"
                   :items="brandList"
-                  :key="brandList.id"
                   item-text="displayName"
                   prepend-icon="shopping_basket"
                   label="Brand Name"
@@ -256,12 +256,12 @@ export default {
                     slot-scope="data"
                   >
                     <template v-if="typeof data.item !== 'object'">
-                      <v-list-tile-content v-text="data.item"/>
+                      <v-list-tile-content v-text="data.item" />
                     </template>
                     <template v-else>
                       <v-list-tile-content>
-                        <v-list-tile-title v-html="data.item.displayName"/>
-                        <v-list-tile-sub-title v-html="`${data.item.organizationLevel1Name} > ${data.item.organizationLevel2Name}`"/>
+                        <v-list-tile-title>{{ data.item.displayName }}</v-list-tile-title>
+                        <v-list-tile-sub-title>{{ data.item.organizationLevel1Name }} > {{ data.item.organizationLevel2Name }}</v-list-tile-sub-title>
                       </v-list-tile-content>
                     </template>
                     <template 
@@ -269,8 +269,8 @@ export default {
                       slot-scope="data"
                     >
                       <v-chip
-                        :selected="data.selected"
                         :key="JSON.stringify(data.item)"
+                        :selected="data.selected"
                         close
                         @input="data.parent.selectItem(data.item)"
                       >
@@ -297,7 +297,9 @@ export default {
                 >
                   <template slot="no-data">
                     <v-list-tile>
-                      <span class="subheading">Create</span>
+                      <span class="subheading">
+                        Create
+                      </span>
                       <v-chip
                         :color="`${colors[nonce - 1]} lighten-3`"
                         label
@@ -324,7 +326,9 @@ export default {
                       <v-icon
                         small
                         @click="parent.selectItem(item)"
-                      >close</v-icon>
+                      >
+                        close
+                      </v-icon>
                     </v-chip>
                   </template>
                   <template
@@ -352,7 +356,7 @@ export default {
                         {{ item.text }}
                       </v-chip>
                     </v-list-tile-content>
-                    <v-spacer/>
+                    <v-spacer />
                     <v-list-tile-action @click.stop>
                       <v-btn
                         icon
@@ -368,7 +372,7 @@ export default {
           </v-container>
           <v-card-actions>
             <!-- Button Action in below card-->
-            <v-spacer/>
+            <v-spacer />
             <v-btn
               class="v-btn--simple"
               round 

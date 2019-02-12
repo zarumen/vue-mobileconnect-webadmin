@@ -38,7 +38,8 @@ export default {
       <v-container
         fill-height
         fluid
-        grid-list-xl>
+        grid-list-xl
+      >
         <v-layout
           justify-center
           wrap
@@ -119,7 +120,8 @@ export default {
                     </v-flex>
                     <v-flex
                       xs12
-                      md4>
+                      md4
+                    >
                       <v-text-field
                         label="City"
                         class="purple-input"
@@ -128,7 +130,8 @@ export default {
                     </v-flex>
                     <v-flex
                       xs12
-                      md4>
+                      md4
+                    >
                       <v-text-field
                         label="Country"
                         class="purple-input"
@@ -137,12 +140,14 @@ export default {
                     </v-flex>
                     <v-flex
                       xs12
-                      md4>
+                      md4
+                    >
                       <v-text-field
                         class="purple-input"
                         label="Postal Code"
                         type="number"
-                        disabled/>
+                        disabled
+                      />
                     </v-flex>
                     <v-flex
                       xs12
@@ -178,8 +183,12 @@ export default {
                 class="text-xs-center" 
                 style="width:200px"
               >
-                <h6 class="category text-gray font-weight-thin mb-3">{{ user.jobPosition }}</h6>
-                <h4 class="card-title font-weight-light">{{ profileName }}</h4>
+                <h6 class="category text-gray font-weight-thin mb-3">
+                  {{ user.jobPosition }}
+                </h6>
+                <h4 class="card-title font-weight-light">
+                  {{ profileName }}
+                </h4>
                 <v-btn
                   color="primary"
                   round

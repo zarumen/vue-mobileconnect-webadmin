@@ -72,7 +72,9 @@ export default {
             <v-flex
               class="title"
             >
-              <h4 class="font-weight-medium white--text">Mobile Connect Web Admin</h4>
+              <h4 class="font-weight-medium white--text">
+                Mobile Connect Web Admin
+              </h4>
             </v-flex>
           </v-layout>
           <v-card-text>
@@ -105,7 +107,9 @@ export default {
                   name="sync"
                   spin
                 />
-                <span v-else>Log In</span>
+                <span v-else>
+                  Log In
+                </span>
               </BaseButton>
               <p v-if="authError">
                 There was an error logging in to your account.

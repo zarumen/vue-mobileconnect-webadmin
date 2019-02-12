@@ -8,8 +8,8 @@ export default {
 
 <template>
   <v-content>
-    <nav-bar/>
-    <slot/>
+    <nav-bar />
+    <slot />
   </v-content>
 </template>
 

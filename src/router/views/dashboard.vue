@@ -1,8 +1,8 @@
 <script>
 import Layout from '@layouts/main'
-import Bar from '@utils/chart/Bar'
-import Doughnut from '@utils/chart/Doughnut'
-import LineChart from '@utils/chart/LineChart'
+// import Bar from '@utils/chart/Bar'
+// import Doughnut from '@utils/chart/Doughnut'
+// import LineChart from '@utils/chart/LineChart'
 
 export default {
   page: {
@@ -11,9 +11,6 @@ export default {
   },
   components: { 
     Layout,
-    Bar,
-    Doughnut,
-    LineChart
   },
   data () {
     return {
@@ -246,7 +243,9 @@ export default {
             color="info"
             type="Line"
           >
-            <h4 class="title font-weight-light">Daily Sales</h4>
+            <h4 class="title font-weight-light">
+              Daily Sales
+            </h4>
             <p class="category d-inline-flex font-weight-light">
               <v-icon
                 color="green"
@@ -254,7 +253,9 @@ export default {
               >
                 arrow_upward
               </v-icon>
-              <span class="green--text">55%</span>&nbsp;
+              <span class="green--text">
+                55%
+              </span>&nbsp;
               increase in today's sales
             </p>
 
@@ -265,7 +266,9 @@ export default {
               >
                 access_time
               </v-icon>
-              <span class="caption grey--text font-weight-light">updated 4 minutes ago</span>
+              <span class="caption grey--text font-weight-light">
+                updated 4 minutes ago
+              </span>
             </template>
           </base-chart-card>
         </v-flex>
@@ -281,8 +284,12 @@ export default {
             color="red"
             type="Bar"
           >
-            <h4 class="title font-weight-light">Email Subscription</h4>
-            <p class="category d-inline-flex font-weight-light">Last Campaign Performance</p>
+            <h4 class="title font-weight-light">
+              Email Subscription
+            </h4>
+            <p class="category d-inline-flex font-weight-light">
+              Last Campaign Performance
+            </p>
 
             <template slot="actions">
               <v-icon
@@ -291,7 +298,9 @@ export default {
               >
                 access_time
               </v-icon>
-              <span class="caption grey--text font-weight-light">updated 10 minutes ago</span>
+              <span class="caption grey--text font-weight-light">
+                updated 10 minutes ago
+              </span>
             </template>
           </base-chart-card>
         </v-flex>
@@ -306,8 +315,12 @@ export default {
             color="green"
             type="Line"
           >
-            <h3 class="title font-weight-light">Completed Tasks</h3>
-            <p class="category d-inline-flex font-weight-light">Last Last Campaign Performance</p>
+            <h3 class="title font-weight-light">
+              Completed Tasks
+            </h3>
+            <p class="category d-inline-flex font-weight-light">
+              Last Last Campaign Performance
+            </p>
 
             <template slot="actions">
               <v-icon
@@ -316,7 +329,9 @@ export default {
               >
                 access_time
               </v-icon>
-              <span class="caption grey--text font-weight-light">campaign sent 26 minutes ago</span>
+              <span class="caption grey--text font-weight-light">
+                campaign sent 26 minutes ago
+              </span>
             </template>
           </base-chart-card>
         </v-flex>
@@ -349,9 +364,15 @@ export default {
               >
                 <td>{{ index + 1 }}</td>
                 <td>{{ item.name }}</td>
-                <td class="text-xs-right">{{ item.salary }}</td>
-                <td class="text-xs-right">{{ item.country }}</td>
-                <td class="text-xs-right">{{ item.city }}</td>
+                <td class="text-xs-right">
+                  {{ item.salary }}
+                </td>
+                <td class="text-xs-right">
+                  {{ item.country }}
+                </td>
+                <td class="text-xs-right">
+                  {{ item.city }}
+                </td>
               </template>
             </v-data-table>
           </base-card>
@@ -379,19 +400,24 @@ export default {
                   Shortcode:
                 </span>
                 <v-tab class="mr-3">
-                  <v-icon class="mr-2">list</v-icon>
+                  <v-icon class="mr-2">
+                    list
+                  </v-icon>
                   List
                 </v-tab>
                 <v-tab class="mr-3">
-                  <v-icon class="mr-2">whatshot</v-icon>
+                  <v-icon class="mr-2">
+                    whatshot
+                  </v-icon>
                   Keyword
                 </v-tab>
                 <v-tab>
-                  <v-icon class="mr-2">star</v-icon>
+                  <v-icon class="mr-2">
+                    star
+                  </v-icon>
                   Reserved
                 </v-tab>
               </v-tabs>
-              
             </v-flex>
             <v-card-title>
               <span class="title">
@@ -404,7 +430,7 @@ export default {
                   hide-details
                 />
               </span>
-              <v-spacer/>
+              <v-spacer />
               <v-btn 
                 v-if="tabs === 0"
                 class="v-btn--simple"
@@ -447,7 +473,8 @@ export default {
                     <div class="d-flex">
                       <v-tooltip
                         top
-                        content-class="top">
+                        content-class="top"
+                      >
                         <v-btn
                           slot="activator"
                           class="v-btn--simple"
@@ -460,21 +487,23 @@ export default {
                       </v-tooltip>
                       <v-tooltip
                         top
-                        content-class="top">
+                        content-class="top"
+                      >
                         <v-btn
                           slot="activator"
                           class="v-btn--simple"
                           color="danger"
                           icon
                         >
-                          <v-icon color="error">close</v-icon>
+                          <v-icon color="error">
+                            close
+                          </v-icon>
                         </v-btn>
                         <span>Close</span>
                       </v-tooltip>
-
                     </div>
                   </v-list-tile>
-                  <v-divider/>
+                  <v-divider />
                   <v-list-tile @click="complete(1)">
                     <v-list-tile-action>
                       <v-checkbox
@@ -488,7 +517,8 @@ export default {
                     <div class="d-flex">
                       <v-tooltip
                         top
-                        content-class="top">
+                        content-class="top"
+                      >
                         <v-btn
                           slot="activator"
                           class="v-btn--simple"
@@ -502,20 +532,23 @@ export default {
 
                       <v-tooltip
                         top
-                        content-class="top">
+                        content-class="top"
+                      >
                         <v-btn
                           slot="activator"
                           class="v-btn--simple"
                           color="danger"
                           icon
                         >
-                          <v-icon color="error">close</v-icon>
+                          <v-icon color="error">
+                            close
+                          </v-icon>
                         </v-btn>
                         <span>Close</span>
                       </v-tooltip>
                     </div>
                   </v-list-tile>
-                  <v-divider/>
+                  <v-divider />
                   <v-list-tile @click="complete(2)">
                     <v-list-tile-action>
                       <v-checkbox
@@ -529,7 +562,8 @@ export default {
                     <div class="d-flex">
                       <v-tooltip
                         top
-                        content-class="top">
+                        content-class="top"
+                      >
                         <v-btn
                           slot="activator"
                           class="v-btn--simple"
@@ -542,18 +576,20 @@ export default {
                       </v-tooltip>
                       <v-tooltip
                         top
-                        content-class="top">
+                        content-class="top"
+                      >
                         <v-btn
                           slot="activator"
                           class="v-btn--simple"
                           color="danger"
                           icon
                         >
-                          <v-icon color="error">close</v-icon>
+                          <v-icon color="error">
+                            close
+                          </v-icon>
                         </v-btn>
                         <span>Close</span>
                       </v-tooltip>
-
                     </div>
                   </v-list-tile>
                 </v-list>

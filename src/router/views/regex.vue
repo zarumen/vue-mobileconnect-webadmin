@@ -20,7 +20,9 @@ export default {
       target="_blank"
       round
     >
-      <v-icon left>code</v-icon>
+      <v-icon left>
+        code
+      </v-icon>
       <span>See all icons</span>
     </v-btn>
     <div>

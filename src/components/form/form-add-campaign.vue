@@ -272,7 +272,8 @@ export default {
       v-model="addCampaignDialog" 
       fullscreen 
       hide-overlay 
-      transition="dialog-bottom-transition">
+      transition="dialog-bottom-transition"
+    >
       <v-card>
         <v-form
           ref="campaignForm"
@@ -295,7 +296,7 @@ export default {
             <v-toolbar-title class="white--text">
               Add New Campaign
             </v-toolbar-title>
-            <v-spacer/>
+            <v-spacer />
             <v-toolbar-items>
               <v-btn
                 dark
@@ -344,7 +345,9 @@ export default {
                     />
                   </v-flex>
                   <v-flex v-if="helper">
-                    <v-subheader class="red--text">{{ helperText.campaignCode }}</v-subheader>
+                    <v-subheader class="red--text">
+                      {{ helperText.campaignCode }}
+                    </v-subheader>
                   </v-flex>
                   <v-flex 
                     xs12
@@ -357,7 +360,9 @@ export default {
                     />
                   </v-flex> 
                   <v-flex v-if="helper">
-                    <v-subheader class="red--text">{{ helperText.campaignName }}</v-subheader>
+                    <v-subheader class="red--text">
+                      {{ helperText.campaignName }}
+                    </v-subheader>
                   </v-flex>
                   <v-flex 
                     xs12
@@ -370,7 +375,9 @@ export default {
                     />
                   </v-flex>
                   <v-flex v-if="helper">
-                    <v-subheader class="red--text">{{ helperText.campaignDescription }}</v-subheader>
+                    <v-subheader class="red--text">
+                      {{ helperText.campaignDescription }}
+                    </v-subheader>
                   </v-flex>               
                 </v-card-text>
               </v-card>
@@ -409,10 +416,10 @@ export default {
                   >
                     <v-subheader><small>Campaign Owner Details:</small></v-subheader>
                     <v-combobox
+                      :key="brandList.key"
                       v-model="brand"
                       :hint="`${brand}`"
                       :items="brandList"
-                      :key="brandList.key"
                       item-text="displayName"
                       prepend-icon="shopping_basket"
                       label="Campaign Owners: Brand"
@@ -431,8 +438,8 @@ export default {
                             {{ data.item.displayName.slice(0, 2).toUpperCase() }}
                           </v-list-tile-avatar>
                           <v-list-tile-content>
-                            <v-list-tile-title v-html="data.item.displayName"/>
-                            <v-list-tile-sub-title v-html="data.item.organizationLevel2Name"/>
+                            <v-list-tile-title>{{ data.item.displayName }}</v-list-tile-title>
+                            <v-list-tile-sub-title>{{ data.item.organizationLevel2Name }}</v-list-tile-sub-title>
                           </v-list-tile-content>
                         </template>
                         <template v-else>
@@ -440,8 +447,8 @@ export default {
                             <img :src="data.item.picURL">
                           </v-list-tile-avatar>
                           <v-list-tile-content>
-                            <v-list-tile-title v-html="data.item.displayName"/>
-                            <v-list-tile-sub-title v-html="data.item.organizationLevel2Name"/>
+                            <v-list-tile-title>{{ data.item.displayName }}</v-list-tile-title>
+                            <v-list-tile-sub-title>{{ data.item.organizationLevel2Name }}</v-list-tile-sub-title>
                           </v-list-tile-content>
                         </template>
                         <template
@@ -449,8 +456,8 @@ export default {
                           slot-scope="data"
                         >
                           <v-chip
-                            :selected="data.selected"
                             :key="JSON.stringify(data.item)"
+                            :selected="data.selected"
                             color="primary"
                             text-color="white"
                             close
@@ -479,7 +486,9 @@ export default {
                     />
                   </v-flex>
                   <v-flex v-if="helper">
-                    <v-subheader class="red--text">{{ helperText.keyword }}</v-subheader>
+                    <v-subheader class="red--text">
+                      {{ helperText.keyword }}
+                    </v-subheader>
                   </v-flex>  
                   <v-flex 
                     xs8
@@ -494,7 +503,9 @@ export default {
                     />
                   </v-flex>
                   <v-flex v-if="helper">
-                    <v-subheader class="red--text">{{ helperText.shortcode }}</v-subheader>
+                    <v-subheader class="red--text">
+                      {{ helperText.shortcode }}
+                    </v-subheader>
                   </v-flex> 
                   <v-subheader>
                     <small>Campaign Start Status:</small>
@@ -516,7 +527,9 @@ export default {
                     />
                   </v-radio-group>
                   <v-flex v-if="helper">
-                    <v-subheader class="red--text">{{ helperText.campaignActive }}</v-subheader>
+                    <v-subheader class="red--text">
+                      {{ helperText.campaignActive }}
+                    </v-subheader>
                   </v-flex> 
                   <!-- START DATE PICKER -->
                   <v-flex>
@@ -532,8 +545,8 @@ export default {
                     >
                       <v-menu
                         ref="menu"
-                        :close-on-content-click="false"
                         v-model="menu"
+                        :close-on-content-click="false"
                         :nudge-right="40"
                         :return-value.sync="date"
                         lazy
@@ -557,7 +570,7 @@ export default {
                           locale="th"
                           color="deep-purple"
                         >
-                          <v-spacer/>
+                          <v-spacer />
                           <v-btn 
                             class="v-btn--simple"
                             round
@@ -582,8 +595,8 @@ export default {
                     >
                       <v-menu
                         ref="menu3"
-                        :close-on-content-click="false"
                         v-model="menu3"
+                        :close-on-content-click="false"
                         :nudge-right="40"
                         :return-value.sync="time"
                         lazy
@@ -605,7 +618,7 @@ export default {
                           width="320"
                           color="deep-purple"
                         />
-                        <v-spacer/>
+                        <v-spacer />
                         <v-btn
                           flat
                           disabled
@@ -629,7 +642,9 @@ export default {
                     </v-flex>
                   </v-layout>
                   <v-flex v-if="helper">
-                    <v-subheader class="red--text">{{ helperText.campaignDateStart }}</v-subheader>
+                    <v-subheader class="red--text">
+                      {{ helperText.campaignDateStart }}
+                    </v-subheader>
                   </v-flex> 
                   <!-- END DATE PICKER -->
                   <v-flex>
@@ -645,8 +660,8 @@ export default {
                     >
                       <v-menu
                         ref="menu4"
-                        :close-on-content-click="false"
                         v-model="menu4"
+                        :close-on-content-click="false"
                         :nudge-right="40"
                         :return-value.sync="date2"
                         lazy
@@ -670,7 +685,7 @@ export default {
                           locale="th"
                           color="deep-purple"
                         >
-                          <v-spacer/>
+                          <v-spacer />
                           <v-btn 
                             class="v-btn--simple"
                             round
@@ -695,8 +710,8 @@ export default {
                     >
                       <v-menu
                         ref="menu6"
-                        :close-on-content-click="false"
                         v-model="menu6"
+                        :close-on-content-click="false"
                         :nudge-right="40"
                         :return-value.sync="time2"
                         lazy
@@ -718,7 +733,7 @@ export default {
                           width="320"
                           color="deep-purple"
                         />
-                        <v-spacer/>
+                        <v-spacer />
                         <v-btn
                           flat
                           disabled
@@ -742,7 +757,9 @@ export default {
                     </v-flex>                    
                   </v-layout>
                   <v-flex v-if="helper">
-                    <v-subheader class="red--text">{{ helperText.campaignDateEnd }}</v-subheader>
+                    <v-subheader class="red--text">
+                      {{ helperText.campaignDateEnd }}
+                    </v-subheader>
                   </v-flex> 
                 </v-card-text>
               </v-card>
@@ -775,7 +792,9 @@ export default {
               >
                 <v-card-text>
                   <v-flex v-if="helper">
-                    <v-subheader class="red--text">{{ helperText.contextDelimiter }}</v-subheader>
+                    <v-subheader class="red--text">
+                      {{ helperText.contextDelimiter }}
+                    </v-subheader>
                   </v-flex> 
                   <v-flex 
                     xs8
@@ -801,7 +820,9 @@ export default {
                         avatar
                       >
                         <v-list-tile-avatar>
-                          <v-icon class="blue white--text">code</v-icon>
+                          <v-icon class="blue white--text">
+                            code
+                          </v-icon>
                         </v-list-tile-avatar>
                         <v-list-tile-content>
                           <v-list-tile-title>{{ item.messageContextFailed }}</v-list-tile-title>
@@ -813,22 +834,26 @@ export default {
                             ripple
                             @click="deleteContextParser(item.messageContextFailed)"
                           >
-                            <v-icon color="grey lighten-1">delete_forever</v-icon>
+                            <v-icon color="grey lighten-1">
+                              delete_forever
+                            </v-icon>
                           </v-btn>
                         </v-list-tile-action>
                       </v-list-tile>
                     </v-list>
                   </v-flex>
-                  <p/>
+                  <p />
                   <v-btn 
                     color="primary" 
                     round
                     @click.native="cardOpen = !cardOpen"
                   >
-                    <v-icon dark>add</v-icon>
+                    <v-icon dark>
+                      add
+                    </v-icon>
                     Add Parser
                   </v-btn>
-                  <p/>
+                  <p />
                   <v-flex 
                     xs12
                     md6
@@ -850,7 +875,9 @@ export default {
                             required
                           />
                           <v-flex v-if="helper">
-                            <v-subheader class="red--text">{{ helperText.exclude }}</v-subheader>
+                            <v-subheader class="red--text">
+                              {{ helperText.exclude }}
+                            </v-subheader>
                           </v-flex>            
                           <v-text-field 
                             v-model="anotherParser.messageContextFailed"
@@ -860,7 +887,9 @@ export default {
                             required
                           />
                           <v-flex v-if="helper">
-                            <v-subheader class="red--text">{{ helperText.validateFailMsg }}</v-subheader>
+                            <v-subheader class="red--text">
+                              {{ helperText.validateFailMsg }}
+                            </v-subheader>
                           </v-flex> 
                           <v-select 
                             v-model="validateType"
@@ -871,7 +900,9 @@ export default {
                             prepend-icon="assignment"
                           />
                           <v-flex v-if="helper">
-                            <v-subheader class="red--text">{{ helperText.validateType }}</v-subheader>
+                            <v-subheader class="red--text">
+                              {{ helperText.validateType }}
+                            </v-subheader>
                           </v-flex> 
                           <v-text-field 
                             v-model="anotherParser.contextForm"
@@ -881,14 +912,18 @@ export default {
                             label="Condition (Regular Expression)"
                           />
                           <v-flex v-if="helper">
-                            <v-subheader class="red--text">{{ helperText.validateForm }}</v-subheader>
+                            <v-subheader class="red--text">
+                              {{ helperText.validateForm }}
+                            </v-subheader>
                           </v-flex>
                           <v-btn 
                             color="primary" 
                             round
                             @click.native="subcardOpen = !subcardOpen"
                           >
-                            <v-icon dark>add</v-icon>
+                            <v-icon dark>
+                              add
+                            </v-icon>
                             Add Specific Condition
                           </v-btn>
                           <v-subheader>Specific Condition: (In Parser Object)</v-subheader>
@@ -903,7 +938,9 @@ export default {
                                 avatar
                               >
                                 <v-list-tile-avatar>
-                                  <v-icon class="blue white--text">code</v-icon>
+                                  <v-icon class="blue white--text">
+                                    code
+                                  </v-icon>
                                 </v-list-tile-avatar>
                                 <v-list-tile-content>
                                   <v-list-tile-title>{{ item.messageContextFailed }}</v-list-tile-title>
@@ -915,7 +952,9 @@ export default {
                                     ripple
                                     @click="deleteSubContextArray(item.messageContextFailed)"
                                   >
-                                    <v-icon color="grey lighten-1">delete_forever</v-icon>
+                                    <v-icon color="grey lighten-1">
+                                      delete_forever
+                                    </v-icon>
                                   </v-btn>
                                 </v-list-tile-action>
                               </v-list-tile>
@@ -947,11 +986,13 @@ export default {
                                     label="Specific Condition (Regular Expression)"
                                   />
                                   <v-flex v-if="helper">
-                                    <v-subheader class="red--text">{{ helperText.validateFailMsg }}</v-subheader>
+                                    <v-subheader class="red--text">
+                                      {{ helperText.validateFailMsg }}
+                                    </v-subheader>
                                   </v-flex>
                                 </v-card-text>
                                 <v-card-actions>
-                                  <v-spacer/>
+                                  <v-spacer />
                                   <v-btn 
                                     class="v-btn--simple"
                                     color="primary"
@@ -973,7 +1014,7 @@ export default {
                           </v-flex>                
                         </v-card-text>
                         <v-card-actions>
-                          <v-spacer/>
+                          <v-spacer />
                           <v-btn 
                             class="v-btn--simple"
                             color="primary"
@@ -1029,7 +1070,9 @@ export default {
                     md6
                   > 
                     <v-flex v-if="helper">
-                      <v-subheader class="red--text">{{ helperText.campaignNotAvailableMsg }}</v-subheader>
+                      <v-subheader class="red--text">
+                        {{ helperText.campaignNotAvailableMsg }}
+                      </v-subheader>
                     </v-flex> 
                     <v-text-field 
                       v-model="validateForm.messageCampaignTestNotRegister"
@@ -1037,7 +1080,9 @@ export default {
                       label="Empty Message"
                     />
                     <v-flex v-if="helper">
-                      <v-subheader class="red--text">{{ helperText.messageCampaignNotAvailable }}</v-subheader>
+                      <v-subheader class="red--text">
+                        {{ helperText.messageCampaignNotAvailable }}
+                      </v-subheader>
                     </v-flex>
                     <v-text-field 
                       v-model="validateForm.messageCampaignNotAvailable"
@@ -1045,7 +1090,9 @@ export default {
                       label="Pause Service Message"
                     />
                     <v-flex v-if="helper">
-                      <v-subheader class="red--text">{{ helperText.campaignNotAvailableMsg }}</v-subheader>
+                      <v-subheader class="red--text">
+                        {{ helperText.campaignNotAvailableMsg }}
+                      </v-subheader>
                     </v-flex> 
                     <v-text-field 
                       v-model="validateForm.messageCheckMsisdnNotFound"
@@ -1053,7 +1100,9 @@ export default {
                       label="Telephone Number Checked Error Message"
                     />
                     <v-flex v-if="helper">
-                      <v-subheader class="red--text">{{ helperText.messageBoundariesLessError }}</v-subheader>
+                      <v-subheader class="red--text">
+                        {{ helperText.messageBoundariesLessError }}
+                      </v-subheader>
                     </v-flex> 
                     <v-text-field 
                       v-model="validateForm.messageBoundariesLessError"
@@ -1061,7 +1110,9 @@ export default {
                       label="Less Content Message"
                     />
                     <v-flex v-if="helper">
-                      <v-subheader class="red--text">{{ helperText.messageBoundariesOverError }}</v-subheader>
+                      <v-subheader class="red--text">
+                        {{ helperText.messageBoundariesOverError }}
+                      </v-subheader>
                     </v-flex> 
                     <v-text-field 
                       v-model="validateForm.messageBoundariesOverError"
@@ -1069,7 +1120,9 @@ export default {
                       label="Over Content Message"
                     />
                     <v-flex v-if="helper">
-                      <v-subheader class="red--text">{{ helperText.validateMsgBeforeStart }}</v-subheader>
+                      <v-subheader class="red--text">
+                        {{ helperText.validateMsgBeforeStart }}
+                      </v-subheader>
                     </v-flex>
                     <v-text-field 
                       v-model="validateForm.messageBeforeStart"
@@ -1077,7 +1130,9 @@ export default {
                       label="Before Service Active Message"
                     />
                     <v-flex v-if="helper">
-                      <v-subheader class="red--text">{{ helperText.validateMsgAfterEnd }}</v-subheader>
+                      <v-subheader class="red--text">
+                        {{ helperText.validateMsgAfterEnd }}
+                      </v-subheader>
                     </v-flex>
                     <v-text-field 
                       v-model="validateForm.messageAfterEnd"
@@ -1125,7 +1180,9 @@ export default {
                       <v-flex>
                         <v-subheader>Reward Validation:</v-subheader>
                         <v-flex v-if="helper">
-                          <v-subheader class="red--text">{{ helperText.rewardHasSequence }}</v-subheader>
+                          <v-subheader class="red--text">
+                            {{ helperText.rewardHasSequence }}
+                          </v-subheader>
                         </v-flex> 
                         <v-switch
                           v-model="switch2"
@@ -1138,7 +1195,9 @@ export default {
                           label="Reward is Object?"
                         />
                         <v-flex v-if="helper">
-                          <v-subheader class="red--text">{{ helperText.limitReward }}</v-subheader>
+                          <v-subheader class="red--text">
+                            {{ helperText.limitReward }}
+                          </v-subheader>
                         </v-flex> 
                         <v-text-field 
                           v-model="validateForm.rewardsLimit"
@@ -1146,7 +1205,9 @@ export default {
                           label="Limit Rewards"
                         />
                         <v-flex v-if="helper">
-                          <v-subheader class="red--text">{{ helperText.failMsg }}</v-subheader>
+                          <v-subheader class="red--text">
+                            {{ helperText.failMsg }}
+                          </v-subheader>
                         </v-flex> 
                         <v-text-field 
                           v-model="validateForm.messageRewardFailed"
@@ -1166,7 +1227,9 @@ export default {
                             avatar
                           >
                             <v-list-tile-avatar>
-                              <v-icon class="deep-purple white--text">redeem</v-icon>
+                              <v-icon class="deep-purple white--text">
+                                redeem
+                              </v-icon>
                             </v-list-tile-avatar>
                             <v-list-tile-content>
                               <v-list-tile-title>{{ item.rewardName }}</v-list-tile-title>
@@ -1178,7 +1241,9 @@ export default {
                                 ripple
                                 @click="deleteReward(item.rewardName)"
                               >
-                                <v-icon color="grey lighten-1">delete_forever</v-icon>
+                                <v-icon color="grey lighten-1">
+                                  delete_forever
+                                </v-icon>
                               </v-btn>
                             </v-list-tile-action>
                           </v-list-tile>
@@ -1189,10 +1254,12 @@ export default {
                         round
                         @click.native="cardOpen = !cardOpen"
                       >
-                        <v-icon dark>add</v-icon>
+                        <v-icon dark>
+                          add
+                        </v-icon>
                         Add Reward
                       </v-btn>
-                      <p/>
+                      <p />
                       <v-card v-if="cardOpen">
                         <v-form
                           ref="anotherReward"
@@ -1200,16 +1267,20 @@ export default {
                           lazy-validation
                         >
                           <v-card-title>
-                            <v-subheader>Add Reward Validation Details: <small class="red--text">&nbsp; ปุ่ม generate และ upload ยังใช้ไม่ได้</small></v-subheader>
+                            <v-subheader>
+                              Add Reward Validation Details: <small class="red--text">
+                                &nbsp; ปุ่ม generate และ upload ยังใช้ไม่ได้
+                              </small>
+                            </v-subheader>
                           </v-card-title>
                           <v-card-actions>
-                            <p/>
+                            <p />
                             <v-switch
                               v-model="switch1"
                               color="deep-purple"
                               label="is Coupon"
                             />
-                            <v-spacer/>
+                            <v-spacer />
                             <v-btn
                               :disabled="!switch1"
                               color="blue-grey"
@@ -1234,7 +1305,7 @@ export default {
                               </v-icon>
                               Upload
                             </v-btn>
-                            <p/>
+                            <p />
                           </v-card-actions>
                           <v-card-text>
                             <v-text-field
@@ -1250,7 +1321,9 @@ export default {
                               required
                             />
                             <v-flex v-if="helper">
-                              <v-subheader class="red--text">{{ helperText.name }}</v-subheader>
+                              <v-subheader class="red--text">
+                                {{ helperText.name }}
+                              </v-subheader>
                             </v-flex> 
                             <v-text-field 
                               v-model="anotherReward.rewardTotal"
@@ -1261,7 +1334,9 @@ export default {
                               required
                             />
                             <v-flex v-if="helper">
-                              <v-subheader class="red--text">{{ helperText.rewardTotal }}</v-subheader>
+                              <v-subheader class="red--text">
+                                {{ helperText.rewardTotal }}
+                              </v-subheader>
                             </v-flex> 
                             <v-text-field 
                               v-model="anotherReward.rewardCondition"
@@ -1271,7 +1346,9 @@ export default {
                               required
                             />
                             <v-flex v-if="helper">
-                              <v-subheader class="red--text">{{ helperText.rewardCondition }}</v-subheader>
+                              <v-subheader class="red--text">
+                                {{ helperText.rewardCondition }}
+                              </v-subheader>
                             </v-flex> 
                             <v-text-field 
                               v-model="anotherReward.rewardConditionForm"
@@ -1281,7 +1358,9 @@ export default {
                               required
                             />
                             <v-flex v-if="helper">
-                              <v-subheader class="red--text">{{ helperText.rewardvalidateForm }}</v-subheader>
+                              <v-subheader class="red--text">
+                                {{ helperText.rewardvalidateForm }}
+                              </v-subheader>
                             </v-flex>
                             <v-text-field 
                               v-model="anotherReward.messageRewardWin"
@@ -1291,11 +1370,13 @@ export default {
                               required
                             />
                             <v-flex v-if="helper">
-                              <v-subheader class="red--text">{{ helperText.winMsg }}</v-subheader>
+                              <v-subheader class="red--text">
+                                {{ helperText.winMsg }}
+                              </v-subheader>
                             </v-flex>
                           </v-card-text>
                           <v-card-actions>
-                            <v-spacer/>
+                            <v-spacer />
                             <v-btn
                               class="v-btn--simple" 
                               round
@@ -1353,28 +1434,108 @@ export default {
                     <v-flex 
                       xs12
                     > 
-                      <p class="indigo--text"><strong>Step 6: Summary Page</strong></p>
+                      <p class="indigo--text">
+                        <strong>Step 6: Summary Page</strong>
+                      </p>
 
-                      <p>compaign Code: <strong class="green--text">{{ campaignForm.campaignCode }}</strong></p>
-                      <p>compaign Name: <strong class="green--text">{{ campaignForm.campaignName }}</strong></p>
-                      <p>compaign Description: <strong class="green--text">{{ campaignForm.campaignDescription }}</strong></p>
-                      <p>compaign Keyword: <strong class="green--text">{{ campaignForm.keyword }}</strong></p>
-                      <p>compaign Shortcode: <strong class="green--text">{{ campaignForm.shortcode }}</strong></p>
+                      <p>
+                        compaign Code: <strong class="green--text">
+                          {{ campaignForm.campaignCode }}
+                        </strong>
+                      </p>
+                      <p>
+                        compaign Name: <strong class="green--text">
+                          {{ campaignForm.campaignName }}
+                        </strong>
+                      </p>
+                      <p>
+                        compaign Description: <strong class="green--text">
+                          {{ campaignForm.campaignDescription }}
+                        </strong>
+                      </p>
+                      <p>
+                        compaign Keyword: <strong class="green--text">
+                          {{ campaignForm.keyword }}
+                        </strong>
+                      </p>
+                      <p>
+                        compaign Shortcode: <strong class="green--text">
+                          {{ campaignForm.shortcode }}
+                        </strong>
+                      </p>
                       <!-- <p>compaign's Brand: <strong class="green- -text">{{ brand.organizationLevel3Name }}</strong></p> -->
-                      <p>compaign's Start Date: <strong class="green--text">{{ date }}</strong> Time: <strong class="green--text">{{ time }}</strong></p>
-                      <p>compaign's End Date: <strong class="green--text">{{ date2 }}</strong> Time: <strong class="green--text">{{ time2 }}</strong></p>
-                      <p>campaign State: <strong class="green--text">{{ cActive }}</strong></p>
-                      <p>Empty Message: <strong class="green--text">{{ validateForm.campaignNotAvailableMsg }}</strong></p>
-                      <p>Fail Message: <strong class="green--text">{{ validateForm.failMsg }}</strong></p>
-                      <p>Limit Reward: <strong class="green--text">{{ validateForm.limitReward }}</strong></p>
-                      <p>Delimiter: <strong class="green--text">{{ validateForm.validateBoundaries }}</strong></p>
-                      <p>Less Content Message: <strong class="green--text">{{ validateForm.validateBoundariesLessErrMsg }}</strong></p>
-                      <p>Over Content Message: <strong class="green--text">{{ validateForm.validateBoundariesOverErrMsg }}</strong></p>
-                      <p>After Service Active: <strong class="green--text">{{ validateForm.validateMsgAfterEnd }}</strong></p>
-                      <p>Before Service Active: <strong class="green--text">{{ validateForm.validateMsgBeforeStart }}</strong></p>
-                      <p>Pause Service Message: <strong class="green--text">{{ validateForm.messageCampaignNotAvailable }}</strong></p>
-                      <p class="indigo--text">------------------------------Still Workings--------------------------------</p>
-                      <p>contextParser: <strong class="green--text">{{ contextParser }}</strong></p>
+                      <p>
+                        compaign's Start Date: <strong class="green--text">
+                          {{ date }}
+                        </strong> Time: <strong class="green--text">
+                          {{ time }}
+                        </strong>
+                      </p>
+                      <p>
+                        compaign's End Date: <strong class="green--text">
+                          {{ date2 }}
+                        </strong> Time: <strong class="green--text">
+                          {{ time2 }}
+                        </strong>
+                      </p>
+                      <p>
+                        campaign State: <strong class="green--text">
+                          {{ cActive }}
+                        </strong>
+                      </p>
+                      <p>
+                        Empty Message: <strong class="green--text">
+                          {{ validateForm.campaignNotAvailableMsg }}
+                        </strong>
+                      </p>
+                      <p>
+                        Fail Message: <strong class="green--text">
+                          {{ validateForm.failMsg }}
+                        </strong>
+                      </p>
+                      <p>
+                        Limit Reward: <strong class="green--text">
+                          {{ validateForm.limitReward }}
+                        </strong>
+                      </p>
+                      <p>
+                        Delimiter: <strong class="green--text">
+                          {{ validateForm.validateBoundaries }}
+                        </strong>
+                      </p>
+                      <p>
+                        Less Content Message: <strong class="green--text">
+                          {{ validateForm.validateBoundariesLessErrMsg }}
+                        </strong>
+                      </p>
+                      <p>
+                        Over Content Message: <strong class="green--text">
+                          {{ validateForm.validateBoundariesOverErrMsg }}
+                        </strong>
+                      </p>
+                      <p>
+                        After Service Active: <strong class="green--text">
+                          {{ validateForm.validateMsgAfterEnd }}
+                        </strong>
+                      </p>
+                      <p>
+                        Before Service Active: <strong class="green--text">
+                          {{ validateForm.validateMsgBeforeStart }}
+                        </strong>
+                      </p>
+                      <p>
+                        Pause Service Message: <strong class="green--text">
+                          {{ validateForm.messageCampaignNotAvailable }}
+                        </strong>
+                      </p>
+                      <p class="indigo--text">
+                        ------------------------------Still Workings--------------------------------
+                      </p>
+                      <p>
+                        contextParser: <strong class="green--text">
+                          {{ contextParser }}
+                        </strong>
+                      </p>
                       <p>rewards: {{ rewards }}</p>
                     </v-flex>
                   </v-layout>

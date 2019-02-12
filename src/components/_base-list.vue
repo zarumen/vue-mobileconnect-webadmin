@@ -19,7 +19,8 @@ export default {
       <div class="d-flex">
         <v-tooltip
           top
-          content-class="top">
+          content-class="top"
+        >
           <v-btn
             slot="activator"
             class="v-btn--simple"
@@ -32,21 +33,23 @@ export default {
         </v-tooltip>
         <v-tooltip
           top
-          content-class="top">
+          content-class="top"
+        >
           <v-btn
             slot="activator"
             class="v-btn--simple"
             color="danger"
             icon
           >
-            <v-icon color="error">close</v-icon>
+            <v-icon color="error">
+              close
+            </v-icon>
           </v-btn>
           <span>Close</span>
         </v-tooltip>
-
       </div>
     </v-list-tile>
-    <v-divider/>
+    <v-divider />
     <v-list-tile @click="complete(1)">
       <v-list-tile-action>
         <v-checkbox
@@ -60,7 +63,8 @@ export default {
       <div class="d-flex">
         <v-tooltip
           top
-          content-class="top">
+          content-class="top"
+        >
           <v-btn
             slot="activator"
             class="v-btn--simple"
@@ -74,20 +78,23 @@ export default {
 
         <v-tooltip
           top
-          content-class="top">
+          content-class="top"
+        >
           <v-btn
             slot="activator"
             class="v-btn--simple"
             color="danger"
             icon
           >
-            <v-icon color="error">close</v-icon>
+            <v-icon color="error">
+              close
+            </v-icon>
           </v-btn>
           <span>Close</span>
         </v-tooltip>
       </div>
     </v-list-tile>
-    <v-divider/>
+    <v-divider />
     <v-list-tile @click="complete(2)">
       <v-list-tile-action>
         <v-checkbox
@@ -101,7 +108,8 @@ export default {
       <div class="d-flex">
         <v-tooltip
           top
-          content-class="top">
+          content-class="top"
+        >
           <v-btn
             slot="activator"
             class="v-btn--simple"
@@ -114,18 +122,20 @@ export default {
         </v-tooltip>
         <v-tooltip
           top
-          content-class="top">
+          content-class="top"
+        >
           <v-btn
             slot="activator"
             class="v-btn--simple"
             color="danger"
             icon
           >
-            <v-icon color="error">close</v-icon>
+            <v-icon color="error">
+              close
+            </v-icon>
           </v-btn>
           <span>Close</span>
         </v-tooltip>
-
       </div>
     </v-list-tile>
   </v-list>

@@ -151,7 +151,7 @@ export default {
             <img src="@assets/images/logo.png">
           </v-list-tile-title>
         </v-list-tile>
-        <v-divider/>
+        <v-divider />
         <!-- <v-list-tile
           v-if="responsive"
         >
