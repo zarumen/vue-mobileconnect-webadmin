@@ -108,7 +108,7 @@ export default {
                 hide-details
               />
             </span>
-            <v-spacer/>
+            <v-spacer />
             <v-btn 
               class="v-btn--simple"
               color="primary"
@@ -116,7 +116,7 @@ export default {
               icon
               @click.native="reloadData()"
             >
-              <BaseIcon name="syncAlt"/>            
+              <BaseIcon name="syncAlt" />            
             </v-btn>
             <v-btn 
               flat 
@@ -150,10 +150,10 @@ export default {
       />
       <v-snackbar 
         v-if="loading===false" 
+        v-model="snackbar" 
         :left="true" 
         :timeout="timeout" 
-        :color="mode" 
-        v-model="snackbar"
+        :color="mode"
       >
         {{ notice }}
         <v-btn 

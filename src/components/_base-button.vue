@@ -12,7 +12,7 @@ export default {
     color="primary"
     v-on="$listeners"
   >
-    <slot/>
+    <slot />
   </v-btn>
 </template>
 

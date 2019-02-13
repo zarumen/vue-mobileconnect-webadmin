@@ -31,7 +31,8 @@ export default {
     :value="value"
     :label="name"
     v-on="listeners"
-/></template>
+  />
+</template>
 
 <style lang="scss" module>
 @import '@design';

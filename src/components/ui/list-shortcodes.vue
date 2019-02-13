@@ -65,15 +65,21 @@ export default {
             Shortcodes:
           </span>
           <v-tab class="mr-3">
-            <v-icon class="mr-2">build</v-icon>
+            <v-icon class="mr-2">
+              build
+            </v-icon>
             List
           </v-tab>
           <v-tab class="mr-3">
-            <v-icon class="mr-2">whatshot</v-icon>
+            <v-icon class="mr-2">
+              whatshot
+            </v-icon>
             Keyword
           </v-tab>
           <v-tab>
-            <v-icon class="mr-2">star</v-icon>
+            <v-icon class="mr-2">
+              star
+            </v-icon>
             Reserved
           </v-tab>
         </v-tabs>
@@ -89,7 +95,7 @@ export default {
             hide-details
           />
         </span>
-        <v-spacer/>
+        <v-spacer />
         <span v-if="tabs === 0">
           <v-btn  
             class="v-btn--simple"
@@ -172,7 +178,9 @@ export default {
                     icon 
                     ripple
                   >
-                    <v-icon color="grey lighten-1">edit</v-icon>
+                    <v-icon color="grey lighten-1">
+                      edit
+                    </v-icon>
                   </v-btn>
                 </v-list-tile-action>
               </v-list-tile>

@@ -36,7 +36,7 @@ export default {
   <v-layout>    
     <toolbar />
 
-    <drawer v-if="showDrawer"/>
+    <drawer v-if="showDrawer" />
   </v-layout>
 </template>
 

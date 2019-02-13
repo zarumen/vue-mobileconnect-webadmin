@@ -62,7 +62,7 @@ export default {
             hide-details
           />
         </span>
-        <v-spacer/>
+        <v-spacer />
         <v-btn 
           class="v-btn--simple"
           color="primary"
@@ -75,7 +75,8 @@ export default {
       <v-container
         v-if="isNotEmpty"
         fluid 
-        grid-list-md>
+        grid-list-md
+      >
         <v-data-iterator
           :items="items"
           :pagination.sync="mutablePagination"
@@ -98,21 +99,27 @@ export default {
               >
                 {{ toTitleCase(props.item.operator) }}
               </v-card-title>
-              <v-divider/>
+              <v-divider />
               <v-list 
                 dense 
               >
                 <v-list-tile>
                   <v-list-tile-content>Company:</v-list-tile-content>
-                  <v-list-tile-content class="align-end">{{ props.item.displayName }}</v-list-tile-content>
+                  <v-list-tile-content class="align-end">
+                    {{ props.item.displayName }}
+                  </v-list-tile-content>
                 </v-list-tile>
                 <v-list-tile>
                   <v-list-tile-content>ISO Code:</v-list-tile-content>
-                  <v-list-tile-content class="align-end">{{ props.item.isoCode }}</v-list-tile-content>
+                  <v-list-tile-content class="align-end">
+                    {{ props.item.isoCode }}
+                  </v-list-tile-content>
                 </v-list-tile>
                 <v-list-tile>
                   <v-list-tile-content>Country:</v-list-tile-content>
-                  <v-list-tile-content class="align-end">{{ props.item.country }}</v-list-tile-content>
+                  <v-list-tile-content class="align-end">
+                    {{ props.item.country }}
+                  </v-list-tile-content>
                 </v-list-tile>
                 <v-list-tile>
                   <v-list-tile-content>PLMN Number:</v-list-tile-content>
@@ -138,10 +145,10 @@ export default {
     <!-- Pop up Panels -->
     <v-snackbar 
       v-if="loading===false" 
+      v-model="snackbar" 
       :left="true" 
       :timeout="timeout" 
-      :color="mode" 
-      v-model="snackbar"
+      :color="mode"
     >
       {{ notice }}
       <v-btn 
