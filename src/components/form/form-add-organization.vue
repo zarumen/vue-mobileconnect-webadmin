@@ -136,6 +136,7 @@ export default {
           if(tCompany.organizationLevel1 === tDepartment.organizationLevel1) {
             // check if already item in database.
             this.openSnackBar("Cannot Create Item already exists!")
+            break;
           }
 
           // Prepare Object organization
@@ -192,6 +193,7 @@ export default {
                     tBrand.organizationLevel1 === tCompany.organizationLevel1) {
               // HANDLE IF USE COMPANY AND DEPARTMENT AND BRAND MISMATCH
               this.openSnackBar('COMPANY AND DEPARTMENT AND BRAND MISMATCH')
+              break;
 
             } else if (tDepartment === null) {
               // HANDLE IF DEPARTMENT IS NULL
