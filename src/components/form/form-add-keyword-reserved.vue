@@ -206,16 +206,16 @@ export default {
                     </template>
                     <template 
                       slot="selection" 
-                      slot-scope="data"
+                      slot-scope="idata"
                     >
                       <v-chip
-                        :key="JSON.stringify(data.item)"
-                        :selected="data.selected"
+                        :key="JSON.stringify(idata.item)"
+                        :selected="idata.selected"
                         color="deep-purple"
                         close
-                        @input="data.parent.selectItem(data.item)"
+                        @input="idata.parent.selectItem(idata.item)"
                       >
-                        {{ data.item.shortcode }}
+                        {{ idata.item.shortcode }}
                       </v-chip>
                     </template>
                   </template>

@@ -453,21 +453,20 @@ export default {
                         </template>
                         <template
                           slot="selection" 
-                          slot-scope="data"
+                          slot-scope="idata"
                         >
                           <v-chip
-                            :key="JSON.stringify(data.item)"
-                            :selected="data.selected"
+                            :key="JSON.stringify(idata.item)"
+                            :selected="idata.selected"
                             color="primary"
                             text-color="white"
                             close
-                            @input="data.parent.selectItem(data.item)"
+                            @input="idata.parent.selectItem(idata.item)"
                           >
                             <v-avatar>
-                              <img :src="data.item.picURL">
+                              <img :src="idata.item.picURL">
                             </v-avatar>
-                            <!-- @input="data.parent.selectItem(data.item)" -->
-                            {{ data.item.displayName }}
+                            {{ idata.item.displayName }}
                           </v-chip>
                         </template>
                       </template>
