@@ -2,7 +2,7 @@
 import Chart from 'chart.js';
 import formatCurrency from '@utils/format-number'
 
-let ChartData = {
+let VoteData = {
   type: 'bar',
   data: {
     labels: ['','','',''],
@@ -20,19 +20,6 @@ let ChartData = {
           display: true,
           text: ''
       },
-      scales: {
-          yAxes: [{
-              ticks: {
-                  beginAtZero:true
-              }
-          }],
-          xAxes: [{
-            ticks: {
-              maxTicksLimit: 30,
-              stepSize: 1
-            }
-          }]
-      }
     }
 }
 
@@ -56,7 +43,7 @@ export default {
       socketMessage: '',
       timeSeries: [],
       totals: 0,
-      ChartData: ChartData,
+      VoteData: VoteData,
       smscount: 0,
       lastMinute: 0,
       myChart: null,
@@ -78,9 +65,9 @@ export default {
       
       let count = 0
       keys.forEach((result)=>{
-       this.ChartData.data.labels[count] = result
-       this.ChartData.data.datasets[0].data[count] = data[count] 
-       this.ChartData.data.datasets[0].percent[count] = Math.round((data[count])/totals * 100 * 100) / 100
+       this.VoteData.data.labels[count] = result
+       this.VoteData.data.datasets[0].data[count] = data[count] 
+       this.VoteData.data.datasets[0].percent[count] = Math.round((data[count])/totals * 100 * 100) / 100
        count++ 
       })
      
@@ -89,12 +76,6 @@ export default {
   },
   mounted() {
     this.createChart('widget-chart', this.ChartData);
-/*     this.timer = setInterval(() => {
-      let mydata = this.myChart.data.datasets[0].data;
-      mydata.shift()
-      this.smscount = 0
-      this.myChart.update()
-    }, 60000); */
   },
   methods: {
     socketRegister(){
@@ -153,25 +134,9 @@ export default {
   <v-container 
     fluid 
     fill-height
-    fill-width
-  >
+    fill-width >
     <v-layout column>
       <section>
-        <!--         <v-layout 
-          align-center 
-          justify-center 
-          column
-        >
-          <v-flex>
-            <p/>
-            <h1 
-              :style="{color: '#'+this.$route.params.color}"
-              class="big" 
-            >
-              {{ this.$route.params.caption }}
-            </h1>
-          </v-flex>
-        </v-layout> -->
         <v-layout> 
           <v-flex 
             xs12
@@ -180,17 +145,17 @@ export default {
               <v-card-title primary-title>
                 <v-layout column>
                   <div class="headline" style="font-weight: bolder;">{{ this.$route.params.caption }}</div>
-                  <span>Vote sub title</span>
+                  <!-- <span>Vote sub title</span> -->
                   <div class="headline"></div>
                   <div style="height:50px"></div>
-                  <v-layout column class="pa-0 ma-0" v-if="ChartData.data.labels !== undefine">
-                    <v-layout align-center justify-space-around row fill-height v-for="label, index in ChartData.data.labels"> 
+                  <v-layout column class="pa-0 ma-0" v-if="VoteData.data.labels !== undefine">
+                    <v-layout align-center justify-space-around row fill-height v-for="label, index in VoteData.data.labels"> 
                       <div class="headline item">{{ label }} </div>
-                      <div class="headline percent">{{ ChartData.data.datasets[0].percent[index]}}%</div>
+                      <div class="headline percent">{{ VoteData.data.datasets[0].percent[index]}}%</div>
                     </v-layout>
                   </v-layout>
                   <div style="height:10px"></div>
-                  <span>footer</span>
+                  <!-- <span>footer</span> -->
                 </v-layout>
               </v-card-title>
             </v-card>
