@@ -138,7 +138,7 @@ export default {
           column
         >
           <v-flex>
-            <p/>
+            <p />
             <h1 
               :style="{color: '#'+this.$route.params.color}"
               class="big" 
@@ -152,8 +152,8 @@ export default {
             xs-12
             style="width: 100%; padding-left: 20px; padding-bottom: 20px; padding-right: 20px;"        
           >
-            <div class="text-xs-center" >
-              <canvas id="widget-chart"/>
+            <div class="text-xs-center">
+              <canvas id="widget-chart" />
             </div>
           </v-flex>
         </v-layout>

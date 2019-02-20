@@ -59,7 +59,7 @@ export default {
 
       let keys = Object.keys(newdata)
       let data = Object.values(newdata)
-      //const reducer = (accumulator, currentValue) => accumulator + currentValue;
+      // const reducer = (accumulator, currentValue) => accumulator + currentValue;
       let totals = data.reduce((a,b)=> parseInt(a) + parseInt(b) , 0)
       console.log("total:" + totals)
       
@@ -96,14 +96,14 @@ export default {
 </script>
 <style>
   .superbig {
+    font-family: "Roboto",sans-serif;
     font-size: 70px;
     color: #1CABE2;
-    font-family: "Roboto",sans-serif;
   }
   .big {
+    font-family: "Roboto",sans-serif;
     font-size: 30px;
     color: #1CABE2;
-    font-family: "Roboto",sans-serif;
     text-align: center;
   }
   .area {
@@ -112,21 +112,21 @@ export default {
     justify-content: center;
   }
   .item {
-    min-height: 50px;
     width: 90%;
-    margin: 1px;
-    background-color: lightgray;
+    min-height: 50px;
     padding: 10px;
+    margin: 1px;
     font-weight: bolder;
+    background-color: lightgray;
   }
   .percent {
-    min-height: 50px;
     width: 15%;
-    margin: 1px;
+    min-height: 50px;
     padding: 10px 10px;
+    margin: 1px;
     font-weight: bold;
-    background-color: #F1F1FF;
     text-align: right;   
+    background-color: #F1F1FF;
   }
 </style>
 
@@ -134,27 +134,48 @@ export default {
   <v-container 
     fluid 
     fill-height
-    fill-width >
+    fill-width
+  >
     <v-layout column>
       <section>
         <v-layout> 
           <v-flex 
             xs12
           >
-             <v-card color="gray darken-2" >
+            <v-card color="gray darken-2">
               <v-card-title primary-title>
                 <v-layout column>
-                  <div class="headline" style="font-weight: bolder;">{{ this.$route.params.caption }}</div>
+                  <div
+                    class="headline"
+                    style="font-weight: bolder;"
+                  >
+                    {{ this.$route.params.caption }}
+                  </div>
                   <!-- <span>Vote sub title</span> -->
-                  <div class="headline"></div>
-                  <div style="height:50px"></div>
-                  <v-layout column class="pa-0 ma-0" v-if="VoteData.data.labels !== undefine">
-                    <v-layout align-center justify-space-around row fill-height v-for="label, index in VoteData.data.labels"> 
-                      <div class="headline item">{{ label }} </div>
-                      <div class="headline percent">{{ VoteData.data.datasets[0].percent[index]}}%</div>
+                  <div class="headline" />
+                  <div style="height:50px" />
+                  <v-layout
+                    v-if="VoteData.data.labels !== undefine"
+                    column
+                    class="pa-0 ma-0"
+                  >
+                    <v-layout
+                      v-for="(label, index) in VoteData.data.labels"
+                      :key="label"
+                      align-center
+                      justify-space-around
+                      row
+                      fill-height
+                    > 
+                      <div class="headline item">
+                        {{ label }}
+                      </div>
+                      <div class="headline percent">
+                        {{ VoteData.data.datasets[0].percent[index] }}%
+                      </div>
                     </v-layout>
                   </v-layout>
-                  <div style="height:10px"></div>
+                  <div style="height:10px" />
                   <!-- <span>footer</span> -->
                 </v-layout>
               </v-card-title>

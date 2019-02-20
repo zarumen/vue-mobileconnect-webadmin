@@ -134,7 +134,7 @@ export default {
                 hide-details
               />
             </span>
-            <v-spacer/>
+            <v-spacer />
             <v-btn 
               class="v-btn--simple"
               color="primary"
@@ -142,7 +142,7 @@ export default {
               icon
               @click.native="reloadData()"
             >
-              <BaseIcon name="syncAlt"/>            
+              <BaseIcon name="syncAlt" />            
             </v-btn>
             <v-btn 
               flat 
@@ -176,7 +176,11 @@ export default {
               slot-scope="props"
               class="body-2" 
             >
-              <td class="text-xs-center"><a :href="`campaignwidget/${props.item.id}`"><v-icon>widgets</v-icon></a></td>
+              <td class="text-xs-center">
+                <a :href="`campaignwidget/${props.item.id}`">
+                  <v-icon>widgets</v-icon>
+                </a>
+              </td>
               <td><small>{{ props.item.campaignCode }}</small></td>
               <td><small>{{ props.item.organizationLevel3Name }}</small></td>
               <td><small>{{ props.item.campaignName }}</small></td>
@@ -214,10 +218,10 @@ export default {
       />
       <v-snackbar 
         v-if="loading===false" 
+        v-model="snackbar" 
         :left="true" 
         :timeout="timeout" 
-        :color="mode" 
-        v-model="snackbar"
+        :color="mode"
       >
         {{ notice }}
         <v-btn 

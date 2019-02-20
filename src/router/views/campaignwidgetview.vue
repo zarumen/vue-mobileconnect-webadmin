@@ -1,5 +1,5 @@
 <script>
-import Bar from '@utils/chart/Bar'
+// import Bar from '@utils/chart/Bar'
 import formatCurrency from '@utils/format-number'
 
 export default {
@@ -75,12 +75,11 @@ export default {
           align-center 
           justify-center 
           column
-          style="height: 315px;" 
-          
+          style="height: 315px;"
         >
           <!-- border: 1px solid black; -->
           <v-flex>
-            <p/>
+            <p />
             <h1 
               :style="{color: '#'+this.$route.params.color}"
               class="big" 
@@ -93,7 +92,8 @@ export default {
               <h1 
                 :style="{color: '#'+this.$route.params.color}"
                 class="superbig"
-              >{{ socketMessage }} {{ this.$route.params.unit }}
+              >
+                {{ socketMessage }} {{ this.$route.params.unit }}
               </h1>
             </div>
           </v-flex>
@@ -116,8 +116,5 @@ export default {
         </v-layout>
       </section-->
     </v-layout>
-
   </v-container>
-
-
 </template>

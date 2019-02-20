@@ -122,7 +122,7 @@ export default {
       console.log(newdata)
       console.log(typeof newdata)
       // line chart widget
-      if(this.totals !== newdata && this.totals !== 0 && typeof newdata == 'string'){
+      if(this.totals !== newdata && this.totals !== 0 && typeof newdata === 'string'){
         var d = new Date();
         var stime = d.toLocaleTimeString("th",{hour: '2-digit', minute:'2-digit'})
         this.ChartData.data.labels[this.minutes-1] = stime 
@@ -132,21 +132,21 @@ export default {
         this.myChart.update()  
       }
 
-      if(typeof newdata == 'string'){ // Register Type Total 
+      if(typeof newdata === 'string'){ // Register Type Total 
         // totals widget
-        //console.log("trans:" + newdata)
+        // console.log("trans:" + newdata)
         this.totals =  newdata 
         let data = (newdata - this.campaignWidget.offset) * this.campaignWidget.multiplier
         this.totalsShow = formatCurrency(data)
       }
       // keywords widget
-      if(typeof newdata == 'object'){ // Register Type Keyword
+      if(typeof newdata === 'object'){ // Register Type Keyword
         console.log(Object.keys(newdata))
         console.log(Object.values(newdata))
 
         let keys = Object.keys(newdata)
         let data = Object.values(newdata)
-        //const reducer = (accumulator, currentValue) => accumulator + currentValue;
+        // const reducer = (accumulator, currentValue) => accumulator + currentValue;
         let totals = data.reduce((a,b)=> parseInt(a) + parseInt(b) , 0)
         console.log("total:" + totals)
         
@@ -258,16 +258,19 @@ export default {
     >
       <v-layout 
         class="column" 
-        fill-height>
+        fill-height
+      >
         <section
           align-center
         >
           <v-layout
-            align-center>
+            align-center
+          >
             <v-flex 
               xs-12
-              md-8>
-              <v-form >
+              md-8
+            >
+              <v-form>
                 <p>Total Widget</p>
                 <v-text-field
                   v-if="campaignWidget.type=='totals'"
@@ -319,7 +322,7 @@ export default {
               border: 1px solid black;"
           >
             <v-flex>
-              <p/>
+              <p />
               <h1 
                 :style="{color: '#'+campaignWidget.fontColor}"
                 class="big" 
@@ -332,20 +335,23 @@ export default {
                 <h1 
                   :style="{color: '#'+campaignWidget.fontColor}"
                   class="superbig"
-                >{{ totalsShow }} {{ campaignWidget.units }}
+                >
+                  {{ totalsShow }} {{ campaignWidget.units }}
                 </h1>
               </div>
             </v-flex>
           </v-layout>
         </section>
-        <p/>
+        <p />
         <section align-center>
           <v-layout
-            align-center>
+            align-center
+          >
             <v-flex 
               xs-12
-              md-8>
-              <v-form >
+              md-8
+            >
+              <v-form>
                 <p>Realtime Barchart Widget</p>
                 <v-textarea
                   v-model="code2"
@@ -369,7 +375,7 @@ export default {
               border: 1px solid black;"
           >
             <v-flex>
-              <p/>
+              <p />
               <h1 
                 :style="{color: '#'+campaignWidget.fontColor}"
                 class="big" 
@@ -381,21 +387,23 @@ export default {
               xs-12
               style="width: 100%; padding-left: 20px; padding-bottom: 20px; padding-right: 20px;"        
             >
-              <div class="text-xs-center" >
-                <canvas id="widget-chart"/>
+              <div class="text-xs-center">
+                <canvas id="widget-chart" />
               </div>
             </v-flex>
           </v-layout>
         </section>
-        <div style="padding: 10px;"></div>
-        <v-divider></v-divider>
-        <div style="padding: 10px;"></div>
+        <div style="padding: 10px;" />
+        <v-divider />
+        <div style="padding: 10px;" />
         <section align-center>
           <v-layout
-            align-center>
+            align-center
+          >
             <v-flex 
               xs-12
-              md-8>
+              md-8
+            >
               <v-form>
                 <p>Keywords Widget</p>
                 <v-textarea
@@ -416,27 +424,47 @@ export default {
             style="    
               height: 315px;
               width: 580px;"
-              >
+          >
             <v-layout column>
               <section>
                 <v-layout> 
                   <v-flex 
                     xs12
                   >
-                    <v-card color="gray darken-2" >
+                    <v-card color="gray darken-2">
                       <v-card-title primary-title>
                         <v-layout column>
-                          <div class="headline" style="font-weight: bolder;">{{ campaignWidget.caption }}</div>
+                          <div
+                            class="headline"
+                            style="font-weight: bolder;"
+                          >
+                            {{ campaignWidget.caption }}
+                          </div>
                           <!-- <span>Vote sub title</span> -->
-                          <div class="headline"></div>
-                          <div style="height:50px"></div>
-                          <v-layout column class="pa-0 ma-0" v-if="VoteData.data.labels !== undefine">
-                            <v-layout align-center justify-space-around row fill-height v-for="label, index in VoteData.data.labels"> 
-                              <div class="headline item">{{ label }} </div>
-                              <div class="headline percent">{{ VoteData.data.datasets[0].percent[index]}}%</div>
+                          <div class="headline" />
+                          <div style="height:50px" />
+                          <v-layout
+                            v-if="VoteData.data.labels !== undefine"
+                            column
+                            class="pa-0 ma-0"
+                          >
+                            <v-layout
+                              v-for="(label, index) in VoteData.data.labels"
+                              :key="label"
+                              align-center
+                              justify-space-around
+                              row
+                              fill-height
+                            > 
+                              <div class="headline item">
+                                {{ label }}
+                              </div>
+                              <div class="headline percent">
+                                {{ VoteData.data.datasets[0].percent[index] }}%
+                              </div>
                             </v-layout>
                           </v-layout>
-                          <div style="height:10px"></div>
+                          <div style="height:10px" />
                           <!-- <span>footer</span> -->
                         </v-layout>
                       </v-card-title>
