@@ -47,6 +47,9 @@ export default {
   },
   created () {
 
+    if(!this.hadShortcodesList)
+      this.getAllShortcodes()
+
     if(!this.hadList)
       this.getOrganizationsList()
 

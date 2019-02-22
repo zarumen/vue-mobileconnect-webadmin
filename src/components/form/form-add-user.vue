@@ -296,15 +296,15 @@ export default {
                     </template>
                     <template 
                       slot="selection" 
-                      slot-scope="data"
+                      slot-scope="idata"
                     >
                       <v-chip
-                        :key="JSON.stringify(data.item)"
-                        :selected="data.selected"
+                        :key="JSON.stringify(idata.item)"
+                        :selected="idata.selected"
                         close
-                        @input="data.parent.selectItem(data.item)"
+                        @input="idata.parent.selectItem(idata.item)"
                       >
-                        {{ data.item.displayName }}
+                        {{ idata.item.displayName }}
                       </v-chip>
                     </template>
                   </template>
@@ -340,15 +340,15 @@ export default {
                     </template>
                     <template 
                       slot="selection" 
-                      slot-scope="data"
+                      slot-scope="idata"
                     >
                       <v-chip
-                        :key="JSON.stringify(data.item)"
-                        :selected="data.selected"
+                        :key="JSON.stringify(idata.item)"
+                        :selected="idata.selected"
                         close
-                        @input="data.parent.selectItem(data.item)"
+                        @input="idata.parent.selectItem(idata.item)"
                       >
-                        {{ data.item.displayName }}
+                        {{ idata.item.displayName }}
                       </v-chip>
                     </template>
                   </template>

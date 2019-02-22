@@ -72,12 +72,15 @@ export const actions = {
         .add(campaignObject)
 
       let data = {}
-      data[keyword] = newCampaign.id
-
+       
+      keyword.forEach(key => {
+        data[key] = newCampaign.id
+      })
+      
       await firestoreApp
         .collection('campaignKeywordByShortcode')
         .doc(shortcode)
-        .set(data)
+        .set(data, { merge: true })
 
       newValidateCampaign = await firestoreApp
         .collection('campaignValidate')

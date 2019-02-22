@@ -6,6 +6,7 @@ export default {
     mutablePagination: '',
     left: true,
     timeout: 2000,
+    showed: true,
   }),
   computed: {
     ...operatorComputed,

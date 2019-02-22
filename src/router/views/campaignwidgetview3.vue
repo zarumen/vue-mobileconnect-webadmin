@@ -1,6 +1,6 @@
 <script>
 import Chart from 'chart.js';
-import formatCurrency from '@utils/format-number'
+// import formatCurrency from '@utils/format-number'
 
 let VoteData = {
   type: 'bar',

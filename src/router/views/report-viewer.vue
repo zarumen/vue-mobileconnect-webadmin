@@ -45,6 +45,8 @@ export default {
       
       if(this.user.organizationAuth === 'Level3')
         return this.user.organizationLevel3
+
+      return null
     },
     filteredItems() {
       return this.items.filter(item => {
@@ -222,7 +224,7 @@ export default {
                 hide-details
               />
             </span>
-            <v-spacer/>
+            <v-spacer />
             <v-btn 
               class="v-btn--simple"
               color="primary"
@@ -230,7 +232,7 @@ export default {
               icon
               @click.native="reloadData()"
             >
-              <BaseIcon name="syncAlt"/>            
+              <BaseIcon name="syncAlt" />            
             </v-btn>
           </v-card-title>
 
@@ -244,7 +246,6 @@ export default {
                 <v-list-tile 
                   slot="activator" 
                 >
-
                   <v-list-tile-content 
                     @click="getAWSExportJobsListByCampaign(item.id).then((result)=>{
                       getFirebaseExportJobsByCampaign(item.id,result)
@@ -253,17 +254,20 @@ export default {
                     <div style="width: 100%">
                       <v-layout 
                         justify-space-between 
-                        row >
+                        row
+                      >
                         <v-flex 
                           align-content-center 
-                          xs11>
+                          xs11
+                        >
                           {{ item.campaignCode }}: {{ item.campaignName }} <br>
                           <v-list-tile-sub-title>{{ item.campaignActive }}</v-list-tile-sub-title>
                         </v-flex>
                         <v-flex xs1>
                           <v-tooltip
                             top
-                            content-class="top">
+                            content-class="top"
+                          >
                             <v-btn
                               slot="activator"
                               class="v-btn--simple"
@@ -279,7 +283,6 @@ export default {
                       </v-layout>
                     </div>
                   </v-list-tile-content>
-
                 </v-list-tile>
                 <v-divider 
                   v-if="index + 1 < items.length" 
@@ -300,10 +303,10 @@ export default {
                     <div class="d-flex">
                       <v-list-tile-sub-title style="display: flex; align-items: center; justify-content: center">
                         Type: {{ job.type }}
-                      </v-list-tile-sub-title >
+                      </v-list-tile-sub-title>
                       <v-list-tile-sub-title style="display: flex; align-items: center; justify-content: center">
                         {{ job.fileName }}
-                      </v-list-tile-sub-title >
+                      </v-list-tile-sub-title>
                       <v-tooltip
                         top
                         content-class="top"
@@ -326,15 +329,14 @@ export default {
               </v-list-group>
             </v-list>
           </v-card-text>
-
         </base-card>
       </v-flex>
       <v-snackbar 
         v-if="loading===false" 
+        v-model="snackbar" 
         :left="true" 
         :timeout="timeout" 
-        :color="mode" 
-        v-model="snackbar"
+        :color="mode"
       >
         {{ notice }}
         <v-btn 

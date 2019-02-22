@@ -22,8 +22,7 @@
         class="category grey--text font-weight-light"
         v-text="title"
       />
-      <h3
-        class="title display-1 font-weight-medium">
+      <h3 class="title display-1 font-weight-medium">
         {{ value }} <small>{{ smallValue }}</small>
       </h3>
     </div>

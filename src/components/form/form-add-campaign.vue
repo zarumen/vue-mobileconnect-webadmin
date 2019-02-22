@@ -30,7 +30,7 @@ export default {
     const defaultpForm = Object.freeze({
       contextExclude: '',
       messageContextFailed: '',
-      contextType: 'coupon'
+      contextType: 'register'
     })
     const defaultspForm = Object.freeze({
       contextSubForm: '',
@@ -42,14 +42,14 @@ export default {
       rewardCondition: '',
       rewardTotal: '',
       rewardConditionForm: null,
-      messageRewardWin: ''
+      messageRewardSuccess: ''
     })
 
     return {
       // Default Values
       campaignForm: Object.assign({}, defaultcForm),
       validateForm: Object.assign({}, defaultvForm),
-      cActive: 'Active',
+      cState: null,
       brand: null,
       // Stepper Setups
       step: 1,
@@ -62,15 +62,23 @@ export default {
         six: 'Campaign Summary Page'
       },
       valid: null,
+      cTypeList: [
+        'normal',
+        'register',
+        'vote',
+        'text&win',
+        'api'
+      ],
+      campaignType: null,
       // helper variable
       locale: 'TH',
       helper: false,
       helperText: {},
       // context parser variable
       validateTypeList: [
-        {value: 'regex', condition: false},
+        {value: 'regx', condition: false},
         {value: 'validate', condition: true},
-        {value: 'vote', condition: false},
+        {value: 'register', condition: false},
         {value: 'reward', condition: false},
       ],
       validateType: null,
@@ -88,16 +96,24 @@ export default {
       anotherReward: Object.assign({}, defaultrForm),
       objectReward: false,
       // ---------**-------------------------------------
-      // Test Value
+      // Check all value
       // ---------**------------------------------------- 
-      date: null,
-      date2: null,
-      time: '00:00',
-      time2: '00:00',
-      menu: false,
-      menu3: false,
-      menu4: false,
-      menu6: false,
+      date: null, // start date
+      date2: null, // end date
+      date3: null, // start test date
+      date4: null, // end test date
+      time: '00:00', // start time
+      time2: '00:00', // end time
+      time3: '00:00', // start test time
+      time4: '00:00', // end test time
+      menu: false, // start date menu
+      menu2: false, // start time menu
+      menu3: false, // end date menu
+      menu4: false, // end time menu
+      menu5: false, // start test date menu
+      menu6: false, // start test time menu
+      menu7: false, // end test date menu
+      menu8: false, // end test time menu
       switch1: false,
       switch2: false,
       loading1: false,
@@ -113,11 +129,41 @@ export default {
     ...mapState('organizations', {
       brandList: 'brandList'
     }),
+    ...mapState('shortcodes', {
+      shortcodeList: 'shortcodeList',
+      keywordList: 'keywordList',
+      keywordReservedList: 'keywordReservedList'
+    }),
     regexDisable() {
-      if(this.validateType === 'regex')
-        return false
+      if(this.validateType)
+        return this.validateType.condition
 
       return true
+    },
+    contextType() {
+      if(this.validateType)
+        return this.validateType.value
+
+      return null
+    },
+    mutateKeywordList() {
+      if(this.campaignForm.shortcode) {
+
+        let kw = this.mutatekwList(this.campaignForm.shortcode)
+
+        return kw[0].keywords
+      }
+
+      return []
+    },
+    mutateShortcodeList() {
+      if(this.campaignForm.shortcode) {
+
+        let scArray = this.mutatescList(this.campaignForm.shortcode)
+
+        return scArray[0].sendername
+      }
+      return []
     }
   },
   watch: {
@@ -130,6 +176,12 @@ export default {
     ...mapActions('campaigns', [
       'createCampaign'
     ]),
+    mutatekwList(sc) {
+      return this.keywordReservedList.filter(keyword => keyword.shortcode === sc)
+    },
+    mutatescList(sc) {
+      return this.shortcodeList.filter(scList => scList.shortcode === sc)
+    },
     closeDialog() {
       this.$emit('emitCloseCampaignDialog', false)
     },
@@ -140,6 +192,8 @@ export default {
       const campaignNew = this.campaignForm
       const startDate = this.date + "T" + this.time
       const endDate = this.date2 + "T" + this.time2
+      const startTestDate = this.date3 + "T" + this.time3
+      const endTestDate = this.date4 + "T" + this.time4
       const campaignValidationNew = this.validateForm
 
       if(this.brand !== null) {
@@ -148,7 +202,7 @@ export default {
         // Campaign Status
         campaignNew['campaignAvailable'] = true // check campaign paused or unpaused
         campaignNew['campaignActive'] = true // check campaign delete or not deleted
-        campaignNew['campaignState'] = this.cActive // check campaign status {test, production, close} 
+        campaignNew['campaignState'] = this.cState // check campaign status {test, production, close} 
 
         campaignNew['organizationAuth'] = this.brand.organizationAuth
         campaignNew['organizationLevel1'] = this.brand.organizationLevel1
@@ -167,14 +221,18 @@ export default {
         // set Context Parsers
         campaignValidationNew['contextParser'] = this.contextParser
         // set Reward Array
-        campaignValidationNew['rewards'] = this.rewards
+        campaignValidationNew['rewardsArray'] = this.rewards
 
         campaignValidationNew['rewardsHaveSequence'] = this.switch2
         campaignValidationNew['campaignAvailable'] = true
-        campaignValidationNew['campaignState'] = this.cActive
+        campaignValidationNew['campaignState'] = this.cState
+        campaignValidationNew['campaignSenderName'] = this.campaignForm.campaignSenderName
 
+        // set Campaign Timing
         campaignValidationNew['campaignDateStart'] = new Date(startDate)
         campaignValidationNew['campaignDateEnd'] = new Date(endDate)
+        campaignValidationNew['campaignDateTestStart'] = new Date(startTestDate)
+        campaignValidationNew['campaignDateTestEnd'] = new Date(endTestDate)
 
         this.createCampaign({
           campaignObject: campaignNew,
@@ -193,7 +251,7 @@ export default {
 
         let newParser = this.anotherParser
 
-        newParser['contextType'] = this.validateType
+        newParser['contextType'] = this.contextType
         newParser['contextFailed'] = this.subContextArray
 
         if(this.conditionTypeValidate) {
@@ -325,8 +383,8 @@ export default {
               step="1"
             >
               {{ stepName.one }}
-              <small>v.0.20 patch note: สามารถ Add campaign กรอกข้อมูล added Reward และ contextParser ได้แล้ว มีปุ่ม Helper ไว้แสดงข้อความช่วยเบื้องต้น </small>
-              <small>road map: ทำปุ่ม Generate Coupon และ Upload Coupon, ทำตัวช่วย กรอกในสิ่งที่เคยกรอกไปแล้ว (Template) ทั้งในส่วนของ Regex และ ข้อความ (Message Template) และหน้าสุดท้าย ไว้ดูสรุปข้อมูล ก่อน save</small>
+              <small>v.0.50 patch note: สามารถ Add campaign กรอกข้อมูล added Reward อย่างง่าย added Context Parser ทั้ง 3 รูปแบบ contextType </small>
+              <small>road map: ทำ เพิ่ม List Validate รหัสใบเสร็จ และ รหัสสมาชิก, ทำปุ่ม Generate Coupon และ Upload Coupon, ทำตัวช่วย กรอกในสิ่งที่เคยกรอกไปแล้ว (Template) ทั้งในส่วนของ Regex และ ข้อความ (Message Template) และหน้าสุดท้าย ไว้ดูสรุปข้อมูล ก่อน save</small>
             </v-stepper-step>
             <v-stepper-content step="1">
               <v-card
@@ -378,7 +436,18 @@ export default {
                     <v-subheader class="red--text">
                       {{ helperText.campaignDescription }}
                     </v-subheader>
-                  </v-flex>               
+                  </v-flex>
+                  <v-select 
+                    v-model="campaignType"
+                    :items="cTypeList"
+                    label="Campaign Type"
+                    prepend-icon="assignment"
+                  />
+                  <v-flex v-if="helper">
+                    <v-subheader class="red--text">
+                      {{ helperText.campaignType }}
+                    </v-subheader>
+                  </v-flex>                
                 </v-card-text>
               </v-card>
               <v-btn 
@@ -471,46 +540,104 @@ export default {
                         </template>
                       </template>
                     </v-combobox>
-                  </v-flex>
-                  <v-flex 
-                    xs8
-                    sm6 
-                    md3
-                  > 
-                    <v-text-field 
-                      v-model="campaignForm.keyword"
-                      prepend-icon="text_fields"
-                      mask="NNNNNN"
-                      label="Keyword"
-                    />
-                  </v-flex>
-                  <v-flex v-if="helper">
-                    <v-subheader class="red--text">
-                      {{ helperText.keyword }}
-                    </v-subheader>
                   </v-flex>  
                   <v-flex 
                     xs8
                     sm6 
                     md3
                   > 
-                    <v-text-field 
+                    <v-subheader><small>Please Enter Your Shortcode:</small></v-subheader>
+                    <v-autocomplete
+                      :key="shortcodeList.id"
                       v-model="campaignForm.shortcode"
-                      prepend-icon="looks_6"
-                      mask="########"
+                      :hint="`${campaignForm.shortcode}`"
+                      :items="shortcodeList"
+                      :rules="[v => !!v || 'Shortcode is required']"
+                      item-text="shortcode"
+                      prepend-icon="filter_6"
                       label="Shortcode"
+                      type="number"
+                      chips
+                      solo
+                    >
+                      <template 
+                        slot="item"
+                        slot-scope="data"
+                      >
+                        <template v-if="typeof data.item !== 'object'">
+                          <v-list-tile-content v-text="data.item" />
+                        </template>
+                        <template v-else>
+                          <v-list-tile-content>
+                            <v-list-tile-title>{{ data.item.shortcode }}</v-list-tile-title>
+                          </v-list-tile-content>
+                        </template>
+                        <template 
+                          slot="selection"
+                          slot-scope="idata"
+                        >
+                          <v-chip
+                            :key="JSON.stringify(idata.item)"
+                            :selected="idata.selected"
+                            color="deep-purple"
+                            close
+                            @input="idata.parent.selectItem(idata.item)"
+                          >
+                            {{ idata.item.shortcode }}
+                          </v-chip>
+                        </template>
+                      </template>
+                    </v-autocomplete>
+                  </v-flex>
+                  <v-flex v-if="helper">
+                    <v-subheader class="red--text">
+                      {{ helperText.campaignSenderName }}
+                    </v-subheader>
+                  </v-flex>
+                  <v-flex
+                    xs8
+                    sm6 
+                    md3
+                  > 
+                    <v-select 
+                      v-model="campaignForm.campaignSenderName"
+                      :items="mutateShortcodeList"
+                      item-text="value"
+                      item-value="value"
+                      label="Sender Name"
+                      prepend-icon="contact_mail"
+                      solo
                     />
                   </v-flex>
                   <v-flex v-if="helper">
                     <v-subheader class="red--text">
-                      {{ helperText.shortcode }}
+                      {{ helperText.keyword }}
                     </v-subheader>
                   </v-flex> 
+                  <v-flex>
+                    <v-combobox 
+                      v-model="campaignForm.keyword"
+                      :items="mutateKeywordList"
+                      prepend-icon="text_fields"
+                      label="Keyword"
+                      multiple
+                      small-chips
+                      solo
+                    >
+                      <template slot="no-data">
+                        <v-list-tile>
+                          <span class="subheading">
+                            Please back to add Keyword in "Shortcode Management" Menu
+                          </span>
+                        </v-list-tile>
+                      </template>
+                    </v-combobox>
+                  </v-flex>
                   <v-subheader>
                     <small>Campaign Start Status:</small>
                   </v-subheader>
                   <v-radio-group 
-                    v-model="cActive"
+                    v-model="cState"
                     prepend-icon="slideshow"
                     row
                   >
@@ -593,8 +720,8 @@ export default {
                       md4
                     >
                       <v-menu
-                        ref="menu3"
-                        v-model="menu3"
+                        ref="menu2"
+                        v-model="menu2"
                         :close-on-content-click="false"
                         :nudge-right="40"
                         :return-value.sync="time"
@@ -626,14 +753,14 @@ export default {
                           class="v-btn--simple"
                           round
                           color="primary"
-                          @click="menu3 = false"
+                          @click="menu2 = false"
                         >
                           Cancel
                         </v-btn>
                         <v-btn 
                           round 
                           color="primary" 
-                          @click="$refs.menu3.save(time)"
+                          @click="$refs.menu2.save(time)"
                         >
                           OK
                         </v-btn>
@@ -647,7 +774,7 @@ export default {
                   </v-flex> 
                   <!-- END DATE PICKER -->
                   <v-flex>
-                    <v-subheader>End Date</v-subheader>
+                    <v-subheader>End Date :</v-subheader>
                   </v-flex>
                   <v-layout
                     row
@@ -658,8 +785,8 @@ export default {
                       md4
                     >
                       <v-menu
-                        ref="menu4"
-                        v-model="menu4"
+                        ref="menu3"
+                        v-model="menu3"
                         :close-on-content-click="false"
                         :nudge-right="40"
                         :return-value.sync="date2"
@@ -689,14 +816,14 @@ export default {
                             class="v-btn--simple"
                             round
                             color="primary"
-                            @click="menu = false"
+                            @click="menu3 = false"
                           >
                             Cancel
                           </v-btn>
                           <v-btn 
                             round
                             color="primary" 
-                            @click="$refs.menu4.save(date2)"
+                            @click="$refs.menu3.save(date2)"
                           >
                             OK
                           </v-btn>
@@ -708,8 +835,8 @@ export default {
                       md4
                     >
                       <v-menu
-                        ref="menu6"
-                        v-model="menu6"
+                        ref="menu4"
+                        v-model="menu4"
                         :close-on-content-click="false"
                         :nudge-right="40"
                         :return-value.sync="time2"
@@ -741,14 +868,14 @@ export default {
                           class="v-btn--simple"
                           round
                           color="primary" 
-                          @click="menu6 = false"
+                          @click="menu4 = false"
                         >
                           Cancel
                         </v-btn>
                         <v-btn 
                           round 
                           color="primary"  
-                          @click="$refs.menu6.save(time2)"
+                          @click="$refs.menu4.save(time2)"
                         >
                           OK
                         </v-btn>
@@ -758,6 +885,236 @@ export default {
                   <v-flex v-if="helper">
                     <v-subheader class="red--text">
                       {{ helperText.campaignDateEnd }}
+                    </v-subheader>
+                  </v-flex>
+                  <!-- START TEST DATE PICKER -->
+                  <v-flex>
+                    <v-subheader>Start Test Date :</v-subheader>
+                  </v-flex>
+                  <v-layout
+                    row 
+                    wrap
+                  >
+                    <v-flex 
+                      xs4 
+                      md4
+                    >
+                      <v-menu
+                        ref="menu5"
+                        v-model="menu5"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        :return-value.sync="date3"
+                        lazy
+                        transition="scale-transition"
+                        offset-y
+                        full-width
+                        min-width="290px"
+                      >
+                        <v-text-field
+                          slot="activator"
+                          v-model="date3"
+                          label="Date Picker"
+                          prepend-icon="event"
+                          readonly
+                        />
+                        <v-date-picker 
+                          v-model="date3"
+                          no-title 
+                          scrollable
+                          dark
+                          locale="th"
+                          color="deep-purple"
+                        >
+                          <v-spacer />
+                          <v-btn 
+                            class="v-btn--simple"
+                            round
+                            color="primary" 
+                            @click="menu5 = false"
+                          >
+                            Cancel
+                          </v-btn>
+                          <v-btn 
+                            color="primary"
+                            round
+                            @click="$refs.menu5.save(date3)"
+                          >
+                            OK
+                          </v-btn>
+                        </v-date-picker>
+                      </v-menu>
+                    </v-flex>
+                    <v-flex 
+                      xs4 
+                      md4
+                    >
+                      <v-menu
+                        ref="menu6"
+                        v-model="menu6"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        :return-value.sync="time3"
+                        lazy
+                        transition="scale-transition"
+                        offset-y
+                        full-width
+                        min-width="290px"
+                      >
+                        <v-text-field
+                          slot="activator"
+                          v-model="time3"
+                          label="Time Picker"
+                          prepend-icon="access_time"
+                          readonly
+                        />
+                        <v-time-picker
+                          v-model="time3"
+                          type="month"
+                          width="320"
+                          color="deep-purple"
+                        />
+                        <v-spacer />
+                        <v-btn
+                          flat
+                          disabled
+                        />
+                        <v-btn 
+                          class="v-btn--simple"
+                          round
+                          color="primary"
+                          @click="menu6 = false"
+                        >
+                          Cancel
+                        </v-btn>
+                        <v-btn 
+                          round 
+                          color="primary" 
+                          @click="$refs.menu6.save(time3)"
+                        >
+                          OK
+                        </v-btn>
+                      </v-menu>
+                    </v-flex>
+                  </v-layout>
+                  <v-flex v-if="helper">
+                    <v-subheader class="red--text">
+                      {{ helperText.campaignDateTestStart }}
+                    </v-subheader>
+                  </v-flex> 
+                  <!-- END TEST DATE PICKER -->
+                  <v-flex>
+                    <v-subheader>End Test Date :</v-subheader>
+                  </v-flex>
+                  <v-layout
+                    row
+                    wrap
+                  >
+                    <v-flex 
+                      xs4 
+                      md4
+                    >
+                      <v-menu
+                        ref="menu7"
+                        v-model="menu7"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        :return-value.sync="date4"
+                        lazy
+                        transition="scale-transition"
+                        offset-y
+                        full-width
+                        min-width="290px"
+                      >
+                        <v-text-field
+                          slot="activator"
+                          v-model="date4"
+                          label="Date Picker"
+                          prepend-icon="event"
+                          readonly
+                        />
+                        <v-date-picker 
+                          v-model="date4"
+                          no-title 
+                          scrollable
+                          dark
+                          locale="th"
+                          color="deep-purple"
+                        >
+                          <v-spacer />
+                          <v-btn 
+                            class="v-btn--simple"
+                            round
+                            color="primary"
+                            @click="menu7 = false"
+                          >
+                            Cancel
+                          </v-btn>
+                          <v-btn 
+                            round
+                            color="primary" 
+                            @click="$refs.menu7.save(date4)"
+                          >
+                            OK
+                          </v-btn>
+                        </v-date-picker>
+                      </v-menu>
+                    </v-flex>
+                    <v-flex 
+                      xs4 
+                      md4
+                    >
+                      <v-menu
+                        ref="menu8"
+                        v-model="menu8"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        :return-value.sync="time4"
+                        lazy
+                        transition="scale-transition"
+                        offset-y
+                        full-width
+                        min-width="290px"
+                      >
+                        <v-text-field
+                          slot="activator"
+                          v-model="time4"
+                          label="Time Picker"
+                          prepend-icon="access_time"
+                          readonly
+                        />
+                        <v-time-picker
+                          v-model="time4"
+                          type="month"
+                          width="320"
+                          color="deep-purple"
+                        />
+                        <v-spacer />
+                        <v-btn
+                          flat
+                          disabled
+                        />
+                        <v-btn 
+                          class="v-btn--simple"
+                          round
+                          color="primary" 
+                          @click="menu8 = false"
+                        >
+                          Cancel
+                        </v-btn>
+                        <v-btn 
+                          round 
+                          color="primary"  
+                          @click="$refs.menu8.save(time4)"
+                        >
+                          OK
+                        </v-btn>
+                      </v-menu>
+                    </v-flex>                    
+                  </v-layout>
+                  <v-flex v-if="helper">
+                    <v-subheader class="red--text">
+                      {{ helperText.campaignDateTestEnd }}
                     </v-subheader>
                   </v-flex> 
                 </v-card-text>
@@ -824,8 +1181,13 @@ export default {
                           </v-icon>
                         </v-list-tile-avatar>
                         <v-list-tile-content>
-                          <v-list-tile-title>{{ item.messageContextFailed }}</v-list-tile-title>
-                          <v-list-tile-sub-title>{{ item.contextType }}</v-list-tile-sub-title>
+                          <v-list-tile-title>msg: "{{ item.messageContextFailed }}"</v-list-tile-title>
+                          <v-list-tile-sub-title>
+                            type: {{ item.contextType }} 
+                            <span class="blue--text">
+                              {{ item.contextForm }}
+                            </span>
+                          </v-list-tile-sub-title>
                         </v-list-tile-content>
                         <v-list-tile-action>
                           <v-btn
@@ -894,9 +1256,9 @@ export default {
                             v-model="validateType"
                             :items="validateTypeList"
                             item-text="value"
-                            item-value="value"
                             label="Condition Type"
-                            prepend-icon="assignment"
+                            prepend-icon="ballot"
+                            return-object
                           />
                           <v-flex v-if="helper">
                             <v-subheader class="red--text">
@@ -942,8 +1304,13 @@ export default {
                                   </v-icon>
                                 </v-list-tile-avatar>
                                 <v-list-tile-content>
-                                  <v-list-tile-title>{{ item.messageContextFailed }}</v-list-tile-title>
-                                  <v-list-tile-sub-title>{{ item.contextSubForm }}</v-list-tile-sub-title>
+                                  <v-list-tile-title>msg: {{ item.messageContextFailed }}</v-list-tile-title>
+                                  <v-list-tile-sub-title>
+                                    regx: 
+                                    <span class="blue--text">
+                                      {{ item.contextSubForm }}
+                                    </span>
+                                  </v-list-tile-sub-title>
                                 </v-list-tile-content>
                                 <v-list-tile-action>
                                   <v-btn
@@ -982,11 +1349,11 @@ export default {
                                     v-model="contextFailed.contextSubForm"
                                     prepend-icon="priority_high"
                                     solo-inverted 
-                                    label="Specific Condition (Regular Expression)"
+                                    label="Specific Condition (Regex)"
                                   />
                                   <v-flex v-if="helper">
                                     <v-subheader class="red--text">
-                                      {{ helperText.validateFailMsg }}
+                                      {{ helperText.validateFailSpecificMsg }}
                                     </v-subheader>
                                   </v-flex>
                                 </v-card-text>
@@ -1070,7 +1437,7 @@ export default {
                   > 
                     <v-flex v-if="helper">
                       <v-subheader class="red--text">
-                        {{ helperText.campaignNotAvailableMsg }}
+                        {{ helperText.messageCampaignTestNotRegister }}
                       </v-subheader>
                     </v-flex> 
                     <v-text-field 
@@ -1090,7 +1457,7 @@ export default {
                     />
                     <v-flex v-if="helper">
                       <v-subheader class="red--text">
-                        {{ helperText.campaignNotAvailableMsg }}
+                        {{ helperText.messageCheckMsisdnNotFound }}
                       </v-subheader>
                     </v-flex> 
                     <v-text-field 
@@ -1120,7 +1487,7 @@ export default {
                     />
                     <v-flex v-if="helper">
                       <v-subheader class="red--text">
-                        {{ helperText.validateMsgBeforeStart }}
+                        {{ helperText.messageBeforeStart }}
                       </v-subheader>
                     </v-flex>
                     <v-text-field 
@@ -1130,7 +1497,7 @@ export default {
                     />
                     <v-flex v-if="helper">
                       <v-subheader class="red--text">
-                        {{ helperText.validateMsgAfterEnd }}
+                        {{ helperText.messageAfterEnd }}
                       </v-subheader>
                     </v-flex>
                     <v-text-field 
@@ -1213,6 +1580,16 @@ export default {
                           prepend-icon="chat_bubble"
                           label="Fail Message"
                         />
+                        <v-text-field 
+                          v-model="validateForm.messageRewardsInvalid"
+                          prepend-icon="chat_bubble"
+                          label="Rewards Invalid Message"
+                        />
+                        <v-text-field 
+                          v-model="validateForm.messageRewardReceivedLimit"
+                          prepend-icon="chat_bubble"
+                          label="Rewards Limited Message"
+                        />
                       </v-flex>
                       <v-flex
                         xs12
@@ -1232,7 +1609,7 @@ export default {
                             </v-list-tile-avatar>
                             <v-list-tile-content>
                               <v-list-tile-title>{{ item.rewardName }}</v-list-tile-title>
-                              <v-list-tile-sub-title>{{ item.messageRewardWin }}</v-list-tile-sub-title>
+                              <v-list-tile-sub-title>{{ item.messageRewardSuccess }}</v-list-tile-sub-title>
                             </v-list-tile-content>
                             <v-list-tile-action>
                               <v-btn
@@ -1362,7 +1739,7 @@ export default {
                               </v-subheader>
                             </v-flex>
                             <v-text-field 
-                              v-model="anotherReward.messageRewardWin"
+                              v-model="anotherReward.messageRewardSuccess"
                               :rules="[v => !!v || 'Item is required']"
                               prepend-icon="chat_bubble_outline"
                               label="Success Message"
@@ -1370,7 +1747,19 @@ export default {
                             />
                             <v-flex v-if="helper">
                               <v-subheader class="red--text">
-                                {{ helperText.winMsg }}
+                                {{ helperText.messageRewardSuccess }}
+                              </v-subheader>
+                            </v-flex>
+                            <v-text-field 
+                              v-model="anotherReward.messageRewardOutOfStock"
+                              :rules="[v => !!v || 'Item is required']"
+                              prepend-icon="chat_bubble_outline"
+                              label="Out of Stock Message"
+                              required
+                            />
+                            <v-flex v-if="helper">
+                              <v-subheader class="red--text">
+                                {{ helperText.messageRewardOutOfStock }}
                               </v-subheader>
                             </v-flex>
                           </v-card-text>
@@ -1453,6 +1842,11 @@ export default {
                         </strong>
                       </p>
                       <p>
+                        compaign Type: <strong class="green--text">
+                          {{ campaignType }}
+                        </strong>
+                      </p>
+                      <p>
                         compaign Keyword: <strong class="green--text">
                           {{ campaignForm.keyword }}
                         </strong>
@@ -1478,8 +1872,22 @@ export default {
                         </strong>
                       </p>
                       <p>
+                        compaign's Test Start Date: <strong class="green--text">
+                          {{ date3 }}
+                        </strong> Time: <strong class="green--text">
+                          {{ time3 }}
+                        </strong>
+                      </p>
+                      <p>
+                        compaign's Test End Date: <strong class="green--text">
+                          {{ date4 }}
+                        </strong> Time: <strong class="green--text">
+                          {{ time4 }}
+                        </strong>
+                      </p>
+                      <p>
                         campaign State: <strong class="green--text">
-                          {{ cActive }}
+                          {{ cState }}
                         </strong>
                       </p>
                       <p>
@@ -1499,32 +1907,42 @@ export default {
                       </p>
                       <p>
                         Delimiter: <strong class="green--text">
-                          {{ validateForm.validateBoundaries }}
+                          {{ validateForm.contextDelimiter }}
                         </strong>
                       </p>
                       <p>
                         Less Content Message: <strong class="green--text">
-                          {{ validateForm.validateBoundariesLessErrMsg }}
+                          {{ validateForm.messageBoundariesLessError }}
                         </strong>
                       </p>
                       <p>
                         Over Content Message: <strong class="green--text">
-                          {{ validateForm.validateBoundariesOverErrMsg }}
+                          {{ validateForm.messageBoundariesOverError }}
                         </strong>
                       </p>
                       <p>
                         After Service Active: <strong class="green--text">
-                          {{ validateForm.validateMsgAfterEnd }}
+                          {{ validateForm.messageAfterEnd }}
                         </strong>
                       </p>
                       <p>
                         Before Service Active: <strong class="green--text">
-                          {{ validateForm.validateMsgBeforeStart }}
+                          {{ validateForm.messageBeforeStart }}
                         </strong>
                       </p>
                       <p>
                         Pause Service Message: <strong class="green--text">
                           {{ validateForm.messageCampaignNotAvailable }}
+                        </strong>
+                      </p>
+                      <p>
+                        Telephone Number Checked Error Message: <strong class="green--text">
+                          {{ validateForm.messageCheckMsisdnNotFound }}
+                        </strong>
+                      </p>
+                      <p>
+                        Empty Message: <strong class="green--text">
+                          {{ validateForm.messageCampaignTestNotRegister }}
                         </strong>
                       </p>
                       <p class="indigo--text">

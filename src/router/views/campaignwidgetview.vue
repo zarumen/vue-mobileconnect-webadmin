@@ -15,7 +15,6 @@ export default {
       }
   }, 
   components: { 
-    Bar,
   },
   data() {
     return {

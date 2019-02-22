@@ -1,11 +1,13 @@
 <script>
 import { shortcodeComputed, shortcodeMethods } from '@state/helpers'
 import FormAddKeyword from '@components/form/form-add-keyword-reserved'
+import FormAddShortcode from '@components/form/form-add-shortcode'
 
 export default {
-  components: { FormAddKeyword },
+  components: { FormAddKeyword, FormAddShortcode },
   data: () => ({
     addKeywordDialog: '',
+    addShortcodeDialog: '',
     tabs: 0,
     dialog: false
   }),
@@ -249,6 +251,10 @@ export default {
     <form-add-keyword
       :add-keyword-dialog="addKeywordDialog" 
       @emitCloseKeywordDialog="addKeywordDialog=arguments[0]"
+    />
+    <form-add-shortcode
+      :add-keyword-dialog="addShortcodeDialog" 
+      @emitCloseShortcodeDialog="addShortcodeDialog=arguments[0]"
     />
     <BaseDialog 
       :dialog="dialog" 
