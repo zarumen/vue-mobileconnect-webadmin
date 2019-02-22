@@ -7,10 +7,12 @@ import {
   commitPagination,
   getDefaultPagination,
 } from '@utils/pagination-util'
+import { Store } from "vuex";
 
 export const state = {
   // Data Table Initial Setup Variables
   items: null,
+  item: null,
   pagination: getDefaultPagination(),
   loading: false,
   mode: '',
@@ -53,6 +55,9 @@ export const mutations = {
   },
   setItems (state, items) {
     state.items = items
+  },
+  setItem (state, item) {
+    state.item = item
   }
 }
 
@@ -134,6 +139,34 @@ export const actions = {
         sendSuccessNotice(commit, 'Load Campaigns Finished!')
         closeNotice(commit, 2000)
         return campaignList
+      })
+      .catch(error => {
+        console.log(error)
+        commit('setLoading', { loading: false })
+        sendErrorNotice(commit, 'Load Failed!')
+        closeNotice(commit, 2000)
+        return error
+      })
+  },
+  getCampaign({ commit, dispatch },campaignId) {
+    
+    commit('setLoading', { loading: true })
+    
+    return firestoreApp
+      .collection('campaigns').doc(campaignId)
+      .get()
+      .then(function(doc) {
+        let campaign = {}
+        if (doc.exists) {
+            
+            campaign = doc.data()
+        } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+        }
+        console.log("Document data:", campaign)
+        commit('setItem', campaign)
+        return campaign
       })
       .catch(error => {
         console.log(error)

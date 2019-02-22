@@ -57,12 +57,27 @@ export default {
           title: 'Regex Manager',
         },
         {
+          name: 'campaignwidgets',
+          icon: 'school',
+          title: 'Widget Manager',
+        },
+        {
+          name: 'report',
+          icon: 'fileAlt',
+          title: 'Report Export',
+        },
+        {
           name: 'campaigns',
           icon: 'storeAlt',
           title: 'Campaigns Manager',
         },
       ]
       let menuUser = [
+        {
+          name: 'report',
+          icon: 'fileAlt',
+          title: 'Report Export',
+        },
         {
           name: 'profile',
           icon: 'userCircle',
@@ -121,8 +136,8 @@ export default {
         v-if="loggedIn"
         @click.stop="drawer = !drawer"
       />
-      <v-toolbar-title>
-        Mobile Connect
+      <v-toolbar-title justify-left>
+        <img src="@assets/images/logo.png">
       </v-toolbar-title>
       <v-spacer/>
       <v-toolbar-items>

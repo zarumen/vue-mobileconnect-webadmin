@@ -1,103 +1,96 @@
 <script>
 import Layout from '@layouts/main'
-import FormAddOrganization from '@components/form-add-organization'
-import { orgMethods, orgComputed } from '@state/helpers'
-import { debounce } from "lodash";
+import FormAddCampaign from '@components/form-add-campaign'
+import { mapGetters, mapActions } from 'vuex'
+import { campaignComputed } from '@state/helpers'
 
 export default {
   page: {
-    title: 'Organizations',
-    meta: [{ name: 'description', content: 'Organizations' }],
+    title: 'Transaction',
+    meta: [{ name: 'description', content: 'Campaign Transaction' }],
   },
-  components: { Layout, FormAddOrganization },
+  components: { Layout, FormAddCampaign },
   data() {
     return {
-      baseModule: 'organizations',
-      addDialog: '',
+      baseModule: 'transaction',
+      addCampaignDialog: '',
       dialog: '',
-      dialogTitle: "Organization Delete Dialog",
-      dialogText: "Do you want to delete this organization?",
+      dialogTitle: "Campaign Delete Dialog",
+      dialogText: "Do you want to delete this campaign?",
       headers: [
+        { text: 'Report', value: 'Transaction' },
         {
-          text: 'Level',
+          text: 'Code',
           left: true,
-          value: 'organizationAuth'
+          value: 'campaignCode'
         },
-        { text: 'Company',left: true, value: 'organizationLevel1Name' },
-        { text: 'Department', value: 'organizationLevel2Name' },
         { text: 'Brand', value: 'organizationLevel3Name' },
+        { text: 'Header', value: 'campaignHeader' },
+        { text: 'Keyword', value: 'keyword' },
+        { text: 'Shortcode', value: 'shortcode' },
+        { text: 'Start Date', value: 'campaignDateStart' },
+        { text: 'End Date', value: 'campaignDateEnd' },
+        { text: 'Reward', value: 'campaignAvailable' },
+        { text: 'Status', value: 'campaignActive' },
       ],
-      organizationId: '',
+      campaignId: '',
+      campaign: {},
       left: true,
-      // NOT USE! now
-      searchVm: {
-        contains: {
-          firstName: '',
-          lastName: ''
-        }
-      },
-      search: '',
-      rightDrawer: false,
-      query: "",
       timeout: 2000,
-      quickSearchFilter: 'ICC'
     }
   },
   computed: {
-    ...orgComputed,
-    quickSearch: {
-      get: () => {
-        return this.quickSearchFilter
-      },
-      set: (val) => {
-        this.quickSearchFilter = val
-        this.quickSearchFilter && this.quickSearchProducts()
-      }
-    },
+    ...campaignComputed,
+    ...mapGetters('organizations', [
+      'hadList',
+    ]),
   },
   watch: {
-    
+
   },
   created () {
-    
-    if (!this.hadList) {
-      this.reloadData()
-    }      
+
+    if(!this.hadList)
+      this.getOrganizationsList()
+
+    // if(this.$route.params.campaignId)
+       this.getCampaign(this.$route.params.campaignId)
+       
   },
   methods: {
-    ...orgMethods,
-    print () {
+    ...mapActions('campaigns', [
+      'getCampaign',
+      'closeSnackBar',
+    ]),
+    ...mapActions('organizations', [
+      'getOrganizationsList'
+    ]),
+    print() {
       window.print()
     },
-    edit (item) {
-      // sending to editPage
-      // this.$router.push({ name: 'organization-edit', params: { id: item.id } })
+    reloadData () {
+      this.getAllCampaigns()
     },
-    remove (item) {
-      this.organizationId = item.id
-      console.log(this.organizationId)
+    edit(item) {
+
+    },
+    remove(item) {
+      this.campaignId = item.id
       this.dialog = true
     },
     onConfirm () {
-      // send organizationId to Store dispatch (organizations/deleteOrganization)
-      this.$store.dispatch('organizations/deleteOrganization', this.organizationId)
-      this.$store.dispatch('organizations/closeSnackBar', 2000)
+      this.deleteCampaign(this.campaignId)
+      this.closeSnackbar(2000)
       this.dialog = false
     },
     onCancel () {
-      this.organizationId = ''
+      this.campaignId = ''
       this.dialog = false
     },
     exitSnackbar () {
-      this.$store.commit('organizations/setSnackbar', { snackbar: false })
-      this.$store.commit('organizations/setNotice', { notice: '' })
+      this.$store.commit('campaigns/setSnackbar', { snackbar: false })
+      this.$store.commit('campaigns/setNotice', { notice: '' })
     },
-    reloadData () {
-      this.getOrganizationsList()
-    },
-    quickSearchProducts: debounce(() => {
-      console.log(this.quickSearchFilter)
-    }, 300)
   },
 }
 </script>
@@ -110,7 +103,8 @@ export default {
           <!-- Controller Tools Panels -->
           <v-card-title>
             <span class="title">
-              Organizations {{ pagination? "("+pagination.totalItems+")": "" }}
+              Campaign: {{ item.campaignName }} 
+              {{ pagination? "("+pagination.totalItems+")": "" }}
               <v-text-field
                 append-icon="search"
                 label="Quick Search"
@@ -182,13 +176,13 @@ export default {
       color="indigo"
       dark
       fixed
-      @click.stop="addDialog = !addDialog"
+      @click.stop="addCampaignDialog = !addCampaignDialog"
     >
       <v-icon>add</v-icon>
     </v-btn>
-    <form-add-organization 
-      :add-dialog="addDialog" 
-      @emitCloseDialog="addDialog=arguments[0]"
+    <form-add-campaign
+      :add-campaign-dialog="addCampaignDialog"
+      @emitCloseCampaignDialog="addCampaignDialog=arguments[0]"
     />
   </Layout>
 </template>
