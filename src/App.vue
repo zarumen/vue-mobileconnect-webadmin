@@ -1,29 +1,108 @@
+<script>
+const appConfig = require('@/app.config')
+
+export default {
+  page: {
+    // All subcomponent titles will be injected into this template.
+    titleTemplate(title) {
+      title = typeof title === 'function' ? title(this.$store) : title
+      return title ? `${title} | ${appConfig.title}` : appConfig.title
+    },
+  },
+}
+</script>
+
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app id="app">
+    <!--
+    Even when routes use the same component, treat them
+    as distinct and create the component again.
+    -->
+    <v-fade-transition mode="out-in">
+      <router-view :key="$route.fullPath" />
+    </v-fade-transition>
+  </v-app>
 </template>
 
+<!-- This should generally be the only global CSS in the app. -->
 <style lang="scss">
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+// Allow element/type selectors, because this is global CSS.
+// stylelint-disable selector-max-type, selector-class-pattern
+
+// Normalize default styles across browsers,
+// https://necolas.github.io/normalize.css/
+// @import '~normalize.css/normalize.css';
+// Style loading bar between pages.
+// https://github.com/rstacruz/nprogress
+@import '~nprogress/nprogress.css';
+
+// Design variables and utilities from src/design.
+@import '@design';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+
+body {
+  background: $color-body-bg;
+}
+
+#app {
+  @extend %typography-small;
+}
+
+// ===
+// Base element styles
+// ===
+
+a {
+  color: $color-link-text
+}
+
+a:visited {
+  color: $color-link-text-active;
+}
+
+h1 {
+  @extend %typography-xxlarge;
+}
+
+h2 {
+  @extend %typography-xlarge;
+}
+
+h3 {
+  @extend %typography-large;
+}
+
+h4 {
+  @extend %typography-medium;
+}
+
+h5,
+h6 {
+  @extend %typography-small;
+}
+
+.input {
+  @extend %typography-small;
+
+  display: block;
+  width: 100%;
+  padding: $size-input-padding-vertical $size-input-padding-horizontal;
+  margin-bottom: $size-grid-padding;
+  line-height: 1;
+  border: $size-input-border solid $color-input-border;
+  border-radius: $size-input-border-radius;
+}
+
+// ===
+// Vendor
+// ===
+
+#nprogress .bar {
+  background: $color-link-text;
 }
 </style>

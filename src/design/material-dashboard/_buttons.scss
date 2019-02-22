@@ -1,0 +1,105 @@
+.v-btn {
+  height: auto;
+  padding: $padding-small + 2 $padding-general + 15;
+  margin: $margin-small 1px;
+  font-size: $font-size-small;
+  font-weight: $font-weight-base !important;
+  line-height: $line-height-base;
+  color: $white !important;
+  cursor: pointer;
+  border-radius: $border-radius-base;
+
+  &.v-btn--round,
+  &.v-btn--round::after {
+    border-radius: $btn-round-padding;
+  }
+
+  &.v-btn-facebook {
+    @include social-buttons-color($social-facebook);
+  }
+  &.v-btn-twitter {
+    @include social-buttons-color($social-twitter);
+  }
+
+  .v-icon--left {
+    margin-right: $btn-margin-icon;
+  }
+  .v-icon--right {
+    margin-left: $btn-margin-icon;
+  }
+
+  &.v-btn--large {
+    padding: $btn-y-large-padding $btn-x-large-padding !important;
+    font-size: $font-size-general;
+    line-height: $btn-large-line-height;
+  }
+
+  &.v-btn--small {
+    padding: $btn-y-small-padding $btn-x-small-padding !important;
+    font-size: $font-size-small - 1;
+  }
+
+  &.v-btn--icon {
+    width: $btn-icon-dim;
+    height: $btn-icon-dim;
+    padding: 0;
+    line-height: $btn-icon-dim;
+
+    &.v-btn--round {
+      border-radius: 50%;
+    }
+  }
+
+  &.success {
+    @include button-color($brand-success);
+  }
+
+  &.default {
+    @include button-color($gray-light);
+  }
+
+  &.primary {
+    @include button-color($deep-purple);
+  }
+
+  &.secondary {
+    @include button-color($yellow-green);
+  }
+
+  &.warning {
+    @include button-color($brand-warning);
+  }
+
+  &.info {
+    @include button-color($brand-info);
+  }
+
+  &.danger {
+    @include button-color($brand-danger);
+  }
+
+  .v-icon {
+    font-size: $btn-font-size-icon;
+  }
+}
+
+.v-btn--fixed {
+  right: 0;
+  width: $btn-fixed-width;
+  padding: 0;
+  background-color: rgba($black, .3) !important;
+  border-radius: $border-radius-base + 3;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+
+  .v-icon {
+    padding: $padding-small;
+    font-size: $btn-fixed-icon-size;
+  }
+}
+
+.v-btn--active::before,
+.v-btn:focus::before,
+.v-btn:hover::before {
+  background-color: transparent;
+}

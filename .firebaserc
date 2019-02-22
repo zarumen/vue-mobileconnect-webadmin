@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "mobile-connect-sms",
+    "production": "mobile-connect-sms"
+  }
+}

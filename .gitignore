@@ -19,3 +19,12 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+
+#firebase project config
+/src/utils/firebase.config.js
+.firebaserc
+
+
+# Firebase Cache
+.firebase
+
