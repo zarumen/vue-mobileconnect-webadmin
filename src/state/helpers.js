@@ -69,9 +69,26 @@ export const campaignComputed = {
     snackbar: state => state.snackbar,
     notice: state => state.notice
   }),
+  ...mapGetters('organizations', [
+    'hadList',
+  ]),
   ...mapGetters('campaigns', [
     'hadCampaignList',
   ])
+}
+
+export const campaignMethods = {
+  ...mapActions('campaigns', [
+    'getAllCampaigns',
+    'deleteCampaign',
+    'closeSnackBar',
+  ]),
+  ...mapActions('organizations', [
+    'getOrganizationsList'
+  ]),
+  ...mapActions('shortcodes', [
+  'getAllShortcodes',
+  ]),
 }
 
 export const operatorComputed = {

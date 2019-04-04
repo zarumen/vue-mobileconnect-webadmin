@@ -1,8 +1,7 @@
 <script>
 import Layout from '@layouts/main'
 import FormAddCampaign from '@components/form/form-add-campaign'
-import { mapGetters, mapActions } from 'vuex'
-import { campaignComputed } from '@state/helpers'
+import { campaignComputed, campaignMethods } from '@state/helpers'
 
 export default {
   page: {
@@ -38,9 +37,6 @@ export default {
   },
   computed: {
     ...campaignComputed,
-    ...mapGetters('organizations', [
-      'hadList',
-    ]),
   },
   watch: {
 
@@ -57,14 +53,7 @@ export default {
       this.getAllCampaigns()
   },
   methods: {
-    ...mapActions('campaigns', [
-      'getAllCampaigns',
-      'deleteCampaign',
-      'closeSnackBar',
-    ]),
-    ...mapActions('organizations', [
-      'getOrganizationsList'
-    ]),
+    ...campaignMethods,
     print() {
       window.print()
     },

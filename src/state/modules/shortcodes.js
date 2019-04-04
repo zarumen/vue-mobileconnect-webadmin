@@ -1,5 +1,6 @@
 import { set } from '@state/helpers'
 import firestoreApp from "@utils/firestore.config"
+import _ from 'lodash'
 
 import {
   sendSuccessNotice,
@@ -7,6 +8,7 @@ import {
   closeNotice,
   commitPagination,
 } from '@utils/pagination-util'
+
 
 export const state = {
   // -------------- Shortcode Parameter -------------------//
@@ -18,6 +20,7 @@ export const state = {
   // Data Table Initial Setup Variables
   items: null,
   operators: null,
+  operatorConfig: null,
   pagination: {},
   loading: false,
   mode: '',
@@ -27,7 +30,9 @@ export const state = {
 
 export const getters = {
   hadOperatorsList: (state) => !!state.items,
-  hadShortcodesList: (state) => !!state.shortcodeList
+  hadShortcodesList: (state) => !!state.shortcodeList,
+  hadOperatorConfig: (state) => !!state.operatorConfig,
+  getOneOpsConfig: (state) => state.operatorConfig
 }
 
 export const mutations = {
@@ -41,6 +46,10 @@ export const mutations = {
   // -------------- Operator Parameter Mutations -------------------//
   setPagination: set('pagination'),
   setOperators: set('operators'),
+  // mutate Operator Config
+  setOperatorConfig (state, payload) {
+    _.assign(state.operatorConfig, payload)
+  },
   // update Page
   setPage(state, paginationPage) {
     state.pagination.page = paginationPage
@@ -67,8 +76,46 @@ export const actions = {
   // ===
   // CREATE Zone
   // ===
-  createShortcode({ commit, dispatch }, { shortcode, config }) {
+  createShortcode({ commit, dispatch }, { shortcode, info }) {
     // TODO: สร้าง shortcode จอง
+
+    return firestoreApp
+      .collection('shortcodeConfig')
+      .doc(`${shortcode.shortcode}`)
+      .set(info, { merge: true })
+      .then(docRef => {
+        console.log("Document written with ID: ", shortcode);
+        dispatch('getShortcodesFromFirestore')
+        sendSuccessNotice(commit, 'New Shortcode has been added.')
+        closeNotice(commit, 1500)
+      })
+      .catch(error => {
+        console.log(error)
+        sendErrorNotice(commit, 'Operation failed! Please try again later. ')
+        closeNotice(commit, 1500)
+        return error
+      })
+  },
+  createOperatorConfig({ commit, dispatch }, { shortcode, operator, config }) {
+
+    return firestoreApp
+      .collection('shortcodeConfig')
+      .doc(`${shortcode}`)
+      .collection('operator')
+      .doc(`${operator}`)
+      .set(config, { merge: true })
+      .then(() => {
+        console.log(`Document written with ID: ${shortcode} ops: ${operator}`);
+        dispatch('getShortcodesFromFirestore')
+        sendSuccessNotice(commit, 'New OperatorConfig has been added.')
+        closeNotice(commit, 1500)
+      })
+      .catch(error => {
+        console.log(error)
+        sendErrorNotice(commit, 'Operation Config save failed! Please try again later. ')
+        closeNotice(commit, 1500)
+        return error
+      })
   },
   createKeywordsReserved({ commit, dispatch }, { shortcode, keywords }) {
     // สร้าง keywords จอง
@@ -99,7 +146,7 @@ export const actions = {
     commit('setLoading', { loading: true })
 
     return firestoreApp
-      .collection('operatorConfig')
+      .collection('operatorInfo')
       .get()
       .then(querySnapshot => {
 
@@ -291,11 +338,56 @@ export const actions = {
         sendErrorNotice(commit, 'Load Keywords Failed!')
         closeNotice(commit, 2000)
       })
+  },
+  getOperatorConfig({ commit }, { operator, shortcode }) {
 
-  }
+    return firestoreApp
+      .collection('shortcodeConfig')
+      .doc(`${shortcode}`)
+      .collection('operator')
+      .doc(`${operator}`)
+      .get()
+      .then(opsDocSnapshot => {
+        let operatorConf = {}
+
+        if (opsDocSnapshot.exists) {
+          // do something with the data
+          operatorConf = opsDocSnapshot.data()
+
+        } else {
+          console.log('document not found');
+        }
+        commit('setOperatorConfig', operatorConf)
+        return operatorConf
+      })
+      .catch(error => console.log(`operatorConfig Error: ${error}`))
+  }, 
   // ===
   // UPDATE Zone
   // ===
+  mutateOperatorConfig({ commit }, payload) {
+    commit('setOperatorConfig', payload)
+  },
+  editOperatorConfig({ commit }, { shortcode, operator, config }) {
+
+    return firestoreApp
+      .collection('shortcodeConfig')
+      .doc(`${shortcode}`)
+      .collection('operator')
+      .doc(`${operator}`)
+      .update(config)
+      .then(() => {
+        console.log(`Document written with ID: ${shortcode} ops: ${operator}`);
+        sendSuccessNotice(commit, 'OperatorConfig has been edited.')
+        closeNotice(commit, 1500)
+      })
+      .catch(error => {
+        console.log(error)
+        sendErrorNotice(commit, 'Operation Config save failed! Please try again later. ')
+        closeNotice(commit, 1500)
+        return error
+      })
+  },
   // ===
   // DELETE Zone
   // ===

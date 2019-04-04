@@ -14,7 +14,10 @@ export default {
     },
     activator: null,
     attach: null,
-    colors: ['green', 'purple', 'indigo', 'cyan', 'teal', 'red','light-green', 'deep-purple', 'blue', 'pink', 'lime'],
+    colors: [
+      'green', 'purple', 'indigo', 'cyan', 'teal', 'red',
+      'light-green', 'deep-purple', 'blue', 'pink', 'lime'
+    ],
     editing: null,
     index: -1,
     items: [
@@ -180,7 +183,7 @@ export default {
               >
                 <p>Please Enter Your Shortcode:</p>
                 <v-combobox
-                  :key="shortcodeList.id"
+                  :key="shortcodeList.key"
                   v-model="keyform.shortcode"
                   :hint="`${keyform.shortcode}`"
                   :items="shortcodeList"

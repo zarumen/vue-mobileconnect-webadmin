@@ -34,7 +34,10 @@ export default {
   },
   methods: {
     ...operatorMethods,
-    toTitleCase(string) {
+    reloadOperators () {
+      return this.getAllOperators()
+    },
+    toTitleCase (string) {
       return string.replace(/\w\S*/g, (text) => text.charAt(0).toUpperCase() + text.substr(1).toLowerCase())
     },
     exitSnackbar () {
@@ -49,27 +52,38 @@ export default {
   <base-helper-offset :offset="10">
     <base-card
       color="deep-purple"
-      title="Operators Config"
+      title="Operators Info"
       text="Operator's General Informations"
     >
       <!-- Controller Tools Panels -->
       <v-card-title>
         <span class="title">
           Operators {{ pagination? "("+pagination.totalItems+")": "" }}
-          <v-text-field
+          <!-- <v-text-field
             append-icon="search"
             label="Quick Search"
             single-line
             hide-details
-          />
+          /> -->
         </span>
         <v-spacer />
+        <v-btn
+          color="primary"
+          round
+          circle
+        >
+          NEW OPERATOR            
+        </v-btn>
         <v-btn 
           class="v-btn--simple"
           color="primary"
           circle
+          icon
+          @click.native="reloadOperators"
         >
-          NEW OPERATOR            
+          <v-icon>
+            refresh
+          </v-icon>
         </v-btn>
       </v-card-title>
       <!-- Insert in Base-Table Component -->
