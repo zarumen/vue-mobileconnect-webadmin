@@ -59,6 +59,7 @@ export const campaignComputed = {
   ...mapState('campaigns', {
     // ListItem of Data Table 
     items: state => state.items,
+    item: state => state.item,
     // Set Up Data Table Pagination & 
     pagination: state => state.pagination,
     page: state => state.pagination.page,
