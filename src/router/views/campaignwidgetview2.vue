@@ -1,6 +1,7 @@
 <script>
 import Chart from 'chart.js';
 import formatCurrency from '@utils/format-number'
+import { genTimeSeries, genEmptyArray } from '@utils/rgt-array'
 
 let ChartData = {
   type: 'bar',
@@ -59,7 +60,8 @@ export default {
       smscount: 0,
       lastMinute: 0,
       myChart: null,
-      timer: null
+      timer: null,
+      minutes: 120
     }
   },
   created() {
@@ -80,8 +82,15 @@ export default {
     }   
   },
   mounted() {
+    let d = new Date();
+    this.ChartData.data.labels = genTimeSeries(d,this.minutes-1)
+    this.ChartData.data.datasets[0].data = genEmptyArray(this.minutes-1)
+
     this.createChart('widget-chart', this.ChartData);
     this.timer = setInterval(() => {
+    d = new Date();
+    this.ChartData.data.labels = genTimeSeries(d,this.minutes-1)
+
       let mydata = this.myChart.data.datasets[0].data;
       mydata.shift()
       this.smscount = 0
@@ -102,7 +111,6 @@ export default {
       });
     },
   },
-
 }
 </script>
 <style>

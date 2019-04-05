@@ -195,12 +195,11 @@ export default {
 
     this.createChart('widget-chart', this.ChartData);
     this.timer = setInterval(() => {
-      // let mydata = this.myChart.data.datasets[0].data;
-      d = new Date();
-      let stime = d.toLocaleTimeString("th",{hour: '2-digit', minute:'2-digit'})
-      this.ChartData.data.labels.shift()
-      this.ChartData.data.labels[this.minutes-1] = stime
-      this.myChart.data.datasets[0].data.shift()
+    d = new Date();
+    this.ChartData.data.labels = genTimeSeries(d,this.minutes-1)
+
+      let mydata = this.myChart.data.datasets[0].data;
+      mydata.shift()
       this.smscount = 0
       this.myChart.update()
     }, 60000);
@@ -379,6 +378,11 @@ export default {
             >
               <v-form>
                 <p>Realtime Barchart Widget</p>
+                <v-text-field
+                  v-model="campaignWidget.minutes"
+                  :counter="10"
+                  label="Minutes"
+                />
                 <v-textarea
                   v-model="code2"
                   label="Message"

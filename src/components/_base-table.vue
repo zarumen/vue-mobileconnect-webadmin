@@ -106,6 +106,10 @@ export default {
               <v-icon>widgets</v-icon>
             </a>                      
           </small>
+          <small v-if="header.text==='Report'">
+            <a :href="'/report/transaction/'+props.item.id"><v-icon>description</v-icon></a>                      
+          </small>
+          <small v-else>{{ renderData(props.item, header) }}</small>
         </td>
         <td 
           v-if="basemodule != 'campaignwidgets'"
