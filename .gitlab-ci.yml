@@ -1,19 +1,43 @@
+image: node:latest
+
+cache:
+  key: node_modules
+  paths:
+    - node_modules
+
 stages:
+  - install
   - build
-  - test
   - deploy
+
+install:
+  stage: install
+  only:
+    - master
+  script:
+    - yarn install
+  artifacts:
+    paths:
+      - node_modules
 
 build:
   stage: build
+  only:
+    - master
   script:
     - yarn build
-
-test:
-  stage: test
-  script:
-    - yarn test:unit:ci
+  dependencies:
+    - install
+  artifacts:
+    paths:
+      - dist
 
 deploy:
-  stage: deploy
+  only:
+    - master
   script:
-    - firebase deploy --only hosting
+    - yarn global add firebase-tools --cache-folder node_modules
+    - firebase deploy -m "Pipeline $CI_PIPELINE_ID, build $CI_BUILD_ID" --non-interactive --token $FIREBASE_DEPLOY_KEY --project $FIREBASE_PROJECT
+  dependencies:
+    - install
+    - build
