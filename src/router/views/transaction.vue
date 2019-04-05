@@ -1,6 +1,6 @@
 <script>
 import Layout from '@layouts/main'
-import FormAddCampaign from '@components/form-add-campaign'
+import FormAddCampaign from '@components/form/form-add-campaign'
 import { mapGetters, mapActions } from 'vuex'
 import { campaignComputed } from '@state/helpers'
 
@@ -112,14 +112,14 @@ export default {
                 hide-details
               />
             </span>
-            <v-spacer/>
+            <v-spacer />
             <v-btn 
               flat 
               icon 
               color="green"
               @click.native="reloadData()"
             >
-              <BaseIcon name="syncAlt"/>            
+              <BaseIcon name="syncAlt" />            
             </v-btn>
             <v-btn 
               flat 
@@ -153,10 +153,10 @@ export default {
       />
       <v-snackbar 
         v-if="loading===false" 
+        v-model="snackbar" 
         :left="true" 
         :timeout="timeout" 
-        :color="mode" 
-        v-model="snackbar"
+        :color="mode"
       >
         {{ notice }}
         <v-btn 

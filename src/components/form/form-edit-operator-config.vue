@@ -130,6 +130,8 @@ export default {
         operator: this.operator,
         config: data
       })
+
+      this.closeDialog()
     },
   }
 }

@@ -1,6 +1,6 @@
 import { set } from '@state/helpers'
 import firestoreApp from "@utils/firestore.config"
-import _ from 'lodash'
+import _ from 'lodash/assign'
 
 import {
   sendSuccessNotice,
