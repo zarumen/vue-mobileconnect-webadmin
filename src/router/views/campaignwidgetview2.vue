@@ -67,7 +67,7 @@ export default {
   created() {
     this.$socket.emit('register', 'totals','production',this.$route.params.campaignId)
 
-    this.$options.sockets.transaction = (newdata) => {
+    this.$options.sockets.transactionTotals = (newdata) => {
           // line chart widget
           if(this.totals !== newdata && this.totals !== 0){
             console.log(this.myChart.data.datasets[0].data)

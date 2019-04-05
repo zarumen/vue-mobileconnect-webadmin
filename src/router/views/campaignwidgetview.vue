@@ -28,7 +28,7 @@ export default {
   created() {
     this.$socket.emit('register', 'totals','production',this.$route.params.campaignId)
 
-    this.$options.sockets.transaction = (newdata) => {
+    this.$options.sockets.transactionTotals = (newdata) => {
       console.log("trans:" + newdata)
       this.socketMessage = formatCurrency((newdata - this.$route.params.offset)  * this.$route.params.multiplier)
       this.timeSeries.push('1')
