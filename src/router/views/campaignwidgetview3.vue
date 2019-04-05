@@ -51,9 +51,9 @@ export default {
     }
   },
   created() {
-    this.$socket.emit('register', 'keyword','production',this.$route.params.campaignId)
+    this.$socket.emit('register', 'rewards','test',this.$route.params.campaignId)
 
-    this.$options.sockets.transaction = (newdata) => {
+    this.$options.sockets.transactionRewards = (newdata) => {
       console.log(Object.keys(newdata))
       console.log(Object.values(newdata))
 
@@ -80,7 +80,7 @@ export default {
   methods: {
     socketRegister(){
       console.log('param campaignId:'+this.campaignId)
-      this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);
+      this.$socket.emit('register', 'totals','test',this.$route.params.campaignId);
     },
     createChart(chartId, chartData) {
       const ctx = document.getElementById(chartId);
@@ -91,7 +91,15 @@ export default {
       });
     },
   },
+/* function compare(a,b) {
+  if (a.last_nom < b.last_nom)
+    return -1;
+  if (a.last_nom > b.last_nom)
+    return 1;
+  return 0;
+}
 
+objs.sort(compare); */
 }
 </script>
 <style>

@@ -60,6 +60,27 @@ let VoteData = {
     }
 }
 
+let RewardsData = {
+  type: 'bar',
+  data: {
+    labels: ['','','',''],
+    datasets: [{
+          label: '# messages',
+          data: [0,0,0,0],
+          percent: [0,0,0,0],
+          backgroundColor:'rgba(31, 119, 180, 1)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+      }]
+  },
+    options: {
+      title: {
+          display: true,
+          text: ''
+      },
+    }
+}
+
 export default {
   page() {
       return {
@@ -80,6 +101,7 @@ export default {
       code: '',
       code2: '',
       code3: '',
+      code4: '',
       campaignWidget: {
         caption: ' ',
         units: ' ',
@@ -90,6 +112,7 @@ export default {
       },
       ChartData: ChartData,
       VoteData: VoteData,
+      RewardsData: RewardsData,
       smscount: 0,
       lastMinute: 0,
       myChart: null,
@@ -114,15 +137,16 @@ export default {
     }
   },
   created() {
-    this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);
-    this.$socket.emit('register', 'keyword','production',this.$route.params.campaignId);
+    this.$socket.emit('register', 'totals','test',this.$route.params.campaignId);
+    this.$socket.emit('register', 'keyword','test',this.$route.params.campaignId);
+    this.$socket.emit('register', 'rewards','test',this.$route.params.campaignId);
     this.getCampaignWidget(this.$route.params.campaignId)
 
-    this.$options.sockets.transaction = (newdata) => {
+    this.$options.sockets.transactionRewards = (newdata) => {
       console.log(newdata)
       console.log(typeof newdata)
       // line chart widget
-      if(this.totals !== newdata && this.totals !== 0 && typeof newdata === 'string'){
+/*       if(this.totals !== newdata && this.totals !== 0 && typeof newdata === 'string'){
         var d = new Date();
         var stime = d.toLocaleTimeString("th",{hour: '2-digit', minute:'2-digit'})
         this.ChartData.data.labels[this.minutes-1] = stime 
@@ -130,25 +154,27 @@ export default {
         this.smscount = this.smscount + (newdata - this.totals);
         this.myChart.data.datasets[0].data[this.minutes-1] = this.smscount;
         this.myChart.update()  
-      }
+      } */
 
-      if(typeof newdata === 'string'){ // Register Type Total 
+/*       if(typeof newdata === 'string'){ // Register Type Total 
         // totals widget
         // console.log("trans:" + newdata)
         this.totals =  newdata 
         let data = (newdata - this.campaignWidget.offset) * this.campaignWidget.multiplier
         this.totalsShow = formatCurrency(data)
-      }
+      } */
       // keywords widget
       if(typeof newdata === 'object'){ // Register Type Keyword
-        console.log(Object.keys(newdata))
-        console.log(Object.values(newdata))
+        console.log(newdata)
+
+        //console.log(Object.keys(newdata))
+        //console.log(Object.values(newdata))
 
         let keys = Object.keys(newdata)
         let data = Object.values(newdata)
         // const reducer = (accumulator, currentValue) => accumulator + currentValue;
         let totals = data.reduce((a,b)=> parseInt(a) + parseInt(b) , 0)
-        console.log("total:" + totals)
+        //console.log("total:" + totals)
         
         let count = 0
         keys.forEach((result)=>{
