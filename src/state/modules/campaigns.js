@@ -11,6 +11,7 @@ import {
 export const state = {
   // Data Table Initial Setup Variables
   items: null,
+  item: null,
   pagination: getDefaultPagination(),
   loading: false,
   mode: '',

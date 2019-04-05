@@ -20,7 +20,7 @@ export default {
     const defaultvForm = Object.freeze({
       contextDelimiter: '',
       messageCampaignNotAvailable: '',
-      messageRewardFailed: '',
+      messageRewardsFailed: '',
       messageBoundariesLessError: '',
       messageBoundariesOverError: '',
       messageAfterEnd: '',
@@ -1576,7 +1576,7 @@ export default {
                           </v-subheader>
                         </v-flex> 
                         <v-text-field 
-                          v-model="validateForm.messageRewardFailed"
+                          v-model="validateForm.messageRewardsFailed"
                           prepend-icon="chat_bubble"
                           label="Fail Message"
                         />

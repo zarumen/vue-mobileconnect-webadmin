@@ -1,59 +1,70 @@
 <script>
 import Layout from '@layouts/main'
 import FormAddCampaign from '@components/form/form-add-campaign'
-import { campaignComputed, campaignMethods } from '@state/helpers'
+import { mapGetters, mapActions } from 'vuex'
+import { campaignComputed } from '@state/helpers'
 
 export default {
   page: {
-    title: 'Campaigns',
-    meta: [{ name: 'description', content: 'Campaigns' }],
+    title: 'Transaction',
+    meta: [{ name: 'description', content: 'Campaign Transaction' }],
   },
   components: { Layout, FormAddCampaign },
   data() {
     return {
-      baseModule: 'campaigns',
+      baseModule: 'transaction',
       addCampaignDialog: '',
       dialog: '',
       dialogTitle: "Campaign Delete Dialog",
       dialogText: "Do you want to delete this campaign?",
       headers: [
+        { text: 'Report', value: 'Transaction' },
         {
           text: 'Code',
           left: true,
           value: 'campaignCode'
         },
         { text: 'Brand', value: 'organizationLevel3Name' },
-        { text: 'Header', value: 'campaignName' },
+        { text: 'Header', value: 'campaignHeader' },
         { text: 'Keyword', value: 'keyword' },
         { text: 'Shortcode', value: 'shortcode' },
         { text: 'Start Date', value: 'campaignDateStart' },
         { text: 'End Date', value: 'campaignDateEnd' },
-        { text: 'Status', value: 'campaignState' },
+        { text: 'Reward', value: 'campaignAvailable' },
+        { text: 'Status', value: 'campaignActive' },
       ],
       campaignId: '',
+      campaign: {},
       left: true,
       timeout: 2000,
     }
   },
   computed: {
     ...campaignComputed,
+    ...mapGetters('organizations', [
+      'hadList',
+    ]),
   },
   watch: {
 
   },
   created () {
 
-    if(!this.hadShortcodesList)
-      this.getAllShortcodes()
-
     if(!this.hadList)
       this.getOrganizationsList()
 
-    if(!this.hadCampaignList)
-      this.getAllCampaigns()
+    // if(this.$route.params.campaignId)
+       this.getCampaign(this.$route.params.campaignId)
+       
   },
   methods: {
-    ...campaignMethods,
+    ...mapActions('campaigns', [
+      'getCampaign',
+      'closeSnackBar',
+    ]),
+    ...mapActions('organizations', [
+      'getOrganizationsList'
+    ]),
     print() {
       window.print()
     },
@@ -92,7 +103,8 @@ export default {
           <!-- Controller Tools Panels -->
           <v-card-title>
             <span class="title">
-              Campaigns {{ pagination? "("+pagination.totalItems+")": "" }}
+              Campaign: {{ item.campaignName }} 
+              {{ pagination? "("+pagination.totalItems+")": "" }}
               <v-text-field
                 append-icon="search"
                 label="Quick Search"
@@ -102,10 +114,9 @@ export default {
             </span>
             <v-spacer />
             <v-btn 
-              class="v-btn--simple"
-              color="primary"
-              circle
-              icon
+              flat 
+              icon 
+              color="green"
               @click.native="reloadData()"
             >
               <BaseIcon name="syncAlt" />            
@@ -162,7 +173,8 @@ export default {
       fab
       bottom
       right
-      color="primary"
+      color="indigo"
+      dark
       fixed
       @click.stop="addCampaignDialog = !addCampaignDialog"
     >

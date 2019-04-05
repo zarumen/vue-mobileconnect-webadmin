@@ -19,6 +19,7 @@ export default {
   <Layout>
     <div>
       <v-container
+        class="pa-0"
         fluid
       >
         <section>
@@ -444,4 +445,5 @@ export default {
 
 <style lang="scss" module>
 @import '@design';
+
 </style>

@@ -1,34 +1,37 @@
 <script>
 import Layout from '@layouts/main'
 import FormAddCampaign from '@components/form/form-add-campaign'
-import { campaignComputed, campaignMethods } from '@state/helpers'
+import { mapGetters, mapActions } from 'vuex'
+import { campaignComputed } from '@state/helpers'
 
 export default {
   page: {
-    title: 'Campaigns',
-    meta: [{ name: 'description', content: 'Campaigns' }],
+    title: 'Widgets',
+    meta: [{ name: 'description', content: 'Campaign Widgets' }],
   },
   components: { Layout, FormAddCampaign },
   data() {
     return {
-      baseModule: 'campaigns',
+      baseModule: 'campaignwidgets',
       addCampaignDialog: '',
       dialog: '',
       dialogTitle: "Campaign Delete Dialog",
       dialogText: "Do you want to delete this campaign?",
       headers: [
+        { text: 'Report', value: 'Transaction' },
         {
           text: 'Code',
           left: true,
           value: 'campaignCode'
         },
         { text: 'Brand', value: 'organizationLevel3Name' },
-        { text: 'Header', value: 'campaignName' },
+        { text: 'Header', value: 'campaignHeader' },
         { text: 'Keyword', value: 'keyword' },
         { text: 'Shortcode', value: 'shortcode' },
         { text: 'Start Date', value: 'campaignDateStart' },
         { text: 'End Date', value: 'campaignDateEnd' },
-        { text: 'Status', value: 'campaignState' },
+        { text: 'Reward', value: 'campaignAvailable' },
+        { text: 'Status', value: 'campaignActive' },
       ],
       campaignId: '',
       left: true,
@@ -37,14 +40,14 @@ export default {
   },
   computed: {
     ...campaignComputed,
+    ...mapGetters('organizations', [
+      'hadList',
+    ]),
   },
   watch: {
 
   },
   created () {
-
-    if(!this.hadShortcodesList)
-      this.getAllShortcodes()
 
     if(!this.hadList)
       this.getOrganizationsList()
@@ -53,7 +56,14 @@ export default {
       this.getAllCampaigns()
   },
   methods: {
-    ...campaignMethods,
+    ...mapActions('campaigns', [
+      'getAllCampaigns',
+      'deleteCampaign',
+      'closeSnackBar',
+    ]),
+    ...mapActions('organizations', [
+      'getOrganizationsList'
+    ]),
     print() {
       window.print()
     },
@@ -102,10 +112,9 @@ export default {
             </span>
             <v-spacer />
             <v-btn 
-              class="v-btn--simple"
-              color="primary"
-              circle
-              icon
+              flat 
+              icon 
+              color="green"
               @click.native="reloadData()"
             >
               <BaseIcon name="syncAlt" />            
@@ -162,7 +171,8 @@ export default {
       fab
       bottom
       right
-      color="primary"
+      color="indigo"
+      dark
       fixed
       @click.stop="addCampaignDialog = !addCampaignDialog"
     >

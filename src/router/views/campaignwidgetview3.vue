@@ -51,23 +51,31 @@ export default {
     }
   },
   created() {
-    this.$socket.emit('register', 'keyword','production',this.$route.params.campaignId)
+    this.$socket.emit('register', 'rewards','test',this.$route.params.campaignId)
 
-    this.$options.sockets.transaction = (newdata) => {
-      console.log(Object.keys(newdata))
-      console.log(Object.values(newdata))
+    this.$options.sockets.transactionRewards = (newdata) => {
+/*       console.log(Object.keys(newdata))
+      console.log(Object.values(newdata)) */
+      let Sorted = []
+      Sorted['key'] = Object.keys(newdata)
+      Sorted['values'] = Object.values(newdata)
 
-      let keys = Object.keys(newdata)
+    
+      // console.log(Sorted)
+      let Sorted2 = this.bubbleSort(Sorted)
+      // console.log(Sorted2)
+
+      // let keys = Object.keys(newdata)
       let data = Object.values(newdata)
       // const reducer = (accumulator, currentValue) => accumulator + currentValue;
       let totals = data.reduce((a,b)=> parseInt(a) + parseInt(b) , 0)
       console.log("total:" + totals)
       
       let count = 0
-      keys.forEach((result)=>{
+      Sorted2['key'].forEach((result)=>{
        this.VoteData.data.labels[count] = result
-       this.VoteData.data.datasets[0].data[count] = data[count] 
-       this.VoteData.data.datasets[0].percent[count] = Math.round((data[count])/totals * 100 * 100) / 100
+       this.VoteData.data.datasets[0].data[count] = Sorted2['values'][count] 
+       this.VoteData.data.datasets[0].percent[count] = Math.round((Sorted2['values'][count])/totals * 100 * 100) / 100
        count++ 
       })
      
@@ -80,7 +88,7 @@ export default {
   methods: {
     socketRegister(){
       console.log('param campaignId:'+this.campaignId)
-      this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);
+      this.$socket.emit('register', 'totals','test',this.$route.params.campaignId);
     },
     createChart(chartId, chartData) {
       const ctx = document.getElementById(chartId);
@@ -90,8 +98,30 @@ export default {
         options: chartData.options,
       });
     },
-  },
+    bubbleSort(arr){
+      let i = 0;
+      let j = 0;
+      for (i = 0; i < arr['values'].length-1; i++){
+          // Last i elements are already in place    
+          for (j = 0; j < arr['values'].length-i-1; j++){
+              
+              if (parseInt(arr['values'][j]) < parseInt(arr['values'][j+1])){ // swap(arr[j], arr[j+1]); 
+                let tmp = arr['values'][j]                
+                arr['values'][j] = arr['values'][j+1]
+                arr['values'][j+1] = tmp
 
+                let tmp2 = arr['key'][j]
+                arr['key'][j] = arr['key'][j+1]
+                arr['key'][j+1] = tmp2
+                
+              } 
+                 
+          }
+      }
+      console.log(arr)
+      return arr       
+    }
+  }
 }
 </script>
 <style>
