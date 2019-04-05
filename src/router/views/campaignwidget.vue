@@ -167,14 +167,14 @@ export default {
       if(typeof newdata === 'object'){ // Register Type Keyword
         console.log(newdata)
 
-        //console.log(Object.keys(newdata))
-        //console.log(Object.values(newdata))
+        // console.log(Object.keys(newdata))
+        // console.log(Object.values(newdata))
 
         let keys = Object.keys(newdata)
         let data = Object.values(newdata)
         // const reducer = (accumulator, currentValue) => accumulator + currentValue;
         let totals = data.reduce((a,b)=> parseInt(a) + parseInt(b) , 0)
-        //console.log("total:" + totals)
+        // console.log("total:" + totals)
         
         let count = 0
         keys.forEach((result)=>{
