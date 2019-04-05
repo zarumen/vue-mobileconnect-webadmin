@@ -137,9 +137,9 @@ export default {
     }
   },
   created() {
-    this.$socket.emit('register', 'totals','test',this.$route.params.campaignId);
-    this.$socket.emit('register', 'keyword','test',this.$route.params.campaignId);
-    this.$socket.emit('register', 'rewards','test',this.$route.params.campaignId);
+    this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);
+    this.$socket.emit('register', 'keyword','production',this.$route.params.campaignId);
+    this.$socket.emit('register', 'rewards','production',this.$route.params.campaignId);
     this.getCampaignWidget(this.$route.params.campaignId)
 
     this.$options.sockets.transactionRewards = (newdata) => {
@@ -186,6 +186,28 @@ export default {
       
         this.$forceUpdate()
       }
+    }     
+    this.$options.sockets.transactionTotals = (newdata) => {
+
+      // line chart widget
+      if(this.totals !== newdata && this.totals !== 0 && typeof newdata === 'string'){
+        var d = new Date();
+        var stime = d.toLocaleTimeString("th",{hour: '2-digit', minute:'2-digit'})
+        this.ChartData.data.labels[this.minutes-1] = stime 
+
+        this.smscount = this.smscount + (newdata - this.totals);
+        this.myChart.data.datasets[0].data[this.minutes-1] = this.smscount;
+        this.myChart.update()  
+      }
+
+      if(typeof newdata === 'string'){ // Register Type Total 
+        // totals widget
+        // console.log("trans:" + newdata)
+        this.totals =  newdata 
+        let data = (newdata - this.campaignWidget.offset) * this.campaignWidget.multiplier
+        this.totalsShow = formatCurrency(data)
+      }
+
     }     
   },
   mounted() {
