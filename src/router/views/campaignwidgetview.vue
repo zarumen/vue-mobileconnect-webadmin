@@ -1,5 +1,5 @@
 <script>
-import Bar from '@utils/chart/Bar'
+// import Bar from '@utils/chart/Bar'
 import formatCurrency from '@utils/format-number'
 
 export default {
@@ -15,7 +15,6 @@ export default {
       }
   }, 
   components: { 
-    Bar,
   },
   data() {
     return {
@@ -27,7 +26,13 @@ export default {
     }
   },
   created() {
-    this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);
+    this.$socket.emit('register', 'totals','production',this.$route.params.campaignId)
+
+    this.$options.sockets.transaction = (newdata) => {
+      console.log("trans:" + newdata)
+      this.socketMessage = formatCurrency((newdata - this.$route.params.offset)  * this.$route.params.multiplier)
+      this.timeSeries.push('1')
+    }   
   },
   methods: {
     socketRegister(){
@@ -35,40 +40,7 @@ export default {
       this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);
     },
   },
-  socket: {
-    // Prefix for event names
-    // prefix: "/counter/",
-    
-    // If you set `namespace`, it will create a new socket connection to the namespace instead of `/`
-    // namespace: "/counter",
 
-    events: {
-
-        // Similar as this.$socket.on("changed", (msg) => { ... });
-        // If you set `prefix` to `/counter/`, the event name will be `/counter/changed`
-        //
-        reply(msg) {
-            console.log("Reply: " + msg);
-        },
-        transaction(newdata) {
-          console.log("trans:" + newdata)
-          this.socketMessage = formatCurrency((newdata - this.$route.params.offset)  * this.$route.params.multiplier)
-          this.timeSeries.push('1')
-        },
-        
-        connect() {
-            console.log("Websocket connected to " + this.$socket.nsp);
-        },
-
-        disconnect() {
-            console.log("Websocket disconnected from " + this.$socket.nsp);
-        },
-
-        error(err) {
-            console.error("Websocket error!", err);
-        }
-    }
-  },
 }
 </script>
 <style>
@@ -102,11 +74,11 @@ export default {
           align-center 
           justify-center 
           column
-          
+          style="height: 315px;"
         >
           <!-- border: 1px solid black; -->
           <v-flex>
-            <p/>
+            <p />
             <h1 
               :style="{color: '#'+this.$route.params.color}"
               class="big" 
@@ -119,7 +91,8 @@ export default {
               <h1 
                 :style="{color: '#'+this.$route.params.color}"
                 class="superbig"
-              >{{ socketMessage }} {{ this.$route.params.unit }}
+              >
+                {{ socketMessage }} {{ this.$route.params.unit }}
               </h1>
             </div>
           </v-flex>
@@ -142,8 +115,5 @@ export default {
         </v-layout>
       </section-->
     </v-layout>
-
   </v-container>
-
-
 </template>

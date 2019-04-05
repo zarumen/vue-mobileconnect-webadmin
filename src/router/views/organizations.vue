@@ -1,8 +1,7 @@
 <script>
 import Layout from '@layouts/main'
-import FormAddOrganization from '@components/form-add-organization'
+import FormAddOrganization from '@components/form/form-add-organization'
 import { orgMethods, orgComputed } from '@state/helpers'
-import { debounce } from "lodash";
 
 export default {
   page: {
@@ -30,36 +29,20 @@ export default {
       organizationId: '',
       left: true,
       // NOT USE! now
-      searchVm: {
-        contains: {
-          firstName: '',
-          lastName: ''
-        }
-      },
-      search: '',
       rightDrawer: false,
       query: "",
       timeout: 2000,
-      quickSearchFilter: 'ICC'
+      quickSearchFilter: ''
     }
   },
   computed: {
     ...orgComputed,
-    quickSearch: {
-      get: () => {
-        return this.quickSearchFilter
-      },
-      set: (val) => {
-        this.quickSearchFilter = val
-        this.quickSearchFilter && this.quickSearchProducts()
-      }
-    },
   },
   watch: {
     
   },
   created () {
-    
+    // initial Data Table from OrganizationList query from firestore
     if (!this.hadList) {
       this.reloadData()
     }      
@@ -75,7 +58,6 @@ export default {
     },
     remove (item) {
       this.organizationId = item.id
-      console.log(this.organizationId)
       this.dialog = true
     },
     onConfirm () {
@@ -95,9 +77,6 @@ export default {
     reloadData () {
       this.getOrganizationsList()
     },
-    quickSearchProducts: debounce(() => {
-      console.log(this.quickSearchFilter)
-    }, 300)
   },
 }
 </script>
@@ -106,48 +85,64 @@ export default {
   <Layout>
     <v-container fluid>
       <v-flex xs12>
-        <v-card>
-          <!-- Controller Tools Panels -->
-          <v-card-title>
-            <span class="title">
-              Organizations {{ pagination? "("+pagination.totalItems+")": "" }}
-              <v-text-field
-                append-icon="search"
-                label="Quick Search"
-                single-line
-                hide-details
+        <base-helper-offset
+          :offset="10"
+        >
+          <base-card>
+            <!-- Controller Tools Panels -->
+            <v-card-title class="title">
+              <span>
+                Organizations {{ pagination? "("+pagination.totalItems+")": "" }}
+                <v-text-field
+                  v-model="quickSearchFilter"
+                  class="purple-input"
+                  append-icon="search"
+                  label="Quick Search"
+                  single-line
+                  hide-details
+                />
+              </span>
+              <v-spacer />
+              <v-btn 
+                class="v-btn--simple"
+                color="primary"
+                circle
+                icon
+                @click.native="reloadData()"
+              >
+                <v-icon>
+                  refresh
+                </v-icon>      
+              </v-btn>
+              <v-btn 
+                class="v-btn--simple"
+                color="primary"
+                circle
+                icon
+              >
+                <v-icon>
+                  print
+                </v-icon>
+              </v-btn>
+            </v-card-title>
+            <br>
+            <!-- Insert in Base-Table Component -->
+            <base-helper-offset
+              :offset="10"
+            >
+              <BaseTable
+                v-if="loading===false"
+                :headers="headers"
+                :items="items"
+                :search="quickSearchFilter"
+                :pagination="pagination"
+                :basemodule="baseModule"
+                @edit="edit"
+                @remove="remove"
               />
-            </span>
-            <v-spacer/>
-            <v-btn 
-              flat 
-              icon 
-              color="green"
-              @click.native="reloadData()"
-            >
-              <BaseIcon name="syncAlt"/>            
-            </v-btn>
-            <v-btn 
-              flat 
-              icon 
-              color="indigo"
-            >
-              <v-icon>
-                print
-              </v-icon>
-            </v-btn>
-          </v-card-title>
-          <!-- Insert in Base-Table Component -->
-          <BaseTable
-            v-if="loading===false"
-            :headers="headers"
-            :items="items"
-            :pagination="pagination"
-            :basemodule="baseModule"
-            @edit="edit"
-            @remove="remove"
-          />
-        </v-card>
+            </base-helper-offset>
+          </base-card>
+        </base-helper-offset>
       </v-flex>
       <!-- Pop up Panels -->
       <BaseDialog 
@@ -159,10 +154,10 @@ export default {
       />
       <v-snackbar 
         v-if="loading===false" 
+        v-model="snackbar" 
         :left="true" 
         :timeout="timeout" 
-        :color="mode" 
-        v-model="snackbar"
+        :color="mode"
       >
         {{ notice }}
         <v-btn 
@@ -179,8 +174,7 @@ export default {
       fab
       bottom
       right
-      color="indigo"
-      dark
+      color="primary"
       fixed
       @click.stop="addDialog = !addDialog"
     >

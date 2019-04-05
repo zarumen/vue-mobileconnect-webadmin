@@ -15,6 +15,10 @@ export default {
       type: [Object, String],
       default: '',
     },
+    search: {
+      type: String,
+      default: '',
+    },
     basemodule: {
       type: String,
       default: '',
@@ -22,7 +26,6 @@ export default {
   },
   data () {
     return {
-      search: '',
       mutablePagination: this.pagination
     }
   },
@@ -35,7 +38,7 @@ export default {
      console.log(this.basemodule)
   },
   methods: {
-    renderData(item, header) {
+    renderData (item, header) {
       let val = ''
       if (header.value.includes('.')) {
         const vals = header.value.split('.')
@@ -55,7 +58,7 @@ export default {
     },
     nextPage (newValue) {
       return this.$store.dispatch(`${this.basemodule}/updatePage`, newValue)
-    },
+    }
   },
   
 }
@@ -69,7 +72,7 @@ export default {
       :search="search" 
       :pagination.sync="mutablePagination"
       sort-icon="keyboard_arrow_down"
-      class="elevation-1"
+      class="elevation-1 pa-2"
       hide-actions
     >
       <template
@@ -77,10 +80,10 @@ export default {
         slot-scope="{ header }"
       >
         <span
-          class="subheading font-weight-light text--darken-3"
+          class="subheading font-weight-light light-green--text text--darken-1"
           v-text="header.text"
         />
-      </template>    
+      </template>
       <template 
         slot="items" 
         slot-scope="props"
@@ -88,41 +91,52 @@ export default {
       >
         <td  
           v-for="(header, index) in headers"
-          v-if="header.value!==''"
           :key="index"
-          :class="[ index === 0? 'text-xs-left': 'text-xs-center', 'body-2']"
         >
-          <small v-if="header.text==='Widget'">
-            <a :href="'/campaignwidget/'+props.item.id"><v-icon>widgets</v-icon></a>                      
+          <small v-if="header.text!=='Widget'">
+            {{ renderData(props.item, header) }}
+          </small>
+          <small v-else>
+            <router-link 
+              :to="{ path: 'campaignwidget/'+props.item.id}"
+            >
+              <v-icon>widgets</v-icon>
+            </router-link>
+            <a :href="'/campaignwidget/'+props.item.id">
+              <v-icon>widgets</v-icon>
+            </a>                      
           </small>
           <small v-if="header.text==='Report'">
             <a :href="'/report/transaction/'+props.item.id"><v-icon>description</v-icon></a>                      
           </small>
           <small v-else>{{ renderData(props.item, header) }}</small>
         </td>
-        <td class="text-xs-right">
+        <td 
+          v-if="basemodule != 'campaignwidgets'"
+          class="text-xs-right"
+        >
           <v-btn 
-            v-if="basemodule != 'campaignwidgets'" 
-            color="indigo" 
-            flat
+            class="v-btn--simple"
+            color="secondary"
+            circle
             icon
             @click.native="$emit('edit', props.item)"
           >
             <v-icon>edit</v-icon>
           </v-btn>
           <v-btn
-            v-if="basemodule != 'campaignwidgets'" 
-            color="indigo" 
-            flat
-            icon 
+            class="v-btn--simple" 
+            color="danger" 
+            circle
+            icon
             @click.native="$emit('remove', props.item)"
           >
-            <v-icon>delete</v-icon>
+            <v-icon>close</v-icon>
           </v-btn>
         </td>
       </template>
       <template slot="no-data">
-        <span >
+        <span>
           <p class="pt-2 blue--text subheading">   
             <v-icon 
               medium 
@@ -130,7 +144,8 @@ export default {
             >
               info
             </v-icon>
-            Sorry, nothing to display here :(</p>
+            Sorry, nothing to display here :(
+          </p>
         </span>
       </template>
     </v-data-table>
@@ -144,7 +159,7 @@ export default {
         :length="mutablePagination.pages"
         next-icon="arrow_right"
         prev-icon="arrow_left"
-        color="green"
+        color="light-green"
         circle
         @input="nextPage"
       />
@@ -152,6 +167,7 @@ export default {
   </div>
 </template>
 
-<style lang="scss" module>
+<style lang="scss" module scoped>
 @import '@design';
+
 </style>

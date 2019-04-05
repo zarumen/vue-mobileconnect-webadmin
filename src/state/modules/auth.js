@@ -1,5 +1,6 @@
 import fireauthApp from '@utils/fireauth.config'
 import firestoreApp from '@utils/firestore.config'
+// import { set, toggle } from '@state/helpers'
 
 export const state = {
   currentUser: getSavedState('auth.currentUser'),
@@ -13,7 +14,7 @@ export const getters = {
   // check Admin role
   isAdmin: state => state.isAdmin,
   // get User Email
-  getEmail: state => state.currentUser.email,
+  // getEmail: state => state.currentUser.email,
 }
 
 export const mutations = {
@@ -40,85 +41,105 @@ export const actions = {
 
   // Validates the current user's token and refreshes it
   // with new data from the API.
-  validate({ state, commit }) {
+  async validate({ state, commit }) {
     // check localStorage have data ?
     if (!state.currentUser) return Promise.resolve(null)
 
-    if (!state.userInfo) return Promise.resolve(null)
-
     // check validate localStorage data valid
-    if (state.userInfo.email !== state.currentUser.email) {
+    if (!state.currentUser.email) {
       commit ('SET_CURRENT_USER', null)
       commit ('setUserInfo', null)
       commit ('setAdminRole', false)
+
+      removeState('auth.currentUser')
+      removeState('auth.userInfo')
+      removeState('auth.admin')
       return Promise.resolve(null)
     }
 
     // refresh all data in localStorage
-    return fireauthApp.onAuthStateChanged(firebaseUser => {
-      if (firebaseUser) {
-
-        // console.log(firebaseUser.email)
-
-        if (firebaseUser.email !== state.userInfo.email) {
-          let user = {
-            photoURL: firebaseUser.user.photoURL,
-            email: firebaseUser.user.email,
-            displayName: firebaseUser.user.displayName,
+    return new Promise((resolve, reject) => {
+      fireauthApp.onAuthStateChanged(firebaseUser => {
+        if (firebaseUser) {
+          // refresh new ID Token when token expired
+          if (firebaseUser.qa !== state.currentUser.idToken) {
+            let user = {
+              photoURL: firebaseUser.photoURL,
+              email: firebaseUser.email,
+              displayName: firebaseUser.displayName,
+              idToken: firebaseUser.qa
+            }
+            // refresh IdToken in currentUser
+            commit ('SET_CURRENT_USER', user)
           }
-          commit ('SET_CURRENT_USER', user)
+          // return when use dispatch.then((email) => { ... })
+          resolve(firebaseUser.email)
+        } else {
+          reject(Error('Auth state changed Error!'))
         }
-        
-        return firebaseUser
-      } else {
-        return Promise.resolve(null)
-      }
+      })
     })
+    
 
   },
 
-  logIn({ commit, dispatch, getters }, { username, password } = {}) {
+  async fetchUserInfo({ commit }, user) {
+    firestoreApp
+      .collection('users')
+      .where('email', '==', user.email)
+      .get()
+      .then(querySnapshot => {
+        let updatedUser = {}
+        querySnapshot.forEach(doc => {
+          updatedUser = doc.data()
+          updatedUser['id'] = doc.id
+        })
+        let userIsAdmin = updatedUser.isAdmin
+        commit('setAdminRole', userIsAdmin)
+        commit('setUserInfo', updatedUser)
+        return Promise.resolve(updatedUser)
+      })
+      .catch(error => {
+        console.log(error)
+        if (error.response.status === 401) {
+          commit('setUserInfo', null)
+          commit('SET_CURRENT_USER', null)
+          commit('setAdminRole', false)
+        }
+        return Promise.resolve(null)
+      })
+  },
+
+  async logIn({ commit, dispatch, getters }, { username, password } = {}) {
     // check loggedIn has true ?
     if (getters.loggedIn) return dispatch('validate')
 
-    return fireauthApp
-      .signInWithEmailAndPassword(username, password)
-      .then(firebaseUser => {
-        let user = {
-          photoURL: firebaseUser.user.photoURL,
-          email: firebaseUser.user.email,
-          displayName: firebaseUser.user.displayName,
-        }
-        // console.log(fireauthApp.currentUser)
+    let loginUser = null
+    let user = {}
 
-        firestoreApp
-          .collection('users')
-          .where('email', '==', user.email)
-          .get()
-          .then(querySnapshot => {
-            console.log(querySnapshot)
-            var updatedUser = {}
-            querySnapshot.forEach(doc => {
-              console.log(doc.data())
-              updatedUser = doc.data()
-              updatedUser['id'] = doc.id
-            })
-            let userIsAdmin = updatedUser.isAdmin
-            commit('setAdminRole', userIsAdmin)
-            commit('setUserInfo', updatedUser)
-            commit('SET_CURRENT_USER', user)
-            return updatedUser
-          })
-          .catch(error => {
-            console.log(error)
-            if (error.response.status === 401) {
-              commit('setUserInfo', null)
-              commit('SET_CURRENT_USER', null)
-              commit('setAdminRole', false)
-            }
-            return null
-          })
-      })
+    try {
+
+      loginUser = await fireauthApp.signInWithEmailAndPassword(username, password)
+
+      user = {
+        photoURL: loginUser.user.photoURL,
+        email: loginUser.user.email,
+        displayName: loginUser.user.displayName,
+        idToken: loginUser.user.qa
+      }
+
+    } catch (error) {console.log(error)}
+
+    if(loginUser) {
+      commit('SET_CURRENT_USER', user)
+      dispatch('fetchUserInfo', user)
+
+      console.log('set user and fetch userinfo!')
+      return Promise.resolve(user)
+    } else {
+      console.log(`can't login to firebase!`)
+      return Promise.resolve(null)
+    }
   },
 
   logOut({ commit }) {

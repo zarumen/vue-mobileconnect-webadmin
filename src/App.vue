@@ -1,5 +1,5 @@
 <script>
-import appConfig from '@src/app.config'
+const appConfig = require('@/app.config')
 
 export default {
   page: {
@@ -18,7 +18,9 @@ export default {
     Even when routes use the same component, treat them
     as distinct and create the component again.
     -->
-    <router-view :key="$route.fullPath"/>
+    <v-fade-transition mode="out-in">
+      <router-view :key="$route.fullPath" />
+    </v-fade-transition>
   </v-app>
 </template>
 

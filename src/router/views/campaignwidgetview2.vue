@@ -65,7 +65,21 @@ export default {
     }
   },
   created() {
-    this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);
+    this.$socket.emit('register', 'totals','production',this.$route.params.campaignId)
+
+    this.$options.sockets.transaction = (newdata) => {
+          // line chart widget
+          if(this.totals !== newdata && this.totals !== 0){
+            console.log(this.myChart.data.datasets[0].data)
+            this.smscount = this.smscount + (newdata - this.totals);
+            this.myChart.data.datasets[0].data[28] = this.smscount;
+            this.myChart.update()  
+          }
+
+          console.log("trans:" + newdata)
+          this.totals =  newdata 
+          this.socketMessage = formatCurrency((newdata - this.$route.params.offset)  * this.$route.params.multiplier)
+    }   
   },
   mounted() {
     let d = new Date();
@@ -96,53 +110,6 @@ export default {
         options: chartData.options,
       });
     },
-  },
-  socket: {
-    // Prefix for event names
-    // prefix: "/counter/",
-    
-    // If you set `namespace`, it will create a new socket connection to the namespace instead of `/`
-    // namespace: "/counter",
-
-    events: {
-
-        // Similar as this.$socket.on("changed", (msg) => { ... });
-        // If you set `prefix` to `/counter/`, the event name will be `/counter/changed`
-        //
-        reply(msg) {
-            console.log("Reply: " + msg);
-        },
-        transaction(newdata) {
-          // line chart widget
-          if(this.totals !== newdata && this.totals !== 0){
-            var d = new Date();
-            var stime = d.toLocaleTimeString("th",{hour: '2-digit', minute:'2-digit'})
-            this.ChartData.data.labels[this.minutes-1] = stime 
-            // console.log(this.ChartData.data.labels)
-            // console.log(this.myChart.data.datasets[0].data)
-            this.smscount = this.smscount + (newdata - this.totals);
-            this.myChart.data.datasets[0].data[this.minutes-1] = this.smscount;
-            this.myChart.update()  
-          }
-
-
-          console.log("trans:" + newdata)
-          this.totals =  newdata 
-          this.socketMessage = formatCurrency((newdata - this.$route.params.offset)  * this.$route.params.multiplier)
-        },
-        
-        connect() {
-            console.log("Websocket connected to " + this.$socket.nsp);
-        },
-
-        disconnect() {
-            console.log("Websocket disconnected from " + this.$socket.nsp);
-        },
-
-        error(err) {
-            console.error("Websocket error!", err);
-        }
-    }
   },
 }
 </script>
@@ -179,7 +146,7 @@ export default {
           column
         >
           <v-flex>
-            <p/>
+            <p />
             <h1 
               :style="{color: '#'+this.$route.params.color}"
               class="big" 
@@ -193,8 +160,8 @@ export default {
             xs-12
             style="width: 100%; padding-left: 20px; padding-bottom: 20px; padding-right: 20px;"        
           >
-            <div class="text-xs-center" >
-              <canvas id="widget-chart"/>
+            <div class="text-xs-center">
+              <canvas id="widget-chart" />
             </div>
           </v-flex>
         </v-layout>

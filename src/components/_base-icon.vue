@@ -1,11 +1,39 @@
 <script>
-import { FontAwesomeIcon}  from '@fortawesome/vue-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { library as fontAwesomeIconLibrary } from '@fortawesome/fontawesome-svg-core'
 import camelCase from 'lodash/camelCase'
+import kebabCase from 'lodash/kebabCase'
+
+fontAwesomeIconLibrary.add(
+  // https://fontawesome.com/icons
+  // Add new icons to this list as you need them
+  // free solid
+  require('@fortawesome/free-solid-svg-icons/faAddressCard').definition,
+  require('@fortawesome/free-solid-svg-icons/faChartLine').definition,
+  require('@fortawesome/free-solid-svg-icons/faChartPie').definition,
+  require('@fortawesome/free-solid-svg-icons/faSync').definition,
+  require('@fortawesome/free-solid-svg-icons/faSyncAlt').definition,
+  require('@fortawesome/free-solid-svg-icons/faSitemap').definition,
+  require('@fortawesome/free-solid-svg-icons/faStoreAlt').definition,
+  require('@fortawesome/free-solid-svg-icons/faUser').definition,
+  require('@fortawesome/free-solid-svg-icons/faUserFriends').definition,
+  require('@fortawesome/free-solid-svg-icons/faUserCircle').definition,
+  require('@fortawesome/free-solid-svg-icons/faSchool').definition,
+  require('@fortawesome/free-solid-svg-icons/faSignOutAlt').definition,
+  require('@fortawesome/free-solid-svg-icons/faCaretLeft').definition,
+  require('@fortawesome/free-solid-svg-icons/faCaretRight').definition,
+  require('@fortawesome/free-solid-svg-icons/faSortNumericDown').definition,
+  require('@fortawesome/free-solid-svg-icons/faDiceSix').definition,
+  // brands
+  require('@fortawesome/free-solid-svg-icons/faFileExcel').definition,
+  require('@fortawesome/free-solid-svg-icons/faFileCode').definition,
+)
 
 export default {
   components: {
     FontAwesomeIcon,
   },
+  inheritAttrs: false,
   props: {
     source: {
       type: String,
@@ -16,33 +44,18 @@ export default {
       required: true,
     },
   },
+  data () {
+    return {
+      iconPrefix: 'fas'
+    }
+  },
   computed: {
-    // https://fontawesome.com/icons
-    fontAwesomeIcon() {
-      return {
-        // Add new icons to this list as you need them
-        // free solid
-        addressCard: require('@fortawesome/fontawesome-free-solid/faAddressCard'),
-        chartLine: require('@fortawesome/fontawesome-free-solid/faChartLine'),
-        chartPie: require('@fortawesome/fontawesome-free-solid/faChartPie'),
-        sync: require('@fortawesome/fontawesome-free-solid/faSync'),
-        syncAlt: require('@fortawesome/fontawesome-free-solid/faSyncAlt'),
-        siteMap: require('@fortawesome/fontawesome-free-solid/faSitemap'),
-        storeAlt: require('@fortawesome/fontawesome-free-solid/faStoreAlt'),
-        fileAlt: require('@fortawesome/fontawesome-free-solid/faFileAlt'),
-        // pollAlt: require('@fortawesome/fontawesome-free-solid/faPollAlt'),
-        user: require('@fortawesome/fontawesome-free-solid/faUser'),
-        userFriends: require('@fortawesome/fontawesome-free-solid/faUserFriends'),
-        userCircle: require('@fortawesome/fontawesome-free-solid/faUserCircle'),
-        school: require('@fortawesome/fontawesome-free-solid/faSchool'),
-        signOutAlt: require('@fortawesome/fontawesome-free-solid/faSignOutAlt'),
-        // brands
-        facebook: require('@fortawesome/fontawesome-free-brands/faFacebookSquare'),
-      }[this.name]
+    nameChanged () {
+      return kebabCase(this.name)
     },
     // Gets a CSS module class, e.g. iconCustomLogo
-    customIconClass() {
-      return this.$style[camelCase('icon-custom-' + this.name)]
+    customIconClass () {
+      return this.$style[camelCase('mdi-' + this.name)]
     },
   },
 }
@@ -51,11 +64,14 @@ export default {
 <template>
   <FontAwesomeIcon
     v-if="source === 'font-awesome'"
-    :icon="fontAwesomeIcon"
+    :prefix="iconPrefix"
+    :icon="nameChanged"
     v-bind="$attrs"
   />
-  <span
+  <v-icon
     v-else-if="source === 'custom'"
-    :class="customIconClass"
-  />
+    v-bind="$attrs"
+  >
+    {{ name }}
+  </v-icon>
 </template>

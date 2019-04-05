@@ -7,7 +7,6 @@ import {
   commitPagination,
   getDefaultPagination,
 } from '@utils/pagination-util'
-import { Store } from "vuex";
 
 export const state = {
   // Data Table Initial Setup Variables
@@ -30,17 +29,14 @@ export const mutations = {
   setPagination (state, pagination) {
     state.pagination = pagination
   },
-    // update Page
-  updatePage(state, paginationPage) {
+  // update Page
+  setPage(state, paginationPage) {
     state.pagination.page = paginationPage
   },
-  updateSortBy(state, paginationSortBy) {
-    state.pagination.sortBy = paginationSortBy
-  },
-  updateDescending(state, paginationDesc) {
-    state.pagination.descending = paginationDesc
-  },
   // Mutate Value in Pagination
+  setItems (state, items) {
+    state.items = items
+  },
   setLoading(state, { loading }) {
     state.loading = loading
   },
@@ -53,12 +49,6 @@ export const mutations = {
   setMode (state, { mode }) {
     state.mode = mode
   },
-  setItems (state, items) {
-    state.items = items
-  },
-  setItem (state, item) {
-    state.item = item
-  }
 }
 
 export const actions = {
@@ -83,12 +73,15 @@ export const actions = {
         .add(campaignObject)
 
       let data = {}
-      data[keyword] = newCampaign.id
-
+       
+      keyword.forEach(key => {
+        data[key] = newCampaign.id
+      })
+      
       await firestoreApp
         .collection('campaignKeywordByShortcode')
         .doc(shortcode)
-        .set(data)
+        .set(data, { merge: true })
 
       newValidateCampaign = await firestoreApp
         .collection('campaignValidate')
@@ -148,25 +141,38 @@ export const actions = {
         return error
       })
   },
-  getCampaign({ commit, dispatch },campaignId) {
+  getCampaignsByOrg({ commit }, { auth, orgId } = {}) {
+
+    console.log(auth, orgId)
+
+    if(!orgId) return Promise.resolve(null)
+
+    let authQuery = `organization${auth}`
+
+    console.log(authQuery)
     
     commit('setLoading', { loading: true })
+    commit('setItems', null)
     
     return firestoreApp
-      .collection('campaigns').doc(campaignId)
+      .collection('campaigns')
+      .where(authQuery, "==", orgId)
       .get()
-      .then(function(doc) {
-        let campaign = {}
-        if (doc.exists) {
-            
-            campaign = doc.data()
-        } else {
-            // doc.data() will be undefined in this case
-            console.log("No such document!");
-        }
-        console.log("Document data:", campaign)
-        commit('setItem', campaign)
-        return campaign
+      .then(querySnapshot => {
+
+        let campaignList = []
+
+        querySnapshot.forEach(doc => {
+            let data = doc.data()
+            data['id'] = doc.id
+            campaignList.push(data)
+        })
+
+        commitPagination(commit, campaignList)
+        commit('setLoading', { loading: false })
+        sendSuccessNotice(commit, 'Load Campaigns Finished!')
+        closeNotice(commit, 2000)
+        return campaignList
       })
       .catch(error => {
         console.log(error)
@@ -175,6 +181,13 @@ export const actions = {
         closeNotice(commit, 2000)
         return error
       })
+  },
+
+  // ===
+  // UPDATE Zone
+  // ===
+  updatePage({ commit }, { pageNumber }) {
+    commit('setPage', pageNumber)
   },
   // ===
   // DELETE Zone
@@ -203,4 +216,30 @@ export const actions = {
   closeSnackBar ({ commit }, timeout ) {
     closeNotice(commit, timeout)
   },
+  clearItem ({ commit }) {
+    commit('setItems', null)
+  }
+}
+
+export function getExportJobsByCampaign(campaignId) {
+  
+  return firestoreApp
+    .collection('exportJobs').doc(campaignId).collection('jobs')
+    .get()
+    .then(querySnapshot => {
+
+      let exportJobs = []
+
+      querySnapshot.forEach(doc => {
+        let data = {}
+        data = doc.data()
+        data['id'] = doc.id
+        exportJobs.push(data)
+      })
+      return exportJobs
+    })
+    .catch(error => {
+      console.log(error)
+      return error
+    })
 }

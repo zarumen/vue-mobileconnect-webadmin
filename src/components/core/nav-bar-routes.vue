@@ -1,4 +1,5 @@
 <script>
+import upperCase from 'lodash/upperCase'
 // Allows stubbing BaseLink in unit tests
 const VBtn = 'v-btn'
 
@@ -16,14 +17,14 @@ export default {
   // Render functions are an alternative to templates
   render(h, { props, $style = {} }) {
     function getRouteTitle(route) {
-      return typeof route.title === 'function' ? route.title() : route.title
+      return typeof route.title === 'function' ? route.title() : upperCase(route.title)
     }
 
     // Functional components are the only components allowed
     // to return an array of children, rather than a single
     // root node.
     return props.routes.map(route => (
-      <VBtn flat key={route.name} to={route}>
+      <VBtn class="v-btn--simple" round color="default" key={route.name} to={route}>
         {getRouteTitle(route)}
       </VBtn>
     ))

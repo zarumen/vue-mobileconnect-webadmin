@@ -44,15 +44,17 @@ export default {
       <v-card-text>{{ dialogText }}</v-card-text>
       <v-card-actions>
         <v-btn 
-          color="red"
-          flat
+          class="v-btn--simple"
+          color="danger"
+          round
           @click.native="$emit('onConfirm')"
         >
           Confirm
         </v-btn>
         <v-btn 
-          color="error"
-          flat 
+          class="v-btn--simple"
+          color="default"
+          round 
           @click.native="$emit('onCancel')"
         >
           Cancel

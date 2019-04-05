@@ -1,8 +1,8 @@
 <script>
 import Layout from '@layouts/main'
-import Bar from '@utils/chart/Bar'
-import Doughnut from '@utils/chart/Doughnut'
-import LineChart from '@utils/chart/LineChart'
+// import Bar from '@utils/chart/Bar'
+// import Doughnut from '@utils/chart/Doughnut'
+// import LineChart from '@utils/chart/LineChart'
 
 export default {
   page: {
@@ -11,282 +11,611 @@ export default {
   },
   components: { 
     Layout,
-    Bar,
-    Doughnut,
-    LineChart
   },
+  data () {
+    return {
+      test: 'test in data',
+      dailySalesChart: {
+        info: {
+          labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+          series: [
+            [12, 17, 7, 17, 23, 18, 38]
+          ]
+        },
+        options: {
+          lineSmooth: this.$chartist.Interpolation.cardinal({
+            tension: 0
+          }),
+          low: 0,
+          high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+          chartPadding: {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0
+          }
+        }
+      },
+      dataCompletedTasksChart: {
+        data: {
+          labels: ['12am', '3pm', '6pm', '9pm', '12pm', '3am', '6am', '9am'],
+          series: [
+            [230, 750, 450, 300, 280, 240, 200, 190]
+          ]
+        },
+        options: {
+          lineSmooth: this.$chartist.Interpolation.cardinal({
+            tension: 0
+          }),
+          low: 0,
+          high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+          chartPadding: {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0
+          }
+        }
+      },
+      emailsSubscriptionChart: {
+        data: {
+          labels: ['Ja', 'Fe', 'Ma', 'Ap', 'Mai', 'Ju', 'Jul', 'Au', 'Se', 'Oc', 'No', 'De'],
+          series: [
+            [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]
+
+          ]
+        },
+        options: {
+          axisX: {
+            showGrid: false
+          },
+          low: 0,
+          high: 1000,
+          chartPadding: {
+            top: 0,
+            right: 5,
+            bottom: 0,
+            left: 0
+          }
+        },
+        responsiveOptions: [
+          ['screen and (max-width: 640px)', {
+            seriesBarDistance: 5,
+            axisX: {
+              labelInterpolationFnc: function (value) {
+                return value[0]
+              }
+            }
+          }]
+        ]
+      },
+      headers: [
+        {
+          sortable: false,
+          text: 'ID',
+          value: 'id'
+        },
+        {
+          sortable: false,
+          text: 'Name',
+          value: 'name'
+        },
+        {
+          sortable: false,
+          text: 'Salary',
+          value: 'salary',
+          align: 'right'
+        },
+        {
+          sortable: false,
+          text: 'Country',
+          value: 'country',
+          align: 'right'
+        },
+        {
+          sortable: false,
+          text: 'City',
+          value: 'city',
+          align: 'right'
+        }
+      ],
+      items: [
+        {
+          name: 'Dakota Rice',
+          country: 'Niger',
+          city: 'Oud-Tunrhout',
+          salary: '$35,738'
+        },
+        {
+          name: 'Minerva Hooper',
+          country: 'Curaçao',
+          city: 'Sinaai-Waas',
+          salary: '$23,738'
+        }, {
+          name: 'Sage Rodriguez',
+          country: 'Netherlands',
+          city: 'Overland Park',
+          salary: '$56,142'
+        }, {
+          name: 'Philip Chanley',
+          country: 'Korea, South',
+          city: 'Gloucester',
+          salary: '$38,735'
+        }, {
+          name: 'Doris Greene',
+          country: 'Malawi',
+          city: 'Feldkirchen in Kārnten',
+          salary: '$63,542'
+        }
+      ],
+      tabs: 0,
+      list: {
+        0: false,
+        1: false,
+        2: false
+      }
+    }
+  },
+  methods: {
+    complete (index) {
+      this.list[index] = !this.list[index]
+    }
+  }
 }
 </script>
 
 <template>
   <Layout>
-    <v-container 
-      id="dashboard" 
-      fluid 
-      grid-list-lg 
-      class="mx-0 pa-0"
+    <v-container
+      fill-height
+      fluid
+      grid-list-xl
     >
-      <v-layout 
-        row 
-        wrap
-      >
+      <v-layout wrap>
         <v-flex 
-          md3 
-          sm6 
+          sm6
           xs12
+          md6
+          lg3
         >
-          <v-card 
-            class="cyan darken-3" 
-            light
+          <base-stats-card
+            color="green"
+            icon="store"
+            title="SMS Transactions"
+            value="84,568,445"
+            sub-icon="alarm"
+            sub-text="Last 24 Hours"
+          />
+        </v-flex>
+        <v-flex 
+          sm6
+          xs12
+          md6
+          lg3
+        >
+          <base-stats-card
+            color="orange"
+            icon="store"
+            title="SMS Registration"
+            value="78,049"
+            sub-icon="alarm"
+            sub-text="Last 24 Hours"
+          />
+        </v-flex>
+        <v-flex 
+          sm6
+          xs12
+          md6
+          lg3
+        >
+          <base-stats-card
+            color="blue"
+            icon="store"
+            title="Campaigns Launched"
+            value="945"
+            sub-icon="alarm"
+            sub-text="Last 24 Hours"
+          />
+        </v-flex>
+        <v-flex 
+          sm6
+          xs12
+          md6
+          lg3
+        >
+          <base-stats-card
+            color="purple"
+            icon="money"
+            title="Revenue"
+            value="$34,245"
+            sub-icon="alarm"
+            sub-text="Last 24 Hours"
+          />
+        </v-flex>
+        <v-flex
+          md12
+          sm12
+          lg4
+        >
+          <base-chart-card
+            :data="dailySalesChart.info"
+            :options="dailySalesChart.options"
+            color="info"
+            type="Line"
           >
-            <v-container 
-              fluid 
-              grid-list-sm 
-              class="cyan darken-3" 
-              light
-            >
-              <v-layout 
-                class="mt-2 mb-0" 
-                row 
-                wrap
+            <h4 class="title font-weight-light">
+              Daily Sales
+            </h4>
+            <p class="category d-inline-flex font-weight-light">
+              <v-icon
+                color="green"
+                small
               >
-                <v-flex xs2>
-                  <v-icon 
-                    class="mx-1" 
-                    x-large 
-                    light
-                  >
-                    card_membership
-                  </v-icon>
-                </v-flex>
-                <v-flex 
-                  md6 
-                  sm10
-                >
-                  <div class="mx-1">
-                    <div class="subheading">SMS Transactions</div>
-                    <strong>84,568,445</strong>
-                  </div>
-                </v-flex>
-                <v-flex 
-                  class="text-xs-right" 
-                  sm12 
-                  md4
-                >
-                  <v-btn 
-                    fab 
-                    dark 
-                    class="white--text darken-1" 
-                    flat
-                  >
-                    <v-icon>
-                      more
-                    </v-icon>
-                  </v-btn>
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card>
-        </v-flex>
-        <v-flex 
-          md3 
-          sm6 
-          xs12
-        >
-          <v-card 
-            class="deep-orange  lighten-3" 
-            light
-          >
-            <v-container 
-              fluid 
-              grid-list-sm
-            >
-              <v-layout 
-                class="mt-2 mb-0" 
-                row 
-                wrap
+                arrow_upward
+              </v-icon>
+              <span class="green--text">
+                55%
+              </span>&nbsp;
+              increase in today's sales
+            </p>
+
+            <template slot="actions">
+              <v-icon
+                class="mr-2"
+                small
               >
-                <v-flex xs2>
-                  <v-icon 
-                    class="mx-4" 
-                    x-large 
-                    light
-                  >
-                    card_membership
-                  </v-icon>
-                </v-flex>
-                <v-flex 
-                  md6 
-                  sm10
-                >
-                  <div class="mx-4">
-                    <div class="subheadingfont">SMS Registrations</div>
-                    <strong>78,049</strong>
-                  </div>
-                </v-flex>
-                <v-flex 
-                  class="text-xs-right" 
-                  sm12 
-                  md4
-                >
-                  <v-btn 
-                    fab 
-                    dark 
-                    class="white--text darken-1" 
-                    flat
-                  >
-                    <v-icon>
-                      more
-                    </v-icon>
-                  </v-btn>
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card>
+                access_time
+              </v-icon>
+              <span class="caption grey--text font-weight-light">
+                updated 4 minutes ago
+              </span>
+            </template>
+          </base-chart-card>
         </v-flex>
-        <v-flex 
-          md3 
-          sm6 
-          xs12
+        <v-flex
+          md12
+          sm12
+          lg4
         >
-          <v-card 
-            class="blue-grey darken-1" 
-            light
+          <base-chart-card
+            :data="emailsSubscriptionChart.data"
+            :options="emailsSubscriptionChart.options"
+            :responsive-options="emailsSubscriptionChart.responsiveOptions"
+            color="red"
+            type="Bar"
           >
-            <v-container 
-              fluid 
-              grid-list-sm
-            >
-              <v-layout 
-                class="mt-2 mb-0" 
-                row 
-                wrap>
-                <v-flex xs2>
-                  <v-icon 
-                    class="mx-4" 
-                    x-large 
-                    light
-                  >
-                    card_membership
-                  </v-icon>
-                </v-flex>
-                <v-flex 
-                  md6 
-                  sm10
-                >
-                  <div class="mx-4">
-                    <div class="subheadingfont">Campaigns Launched</div>
-                    <strong>78</strong>
-                  </div>
-                </v-flex>
-                <v-flex 
-                  class="text-xs-right" 
-                  sm12 
-                  md4
-                >
-                  <v-btn 
-                    fab 
-                    dark 
-                    class="white--text darken-1" 
-                    flat
-                  >
-                    <v-icon>
-                      more
-                    </v-icon>
-                  </v-btn>
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card>
-        </v-flex>
-        <v-flex 
-          md3 
-          sm6 
-          xs12
-        >
-          <v-card 
-            class="pink lighten-4" 
-            light
-          >
-            <v-container 
-              fluid 
-              grid-list-sm
-            >
-              <v-layout 
-                class="mt-2 mb-0" 
-                row 
-                wrap
+            <h4 class="title font-weight-light">
+              Email Subscription
+            </h4>
+            <p class="category d-inline-flex font-weight-light">
+              Last Campaign Performance
+            </p>
+
+            <template slot="actions">
+              <v-icon
+                class="mr-2"
+                small
               >
-                <v-flex xs2>
-                  <v-icon 
-                    class="mx-4" 
-                    x-large 
-                    light
-                  >
-                    card_membership
-                  </v-icon>
-                </v-flex>
-                <v-flex 
-                  md6 
-                  sm10
-                >
-                  <div class="mx-4">
-                    <div class="subheadingfont">Bounce Rate</div>
-                    <strong>53%</strong>
-                  </div>
-                </v-flex>
-                <v-flex 
-                  class="text-xs-right" 
-                  sm12 
-                  md4
-                >
-                  <v-btn 
-                    fab 
-                    dark 
-                    class="white--text darken-1" 
-                    flat
-                  >
-                    <v-icon>
-                      more
-                    </v-icon>
-                  </v-btn>
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card>
+                access_time
+              </v-icon>
+              <span class="caption grey--text font-weight-light">
+                updated 10 minutes ago
+              </span>
+            </template>
+          </base-chart-card>
         </v-flex>
-      </v-layout>
-      <v-layout 
-        class="pt-1" 
-        row 
-        wrap
-      >
-        <v-flex 
-          md4 
-          xs12
+        <v-flex
+          md12
+          sm12
+          lg4
         >
-          <v-card light>
-            <doughnut/>
-          </v-card>
-        </v-flex>
-        <v-flex 
-          md4 
-          xs12
-        >
-          <v-card light>
-            <bar/>
-          </v-card>
-        </v-flex>
-        <v-flex 
-          md4 
-          xs12
-        >
-          <v-card 
-            light 
-            class="Chart"
+          <base-chart-card
+            :data="dataCompletedTasksChart.data"
+            :options="dataCompletedTasksChart.options"
+            color="green"
+            type="Line"
           >
-            <line-chart/>
-          </v-card>
+            <h3 class="title font-weight-light">
+              Completed Tasks
+            </h3>
+            <p class="category d-inline-flex font-weight-light">
+              Last Last Campaign Performance
+            </p>
+
+            <template slot="actions">
+              <v-icon
+                class="mr-2"
+                small
+              >
+                access_time
+              </v-icon>
+              <span class="caption grey--text font-weight-light">
+                campaign sent 26 minutes ago
+              </span>
+            </template>
+          </base-chart-card>
+        </v-flex>
+        <v-flex
+          md12
+          lg6
+        >
+          <base-card
+            color="orange"
+            title="Employee Stats"
+            text="New employees on 15th September, 2016"
+          >
+            <v-data-table
+              :headers="headers"
+              :items="items"
+              hide-actions
+            >
+              <template
+                slot="headerCell"
+                slot-scope="{ header }"
+              >
+                <span
+                  class="font-weight-light text-warning text--darken-3"
+                  v-text="header.text"
+                />
+              </template>
+              <template
+                slot="items"
+                slot-scope="{ index, item }"
+              >
+                <td>{{ index + 1 }}</td>
+                <td>{{ item.name }}</td>
+                <td class="text-xs-right">
+                  {{ item.salary }}
+                </td>
+                <td class="text-xs-right">
+                  {{ item.country }}
+                </td>
+                <td class="text-xs-right">
+                  {{ item.city }}
+                </td>
+              </template>
+            </v-data-table>
+          </base-card>
+        </v-flex>
+        <v-flex
+          md12
+          lg6
+        >
+          <base-card
+            class="card-tabs"
+            color="deep-purple darken-3"
+          >
+            <v-flex
+              slot="header"
+            >
+              <v-tabs
+                v-model="tabs"
+                color="transparent"
+                slider-color="light-green"
+              >
+                <span
+                  class="subheading font-weight-light mr-3"
+                  style="align-self: center"
+                >
+                  Shortcode:
+                </span>
+                <v-tab class="mr-3">
+                  <v-icon class="mr-2">
+                    list
+                  </v-icon>
+                  List
+                </v-tab>
+                <v-tab class="mr-3">
+                  <v-icon class="mr-2">
+                    whatshot
+                  </v-icon>
+                  Keyword
+                </v-tab>
+                <v-tab>
+                  <v-icon class="mr-2">
+                    star
+                  </v-icon>
+                  Reserved
+                </v-tab>
+              </v-tabs>
+            </v-flex>
+            <v-card-title>
+              <span class="title">
+                ShortCode Totals 
+                <v-text-field
+                  append-icon="search"
+                  label="Quick Search"
+                  class="purple-input"
+                  single-line
+                  hide-details
+                />
+              </span>
+              <v-spacer />
+              <v-btn 
+                v-if="tabs === 0"
+                class="v-btn--simple"
+                color="light-green darken-2"
+                round
+              >
+                +SHORTCODE            
+              </v-btn>
+              <v-btn 
+                v-if="tabs === 1"
+                class="v-btn--simple"
+                color="light-green darken-2"
+                round
+              >
+                +KEYWORD            
+              </v-btn>
+              <v-btn 
+                v-if="tabs === 2"
+                class="v-btn--simple"
+                color="light-green darken-2"
+                round
+              >
+                +KEYWORD RESERVED            
+              </v-btn>
+            </v-card-title>
+
+            <v-tabs-items v-model="tabs">
+              <v-tab-item :value="0">
+                <v-list three-line>
+                  <v-list-tile @click="complete(0)">
+                    <v-list-tile-action>
+                      <v-checkbox
+                        :value="list[0]"
+                        color="green"
+                      />
+                    </v-list-tile-action>
+                    <v-list-tile-title>
+                      Sign contract for "What are conference organized afraid of?"
+                    </v-list-tile-title>
+                    <div class="d-flex">
+                      <v-tooltip
+                        top
+                        content-class="top"
+                      >
+                        <v-btn
+                          slot="activator"
+                          class="v-btn--simple"
+                          color="secondary"
+                          icon
+                        >
+                          <v-icon>create</v-icon>
+                        </v-btn>
+                        <span>Edit</span>
+                      </v-tooltip>
+                      <v-tooltip
+                        top
+                        content-class="top"
+                      >
+                        <v-btn
+                          slot="activator"
+                          class="v-btn--simple"
+                          color="danger"
+                          icon
+                        >
+                          <v-icon color="error">
+                            close
+                          </v-icon>
+                        </v-btn>
+                        <span>Close</span>
+                      </v-tooltip>
+                    </div>
+                  </v-list-tile>
+                  <v-divider />
+                  <v-list-tile @click="complete(1)">
+                    <v-list-tile-action>
+                      <v-checkbox
+                        :value="list[1]"
+                        color="green"
+                      />
+                    </v-list-tile-action>
+                    <v-list-tile-title>
+                      Lines From Great Russian Literature? Or E-mails From My Boss?
+                    </v-list-tile-title>
+                    <div class="d-flex">
+                      <v-tooltip
+                        top
+                        content-class="top"
+                      >
+                        <v-btn
+                          slot="activator"
+                          class="v-btn--simple"
+                          color="secondary"
+                          icon
+                        >
+                          <v-icon>create</v-icon>
+                        </v-btn>
+                        <span>Edit</span>
+                      </v-tooltip>
+
+                      <v-tooltip
+                        top
+                        content-class="top"
+                      >
+                        <v-btn
+                          slot="activator"
+                          class="v-btn--simple"
+                          color="danger"
+                          icon
+                        >
+                          <v-icon color="error">
+                            close
+                          </v-icon>
+                        </v-btn>
+                        <span>Close</span>
+                      </v-tooltip>
+                    </div>
+                  </v-list-tile>
+                  <v-divider />
+                  <v-list-tile @click="complete(2)">
+                    <v-list-tile-action>
+                      <v-checkbox
+                        :value="list[2]"
+                        color="green"
+                      />
+                    </v-list-tile-action>
+                    <v-list-tile-title>
+                      Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
+                    </v-list-tile-title>
+                    <div class="d-flex">
+                      <v-tooltip
+                        top
+                        content-class="top"
+                      >
+                        <v-btn
+                          slot="activator"
+                          class="v-btn--simple"
+                          color="secondary"
+                          icon
+                        >
+                          <v-icon>create</v-icon>
+                        </v-btn>
+                        <span>Edit</span>
+                      </v-tooltip>
+                      <v-tooltip
+                        top
+                        content-class="top"
+                      >
+                        <v-btn
+                          slot="activator"
+                          class="v-btn--simple"
+                          color="danger"
+                          icon
+                        >
+                          <v-icon color="error">
+                            close
+                          </v-icon>
+                        </v-btn>
+                        <span>Close</span>
+                      </v-tooltip>
+                    </div>
+                  </v-list-tile>
+                </v-list>
+              </v-tab-item>
+              <v-tab-item :value="1">
+                <v-card>
+                  <v-card-title>
+                    2
+                  </v-card-title>
+                </v-card>
+                <v-card>
+                  <v-card-title>
+                    3
+                  </v-card-title>
+                </v-card>
+                <v-card>
+                  <v-card-title>
+                    4
+                  </v-card-title>
+                </v-card>
+              </v-tab-item>
+              <v-tab-item :value="2">
+                3
+              </v-tab-item>
+            </v-tabs-items>
+          </base-card>
         </v-flex>
       </v-layout>
     </v-container>

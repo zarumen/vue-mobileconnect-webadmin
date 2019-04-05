@@ -1,8 +1,7 @@
 <script>
 import Layout from '@layouts/main'
-import FormAddCampaign from '@components/form-add-campaign'
-import { mapGetters, mapActions } from 'vuex'
-import { campaignComputed } from '@state/helpers'
+import FormAddCampaign from '@components/form/form-add-campaign'
+import { campaignComputed, campaignMethods } from '@state/helpers'
 
 export default {
   page: {
@@ -24,13 +23,12 @@ export default {
           value: 'campaignCode'
         },
         { text: 'Brand', value: 'organizationLevel3Name' },
-        { text: 'Header', value: 'campaignHeader' },
+        { text: 'Header', value: 'campaignName' },
         { text: 'Keyword', value: 'keyword' },
         { text: 'Shortcode', value: 'shortcode' },
         { text: 'Start Date', value: 'campaignDateStart' },
         { text: 'End Date', value: 'campaignDateEnd' },
-        { text: 'Reward', value: 'campaignAvailable' },
-        { text: 'Status', value: 'campaignActive' },
+        { text: 'Status', value: 'campaignState' },
       ],
       campaignId: '',
       left: true,
@@ -39,14 +37,14 @@ export default {
   },
   computed: {
     ...campaignComputed,
-    ...mapGetters('organizations', [
-      'hadList',
-    ]),
   },
   watch: {
 
   },
   created () {
+
+    if(!this.hadShortcodesList)
+      this.getAllShortcodes()
 
     if(!this.hadList)
       this.getOrganizationsList()
@@ -55,14 +53,7 @@ export default {
       this.getAllCampaigns()
   },
   methods: {
-    ...mapActions('campaigns', [
-      'getAllCampaigns',
-      'deleteCampaign',
-      'closeSnackBar',
-    ]),
-    ...mapActions('organizations', [
-      'getOrganizationsList'
-    ]),
+    ...campaignMethods,
     print() {
       window.print()
     },
@@ -109,14 +100,15 @@ export default {
                 hide-details
               />
             </span>
-            <v-spacer/>
+            <v-spacer />
             <v-btn 
-              flat 
-              icon 
-              color="green"
+              class="v-btn--simple"
+              color="primary"
+              circle
+              icon
               @click.native="reloadData()"
             >
-              <BaseIcon name="syncAlt"/>            
+              <BaseIcon name="syncAlt" />            
             </v-btn>
             <v-btn 
               flat 
@@ -150,10 +142,10 @@ export default {
       />
       <v-snackbar 
         v-if="loading===false" 
+        v-model="snackbar" 
         :left="true" 
         :timeout="timeout" 
-        :color="mode" 
-        v-model="snackbar"
+        :color="mode"
       >
         {{ notice }}
         <v-btn 
@@ -170,8 +162,7 @@ export default {
       fab
       bottom
       right
-      color="indigo"
-      dark
+      color="primary"
       fixed
       @click.stop="addCampaignDialog = !addCampaignDialog"
     >

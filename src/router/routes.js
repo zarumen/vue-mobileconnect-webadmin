@@ -10,18 +10,19 @@ export default [
     path: '/login',
     name: 'login',
     component: () => lazyLoadView(import('@views/login')),
-    beforeEnter(routeTo, routeFrom, next) {
-      // If the user is already logged in
-      if (store.getters['auth/loggedIn']) {
-        // Redirect to the home page instead
-        next({
-          name: 'home',
-        })
-      } else {
-        // Continue to the login page
-        next()
+    meta: {
+      beforeResolve(routeTo, routeFrom, next) {
+        console.log('render login page!')
+        // If the user is already logged in
+        if (store.getters['auth/loggedIn']) {
+          // Redirect to the home page instead
+          next({ name: 'home' })
+        } else {
+          // Continue to the login page
+          next()
+        }
       }
-    },
+    }
   },
   {
     path: '/profile',
@@ -29,9 +30,22 @@ export default [
     component: () => lazyLoadView(import('@views/profile')),
     meta: {
       authRequired: true,
+      beforeEach: (routeTo, routeFrom, next) => {
+        console.log('Log: redirect from '+JSON.stringify(routeFrom))
+        // If the user is already logged in
+        if (store.getters['auth/loggedIn']) {
+          // Redirect to the home page instead
+          console.log('go to profile page')
+          next()
+        } else {
+          console.log('go back to login')
+          // Continue to the login page
+          next({ name: 'login' })
+        }
+      }
     },
-    props: route => ({
-      user: store.state.auth.userInfo,
+    props: (route) => ({
+      user: store.state.auth.userInfo || {}
     }),
   },
   {
@@ -40,33 +54,33 @@ export default [
     component: () => lazyLoadView(import('@views/profile')),
     meta: {
       authRequired: true,
-    },
-    beforeEnter(routeTo, routeFrom, next) {
-      store
-        // Try to fetch the user's information by their username(email)
-        .dispatch('users/fetchUser', {
-          username: routeTo.params.email,
-        })
-        .then(user => {
-          // Add the user to the route params, so that it can
-          // be provided as a prop for the view component below.
-          routeTo.params.user = user
-          // Continue to the route.
-          next()
-        })
-        .catch(() => {
-          // If a user with the provided username could not be
-          // found, redirect to the 404 page.
-          next({
-            name: '404',
-            params: {
-              resource: 'User',
-            },
+      beforeResolve: (routeTo, routeFrom, next) => {
+        store
+          // Try to fetch the user's information by their username(email)
+          .dispatch('users/fetchUser', {
+            username: routeTo.params.email
           })
-        })
+          .then(user => {
+            // Add the user to the route params, so that it can
+            // be provided as a prop for the view component below.
+            routeTo.params.user = user
+            // Continue to the route.
+            next()
+          })
+          .catch(() => {
+            // If a user with the provided username could not be
+            // found, redirect to the 404 page.
+            next({
+              name: '404',
+              params: {
+                resource: 'User',
+              },
+            })
+          })
+      },
     },
     // Set the user from the route params, once it's set in the
-    // beforeEnter route guard.
+    // beforeResolve route guard.
     props: route => ({
       user: route.params.user,
     }),
@@ -78,7 +92,8 @@ export default [
     meta: {
       authRequired: true,
     },
-    beforeEnter: (routeTo, routeFrom, next) => {
+    beforeResolve: (routeTo, routeFrom, next) => {
+       
        // TODO check admin role to access
        if (store.getters['auth/isAdmin']) {
          next()
@@ -121,6 +136,18 @@ export default [
     // TODO check admin role to access
   },
   {
+    path: '/reportViewer',
+    name: 'reportViewer',
+    component: () => lazyLoadView(import('@views/report-viewer')),
+    meta: {
+      authRequired: true,
+    },
+    props: (route) => ({
+      user: store.state.auth.userInfo || {}
+    }),
+    // TODO check admin role to access
+  },
+  {
     path: '/campaignwidgets',
     name: 'campaignwidgets',
     component: () => lazyLoadView(import('@views/campaignwidgets')),
@@ -149,6 +176,14 @@ export default [
     path: '/campaignwidgetview2/:campaignId/:offset/:caption/:unit/:multiplier/:color',
     name: 'campaignswidgetview2',
     component: () => lazyLoadView(import('@views/campaignwidgetview2')),
+    meta: {
+      authRequired: false,
+    }
+  },
+  {
+    path: '/campaignwidgetview3/:campaignId/:offset/:caption/:unit/:multiplier/:color',
+    name: 'campaignswidgetview3',
+    component: () => lazyLoadView(import('@views/campaignwidgetview3')),
     meta: {
       authRequired: false,
     }
@@ -185,22 +220,22 @@ export default [
     name: 'logout',
     meta: {
       authRequired: true,
-    },
-    beforeEnter(routeTo, routeFrom, next) {
-      store.dispatch('auth/logOut')
-      const authRequiredOnPreviousRoute = routeFrom.matched.some(
-        route => route.meta.authRequired
-      )
-      // Navigate back to previous page, or home as a fallback
-      next(
-        authRequiredOnPreviousRoute
-          ? {
-              name: 'home',
-            }
-          : {
-              ...routeFrom,
-            }
-      )
+      beforeResolve(routeTo, routeFrom, next) {
+        store.dispatch('auth/logOut')
+        const authRequiredOnPreviousRoute = routeFrom.matched.some(
+          (route) => route.meta.authRequired
+        )
+        // Navigate back to previous page, or home as a fallback
+        next(
+          authRequiredOnPreviousRoute
+            ? {
+                name: 'home',
+              }
+            : {
+                ...routeFrom,
+              }
+        )
+      },
     },
   },
   {
@@ -248,7 +283,7 @@ function lazyLoadView(AsyncView) {
     error: require('@views/timeout').default,
     // Delay before showing the loading component.
     // Default: 200 (milliseconds).
-    delay: 600,
+    delay: 400,
     // Time before giving up trying to load the component.
     // Default: Infinity (milliseconds).
     timeout: 10000,

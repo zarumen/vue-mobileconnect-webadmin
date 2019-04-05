@@ -35,14 +35,8 @@ export const mutations = {
     state.pagination = pagination
   },
   // update Page
-  updatePage(state, paginationPage) {
+  setPage(state, paginationPage) {
     state.pagination.page = paginationPage
-  },
-  updateSortBy(state, paginationSortBy) {
-    state.pagination.sortBy = paginationSortBy
-  },
-  updateDescending(state, paginationDesc) {
-    state.pagination.descending = paginationDesc
   },
   // Mutate Value in Pagination
   setLoading(state, { loading }) {
@@ -72,7 +66,6 @@ export const actions = {
     console.log(`Create User ${newUser.firstName}`)
 
     let user = null
-    let updatedUser = null
     let password = generatePass()
 
     try {
@@ -81,17 +74,18 @@ export const actions = {
           newUser.email, 
           password
         )
-      
+
       await fireauthApp.sendPasswordResetEmail(newUser.email)
 
-      updatedUser = await firestoreApp
+      await firestoreApp
         .collection('users')
-        .add(newUser)
-       
+        .doc(user.user.uid)
+        .set(newUser)
+
     } catch (error) { console.log(error) }
 
 
-    if (user && updatedUser) {
+    if (user) {
 
       sendSuccessNotice(commit, 'New User has been added.')
       closeNotice(commit, 3000)
@@ -168,6 +162,12 @@ export const actions = {
         closeNotice(commit, 2000)
         return error
       })
+  },
+  // ===
+  // UPDATE Zone
+  // ===
+  updatePage({ commit }, { pageNumber }) {
+    commit('setPage', pageNumber)
   },
   // ===
   // DELETE Zone

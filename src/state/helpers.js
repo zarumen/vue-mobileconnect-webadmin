@@ -31,6 +31,7 @@ export const orgComputed = {
   ])
 }
 
+
 export const orgMethods = mapActions('organizations', ['getOrganizationsList', 'addCompanyToOrganization'])
 
 export const userComputed = {
@@ -69,7 +70,82 @@ export const campaignComputed = {
     snackbar: state => state.snackbar,
     notice: state => state.notice
   }),
+  ...mapGetters('organizations', [
+    'hadList',
+  ]),
   ...mapGetters('campaigns', [
     'hadCampaignList',
   ])
 }
+
+export const campaignMethods = {
+  ...mapActions('campaigns', [
+    'getAllCampaigns',
+    'deleteCampaign',
+    'closeSnackBar',
+  ]),
+  ...mapActions('organizations', [
+    'getOrganizationsList'
+  ]),
+  ...mapActions('shortcodes', [
+  'getAllShortcodes',
+  ]),
+}
+
+export const operatorComputed = {
+  ...mapState('shortcodes', {
+    // ListItem of Data Table 
+    operators: state => state.operators,
+    items: state => state.items,
+    // // Set Up Data Table Pagination & 
+    pagination: state => state.pagination,
+    page: state => state.pagination.page,
+    // Loading (Looking || Hiding) &
+    loading: state => state.loading,
+    // Snackbar Status and UI Set Up
+    mode: state => state.mode,
+    snackbar: state => state.snackbar,
+    notice: state => state.notice
+  }),
+  ...mapGetters('shortcodes', [
+    'hadOperatorsList',
+  ])
+}
+
+export const operatorMethods = {
+  ...mapActions('shortcodes', [
+    'getAllOperators',
+  ])
+}
+
+export const shortcodeComputed = {
+  ...mapState('shortcodes', {
+    // ListItem of Data 
+    operators: state => state.operators,
+    shortcodeList: state => state.shortcodeList,
+    keywordList: state => state.keywordList,
+    keywordReservedList: state => state.keywordReservedList,
+    // Loading (Looking || Hiding) &
+    loading: state => state.sLoading,
+    // Snackbar Status and UI Set Up
+    mode: state => state.mode,
+    snackbar: state => state.snackbar,
+    notice: state => state.notice
+  }),
+  ...mapGetters('shortcodes', [
+    'hadShortcodesList',
+  ])
+}
+
+export const shortcodeMethods = {
+  ...mapActions('shortcodes', [
+    'getAllShortcodes',
+    'getShortcodesFromFirestore',
+    'getKeywordsActiveFromFirestore',
+    'getKeywordsReservedFromFirestore'
+  ])
+}
+
+export const set = property => (state, payload) => (state[property] = payload)
+
+export const toggle = property => state => (state[property] = !state[property])
