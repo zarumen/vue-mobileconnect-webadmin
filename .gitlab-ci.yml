@@ -1,0 +1,53 @@
+image: node:10.12.0
+
+cache:
+  key: node_modules
+  paths:
+    - node_modules/
+    - .yarn
+
+# We tell GitLab to install all the packages
+# before running anything.
+# Docker images come with yarn preinstalled
+before_script:  
+  - apt-get update -qq && apt-get install
+
+stages:
+  - install
+  - build
+  - deploy
+
+install:
+  stage: install
+  only:
+    - master
+  before_script: 
+    - yarn config set cache-folder .yarn
+  script:
+    - yarn install --progress=false
+  artifacts:
+    paths:
+      - node_modules
+
+build:
+  stage: build
+  only:
+    - master
+  script:
+    - yarn build
+  dependencies:
+    - install
+  artifacts:
+    paths:
+      - dist
+
+deploy:
+  stage: deploy
+  only:
+    - master
+  script:
+    - yarn global add firebase-tools --cache-folder node_modules
+    - firebase deploy --only hosting -m "Pipeline $CI_PIPELINE_ID, build $CI_BUILD_ID" --non-interactive --token $FIREBASE_DEPLOY_KEY --project $FIREBASE_PROJECT
+  dependencies:
+    - install
+    - build
