@@ -180,7 +180,8 @@ export default {
     padding: 10px;
     margin: 1px;
     font-weight: bolder;
-    background-color: lightgray;
+    color:#010166;
+    background-color: #b8ebf8;
   }
   .percent {
     width: 15%;
@@ -188,8 +189,9 @@ export default {
     padding: 10px 10px;
     margin: 1px;
     font-weight: bold;
-    text-align: right;   
-    background-color: #F1F1FF;
+    text-align: right;
+    color:aliceblue;   
+    background-color: #010166;
   }
 </style>
 
@@ -210,13 +212,13 @@ export default {
                 <v-layout column>
                   <div
                     class="headline"
-                    style="font-weight: bolder;"
+                    style="font-weight: bolder; color:#010166;"
                   >
                     {{ this.$route.params.caption }}
                   </div>
                   <!-- <span>Vote sub title</span> -->
                   <div class="headline" />
-                  <div style="height:50px" />
+                  <div style="height:20px" />
                   <v-layout
                     v-if="VoteData.data.labels !== undefine"
                     column
@@ -232,14 +234,15 @@ export default {
                     > 
 
                         
-                      <span class="headline item" style="width:59px;" title="ActionScript">{{ label }}</span>
+                      <span class="headline item" style="width:59px;" title="ActionScript">{{ index+1 }}</span>
+                      <span class="headline item" style="width:100px;" title="ActionScript">{{ "MRW"+label }}</span>
                       <div style="width:90%" class="headline item">
-                        <span  :style="'padding-left:'+VoteData.data.datasets[0].percent[index]*10+'px;'+'background-color:#F1F1FF;' " title="ActionScript"></span>
+                        <span  :style="'padding-left:'+VoteData.data.datasets[0].percent[index]*10+'px;'+'background-color:#010166;' " title="ActionScript"></span>
                       </div>
                       
 
-                      <div class="headline percent" style="width:120px">
-                        {{ VoteData.data.datasets[0].percent[index] }}%
+                      <div class="headline percent" style="width:100px">
+                        {{ Math.round(VoteData.data.datasets[0].percent[index]) }}%
                       </div>
                     </v-layout>
                   </v-layout>
