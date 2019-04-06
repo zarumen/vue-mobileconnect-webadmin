@@ -12,6 +12,10 @@ yarn-debug.log*
 yarn-error.log*
 firebase-debug.log*
 
+# lock dependencies
+package-lock.json
+yarn.lock
+
 # Editor directories and files
 .idea
 .vscode
@@ -29,5 +33,6 @@ firebase-debug.log*
 # Firebase Cache
 .firebase
 .firebase/
+
 
 
