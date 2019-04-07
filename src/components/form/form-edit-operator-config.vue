@@ -27,7 +27,8 @@ export default {
   computed: {
     ...mapGetters('shortcodes', [
       'hadOperatorConfig',
-      'getOneOpsConfig'
+      'getOneOpsConfig',
+      'getShortcodesList'
     ]),
     opsRadio () {
       // set Radio Button
@@ -42,7 +43,7 @@ export default {
         return this.getOneOpsConfig.url
       },
       set (value) {
-        this.setOperatorConfig({ url: value })
+        this.setElementOperatorConfig({ url: value })
       }
     },
     type: {
@@ -50,7 +51,7 @@ export default {
         return this.getOneOpsConfig.type
       },
       set (value) {
-        this.setOperatorConfig({ type: value })
+        this.setElementOperatorConfig({ type: value })
       }
     },
     username: {
@@ -58,7 +59,7 @@ export default {
         return this.getOneOpsConfig.username
       },
       set (value) {
-        this.setOperatorConfig({ username: value })
+        this.setElementOperatorConfig({ username: value })
       }
     },
     password: {
@@ -66,7 +67,7 @@ export default {
         return this.getOneOpsConfig.password
       },
       set (value) {
-        this.setOperatorConfig({ password: value })
+        this.setElementOperatorConfig({ password: value })
       }
     },
   },
@@ -101,21 +102,48 @@ export default {
     ...mapActions('shortcodes', [
       'editOperatorConfig',
       'getOperatorConfig',
+      'deleteOperatorConfig'
     ]),
     ...mapMutations('shortcodes', [
-      'setOperatorConfig'
+      'setOperatorConfig',
+      'setElementOperatorConfig',
+      'setElementShortcodesList'
     ]),
     mutateOppForm (val) {
       this.mutateOperatorConfig(val)
     },
+    mutateShortcodeList (sc, op) {
+
+      let scList = this.getShortcodesList
+      let deletedShortcodeListObj = scList.find(rc => rc.shortcode === sc)
+      // get position of mutate shortcodesList Object
+      let i = this.getShortcodesList.indexOf(deletedShortcodeListObj)
+
+      // deleted operator from operatorName in Obj
+      // operator array remaining such as ["ais", "dtac"]
+      let result = deletedShortcodeListObj.operatorName.filter(re => re !== op)
+
+      this.setElementShortcodesList({
+        position: i,
+        payload: result
+      })
+    },
     closeDialog () {
       this.$emit('emitCloseOpConfigEDialog', false)
     },
-    // clearOppForm () {
-    //   this.oppForm = Object.assign({}, this.defaultOppEditForm)
-    //   this.$refs.oppForm.reset()
-    //   this.opsRadio = this.operator
-    // },
+    clearOpp () {
+      // delete operator config
+
+      this.deleteOperatorConfig({
+        shortcode: this.shortcode,
+        operator: this.operator
+      })
+      .then(() => {
+        this.mutateShortcodeList(this.shortcode, this.operator)
+      })
+
+      this.closeDialog()
+    },
     editOpConfig () {
       // TODO:  added shortcode here!
       let data = {
@@ -223,14 +251,14 @@ export default {
           <v-card-actions>
             <!-- Button Action in below card-->
             <v-spacer />
-            <!-- <v-btn
+            <v-btn
               class="v-btn--simple"
               round 
-              color="secondary" 
-              @click="clearOppForm()"
+              color="danger" 
+              @click="clearOpp()"
             >
               Clear
-            </v-btn> -->
+            </v-btn>
             <v-btn
               class="v-btn--simple"
               round 

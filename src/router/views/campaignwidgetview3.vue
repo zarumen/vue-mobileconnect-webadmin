@@ -111,7 +111,7 @@ export default {
        count++ 
 
       })
-      //this.myChart.update()
+      // this.myChart.update()
       this.$forceUpdate()
 
     }   
@@ -231,17 +231,36 @@ export default {
                       justify-space-around
                       row
                       fill-height
-                    > 
-
-                        
-                      <span class="headline item" style="width:59px;" title="ActionScript">{{ index+1 }}</span>
-                      <span class="headline item" style="width:100px;" title="ActionScript">{{ "MRW"+label }}</span>
-                      <div style="width:90%" class="headline item">
-                        <span  :style="'padding-left:'+VoteData.data.datasets[0].percent[index]*10+'px;'+'background-color:#010166;' " title="ActionScript"></span>
+                    >
+                      <span
+                        class="headline item"
+                        style="width:59px;"
+                        title="ActionScript"
+                      >
+                        {{ index+1 }}
+                      </span>
+                      <span
+                        class="headline item"
+                        style="width:100px;"
+                        title="ActionScript"
+                      >
+                        {{ "MRW"+label }}
+                      </span>
+                      <div
+                        style="width:90%"
+                        class="headline item"
+                      >
+                        <span
+                          :style="'padding-left:'+VoteData.data.datasets[0].percent[index]*10+'px;'+'background-color:#010166;' "
+                          title="ActionScript"
+                        />
                       </div>
                       
 
-                      <div class="headline percent" style="width:100px">
+                      <div
+                        class="headline percent"
+                        style="width:100px"
+                      >
                         {{ Math.round(VoteData.data.datasets[0].percent[index]) }}%
                       </div>
                     </v-layout>
