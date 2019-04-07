@@ -3,7 +3,7 @@ import Chart from 'chart.js';
 // import formatCurrency from '@utils/format-number'
 
 let VoteData = {
-  type: 'bar',
+  type: 'horizontalBar',
   data: {
     labels: ['','','',''],
     datasets: [{
@@ -20,6 +20,39 @@ let VoteData = {
           display: true,
           text: ''
       },
+      scales: {
+          xAxes: [{
+              minBarLength: 2,
+              gridLines: {
+                  offsetGridLines: false
+              }
+          }],
+          yAxes: [{
+              ticks: {
+                  // Include a dollar sign in the ticks
+                  callback: function(value, index, values) {
+                      return value;
+                  },
+                  fontSize: 16
+              },
+              // barThickness: 20,
+              barPercentage: 0.9,
+          }]
+      },
+      legend: {
+          labels: {
+              // This more specific font property overrides the global property
+              fontColor: 'black',
+              defaultFontSize: 16,
+              boxWidth: 60
+          },
+       
+      },
+      elements: {
+        rectangle: {
+          borderWidth: 10,
+        }
+      }   
     }
 }
 
@@ -51,11 +84,10 @@ export default {
     }
   },
   created() {
-    this.$socket.emit('register', 'rewards','test',this.$route.params.campaignId)
+    this.$socket.emit('register', 'rewards','production',this.$route.params.campaignId)
 
     this.$options.sockets.transactionRewards = (newdata) => {
-/*       console.log(Object.keys(newdata))
-      console.log(Object.values(newdata)) */
+
       let Sorted = []
       Sorted['key'] = Object.keys(newdata)
       Sorted['values'] = Object.values(newdata)
@@ -77,18 +109,20 @@ export default {
        this.VoteData.data.datasets[0].data[count] = Sorted2['values'][count] 
        this.VoteData.data.datasets[0].percent[count] = Math.round((Sorted2['values'][count])/totals * 100 * 100) / 100
        count++ 
+
       })
-     
+      // this.myChart.update()
       this.$forceUpdate()
+
     }   
   },
   mounted() {
-    this.createChart('widget-chart', this.ChartData);
+    // this.createChart('widget-chart', this.VoteData);
   },
   methods: {
     socketRegister(){
-      console.log('param campaignId:'+this.campaignId)
-      this.$socket.emit('register', 'totals','test',this.$route.params.campaignId);
+      // console.log('param campaignId:'+this.campaignId)
+      // this.$socket.emit('register', 'totals','test',this.$route.params.campaignId);
     },
     createChart(chartId, chartData) {
       const ctx = document.getElementById(chartId);
@@ -118,7 +152,6 @@ export default {
                  
           }
       }
-      console.log(arr)
       return arr       
     }
   }
@@ -147,7 +180,8 @@ export default {
     padding: 10px;
     margin: 1px;
     font-weight: bolder;
-    background-color: lightgray;
+    color:#010166;
+    background-color: #b8ebf8;
   }
   .percent {
     width: 15%;
@@ -155,8 +189,9 @@ export default {
     padding: 10px 10px;
     margin: 1px;
     font-weight: bold;
-    text-align: right;   
-    background-color: #F1F1FF;
+    text-align: right;
+    color:aliceblue;   
+    background-color: #010166;
   }
 </style>
 
@@ -177,13 +212,13 @@ export default {
                 <v-layout column>
                   <div
                     class="headline"
-                    style="font-weight: bolder;"
+                    style="font-weight: bolder; color:#010166;"
                   >
                     {{ this.$route.params.caption }}
                   </div>
                   <!-- <span>Vote sub title</span> -->
                   <div class="headline" />
-                  <div style="height:50px" />
+                  <div style="height:20px" />
                   <v-layout
                     v-if="VoteData.data.labels !== undefine"
                     column
@@ -196,12 +231,37 @@ export default {
                       justify-space-around
                       row
                       fill-height
-                    > 
-                      <div class="headline item">
-                        {{ label }}
+                    >
+                      <span
+                        class="headline item"
+                        style="width:59px;"
+                        title="ActionScript"
+                      >
+                        {{ index+1 }}
+                      </span>
+                      <span
+                        class="headline item"
+                        style="width:100px;"
+                        title="ActionScript"
+                      >
+                        {{ "MRW"+label }}
+                      </span>
+                      <div
+                        style="width:90%"
+                        class="headline item"
+                      >
+                        <span
+                          :style="'padding-left:'+VoteData.data.datasets[0].percent[index]*10+'px;'+'background-color:#010166;' "
+                          title="ActionScript"
+                        />
                       </div>
-                      <div class="headline percent">
-                        {{ VoteData.data.datasets[0].percent[index] }}%
+                      
+
+                      <div
+                        class="headline percent"
+                        style="width:100px"
+                      >
+                        {{ Math.round(VoteData.data.datasets[0].percent[index]) }}%
                       </div>
                     </v-layout>
                   </v-layout>
@@ -212,6 +272,16 @@ export default {
             </v-card>
           </v-flex>
         </v-layout>
+        <v-layout> 
+          <v-flex 
+            xs-12
+            style="width: 100%; padding-left: 20px; padding-bottom: 20px; padding-right: 20px;"        
+          >
+            <div class="text-xs-center">
+              <canvas id="widget-chart" />
+            </div>
+          </v-flex>
+        </v-layout>        
       </section>
     </v-layout>
   </v-container>

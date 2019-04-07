@@ -70,7 +70,8 @@ export const actions = {
 
       newCampaign = await firestoreApp
         .collection('campaigns')
-        .add(campaignObject)
+        .doc(`${campaignObject.campaignCode}`)
+        .set(campaignObject)
 
       let data = {}
        

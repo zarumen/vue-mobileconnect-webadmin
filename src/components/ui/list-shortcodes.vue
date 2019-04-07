@@ -110,7 +110,7 @@ export default {
       this.dialog = false
     },
     onClicked (i) {
-      console.log(`click in :${JSON.stringify(i.operatorName)}`)
+      console.log(`click in :${JSON.stringify(i)}`)
     },
     clickedOperator (operator, i) {
 
@@ -282,23 +282,23 @@ export default {
         <v-tab-item :value="0">
           <!-- shortcode list -->
           <v-list three-line>
-            <template v-for="(item, index) in filteredList">
+            <template v-for="(item1, index) in filteredList">
               <v-list-tile 
                 :key="index"
                 ripple
-                @click="onClicked(item)"
+                @click="onClicked(item1)"
               >
                 <v-list-tile-content>
                   <v-list-tile-title class="pt-2 subheading font-weight-medium">
                     <v-icon small>
                       filter_6
                     </v-icon>
-                    &nbsp;{{ item.shortcode }}
+                    &nbsp;{{ item1.shortcode }}
                   </v-list-tile-title>
                   <v-list-tile-sub-title class="body-2 font-weight-thin">
                     Sender Name:
                     <span
-                      v-for="i in item.sendername"
+                      v-for="i in item1.sendername"
                       :key="i"
                     >
                       <v-chip
@@ -321,8 +321,8 @@ export default {
                       fab
                       class="v-btn--simple"
                       small
-                      :color="checkedOperatorNameColor('ais', item)"
-                      @click.stop="clickedOperator('ais', item)"
+                      :color="checkedOperatorNameColor('ais', item1)"
+                      @click.stop="clickedOperator('ais', item1)"
                     >
                       AIS
                     </v-btn>
@@ -330,8 +330,8 @@ export default {
                       fab
                       class="v-btn--simple"
                       small
-                      :color="checkedOperatorNameColor('cat', item)"
-                      @click.stop="clickedOperator('cat', item)"
+                      :color="checkedOperatorNameColor('cat', item1)"
+                      @click.stop="clickedOperator('cat', item1)"
                     >
                       CAT
                     </v-btn>
@@ -339,8 +339,8 @@ export default {
                       fab
                       class="v-btn--simple"
                       small
-                      :color="checkedOperatorNameColor('dtac', item)"
-                      @click.stop="clickedOperator('dtac', item)"
+                      :color="checkedOperatorNameColor('dtac', item1)"
+                      @click.stop="clickedOperator('dtac', item1)"
                     >
                       DTAC
                     </v-btn>
@@ -348,8 +348,8 @@ export default {
                       fab
                       class="v-btn--simple"
                       small
-                      :color="checkedOperatorNameColor('true', item)"
-                      @click.stop="clickedOperator('true', item)"
+                      :color="checkedOperatorNameColor('true', item1)"
+                      @click.stop="clickedOperator('true', item1)"
                     >
                       TRUE
                     </v-btn>
