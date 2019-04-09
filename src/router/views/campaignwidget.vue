@@ -125,7 +125,7 @@ export default {
       handler(val) {
         this.code =  '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview/'+this.$route.params.campaignId+'/'+this.campaignWidget.offset+'/'+this.campaignWidget.caption+'/'+val.units+'/'+this.campaignWidget.multiplier+'/'+this.campaignWidget.fontColor+'" frameborder="0" ></iframe>'
         this.code2 =  '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview2/'+this.$route.params.campaignId+'/'+this.campaignWidget.offset+'/'+this.campaignWidget.caption+'/'+val.units+'/'+this.campaignWidget.multiplier+'/'+this.campaignWidget.fontColor+'" frameborder="0" ></iframe>'
-        this.code3 =  '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview3/'+this.$route.params.campaignId+'/'+this.campaignWidget.offset+'/'+this.campaignWidget.caption+'/'+val.units+'/'+this.campaignWidget.multiplier+'/'+this.campaignWidget.fontColor+'" frameborder="0" ></iframe>'
+        this.code3 =  '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview3/'+this.$route.params.campaignId+'/'+this.campaignWidget.offset+'/'+this.campaignWidget.caption+'/'+val.units+'/'+this.campaignWidget.multiplier+'/'+this.campaignWidget.fontColor+'production" frameborder="0" ></iframe>'
         
         firestoreApp.collection("campaignWidget").doc(this.$route.params.campaignId).set(this.campaignWidget).then(function() {
           console.log("Campaign Widget Successfully Written!");
@@ -265,7 +265,7 @@ export default {
     min-height: 50px;
     width: 90%;
     margin: 1px;
-    background-color: lightgray;
+    background-color: #F1F1FF;
     padding: 10px;
     font-weight: bolder;
   }
@@ -486,16 +486,21 @@ export default {
                             <v-layout
                               v-for="(label, index) in VoteData.data.labels"
                               :key="label"
-                              align-center
-                              justify-space-around
+                              align-left
                               row
                               fill-height
                             > 
-                              <div class="headline item">
+                              <div class="headline percent" style="width:50px;">
+                                {{ index+1 }}
+                              </div>
+                              <div class="headline percent" style="width:50px;">
                                 {{ label }}
                               </div>
+                              <div style="width:90% " class="headline item">
+                                <span  :style="'padding-left:'+VoteData.data.datasets[0].percent[index]*10+'px;'+'background-color:#010166;' " title="ActionScript"></span>
+                              </div>
                               <div class="headline percent">
-                                {{ VoteData.data.datasets[0].percent[index] }}%
+                                {{ Math.round(VoteData.data.datasets[0].percent[index]) }}%
                               </div>
                             </v-layout>
                           </v-layout>

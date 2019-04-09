@@ -181,7 +181,7 @@ export default [
     }
   },
   {
-    path: '/campaignwidgetview3/:campaignId/:offset/:caption/:unit/:multiplier/:color',
+    path: '/campaignwidgetview3/:campaignId/:offset/:caption/:unit/:multiplier/:color/:state',
     name: 'campaignswidgetview3',
     component: () => lazyLoadView(import('@views/campaignwidgetview3')),
     meta: {

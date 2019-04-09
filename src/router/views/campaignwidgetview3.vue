@@ -84,7 +84,7 @@ export default {
     }
   },
   created() {
-    this.$socket.emit('register', 'rewards','production',this.$route.params.campaignId)
+    this.$socket.emit('register', 'rewards',this.$route.params.state,this.$route.params.campaignId)
 
     this.$options.sockets.transactionRewards = (newdata) => {
 
@@ -237,7 +237,7 @@ export default {
                       <span class="headline item" style="width:59px;" title="ActionScript">{{ index+1 }}</span>
                       <span class="headline item" style="width:100px;" title="ActionScript">{{ "MRW"+label }}</span>
                       <div style="width:90%" class="headline item">
-                        <span  :style="'padding-left:'+VoteData.data.datasets[0].percent[index]*10+'px;'+'background-color:#010166;' " title="ActionScript"></span>
+                        <span  :style="'padding-left:'+VoteData.data.datasets[0].percent[index]*10+'px;'+'background-color:#010166;' " ></span>
                       </div>
                       
 
