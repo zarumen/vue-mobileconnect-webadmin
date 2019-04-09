@@ -26,7 +26,7 @@ export default {
     }
   },
   created() {
-    if(this.$route.params.state=="test"){
+    if(this.$route.params.state === "test"){
       this.$socket.emit('register', 'totals',this.$route.params.state,this.$route.params.campaignId)
     }else{
       this.$socket.emit('register', 'totals','production',this.$route.params.campaignId)
