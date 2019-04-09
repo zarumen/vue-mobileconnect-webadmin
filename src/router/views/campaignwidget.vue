@@ -490,14 +490,26 @@ export default {
                               row
                               fill-height
                             > 
-                              <div class="headline percent" style="width:50px;">
+                              <div
+                                class="headline percent"
+                                style="width:50px;"
+                              >
                                 {{ index+1 }}
                               </div>
-                              <div class="headline percent" style="width:50px;">
+                              <div
+                                class="headline percent"
+                                style="width:50px;"
+                              >
                                 {{ label }}
                               </div>
-                              <div style="width:90% " class="headline item">
-                                <span  :style="'padding-left:'+VoteData.data.datasets[0].percent[index]*10+'px;'+'background-color:#010166;' " title="ActionScript"></span>
+                              <div
+                                style="width:90% "
+                                class="headline item"
+                              >
+                                <span
+                                  :style="'padding-left:'+VoteData.data.datasets[0].percent[index]*10+'px;'+'background-color:#010166;' "
+                                  title="ActionScript"
+                                />
                               </div>
                               <div class="headline percent">
                                 {{ Math.round(VoteData.data.datasets[0].percent[index]) }}%
