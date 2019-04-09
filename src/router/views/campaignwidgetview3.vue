@@ -231,7 +231,6 @@ export default {
                       justify-space-around
                       row
                       fill-height
-
                     >
                       <span
                         class="headline item"
@@ -255,7 +254,6 @@ export default {
                           :style="'padding-left:'+VoteData.data.datasets[0].percent[index]*10+'px;'+'background-color:#010166;' "
                           title="ActionScript"
                         />
-
                       </div>
                       
 
