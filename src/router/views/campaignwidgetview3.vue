@@ -189,8 +189,8 @@ export default {
     padding: 10px 10px;
     margin: 1px;
     font-weight: bold;
-    text-align: right;
     color:aliceblue;   
+    text-align: right;
     background-color: #010166;
   }
 </style>
@@ -220,13 +220,13 @@ export default {
                   <div class="headline" />
                   <div style="height:20px" />
                   <v-layout
-                    v-if="VoteData.data.labels !== undefine"
+                    v-if="VoteData.data.labels !== 'undefined'"
                     column
                     class="pa-0 ma-0"
                   >
                     <v-layout
                       v-for="(label, index) in VoteData.data.labels"
-                      :key="label"
+                      :key="label.key"
                       align-center
                       justify-space-around
                       row

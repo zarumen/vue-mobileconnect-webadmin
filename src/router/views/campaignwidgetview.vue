@@ -26,7 +26,12 @@ export default {
     }
   },
   created() {
-    this.$socket.emit('register', 'totals','production',this.$route.params.campaignId)
+    if(this.$route.params.state === "test"){
+      this.$socket.emit('register', 'totals',this.$route.params.state,this.$route.params.campaignId)
+    }else{
+      this.$socket.emit('register', 'totals','production',this.$route.params.campaignId)
+    }
+    
 
     this.$options.sockets.transactionTotals = (newdata) => {
       console.log("trans:" + newdata)
