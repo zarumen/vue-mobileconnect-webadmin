@@ -34,7 +34,7 @@ build:
   only:
     - master
   before_script: 
-    - echo $FIREBASE_CONFIG_FILE | base64 -D > ./src/utils/firebase.config.js
+    - echo $FIREBASE_CONFIG_FILE | base64 -d > ./src/utils/firebase.config.js
   script:
     - yarn build
   dependencies:

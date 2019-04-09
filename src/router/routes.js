@@ -166,7 +166,7 @@ export default [
   },
   {
     path: '/campaignwidgetview/:campaignId/:offset/:caption/:unit/:multiplier/:color/:state',
-    name: 'campaignswidgetview',
+    name: 'campaignswidgetviewstate',
     component: () => lazyLoadView(import('@views/campaignwidgetview')),
     meta: {
       authRequired: false,
@@ -182,7 +182,7 @@ export default [
   },
   {
     path: '/campaignwidgetview2/:campaignId/:offset/:caption/:unit/:multiplier/:color/:state',
-    name: 'campaignswidgetview2',
+    name: 'campaignswidgetview2state',
     component: () => lazyLoadView(import('@views/campaignwidgetview2')),
     meta: {
       authRequired: false,
