@@ -1,6 +1,6 @@
 import { set } from '@state/helpers'
 import firestoreApp from "@utils/firestore.config"
-import _ from 'lodash/assign'
+import assign from 'lodash/assign'
 
 import {
   sendSuccessNotice,
@@ -31,6 +31,7 @@ export const state = {
 export const getters = {
   hadOperatorsList: (state) => !!state.items,
   hadShortcodesList: (state) => !!state.shortcodeList,
+  getShortcodesList: (state) => state.shortcodeList,
   hadOperatorConfig: (state) => !!state.operatorConfig,
   getOneOpsConfig: (state) => state.operatorConfig
 }
@@ -48,7 +49,14 @@ export const mutations = {
   setOperators: set('operators'),
   // mutate Operator Config
   setOperatorConfig (state, payload) {
-    _.assign(state.operatorConfig, payload)
+    state.operatorConfig =  payload
+  },
+  setElementOperatorConfig (state, payload) {
+    assign(state.operatorConfig, payload)
+  },
+  setElementShortcodesList (state, { position, payload }) {
+    state.shortcodeList[position].operatorName = []
+    assign(state.shortcodeList[position].operatorName, payload)
   },
   // update Page
   setPage(state, paginationPage) {
@@ -391,6 +399,28 @@ export const actions = {
   // ===
   // DELETE Zone
   // ===
+  deleteOperatorConfig({ commit }, { shortcode, operator }) {
+
+    return firestoreApp
+      .collection('shortcodeConfig')
+      .doc(`${shortcode}`)
+      .collection('operator')
+      .doc(`${operator}`)
+      .delete()
+      .then(() => {
+
+        console.log(`Delete Operator Config`);
+        sendSuccessNotice(commit, 'OperatorConfig has been deleted.')
+        closeNotice(commit, 1500)
+        return `yes`
+      })
+      .catch(error => {
+        console.log(error)
+        sendErrorNotice(commit, 'Operation Config delete failed! Please try again later. ')
+        closeNotice(commit, 1500)
+        return error
+      })
+  }
   // ===
   // ETC. Zone
   // ===

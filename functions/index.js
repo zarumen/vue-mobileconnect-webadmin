@@ -95,7 +95,7 @@ exports.deleteAggregationInShortcodeConfig = functions.firestore
 
         let shortcodeType = [];
 
-        if (deletedValue.type) {
+        if (deletedValue) {
 
           let opsAll = recentTransactions.map(ops => ops.type);
           shortcodeType = [...new Set(opsAll)];
