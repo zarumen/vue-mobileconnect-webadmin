@@ -1,7 +1,7 @@
 export const helperTH = {
     // Helper for Campaign Create Fields
     // CampaignField: 'Helper Text Suggestion',
-    campaignCode: 'code ของ campaign ที่ใช้เรียกใน บริษัท',
+    campaignCode: 'code ของ campaign ที่ใช้เรียกใน บริษัท และจะนำไปใช้เป็น Campaign ID',
     campaignName: 'title ของ campaign',
     campaignDescription: 'description ของ campaign',
     campaignActive: 'set State เริ่มต้นของ campaign',
@@ -38,5 +38,6 @@ export const helperTH = {
     messageBeforeStart: 'msg ตอบกลับเมื่อเล่นก่อนเวลา',    
     messageCampaignNotAvailable: 'msg ปิดชั่วคราว',    
     messageCampaignTestNotRegister: 'msg ตอบกลับสำหรับเบอร์ที่ ไม่มีสิทธิในการ Test',    
-    messageCheckMsisdnNotFound: 'msg ตอบกลับ สำหรับ Telephone Number ที่ไม่ใช่สมาชิก',    
+    messageCheckMsisdnNotFound: 'msg ตอบกลับ สำหรับ Telephone Number ที่ไม่ใช่สมาชิก',
+    messageRegisterFail: 'msg ตอบกลับ เมื่อใช้การลงทะเบียน contextType: register ไปแล้ว',   
 }
