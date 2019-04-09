@@ -383,7 +383,7 @@ export default {
               step="1"
             >
               {{ stepName.one }}
-              <small>v.0.50 patch note: สามารถ Add campaign กรอกข้อมูล added Reward อย่างง่าย added Context Parser ทั้ง 3 รูปแบบ contextType </small>
+              <small>v.0.6.1 patch note: สามารถ Add campaign [ตัว campaignCode จะกลายเป็น campaignId] กรอกข้อมูล added Reward อย่างง่าย added Context Parser ทั้ง 3 รูปแบบ contextType </small>
               <small>road map: ทำ เพิ่ม List Validate รหัสใบเสร็จ และ รหัสสมาชิก, ทำปุ่ม Generate Coupon และ Upload Coupon, ทำตัวช่วย กรอกในสิ่งที่เคยกรอกไปแล้ว (Template) ทั้งในส่วนของ Regex และ ข้อความ (Message Template) และหน้าสุดท้าย ไว้ดูสรุปข้อมูล ก่อน save</small>
             </v-stepper-step>
             <v-stepper-content step="1">
@@ -1147,11 +1147,12 @@ export default {
                 class="mb-5"
               >
                 <v-card-text>
-                  <v-flex v-if="helper">
-                    <v-subheader class="red--text">
-                      {{ helperText.contextDelimiter }}
-                    </v-subheader>
-                  </v-flex> 
+                  <v-switch
+                    v-model="validateForm.campaignHasMsisdnList"
+                    color="deep-purple"
+                    label="Has Mobile Number List from Client?"
+                  />
+                  <v-subheader>Campaign Validate Details</v-subheader>
                   <v-flex 
                     xs8
                     sm6 
@@ -1164,6 +1165,11 @@ export default {
                       label="Delimiter"
                     />
                   </v-flex>
+                  <v-flex v-if="helper">
+                    <v-subheader class="red--text">
+                      {{ helperText.contextDelimiter }}
+                    </v-subheader>
+                  </v-flex> 
                   <v-subheader>Context Parser: (In Parser Object)</v-subheader>
                   <v-flex
                     xs12
@@ -1506,6 +1512,18 @@ export default {
                       label="After Service Active Message"
                     />
                   </v-flex>
+                  <v-flex v-if="helper">
+                    <v-subheader class="red--text">
+                      {{ helperText.messageRegisterFail }}
+                    </v-subheader>
+                  </v-flex>
+                  <v-text-field 
+                    v-model="validateForm.messageRegisterFail"
+                    :rules="[v => !!v || 'Item is required']"
+                    prepend-icon="chat"
+                    label="Already Registered Message"
+                    required
+                  />
                 </v-card-text>
               </v-card>
               <v-btn 
@@ -1750,18 +1768,6 @@ export default {
                                 {{ helperText.messageRewardSuccess }}
                               </v-subheader>
                             </v-flex>
-                            <v-text-field 
-                              v-model="anotherReward.messageRewardOutOfStock"
-                              :rules="[v => !!v || 'Item is required']"
-                              prepend-icon="chat_bubble_outline"
-                              label="Out of Stock Message"
-                              required
-                            />
-                            <v-flex v-if="helper">
-                              <v-subheader class="red--text">
-                                {{ helperText.messageRewardOutOfStock }}
-                              </v-subheader>
-                            </v-flex>
                           </v-card-text>
                           <v-card-actions>
                             <v-spacer />
@@ -1891,18 +1897,13 @@ export default {
                         </strong>
                       </p>
                       <p>
-                        Empty Message: <strong class="green--text">
-                          {{ validateForm.campaignNotAvailableMsg }}
-                        </strong>
-                      </p>
-                      <p>
                         Fail Message: <strong class="green--text">
-                          {{ validateForm.failMsg }}
+                          {{ validateForm.messageRewardsFailed }}
                         </strong>
                       </p>
                       <p>
                         Limit Reward: <strong class="green--text">
-                          {{ validateForm.limitReward }}
+                          {{ validateForm.rewardsLimit }}
                         </strong>
                       </p>
                       <p>
@@ -1945,6 +1946,11 @@ export default {
                           {{ validateForm.messageCampaignTestNotRegister }}
                         </strong>
                       </p>
+                      <p>
+                        Already Registered Message: <strong class="green--text">
+                          {{ validateForm.messageRegisterFail }}
+                        </strong>
+                      </p>
                       <p class="indigo--text">
                         ------------------------------Still Workings--------------------------------
                       </p>
@@ -1953,7 +1959,7 @@ export default {
                           {{ contextParser }}
                         </strong>
                       </p>
-                      <p>rewards: {{ rewards }}</p>
+                      <p>rewards: {{ JSON.stringify(rewards, null, 2) }}</p>
                     </v-flex>
                   </v-layout>
                 </v-card-text>

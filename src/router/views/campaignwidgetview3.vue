@@ -84,7 +84,7 @@ export default {
     }
   },
   created() {
-    this.$socket.emit('register', 'rewards','production',this.$route.params.campaignId)
+    this.$socket.emit('register', 'rewards',this.$route.params.state,this.$route.params.campaignId)
 
     this.$options.sockets.transactionRewards = (newdata) => {
 

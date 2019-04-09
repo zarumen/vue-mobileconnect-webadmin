@@ -111,9 +111,6 @@ export default {
               <v-icon>description</v-icon>
             </a>                      
           </small>
-          <small v-else>
-            {{ renderData(props.item, header) }}
-          </small>
         </td>
         <td 
           v-if="basemodule != 'campaignwidgets'"
