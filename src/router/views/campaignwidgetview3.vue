@@ -157,7 +157,7 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
   .superbig {
     font-family: "Roboto",sans-serif;
     font-size: 70px;
@@ -175,13 +175,10 @@ export default {
     justify-content: center;
   }
   .item {
-    width: 90%;
     min-height: 50px;
-    padding: 10px;
-    margin: 1px;
+    margin: 20px;
     font-weight: bolder;
     color:#010166;
-    background-color: #b8ebf8;
   }
   .percent {
     width: 15%;
@@ -192,6 +189,15 @@ export default {
     color:aliceblue;   
     text-align: right;
     background-color: #010166;
+  }
+  .line {
+    background-color: #b8ebf8
+  }
+  .slidinglist-enter-active {
+    transition: all 4s ease;
+  }
+  .slidinglist-leave-active {
+    transition: all 2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
   }
 </style>
 
@@ -222,48 +228,60 @@ export default {
                   <v-layout
                     v-if="VoteData.data.labels !== 'undefined'"
                     column
-                    class="pa-0 ma-0"
+                    class="pa-1 ma-1"
                   >
-                    <v-layout
-                      v-for="(label, index) in VoteData.data.labels"
-                      :key="label.key"
-                      align-center
-                      justify-space-around
-                      row
-                      fill-height
+                    <transition-group
+                      class="py-0"
+                      tag="v-list"
+                      name="slidinglist"
                     >
-                      <span
-                        class="headline item"
-                        style="width:59px;"
-                        title="ActionScript"
+                      <template
+                        v-for="(label, index) in VoteData.data.labels"
+                        align-center
+                        justify-space-around
+                        row
+                        fill-height
                       >
-                        {{ index+1 }}
-                      </span>
-                      <span
-                        class="headline item"
-                        style="width:100px;"
-                        title="ActionScript"
-                      >
-                        {{ "MRW"+label }}
-                      </span>
-                      <div
-                        style="width:90%"
-                        class="headline item"
-                      >
-                        <span
-                          :style="'padding-left:'+VoteData.data.datasets[0].percent[index]*10+'px;'+'background-color:#010166;' "
-                          title="ActionScript"
+                        <v-divider
+                          v-if="index !== 0"
+                          :key="`${index}-divider`"
+                          class="line"
                         />
-                      </div>
-                      
-
-                      <div
-                        class="headline percent"
-                        style="width:100px"
-                      >
-                        {{ Math.round(VoteData.data.datasets[0].percent[index]) }}%
-                      </div>
-                    </v-layout>
+                        <v-list-tile 
+                          :key="index"
+                          class="pa-2"
+                        >
+                          <v-list-tile-avatar>
+                            {{ index+1 }}
+                          </v-list-tile-avatar>
+                          <v-list-tile-content>
+                            <v-layout row>
+                              <v-flex>
+                                <v-chip
+                                  color="blue-grey lighten-4"
+                                  class="headline item"
+                                >
+                                  {{ "MRW"+label }}
+                                </v-chip>
+                              </v-flex>
+                              <v-flex
+                                style="width:90%"
+                                class="headline item"
+                              >
+                                <span
+                                  :style="'padding:'+VoteData.data.datasets[0].percent[index]*10+'px;'+'background-color:#010166;'"
+                                />
+                              </v-flex>
+                            </v-layout>
+                          </v-list-tile-content>
+                          <v-list-tile-action>
+                            <v-avatar class="indigo darken-4 white--text">
+                              {{ Math.round(VoteData.data.datasets[0].percent[index]) }}%
+                            </v-avatar>
+                          </v-list-tile-action>
+                        </v-list-tile>
+                      </template>
+                    </transition-group>
                   </v-layout>
                   <div style="height:10px" />
                   <!-- <span>footer</span> -->
