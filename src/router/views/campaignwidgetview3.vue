@@ -251,7 +251,7 @@ export default {
                           :key="index"
                           class="pa-2"
                         >
-                          <v-list-tile-avatar>
+                          <v-list-tile-avatar class="hidden-xs-only">
                             {{ index+1 }}
                           </v-list-tile-avatar>
                           <v-list-tile-content>

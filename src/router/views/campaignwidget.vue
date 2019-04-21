@@ -247,13 +247,13 @@ export default {
 </script>
 <style>
   .superbig {
-    font-size: 70px;
     font-family: "Roboto",sans-serif;
+    font-size: 70px;
   }
   .big {
+    font-family: "Roboto",sans-serif;
     font-size: 30px;
     color: #1CABE2;
-    font-family: "Roboto",sans-serif;
     text-align: center;
   }
   .area {
@@ -262,21 +262,21 @@ export default {
     justify-content: center;
   }
   .item {
-    min-height: 50px;
     width: 90%;
-    margin: 1px;
-    background-color: #F1F1FF;
+    min-height: 50px;
     padding: 10px;
+    margin: 1px;
     font-weight: bolder;
+    background-color: #F1F1FF;
   }
   .percent {
-    min-height: 50px;
     width: 15%;
-    margin: 1px;
+    min-height: 50px;
     padding: 10px 10px;
+    margin: 1px;
     font-weight: bold;
-    background-color: #F1F1FF;
     text-align: right;   
+    background-color: #F1F1FF;
   }
 </style>
 

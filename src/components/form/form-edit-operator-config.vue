@@ -17,6 +17,7 @@ export default {
   },
   data () {
     return {
+      dialog: false,
       items: [
         "MO", "MT"
       ],
@@ -161,6 +162,12 @@ export default {
 
       this.closeDialog()
     },
+    onCancel () {
+      this.dialog = false
+    },
+    onConfirm () {
+      this.clearOpp()
+    },
   }
 }
 </script>
@@ -255,7 +262,7 @@ export default {
               class="v-btn--simple"
               round 
               color="danger" 
-              @click="clearOpp()"
+              @click="dialog = !dialog"
             >
               Clear
             </v-btn>
@@ -279,6 +286,13 @@ export default {
         </v-card>
       </v-form>
     </v-dialog>
+    <BaseDialog 
+      :dialog="dialog" 
+      :dialog-title="`Confirm Deleted ${this.operator} Password Config`" 
+      :dialog-text="`You want to Delete ${this.operator} password in ${this.shortcode}?`"
+      @onConfirm="onConfirm" 
+      @onCancel="onCancel"
+    />
   </div>
 </template>
 

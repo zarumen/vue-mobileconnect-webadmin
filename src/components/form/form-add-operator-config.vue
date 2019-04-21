@@ -33,12 +33,14 @@ export default {
       ],
       valid: true,
       iconValue: true,
+      opsDisabled: false
     }
   },
   computed: {
     opsRadio () {
 
       if (this.operator !== '') {
+        this.opsDisabled = true
         return this.operator
       }
       return null
@@ -103,7 +105,8 @@ export default {
                 xs12
               >
                 <v-radio-group 
-                  v-model="opsRadio" 
+                  v-model="opsRadio"
+                  :disabled="opsDisabled"
                   row
                 >
                   <v-radio 

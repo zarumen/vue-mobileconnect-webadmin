@@ -1,5 +1,6 @@
 <script>
 import { mapState, mapActions } from 'vuex'
+import { arrayToObject } from '@utils/array-to-object'
 import { helperTH } from '@utils/campaign-create-helper'
 
 export default {
@@ -69,6 +70,10 @@ export default {
         'text&win',
         'api'
       ],
+      checkKeywordRules: [
+        v => !!v || 'This Field is required',
+        v => this.checkDuplicatedKeyword(v) || 'Keyword ซ้ำกับที่มีอยู่แล้ว'
+      ],
       campaignType: null,
       // helper variable
       locale: 'TH',
@@ -94,7 +99,7 @@ export default {
       rewardValid: true,
       // reward array
       anotherReward: Object.assign({}, defaultrForm),
-      objectReward: false,
+      checkObjectReward: false,
       // ---------**-------------------------------------
       // Check all value
       // ---------**------------------------------------- 
@@ -120,9 +125,9 @@ export default {
       cardOpen: false,
       subcardOpen: false,
       itemstest: [
-          { icon: 'code', iconClass: 'blue white--text', title: 'Invalid Format Message 1', subtitle: 'regex 1' },
-          { icon: 'code', iconClass: 'blue white--text', title: 'Invalid Format Message 2', subtitle: 'regex 2' }
-        ]
+        { icon: 'code', iconClass: 'blue white--text', title: 'Invalid Format Message 1', subtitle: 'regex 1' },
+        { icon: 'code', iconClass: 'blue white--text', title: 'Invalid Format Message 2', subtitle: 'regex 2' }
+      ]
     }
   },
   computed: {
@@ -134,29 +139,50 @@ export default {
       keywordList: 'keywordList',
       keywordReservedList: 'keywordReservedList'
     }),
-    regexDisable() {
+    keywordInKeywordList () {
+      let sCheck = this.campaignForm.shortcode
+
+      if(sCheck) {
+        let kws = this.keywordList.filter(sc => sc.shortcode === sCheck)
+
+        return kws[0].keywords
+      }
+
+      return []
+    },
+    regexDisable () {
       if(this.validateType)
         return this.validateType.condition
 
       return true
     },
-    contextType() {
+    contextType () {
       if(this.validateType)
         return this.validateType.value
 
       return null
     },
-    mutateKeywordList() {
-      if(this.campaignForm.shortcode) {
+    mutateKeywordList () {
+      
+      let scCheck = this.campaignForm.shortcode
 
-        let kw = this.mutatekwList(this.campaignForm.shortcode)
+      if(scCheck) {
 
-        return kw[0].keywords
+        let checkedInReservedList = this.keywordReservedList.some(sc => sc.shortcode === scCheck)
+        
+        if(checkedInReservedList) {
+          console.log('have keyword Reserved!')
+          let kw = this.mutatekwReservedList(scCheck)
+
+          return kw[0].keywordsArray
+        }
+
+        return []
       }
 
       return []
     },
-    mutateShortcodeList() {
+    mutateShortcodeList () {
       if(this.campaignForm.shortcode) {
 
         let scArray = this.mutatescList(this.campaignForm.shortcode)
@@ -176,7 +202,29 @@ export default {
     ...mapActions('campaigns', [
       'createCampaign'
     ]),
+    checkDuplicatedKeyword (keywordArr) {
+
+      if(keywordArr) {
+        // ถ้ามี keyword เข้ามาให้ เช็คว่า มี keyword ที่ใช้อยู่รึิเปล่า
+        let checkArr = keywordArr.map(element => {
+          // return เป็น Boolean Array ของ keywords [true, false, true]
+          return this.keywordInKeywordList.includes(element)
+        })
+        // ถ้ามี แม้แต่ 1 ตัวที่เป็น true ให้โชว์ error ว่า มี keyword ซ้ำ
+        if(checkArr.includes(true)) {
+          // show Error
+          return false
+        }
+        // doesn't show Error
+        return true
+      }
+      // doesn't show Error
+      return true
+    },
     mutatekwList(sc) {
+      return this.keywordList.filter(keyword => keyword.shortcode === sc)
+    },
+    mutatekwReservedList(sc) {
       return this.keywordReservedList.filter(keyword => keyword.shortcode === sc)
     },
     mutatescList(sc) {
@@ -186,7 +234,8 @@ export default {
       this.$emit('emitCloseCampaignDialog', false)
     },
     saveCampaign() {
-      
+      // check forms in v-form validation
+      this.$refs.campaignForm.validate()
       // prepare campaign Object and campaignValidation Object
 
       const campaignNew = this.campaignForm
@@ -220,8 +269,12 @@ export default {
         
         // set Context Parsers
         campaignValidationNew['contextParser'] = this.contextParser
-        // set Reward Array
-        campaignValidationNew['rewardsArray'] = this.rewards
+        // set Reward Array or Object
+        if(checkObjectReward) {
+          campaignValidationNew['rewardsObject'] = arrayToObject(this.rewards, "rewardId")
+        } else {
+          campaignValidationNew['rewardsArray'] = this.rewards
+        }
 
         campaignValidationNew['rewardsHaveSequence'] = this.switch2
         campaignValidationNew['campaignAvailable'] = true
@@ -383,7 +436,7 @@ export default {
               step="1"
             >
               {{ stepName.one }}
-              <small>v.0.6.1 patch note: สามารถ Add campaign [ตัว campaignCode จะกลายเป็น campaignId] กรอกข้อมูล added Reward อย่างง่าย added Context Parser ทั้ง 3 รูปแบบ contextType </small>
+              <small>v.0.6.3 patch note: เช็ค Keyword ว่ามีซ้ำกับที่ใช้ด้วยรึเปล่า และทำการ map shortcode กับ keyword ที่จองไว้เสมอ</small>
               <small>road map: ทำ เพิ่ม List Validate รหัสใบเสร็จ และ รหัสสมาชิก, ทำปุ่ม Generate Coupon และ Upload Coupon, ทำตัวช่วย กรอกในสิ่งที่เคยกรอกไปแล้ว (Template) ทั้งในส่วนของ Regex และ ข้อความ (Message Template) และหน้าสุดท้าย ไว้ดูสรุปข้อมูล ก่อน save</small>
             </v-stepper-step>
             <v-stepper-content step="1">
@@ -618,6 +671,7 @@ export default {
                     <v-combobox 
                       v-model="campaignForm.keyword"
                       :items="mutateKeywordList"
+                      :rules="checkKeywordRules"
                       prepend-icon="text_fields"
                       label="Keyword"
                       multiple
@@ -1255,7 +1309,7 @@ export default {
                           />
                           <v-flex v-if="helper">
                             <v-subheader class="red--text">
-                              {{ helperText.validateFailMsg }}
+                              {{ helperText.messageContextFailed }}
                             </v-subheader>
                           </v-flex> 
                           <v-select 
@@ -1478,8 +1532,10 @@ export default {
                     </v-flex> 
                     <v-text-field 
                       v-model="validateForm.messageBoundariesLessError"
+                      :rules="[v => !!v || 'Item is required']"
                       prepend-icon="chat"
                       label="Less Content Message"
+                      required
                     />
                     <v-flex v-if="helper">
                       <v-subheader class="red--text">
@@ -1488,8 +1544,10 @@ export default {
                     </v-flex> 
                     <v-text-field 
                       v-model="validateForm.messageBoundariesOverError"
+                      :rules="[v => !!v || 'Item is required']"
                       prepend-icon="chat"
                       label="Over Content Message"
+                      required
                     />
                     <v-flex v-if="helper">
                       <v-subheader class="red--text">
@@ -1498,8 +1556,10 @@ export default {
                     </v-flex>
                     <v-text-field 
                       v-model="validateForm.messageBeforeStart"
+                      :rules="[v => !!v || 'Item is required']"
                       prepend-icon="chat"
                       label="Before Service Active Message"
+                      required
                     />
                     <v-flex v-if="helper">
                       <v-subheader class="red--text">
@@ -1508,8 +1568,10 @@ export default {
                     </v-flex>
                     <v-text-field 
                       v-model="validateForm.messageAfterEnd"
+                      :rules="[v => !!v || 'Item is required']"
                       prepend-icon="chat"
                       label="After Service Active Message"
+                      required
                     />
                   </v-flex>
                   <v-flex v-if="helper">
@@ -1519,10 +1581,18 @@ export default {
                   </v-flex>
                   <v-text-field 
                     v-model="validateForm.messageRegisterFail"
-                    :rules="[v => !!v || 'Item is required']"
                     prepend-icon="chat"
                     label="Already Registered Message"
-                    required
+                  />
+                  <v-flex v-if="helper">
+                    <v-subheader class="red--text">
+                      {{ helperText.messageValidateFail }}
+                    </v-subheader>
+                  </v-flex>
+                  <v-text-field 
+                    v-model="validateForm.messageValidateFail"
+                    prepend-icon="chat"
+                    label="Validate Verify Code Failed Message"
                   />
                 </v-card-text>
               </v-card>
@@ -1562,7 +1632,7 @@ export default {
                       md6
                     > 
                       <v-flex>
-                        <v-subheader>Reward Validation:</v-subheader>
+                        <v-subheader>Rewards Validation:</v-subheader>
                         <v-flex v-if="helper">
                           <v-subheader class="red--text">
                             {{ helperText.rewardHasSequence }}
@@ -1571,12 +1641,17 @@ export default {
                         <v-switch
                           v-model="switch2"
                           color="deep-purple"
-                          label="is Sequential Reward"
+                          label="Is Sequential Rewards?"
                         />
+                        <v-flex v-if="helper">
+                          <v-subheader class="red--text">
+                            {{ helperText.rewardHasObject }}
+                          </v-subheader>
+                        </v-flex> 
                         <v-switch
-                          v-model="objectReward"
+                          v-model="checkObjectReward"
                           color="deep-purple"
-                          label="Reward is Object?"
+                          label="Can Customer Choose your Rewards?"
                         />
                         <v-flex v-if="helper">
                           <v-subheader class="red--text">
@@ -1590,7 +1665,7 @@ export default {
                         />
                         <v-flex v-if="helper">
                           <v-subheader class="red--text">
-                            {{ helperText.failMsg }}
+                            {{ helperText.messageRewardsFailed }}
                           </v-subheader>
                         </v-flex> 
                         <v-text-field 
@@ -1598,11 +1673,21 @@ export default {
                           prepend-icon="chat_bubble"
                           label="Fail Message"
                         />
+                        <v-flex v-if="helper">
+                          <v-subheader class="red--text">
+                            {{ helperText.messageRewardsInvalid }}
+                          </v-subheader>
+                        </v-flex>
                         <v-text-field 
                           v-model="validateForm.messageRewardsInvalid"
                           prepend-icon="chat_bubble"
                           label="Rewards Invalid Message"
                         />
+                        <v-flex v-if="helper">
+                          <v-subheader class="red--text">
+                            {{ helperText.messageRewardReceivedLimit }}
+                          </v-subheader>
+                        </v-flex>
                         <v-text-field 
                           v-model="validateForm.messageRewardReceivedLimit"
                           prepend-icon="chat_bubble"
@@ -1702,11 +1787,21 @@ export default {
                             <p />
                           </v-card-actions>
                           <v-card-text>
+                            <v-flex v-if="helper">
+                              <v-subheader class="red--text">
+                                {{ helperText.rewardId }}
+                              </v-subheader>
+                            </v-flex>
                             <v-text-field
                               v-model="anotherReward.rewardId"
                               prepend-icon="atm"
                               label="Reward ID"
                             />
+                            <v-flex v-if="helper">
+                              <v-subheader class="red--text">
+                                {{ helperText.name }}
+                              </v-subheader>
+                            </v-flex> 
                             <v-text-field
                               v-model="anotherReward.rewardName"
                               :rules="[v => !!v || 'Item is required']"
@@ -1716,7 +1811,7 @@ export default {
                             />
                             <v-flex v-if="helper">
                               <v-subheader class="red--text">
-                                {{ helperText.name }}
+                                {{ helperText.rewardTotal }}
                               </v-subheader>
                             </v-flex> 
                             <v-text-field 
@@ -1729,7 +1824,7 @@ export default {
                             />
                             <v-flex v-if="helper">
                               <v-subheader class="red--text">
-                                {{ helperText.rewardTotal }}
+                                {{ helperText.rewardCondition }}
                               </v-subheader>
                             </v-flex> 
                             <v-text-field 
@@ -1741,9 +1836,9 @@ export default {
                             />
                             <v-flex v-if="helper">
                               <v-subheader class="red--text">
-                                {{ helperText.rewardCondition }}
+                                {{ helperText.rewardvalidateForm }}
                               </v-subheader>
-                            </v-flex> 
+                            </v-flex>
                             <v-text-field 
                               v-model="anotherReward.rewardConditionForm"
                               :rules="[v => !!v || 'Item is required']"
@@ -1753,7 +1848,7 @@ export default {
                             />
                             <v-flex v-if="helper">
                               <v-subheader class="red--text">
-                                {{ helperText.rewardvalidateForm }}
+                                {{ helperText.messageRewardSuccess }}
                               </v-subheader>
                             </v-flex>
                             <v-text-field 
@@ -1763,11 +1858,6 @@ export default {
                               label="Success Message"
                               required
                             />
-                            <v-flex v-if="helper">
-                              <v-subheader class="red--text">
-                                {{ helperText.messageRewardSuccess }}
-                              </v-subheader>
-                            </v-flex>
                           </v-card-text>
                           <v-card-actions>
                             <v-spacer />
@@ -1951,8 +2041,23 @@ export default {
                           {{ validateForm.messageRegisterFail }}
                         </strong>
                       </p>
+                      <p>
+                        Already Registered Message: <strong class="green--text">
+                          {{ validateForm.messageRegisterFail }}
+                        </strong>
+                      </p>
+                      <p>
+                        Validate Verify Code Failed Message: <strong class="green--text">
+                          {{ validateForm.messageValidateFail }}
+                        </strong>
+                      </p>
                       <p class="indigo--text">
                         ------------------------------Still Workings--------------------------------
+                      </p>
+                      <p>
+                        Parser Valid: <strong class="green--text">
+                          {{ parserValid }}
+                        </strong>
                       </p>
                       <p>
                         contextParser: <strong class="green--text">
