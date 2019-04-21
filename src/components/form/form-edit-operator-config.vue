@@ -288,8 +288,8 @@ export default {
     </v-dialog>
     <BaseDialog 
       :dialog="dialog" 
-      :dialog-title="`Confirm Deleted ${this.operator} Password Config`" 
-      :dialog-text="`You want to Delete ${this.operator} password in ${this.shortcode}?`"
+      :dialog-title="`Confirm Deleted ${operator} Password Config`" 
+      :dialog-text="`You want to Delete ${operator} password in ${shortcode}?`"
       @onConfirm="onConfirm" 
       @onCancel="onCancel"
     />

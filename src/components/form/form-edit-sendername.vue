@@ -8,10 +8,10 @@ export default {
     },
     shortcodeItem: {
       type: [Object],
-      default: {
+      default: () => ({
         shortcode: '',
         sendername: []
-      }
+      })
     }
   },
   data () {
@@ -135,7 +135,7 @@ export default {
       this.$emit('emitCloseEditSendernameDialog', false)
     },
     saveEditSendername () {
-      //save data
+      // save data
       let arr = this.arraySenderName
 
       this.editSenderName({
@@ -180,94 +180,94 @@ export default {
                 xs12
               >
                 <p>Please Enter Your Sender Name (Allow entering multiple values):</p>
-                  <v-combobox
-                    v-model="model"
-                    :filter="filter"
-                    :hide-no-data="!search"
-                    :items="items"
-                    :search-input.sync="search"
-                    :rules="zRules"
-                    hide-selected
-                    label="Search or Create New SenderName"
-                    multiple
-                    small-chips
-                    solo
-                  >
-                    <template slot="no-data">
-                      <v-list-tile>
-                        <span class="subheading">
-                          Create
-                        </span>
-                        <v-chip
-                          :color="`${colors[nonce - 1]} lighten-3`"
-                          label
-                          small
-                        >
-                          {{ search }}
-                        </v-chip>
-                      </v-list-tile>
-                    </template>
-                    <template
-                      v-if="item === Object(item)"
-                      slot="selection"
-                      slot-scope="{ item, parent, selected }"
-                    >
+                <v-combobox
+                  v-model="model"
+                  :filter="filter"
+                  :hide-no-data="!search"
+                  :items="items"
+                  :search-input.sync="search"
+                  :rules="zRules"
+                  hide-selected
+                  label="Search or Create New SenderName"
+                  multiple
+                  small-chips
+                  solo
+                >
+                  <template slot="no-data">
+                    <v-list-tile>
+                      <span class="subheading">
+                        Create
+                      </span>
                       <v-chip
-                        :color="`${item.color} lighten-3`"
-                        :selected="selected"
+                        :color="`${colors[nonce - 1]} lighten-3`"
                         label
                         small
                       >
-                        <span class="pr-2">
-                          {{ item.text }}
-                        </span>
-                        <v-icon
-                          small
-                          @click="parent.selectItem(item)"
-                        >
-                          close
-                        </v-icon>
+                        {{ search }}
                       </v-chip>
-                    </template>
-                    <template
-                      slot="item"
-                      slot-scope="{ ind, item }"
+                    </v-list-tile>
+                  </template>
+                  <template
+                    v-if="item === Object(item)"
+                    slot="selection"
+                    slot-scope="{ item, parent, selected }"
+                  >
+                    <v-chip
+                      :color="`${item.color} lighten-3`"
+                      :selected="selected"
+                      label
+                      small
                     >
-                      <v-list-tile-content>
-                        <v-text-field
-                          v-if="editing === item"
-                          v-model="editing.text"
-                          autofocus
-                          flat
-                          background-color="transparent"
-                          hide-details
-                          solo
-                          @keyup.enter="edit(ind, item)"
-                        />
-                        <v-chip
-                          v-else
-                          :color="`${item.color} lighten-3`"
-                          dark
-                          label
-                          small
-                        >
-                          {{ item.text }}
-                        </v-chip>
-                      </v-list-tile-content>
-                      <v-spacer />
-                      <v-list-tile-action @click.stop>
-                        <v-btn
-                          class="v-btn--simple"
-                          color="primary"
-                          icon
-                          @click.stop.prevent="edit(ind, item)"
-                        >
-                          <v-icon>{{ editing !== item ? 'edit' : 'check' }}</v-icon>
-                        </v-btn>
-                      </v-list-tile-action>
-                    </template>
-                  </v-combobox>
-                </v-flex>
+                      <span class="pr-2">
+                        {{ item.text }}
+                      </span>
+                      <v-icon
+                        small
+                        @click="parent.selectItem(item)"
+                      >
+                        close
+                      </v-icon>
+                    </v-chip>
+                  </template>
+                  <template
+                    slot="item"
+                    slot-scope="{ ind, item }"
+                  >
+                    <v-list-tile-content>
+                      <v-text-field
+                        v-if="editing === item"
+                        v-model="editing.text"
+                        autofocus
+                        flat
+                        background-color="transparent"
+                        hide-details
+                        solo
+                        @keyup.enter="edit(ind, item)"
+                      />
+                      <v-chip
+                        v-else
+                        :color="`${item.color} lighten-3`"
+                        dark
+                        label
+                        small
+                      >
+                        {{ item.text }}
+                      </v-chip>
+                    </v-list-tile-content>
+                    <v-spacer />
+                    <v-list-tile-action @click.stop>
+                      <v-btn
+                        class="v-btn--simple"
+                        color="primary"
+                        icon
+                        @click.stop.prevent="edit(ind, item)"
+                      >
+                        <v-icon>{{ editing !== item ? 'edit' : 'check' }}</v-icon>
+                      </v-btn>
+                    </v-list-tile-action>
+                  </template>
+                </v-combobox>
+              </v-flex>
             </v-layout>
           </v-container>
           <v-card-actions>
