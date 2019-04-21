@@ -4,14 +4,16 @@ import FormAddKeyword from '@components/form/form-add-keyword-reserved'
 import FormAddShortcode from '@components/form/form-add-shortcode'
 import FormAddOperatorConfig from '@components/form/form-add-operator-config'
 import FormEditOperatorConfig from '@components/form/form-edit-operator-config'
+import FormEditSendername from '@components/form/form-edit-sendername'
 
 export default {
-  components: { FormAddKeyword, FormAddShortcode, FormAddOperatorConfig, FormEditOperatorConfig },
+  components: { FormAddKeyword, FormAddShortcode, FormAddOperatorConfig, FormEditOperatorConfig, FormEditSendername },
   data: () => ({
     addKeywordDialog: '',
     addShortcodeDialog: '',
     addOperatorConfigDialog: '',
     editOperatorConfigDialog: '',
+    editSenderNameDialog: '',
     tabs: 0,
     dialog: false,
     fab: false,
@@ -26,7 +28,8 @@ export default {
     quickSearchFilterKW: '',
     quickSearchFilterKWR: '',
     selectedOperator: '',
-    selectedShortcode: ''
+    selectedShortcode: '',
+    selectedShortcodeObject: ''
   }),
   computed: {
     ...shortcodeComputed,
@@ -133,6 +136,16 @@ export default {
         this.addOperatorConfigDialog = !this.addOperatorConfigDialog
         return console.log(`haven't ops: ${this.selectedOperator} in ${this.selectedShortcode}`)
       }
+    },
+    clickedSenderName (object) {
+      this.selectedShortcodeObject = object
+
+      if(object.sendername) {
+        this.editSenderNameDialog = !this.editSenderNameDialog
+        return console.log(`to edit sendername dialog`)
+      }
+
+      return console.log(`don't have sendername property!!`)
     }
   }
 }
@@ -304,7 +317,7 @@ export default {
                       <v-chip
                         small  
                         class="light-green lighten-1 white--text caption font-weight-thin"
-                        @click.stop="onClicked(i)"
+                        @click.stop="clickedSenderName(item1)"
                       >
                         {{ i }}
                       </v-chip>
@@ -404,7 +417,7 @@ export default {
                 <v-list-tile-sub-title>
                   Keywords:
                   <v-chip
-                    v-for="i in item.keywords" 
+                    v-for="i in item.keywordsArray" 
                     :key="i"
                     class="deep-purple lighten-1 white--text caption font-weight-thin"
                   >
@@ -441,6 +454,12 @@ export default {
       :operator="selectedOperator"
       :shortcode="selectedShortcode"
       @emitCloseOpConfigEDialog="editOperatorConfigDialog=arguments[0]"
+    />
+    <form-edit-sendername
+      v-if="editSenderNameDialog"
+      :edit-sender-name-dialog="editSenderNameDialog"
+      :shortcode-item="selectedShortcodeObject"
+      @emitCloseEditSendernameDialog="editSenderNameDialog=arguments[0]"
     />
     <BaseDialog 
       :dialog="dialog" 

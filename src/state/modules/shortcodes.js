@@ -58,6 +58,10 @@ export const mutations = {
     state.shortcodeList[position].operatorName = []
     assign(state.shortcodeList[position].operatorName, payload)
   },
+  setSendernameInShortcodesList (state, { position, payload }) {
+    state.shortcodeList[position].sendername = []
+    assign(state.shortcodeList[position].sendername, payload)
+  },
   // update Page
   setPage(state, paginationPage) {
     state.pagination.page = paginationPage
@@ -184,7 +188,7 @@ export const actions = {
         return error
       })
   },
-  async getAllShortcodes({ commit }) {
+  async getAllShortcodes({ commit, dispatch }) {
 
     commit('setSLoading', { loading: true })
 
@@ -225,12 +229,19 @@ export const actions = {
 
       kReservedListQuery.forEach(doc => {
         let data = {}
-        data['rawData'] = doc.data()
-        let array = Object.getOwnPropertyNames(doc.data())
+        let raw = doc.data()
+        data['rawData'] = raw
+
+        let arr = adjustKeywordData(raw.keywords)
+
+        let arrFilter = arr.filter((y) => y.value === true).map(item => item.key)
+
         data['shortcode'] = doc.id
-        data['keywords'] = array
+        data['keywordsArray'] = arrFilter
+
         kReservedList.push(data)
       })
+
       console.log('yes')
       commit('setShortcodeList', sList)
       commit('setKeywordList', kList)
@@ -326,10 +337,16 @@ export const actions = {
 
         querySnapshot.forEach(doc => {
           let data = {}
-          data['rawData'] = doc.data()
-          let array = Object.getOwnPropertyNames(doc.data())
+          let raw = doc.data()
+          data['rawData'] = raw
+
+          let arr = adjustKeywordData(raw.keywords)
+
+          let arrFilter = arr.filter((y) => y.value === true).map(item => item.key)
+
           data['shortcode'] = doc.id
-          data['keywords'] = array
+          data['keywordsArray'] = arrFilter
+
           kReservedList.push(data)
         })
 
@@ -396,6 +413,25 @@ export const actions = {
         return error
       })
   },
+  editSenderName({ commit }, { shortcode, senderArray }) {
+
+    return firestoreApp
+      .collection('shortcodeConfig')
+      .doc(`${shortcode}`)
+      .update({
+        sendername: senderArray
+      })
+      .then(() => {
+        sendSuccessNotice(commit, 'SenderName has been edited.')
+        closeNotice(commit, 1500)
+      })
+      .catch(error => {
+        console.log(error)
+        sendErrorNotice(commit, 'SenderName save failed! Please try again later. ')
+        closeNotice(commit, 1500)
+        return error
+      })
+  },
   // ===
   // DELETE Zone
   // ===
@@ -424,4 +460,21 @@ export const actions = {
   // ===
   // ETC. Zone
   // ===
+}
+
+// ===
+// Private helpers
+// ===
+function adjustKeywordData (rawdata) {
+  const arrData = []
+
+  Object.keys(rawdata).forEach((item) => {
+    let m = {}
+    m['key'] = item
+    m['value'] = rawdata[item] // value
+    
+    arrData.push(m)
+  });
+
+  return arrData
 }

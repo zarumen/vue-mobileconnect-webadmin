@@ -75,6 +75,9 @@ export const campaignComputed = {
   ]),
   ...mapGetters('campaigns', [
     'hadCampaignList',
+  ]),
+  ...mapGetters('shortcodes', [
+    'hadShortcodesList',
   ])
 }
 
