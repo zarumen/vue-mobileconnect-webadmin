@@ -273,6 +273,10 @@ export default [
     path: '/home',
     redirect: '/',
   },
+  {
+    path: '/index.html',
+    redirect: '/',
+  },
 ]
 
 // Lazy-loads view components, but with better UX. A loading view

@@ -241,6 +241,7 @@ export default {
                   multiple
                   small-chips
                   solo
+                  required
                 >
                   <template slot="no-data">
                     <v-list-tile>

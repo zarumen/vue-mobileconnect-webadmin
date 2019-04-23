@@ -135,7 +135,9 @@ export const actions = {
     return firestoreApp
       .collection('campaignKeywordReserved')
       .doc(`${shortcode}`)
-      .set(keywords, { merge: true })
+      .set({
+        keywords: keywords
+      })
       .then(docRef => {
 
         console.log("Document written with ID: ", shortcode);
