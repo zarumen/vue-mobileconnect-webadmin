@@ -137,7 +137,7 @@ export const actions = {
       .doc(`${shortcode}`)
       .set({
         keywords: keywords
-      })
+      }, { merge: true })
       .then(docRef => {
 
         console.log("Document written with ID: ", shortcode);

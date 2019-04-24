@@ -29,7 +29,9 @@ export default {
     quickSearchFilterKWR: '',
     selectedOperator: '',
     selectedShortcode: '',
-    selectedShortcodeObject: ''
+    selectedShortcodeObject: '',
+    selectedKeywordActive: '',
+    selectedCampaignId: '',
   }),
   computed: {
     ...shortcodeComputed,
@@ -107,7 +109,7 @@ export default {
     },
     onConfirm () {
       // NOT FINISHED YET!
-      
+      this.dialog = false
     },
     onCancel () {
       this.dialog = false
@@ -146,6 +148,12 @@ export default {
       }
 
       return console.log(`don't have sendername property!!`)
+    },
+    openBaseDialogDetails (keyword, campaignId) {
+      this.selectedCampaignId = campaignId
+      this.selectedKeywordActive = keyword
+
+      this.dialog = !this.dialog
     }
   }
 }
@@ -256,18 +264,27 @@ export default {
             </v-icon>
           </v-btn>
         </span>
-        <v-btn
-          v-if="tabs === 1" 
-          class="v-btn--simple"
-          color="secondary"
-          circle
-          icon
-          @click.native="reloadKeywords"
-        >
-          <v-icon>
-            refresh
-          </v-icon>      
-        </v-btn>
+        <span v-if="tabs === 1">
+          <v-btn
+            class="v-btn--simple"
+            color="light-green darken-2"
+            round
+            @click.stop="addKeywordDialog = !addKeywordDialog"
+          >
+            #KEYWORD         
+          </v-btn>
+          <v-btn
+            class="v-btn--simple"
+            color="secondary"
+            circle
+            icon
+            @click.native="reloadKeywords"
+          >
+            <v-icon>
+              refresh
+            </v-icon>      
+          </v-btn>
+        </span>
         <span v-if="tabs === 2">
           <v-btn
             class="v-btn--simple"
@@ -275,7 +292,7 @@ export default {
             round
             @click.stop="addKeywordDialog = !addKeywordDialog"
           >
-            +KEYWORD         
+            +KEY RESERVED         
           </v-btn>
           <v-btn 
             class="v-btn--simple"
@@ -295,29 +312,29 @@ export default {
         <v-tab-item :value="0">
           <!-- shortcode list -->
           <v-list three-line>
-            <template v-for="(item1, index) in filteredList">
+            <template v-for="(item0, index) in filteredList">
               <v-list-tile 
                 :key="index"
                 ripple
-                @click="onClicked(item1)"
+                @click="onClicked(item0)"
               >
                 <v-list-tile-content>
                   <v-list-tile-title class="pt-2 subheading font-weight-medium">
                     <v-icon small>
                       filter_6
                     </v-icon>
-                    &nbsp;{{ item1.shortcode }}
+                    &nbsp;{{ item0.shortcode }}
                   </v-list-tile-title>
                   <v-list-tile-sub-title class="body-2 font-weight-thin">
                     Sender Name:
                     <span
-                      v-for="i in item1.sendername"
+                      v-for="i in item0.sendername"
                       :key="i"
                     >
                       <v-chip
                         small  
                         class="light-green lighten-1 white--text caption font-weight-thin"
-                        @click.stop="clickedSenderName(item1)"
+                        @click.stop="clickedSenderName(item0)"
                       >
                         {{ i }}
                       </v-chip>
@@ -334,8 +351,8 @@ export default {
                       fab
                       class="v-btn--simple"
                       small
-                      :color="checkedOperatorNameColor('ais', item1)"
-                      @click.stop="clickedOperator('ais', item1)"
+                      :color="checkedOperatorNameColor('ais', item0)"
+                      @click.stop="clickedOperator('ais', item0)"
                     >
                       AIS
                     </v-btn>
@@ -343,8 +360,8 @@ export default {
                       fab
                       class="v-btn--simple"
                       small
-                      :color="checkedOperatorNameColor('cat', item1)"
-                      @click.stop="clickedOperator('cat', item1)"
+                      :color="checkedOperatorNameColor('cat', item0)"
+                      @click.stop="clickedOperator('cat', item0)"
                     >
                       CAT
                     </v-btn>
@@ -352,8 +369,8 @@ export default {
                       fab
                       class="v-btn--simple"
                       small
-                      :color="checkedOperatorNameColor('dtac', item1)"
-                      @click.stop="clickedOperator('dtac', item1)"
+                      :color="checkedOperatorNameColor('dtac', item0)"
+                      @click.stop="clickedOperator('dtac', item0)"
                     >
                       DTAC
                     </v-btn>
@@ -361,8 +378,8 @@ export default {
                       fab
                       class="v-btn--simple"
                       small
-                      :color="checkedOperatorNameColor('true', item1)"
-                      @click.stop="clickedOperator('true', item1)"
+                      :color="checkedOperatorNameColor('true', item0)"
+                      @click.stop="clickedOperator('true', item0)"
                     >
                       TRUE
                     </v-btn>
@@ -379,19 +396,25 @@ export default {
         <v-tab-item :value="1">
           <!-- keyword list -->
           <v-list three-line>
-            <template v-for="(item, index) in filteredKeywordList">
+            <template v-for="(item1, index) in filteredKeywordList">
               <v-list-tile 
                 :key="index"
                 ripple
               >
                 <v-list-tile-content>
-                  <v-list-tile-title>Shortcode: {{ item.shortcode }}</v-list-tile-title>
-                  <v-list-tile-sub-title>
+                  <v-list-tile-title class="pt-2 subheading font-weight-medium">
+                    <v-icon small>
+                      filter_6
+                    </v-icon>
+                    &nbsp;{{ item1.shortcode }}
+                  </v-list-tile-title>
+                  <v-list-tile-sub-title class="body-2 font-weight-thin">
                     Keywords:
                     <v-chip
-                      v-for="k in item.keywords" 
+                      v-for="k in item1.keywords" 
                       :key="k"
                       class="light-green lighten-1 white--text caption font-weight-thin"
+                      @click.stop="openBaseDialogDetails(k, item1.rawData[k])"
                     >
                       {{ k }}
                     </v-chip>
@@ -408,24 +431,35 @@ export default {
         <v-tab-item :value="2">
           <!-- keyword reserved -->
           <v-list three-line>
-            <v-list-tile 
-              v-for="item in keywordReservedList"
-              :key="item.shortcode"
-            >
-              <v-list-tile-content>
-                <v-list-tile-title>{{ item.shortcode }}</v-list-tile-title>
-                <v-list-tile-sub-title>
-                  Keywords:
-                  <v-chip
-                    v-for="i in item.keywordsArray" 
-                    :key="i"
-                    class="deep-purple lighten-1 white--text caption font-weight-thin"
-                  >
-                    {{ i }}
-                  </v-chip>
-                </v-list-tile-sub-title>
-              </v-list-tile-content>
-            </v-list-tile>
+            <template v-for="(item2, index) in keywordReservedList">
+              <v-list-tile 
+                :key="item2.shortcode"
+                ripple
+              >
+                <v-list-tile-content>
+                  <v-list-tile-title class="pt-2 subheading font-weight-medium">
+                    <v-icon small>
+                      filter_6
+                    </v-icon>
+                    &nbsp;{{ item2.shortcode }}
+                  </v-list-tile-title>
+                  <v-list-tile-sub-title class="body-2 font-weight-thin">
+                    Keywords:
+                    <v-chip
+                      v-for="i in item2.keywordsArray" 
+                      :key="i"
+                      class="deep-purple lighten-1 white--text caption font-weight-thin"
+                    >
+                      {{ i }}
+                    </v-chip>
+                  </v-list-tile-sub-title>
+                </v-list-tile-content>
+              </v-list-tile>
+              <v-divider 
+                v-if="index + 1 < filteredKeywordList.length" 
+                :key="`divider-${index}`"
+              />
+            </template>
           </v-list>
         </v-tab-item>
       </v-tabs-items>
@@ -463,9 +497,9 @@ export default {
     />
     <BaseDialog 
       :dialog="dialog" 
-      :dialog-title="`Hey`" 
-      :dialog-text="`Yo`"
-      @onConfirm="onConfirm" 
+      :dialog-title="`Keyword: ${selectedKeywordActive}`" 
+      :dialog-text="`This keyword has use in campaignID ${selectedCampaignId}`"
+      @onConfirm="onConfirm"
       @onCancel="onCancel"
     />
   </base-helper-offset>
