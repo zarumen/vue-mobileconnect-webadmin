@@ -39,9 +39,9 @@ export default {
   computed: {
     opsRadio () {
 
-      if (this.operator !== '') {
-        this.opsDisabled = true
-        return this.operator
+      if (this.operator) {
+
+        return this.changedTrickRadio(this.opsDisabled, this.operator)
       }
       return null
     },
@@ -73,6 +73,12 @@ export default {
         this.closeDialog()
       }
     },
+    changedTrickRadio (bool, operator) {
+
+      bool = !bool
+
+      return operator
+    }
   }
 }
 </script>

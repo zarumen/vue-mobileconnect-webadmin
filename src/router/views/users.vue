@@ -27,7 +27,6 @@ export default {
           value: 'organizationAuth'
         },
         { text: 'First Name', value: 'firstName' },
-        { text: 'Last Name', value: 'lastName' },
         { text: 'Nick Name', value: 'nickName' },
         { text: 'Company Name', value: 'organizationLevel1Name'},
         { text: 'Email', value: 'email' },

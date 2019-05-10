@@ -214,11 +214,22 @@ export default {
               wrap
             >
               <v-flex 
-                xs8 
+                xs11
                 align-center 
                 justify-space-between
               >
                 <v-layout align-center>
+                  <v-select
+                    v-model="select"
+                    :items="levelItems"
+                    item-text="state"
+                    item-value="value"
+                    label="OrganizationLevel Field"
+                    prepend-icon="perm_contact_calendar"
+                    return-object
+                    single-line
+                  />
+                  <v-spacer />
                   <v-avatar 
                     size="80px" 
                     class="mr-3"
@@ -236,17 +247,6 @@ export default {
                       :src="avartar.female"
                     >
                   </v-avatar>
-                  <v-select
-                    v-model="select"
-                    :hint="`${select.id}: ${select.value}`"
-                    :items="levelItems"
-                    item-text="state"
-                    item-value="value"
-                    label="OrganizationLevel Field"
-                    persistent-hint
-                    return-object
-                    single-line
-                  />
                 </v-layout>
               </v-flex>
               <v-flex 
@@ -256,12 +256,10 @@ export default {
                 <v-combobox
                   :key="companyList.key"
                   v-model="company"
-                  :hint="`${company}`"
                   :items="companyList"
                   item-text="displayName"
                   prepend-icon="business"
                   label="Company Name"
-                  persistent-hint
                   required
                   chips
                 />
@@ -273,12 +271,10 @@ export default {
                 <v-combobox
                   :key="departmentList.id"
                   v-model="department"
-                  :hint="`${department}`"
                   :items="departmentList"
                   item-text="displayName"
                   prepend-icon="business_center"
                   label="Department Name"
-                  persistent-hint
                   chips
                 >
                   <template 
@@ -317,12 +313,10 @@ export default {
                 <v-combobox
                   :key="brandList.id"
                   v-model="brand"
-                  :hint="`${brand}`"
                   :items="brandList"
                   item-text="displayName"
                   prepend-icon="shopping_basket"
                   label="Brand Name"
-                  persistent-hint
                   chips
                 >
                   <template 

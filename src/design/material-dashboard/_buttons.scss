@@ -1,6 +1,5 @@
 .v-btn {
   height: auto;
-  padding: $padding-small + 2 $padding-general + 15;
   margin: $margin-small 1px;
   font-size: $font-size-small;
   font-weight: $font-weight-base !important;
@@ -11,6 +10,7 @@
 
   &.v-btn--round,
   &.v-btn--round::after {
+    padding: $padding-small + 2 $padding-general + 15;
     border-radius: $btn-round-padding;
   }
 

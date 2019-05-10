@@ -177,7 +177,7 @@ export default {
             // empty field in Company Name
             this.openSnackBar('Please check "Company Name" is not Correct.')
           }
-          if (typeof tCompany !== 'string') {
+          if (typeof tCompany === 'string') {
             // HANDLE error check if Company is String (use old Company only)
             this.openSnackBar('Please select "Company" from Dropdown List!')
           }
@@ -188,14 +188,7 @@ export default {
           }
           if (typeof tCompany === 'object' && tBrand !== null) {
             
-            if (tCompany.organizationLevel1 !== tDepartment.organizationLevel1 || 
-                  tBrand.organizationLevel2 === tDepartment.organizationLevel2 ||
-                    tBrand.organizationLevel1 === tCompany.organizationLevel1) {
-              // HANDLE IF USE COMPANY AND DEPARTMENT AND BRAND MISMATCH
-              this.openSnackBar('COMPANY AND DEPARTMENT AND BRAND MISMATCH')
-              break;
-
-            } else if (tDepartment === null) {
+            if (tDepartment === null) {
               // HANDLE IF DEPARTMENT IS NULL
               let org = {
                   organizationLevel1: tCompany.organizationLevel1,
@@ -218,6 +211,13 @@ export default {
               // add Object org to Action add Brand in Vuex
               this.addBrandToOrganization(org)
               this.closeDialog()
+
+            } else if (tCompany.organizationLevel1 !== tDepartment.organizationLevel1 || 
+                  tBrand.organizationLevel2 === tDepartment.organizationLevel2 ||
+                    tBrand.organizationLevel1 === tCompany.organizationLevel1) {
+              // HANDLE IF USE COMPANY AND DEPARTMENT AND BRAND MISMATCH
+              this.openSnackBar('COMPANY AND DEPARTMENT AND BRAND MISMATCH')
+              break;
 
             } else {
               // Prepare Object organization

@@ -1,5 +1,6 @@
 import { set } from '@state/helpers'
 import firestoreApp from "@utils/firestore.config"
+import firebase from '@firebase/app'
 import assign from 'lodash/assign'
 
 import {
@@ -33,7 +34,8 @@ export const getters = {
   hadShortcodesList: (state) => !!state.shortcodeList,
   getShortcodesList: (state) => state.shortcodeList,
   hadOperatorConfig: (state) => !!state.operatorConfig,
-  getOneOpsConfig: (state) => state.operatorConfig
+  getOneOpsConfig: (state) => state.operatorConfig,
+  getShortcodesReservedList: (state) => state.keywordReservedList,
 }
 
 export const mutations = {
@@ -57,6 +59,10 @@ export const mutations = {
   setElementShortcodesList (state, { position, payload }) {
     state.shortcodeList[position].operatorName = []
     assign(state.shortcodeList[position].operatorName, payload)
+  },
+  setElementKeywordReservedList (state, { position, payload }) {
+    state.keywordReservedList[position].operatorName = []
+    assign(state.keywordReservedList[position].keywordsArray, payload)
   },
   setSendernameInShortcodesList (state, { position, payload }) {
     state.shortcodeList[position].sendername = []
@@ -237,9 +243,11 @@ export const actions = {
         let arr = adjustKeywordData(raw.keywords)
 
         let arrFilter = arr.filter((y) => y.value === true).map(item => item.key)
-
+        let arrFalseFilter = arr.filter((y) => y.value === false).map(item => item.key)
+        
         data['shortcode'] = doc.id
         data['keywordsArray'] = arrFilter
+        data['keywordsFalseArray'] = arrFalseFilter
 
         kReservedList.push(data)
       })
@@ -345,9 +353,11 @@ export const actions = {
           let arr = adjustKeywordData(raw.keywords)
 
           let arrFilter = arr.filter((y) => y.value === true).map(item => item.key)
+          let arrFalseFilter = arr.filter((y) => y.value === false).map(item => item.key)
 
           data['shortcode'] = doc.id
           data['keywordsArray'] = arrFilter
+          data['keywordsFalseArray'] = arrFalseFilter
 
           kReservedList.push(data)
         })
@@ -458,7 +468,29 @@ export const actions = {
         closeNotice(commit, 1500)
         return error
       })
-  }
+  },
+  deleteKeywordReserved({ commit }, { shortcode, keyword}) {
+
+    let keywordRef = firestoreApp.collection('campaignKeywordReserved').doc(`${shortcode}`)
+
+    return keywordRef
+      .update({
+          [`keywords.${keyword}`]: firebase.firestore.FieldValue.delete()
+      })
+      .then(() => {
+
+        console.log(`Delete Keyword Reserved!`);
+        sendSuccessNotice(commit, 'Keyword has been deleted.')
+        closeNotice(commit, 1500)
+        return `yes`
+      })
+      .catch(error => {
+        console.log(error)
+        sendErrorNotice(commit, 'Operation Config delete failed! Please try again later. ')
+        closeNotice(commit, 1500)
+        return error
+      })
+  },
   // ===
   // ETC. Zone
   // ===

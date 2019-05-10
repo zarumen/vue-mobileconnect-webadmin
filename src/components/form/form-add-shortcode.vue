@@ -235,6 +235,7 @@ export default {
                     :rules="secondRules"
                     hide-selected
                     label="Search or Create New SenderName"
+                    prepend-icon="how_to_reg"
                     multiple
                     small-chips
                     solo

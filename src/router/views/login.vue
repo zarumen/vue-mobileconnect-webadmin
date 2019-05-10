@@ -98,9 +98,11 @@ export default {
                 counter
                 @click:append="() => (ePass = !ePass)"
               />
-              <BaseButton
+              <v-btn
                 :disabled="tryingToLogIn"
+                color="primary"
                 type="submit"
+                round
               >
                 <BaseIcon
                   v-if="tryingToLogIn"
@@ -110,7 +112,7 @@ export default {
                 <span v-else>
                   Log In
                 </span>
-              </BaseButton>
+              </v-btn>
               <p v-if="authError">
                 There was an error logging in to your account.
               </p>

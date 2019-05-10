@@ -238,7 +238,6 @@ export default {
                   :rules="secondRules"
                   hide-selected
                   label="Search or Create New Keyword"
-                  prepend-icon="sort_by_alpha"
                   multiple
                   small-chips
                   solo

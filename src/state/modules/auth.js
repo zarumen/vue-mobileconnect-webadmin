@@ -1,6 +1,6 @@
 import fireauthApp from '@utils/fireauth.config'
 import firestoreApp from '@utils/firestore.config'
-// import { set, toggle } from '@state/helpers'
+import assign from 'lodash/assign'
 
 export const state = {
   currentUser: getSavedState('auth.currentUser'),
@@ -21,6 +21,9 @@ export const mutations = {
   SET_CURRENT_USER(state, newValue) {
     state.currentUser = newValue
     saveState('auth.currentUser', newValue)
+  },
+  setDisplayNameUpdated (state, payload) {
+    assign(state.currentUser, payload)
   },
   setUserInfo(state, newValue) {
     state.userInfo = newValue
