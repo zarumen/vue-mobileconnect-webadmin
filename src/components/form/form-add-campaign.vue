@@ -145,7 +145,12 @@ export default {
       if(sCheck) {
         let kws = this.keywordList.filter(sc => sc.shortcode === sCheck)
 
-        return kws[0].keywords
+        if(kws.length !== 0) {
+
+          return kws[0].keywords
+        }
+
+        return []
       }
 
       return []
@@ -205,6 +210,8 @@ export default {
     checkDuplicatedKeyword (keywordArr) {
 
       if(keywordArr) {
+
+        if(!this.keywordInKeywordList) return true
         // ถ้ามี keyword เข้ามาให้ เช็คว่า มี keyword ที่ใช้อยู่รึิเปล่า
         let checkArr = keywordArr.map(element => {
           // return เป็น Boolean Array ของ keywords [true, false, true]
@@ -270,7 +277,7 @@ export default {
         // set Context Parsers
         campaignValidationNew['contextParser'] = this.contextParser
         // set Reward Array or Object
-        if(checkObjectReward) {
+        if(this.checkObjectReward) {
           campaignValidationNew['rewardsObject'] = arrayToObject(this.rewards, "rewardId")
         } else {
           campaignValidationNew['rewardsArray'] = this.rewards

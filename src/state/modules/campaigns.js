@@ -20,8 +20,15 @@ export const state = {
 }
 
 export const getters = {
-  hadCampaignList(state) {
+  hadCampaignList (state) {
     return !!state.items
+  },
+  getAllCampaignsId (state) {
+
+    if(state.items)
+      return state.items.map(item => item.id)
+
+    return []
   }
 }
 
@@ -30,14 +37,14 @@ export const mutations = {
     state.pagination = pagination
   },
   // update Page
-  setPage(state, paginationPage) {
+  setPage (state, paginationPage) {
     state.pagination.page = paginationPage
   },
   // Mutate Value in Pagination
   setItems (state, items) {
     state.items = items
   },
-  setLoading(state, { loading }) {
+  setLoading (state, { loading }) {
     state.loading = loading
   },
   setNotice (state, { notice }) {

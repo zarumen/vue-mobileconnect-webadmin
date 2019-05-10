@@ -1,4 +1,4 @@
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 
 export const authComputed = {
   ...mapState('auth', {
@@ -137,6 +137,7 @@ export const shortcodeComputed = {
   }),
   ...mapGetters('shortcodes', [
     'hadShortcodesList',
+    'getShortcodesReservedList'
   ])
 }
 
@@ -145,8 +146,12 @@ export const shortcodeMethods = {
     'getAllShortcodes',
     'getShortcodesFromFirestore',
     'getKeywordsActiveFromFirestore',
-    'getKeywordsReservedFromFirestore'
-  ])
+    'getKeywordsReservedFromFirestore',
+    'deleteKeywordReserved'
+  ]),
+  ...mapMutations('shortcodes', [
+    'setElementKeywordReservedList',
+  ]),
 }
 
 export const set = property => (state, payload) => (state[property] = payload)

@@ -16,6 +16,7 @@ export default {
     editSenderNameDialog: '',
     tabs: 0,
     dialog: false,
+    deletedDialog: false,
     fab: false,
     colorOperator: [
       'green',
@@ -29,7 +30,10 @@ export default {
     quickSearchFilterKWR: '',
     selectedOperator: '',
     selectedShortcode: '',
-    selectedShortcodeObject: ''
+    selectedShortcodeObject: '',
+    selectedKeywordActive: '',
+    selectedKeywordReserved: '',
+    selectedCampaignId: '',
   }),
   computed: {
     ...shortcodeComputed,
@@ -76,6 +80,16 @@ export default {
           return post.shortcode.includes(this.quickSearchFilterKW)
         })
       }
+    },
+    filteredKeywordReservedList () {
+
+      if(this.keywordReservedList) {
+        return this.keywordReservedList.filter(post => {
+          return post.shortcode.includes(this.quickSearchFilterKWR)
+        })
+      }
+
+      return null
     }
   },
   watch: {
@@ -96,6 +110,22 @@ export default {
     refreshReservedList () {
       return this.getKeywordsReservedFromFirestore()
     },
+    mutateDeleteKeywordReservedList (sc, keyword) {
+
+      let kReservedList = this.getShortcodesReservedList
+
+      let deletedKeywordListObj = kReservedList.find(rc => rc.shortcode === sc)
+
+      let i = kReservedList.indexOf(deletedKeywordListObj)
+
+      let resultArray = deletedKeywordListObj.keywordsArray.filter(t => t !== keyword)
+
+      this.setElementKeywordReservedList({
+        position: i,
+        payload: resultArray
+      })
+
+    },
     checkedOperatorNameColor (ops, item) {
       let data = []
       if (item) {
@@ -107,10 +137,17 @@ export default {
     },
     onConfirm () {
       // NOT FINISHED YET!
-      
+      this.deleteKeywordReserved({
+        shortcode: this.selectedShortcode,
+        keyword: this.selectedKeywordReserved
+      })
+      .then(() => {
+        this.mutateDeleteKeywordReservedList(this.selectedShortcode, this.selectedKeywordReserved)
+      })
+      this.deletedDialog = false
     },
     onCancel () {
-      this.dialog = false
+      this.deletedDialog = false
     },
     onClicked (i) {
       console.log(`click in :${JSON.stringify(i)}`)
@@ -146,6 +183,21 @@ export default {
       }
 
       return console.log(`don't have sendername property!!`)
+    },
+    clickedKeywordReserved (keyword, shortcode) {
+
+      this.selectedShortcode = shortcode
+      this.selectedKeywordReserved = keyword
+
+      this.deletedDialog = !this.deletedDialog
+
+    },
+    openBaseDialogDetails (keyword, campaignId) {
+
+      this.selectedCampaignId = campaignId
+      this.selectedKeywordActive = keyword
+
+      this.dialog = !this.dialog
     }
   }
 }
@@ -224,7 +276,7 @@ export default {
           v-if="tabs === 2" 
           class="title"
         >
-          Keyword Reserved Totals {{ keywordReservedList? "("+keywordReservedList.length+")": "" }}
+          Keyword Reserved Totals {{ filteredKeywordReservedList? "("+filteredKeywordReservedList.length+")": "" }}
           <v-text-field
             v-model="quickSearchFilterKWR"
             append-icon="search"
@@ -256,18 +308,28 @@ export default {
             </v-icon>
           </v-btn>
         </span>
-        <v-btn
-          v-if="tabs === 1" 
-          class="v-btn--simple"
-          color="secondary"
-          circle
-          icon
-          @click.native="reloadKeywords"
-        >
-          <v-icon>
-            refresh
-          </v-icon>      
-        </v-btn>
+        <span v-if="tabs === 1">
+          <v-btn
+            class="v-btn--simple"
+            color="light-green darken-2"
+            round
+            disabled
+            @click.stop="addKeywordDialog = !addKeywordDialog"
+          >
+            #KEYWORD         
+          </v-btn>
+          <v-btn
+            class="v-btn--simple"
+            color="secondary"
+            circle
+            icon
+            @click.native="reloadKeywords"
+          >
+            <v-icon>
+              refresh
+            </v-icon>      
+          </v-btn>
+        </span>
         <span v-if="tabs === 2">
           <v-btn
             class="v-btn--simple"
@@ -275,7 +337,7 @@ export default {
             round
             @click.stop="addKeywordDialog = !addKeywordDialog"
           >
-            +KEYWORD         
+            +KEY RESERVED         
           </v-btn>
           <v-btn 
             class="v-btn--simple"
@@ -295,29 +357,33 @@ export default {
         <v-tab-item :value="0">
           <!-- shortcode list -->
           <v-list three-line>
-            <template v-for="(item1, index) in filteredList">
+            <template v-for="(item0, index) in filteredList">
               <v-list-tile 
                 :key="index"
                 ripple
-                @click="onClicked(item1)"
+                @click="onClicked(item0)"
               >
+                <v-list-tile-avatar>
+                  <v-icon small>
+                    filter_6
+                  </v-icon>
+                </v-list-tile-avatar>
                 <v-list-tile-content>
                   <v-list-tile-title class="pt-2 subheading font-weight-medium">
-                    <v-icon small>
-                      filter_6
-                    </v-icon>
-                    &nbsp;{{ item1.shortcode }}
+                    {{ item0.shortcode }}
                   </v-list-tile-title>
+                  <v-list-tile-action-text>
+                    &nbsp;Sender Name:
+                  </v-list-tile-action-text>
                   <v-list-tile-sub-title class="body-2 font-weight-thin">
-                    Sender Name:
                     <span
-                      v-for="i in item1.sendername"
+                      v-for="i in item0.sendername"
                       :key="i"
                     >
                       <v-chip
                         small  
-                        class="light-green lighten-1 white--text caption font-weight-thin"
-                        @click.stop="clickedSenderName(item1)"
+                        class="mb-2 light-green darken-2 white--text caption font-weight-thin"
+                        @click.stop="clickedSenderName(item0)"
                       >
                         {{ i }}
                       </v-chip>
@@ -334,8 +400,8 @@ export default {
                       fab
                       class="v-btn--simple"
                       small
-                      :color="checkedOperatorNameColor('ais', item1)"
-                      @click.stop="clickedOperator('ais', item1)"
+                      :color="checkedOperatorNameColor('ais', item0)"
+                      @click.stop="clickedOperator('ais', item0)"
                     >
                       AIS
                     </v-btn>
@@ -343,8 +409,8 @@ export default {
                       fab
                       class="v-btn--simple"
                       small
-                      :color="checkedOperatorNameColor('cat', item1)"
-                      @click.stop="clickedOperator('cat', item1)"
+                      :color="checkedOperatorNameColor('cat', item0)"
+                      @click.stop="clickedOperator('cat', item0)"
                     >
                       CAT
                     </v-btn>
@@ -352,8 +418,8 @@ export default {
                       fab
                       class="v-btn--simple"
                       small
-                      :color="checkedOperatorNameColor('dtac', item1)"
-                      @click.stop="clickedOperator('dtac', item1)"
+                      :color="checkedOperatorNameColor('dtac', item0)"
+                      @click.stop="clickedOperator('dtac', item0)"
                     >
                       DTAC
                     </v-btn>
@@ -361,8 +427,8 @@ export default {
                       fab
                       class="v-btn--simple"
                       small
-                      :color="checkedOperatorNameColor('true', item1)"
-                      @click.stop="clickedOperator('true', item1)"
+                      :color="checkedOperatorNameColor('true', item0)"
+                      @click.stop="clickedOperator('true', item0)"
                     >
                       TRUE
                     </v-btn>
@@ -379,19 +445,30 @@ export default {
         <v-tab-item :value="1">
           <!-- keyword list -->
           <v-list three-line>
-            <template v-for="(item, index) in filteredKeywordList">
+            <template v-for="(item1, index) in filteredKeywordList">
               <v-list-tile 
                 :key="index"
                 ripple
               >
+                <v-list-tile-avatar>
+                  <v-icon small>
+                    filter_6
+                  </v-icon>
+                </v-list-tile-avatar>
                 <v-list-tile-content>
-                  <v-list-tile-title>Shortcode: {{ item.shortcode }}</v-list-tile-title>
-                  <v-list-tile-sub-title>
-                    Keywords:
+                  <v-list-tile-title class="pt-2 subheading font-weight-medium">
+                    {{ item1.shortcode }}
+                  </v-list-tile-title>
+                  <v-list-tile-action-text>
+                    &nbsp;Keywords Used:
+                  </v-list-tile-action-text>
+                  <v-list-tile-sub-title class="body-2 font-weight-thin">
                     <v-chip
-                      v-for="k in item.keywords" 
+                      v-for="k in item1.keywords" 
                       :key="k"
-                      class="light-green lighten-1 white--text caption font-weight-thin"
+                      class="mb-2 light-green white--text caption font-weight-thin"
+                      small
+                      @click.stop="openBaseDialogDetails(k, item1.rawData[k])"
                     >
                       {{ k }}
                     </v-chip>
@@ -408,24 +485,70 @@ export default {
         <v-tab-item :value="2">
           <!-- keyword reserved -->
           <v-list three-line>
-            <v-list-tile 
-              v-for="item in keywordReservedList"
-              :key="item.shortcode"
-            >
-              <v-list-tile-content>
-                <v-list-tile-title>{{ item.shortcode }}</v-list-tile-title>
-                <v-list-tile-sub-title>
-                  Keywords:
-                  <v-chip
-                    v-for="i in item.keywordsArray" 
-                    :key="i"
-                    class="deep-purple lighten-1 white--text caption font-weight-thin"
-                  >
-                    {{ i }}
-                  </v-chip>
-                </v-list-tile-sub-title>
-              </v-list-tile-content>
-            </v-list-tile>
+            <template v-for="(item2, index) in filteredKeywordReservedList">
+              <v-list-tile 
+                :key="item2.shortcode"
+                ripple
+                @click.stop="onClicked(item2)"
+              >
+                <v-list-tile-avatar>
+                  <v-icon small>
+                    filter_6
+                  </v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title class="pt-2 subheading font-weight-medium">
+                    {{ item2.shortcode }}
+                  </v-list-tile-title>
+                  <div>
+                    <v-list-tile-action-text>
+                      &nbsp;Keywords Reserved:
+                    </v-list-tile-action-text>
+                    <v-list-tile-sub-title class="body-2 font-weight-thin">
+                      <!-- Keyword ที่กำลัง reserved -->
+                      <v-chip
+                        v-for="i in item2.keywordsArray" 
+                        :key="i"
+                        class="mb-2 deep-purple lighten-1 white--text caption font-weight-thin"
+                        small
+                        @click.stop="clickedKeywordReserved(i, item2.shortcode)"
+                      >
+                        {{ i }}
+                      </v-chip>
+                      <!-- Keywords ที่ถูกใช้ไปแล้ว (Actived) -->
+                      <v-chip
+                        v-for="i in item2.keywordsFalseArray" 
+                        :key="i"
+                        class="mb-2 grey lighten-1 white--text caption font-weight-thin"
+                        small
+                        @click.stop="onClicked(i)"
+                      >
+                        {{ i }}
+                      </v-chip>
+                    </v-list-tile-sub-title>
+                  </div>
+                  <!-- <div v-if="item2.keywordsFalseArray.length > 0">
+                    <v-list-tile-action-text>
+                      &nbsp;Keywords Reserved Used:
+                    </v-list-tile-action-text>
+                    <v-list-tile-sub-title class="body-2 font-weight-thin">
+                      <v-chip
+                        v-for="i in item2.keywordsFalseArray" 
+                        :key="i"
+                        class="mb-2 grey lighten-1 white--text caption font-weight-thin"
+                        small
+                      >
+                        {{ i }}
+                      </v-chip>
+                    </v-list-tile-sub-title>
+                  </div> -->
+                </v-list-tile-content>
+              </v-list-tile>
+              <v-divider 
+                v-if="index + 1 < filteredKeywordReservedList.length" 
+                :key="`divider-${index}`"
+              />
+            </template>
           </v-list>
         </v-tab-item>
       </v-tabs-items>
@@ -461,13 +584,43 @@ export default {
       :shortcode-item="selectedShortcodeObject"
       @emitCloseEditSendernameDialog="editSenderNameDialog=arguments[0]"
     />
-    <BaseDialog 
-      :dialog="dialog" 
-      :dialog-title="`Hey`" 
-      :dialog-text="`Yo`"
-      @onConfirm="onConfirm" 
+    <BaseDialog
+      :dialog="deletedDialog" 
+      :dialog-title="`Deleted Keyword Reserved Dialog`" 
+      :dialog-text="`Do you want to Deleted ${selectedKeywordReserved} Keyword?`"
+      @onConfirm="onConfirm"
       @onCancel="onCancel"
     />
+    <!-- Details Campaign Keyword Dialog -->
+    <v-dialog
+      v-if="dialog"
+      v-model="dialog"
+      max-width="290"
+      persistent
+    >
+      <v-card>
+        <v-card-title class="headline">
+          Keyword: {{ selectedKeywordActive }}
+        </v-card-title>
+        <v-divider />
+        <v-card-text class="subheading">
+          <strong class="subheading green--text">
+            {{ selectedKeywordActive }}
+          </strong> has use in campaignID <br>"{{ selectedCampaignId }}"
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            color="green darken-1"
+            round
+            flat
+            @click="dialog = false"
+          >
+            Agree
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </base-helper-offset>
 </template>
 

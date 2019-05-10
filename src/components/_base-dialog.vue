@@ -20,15 +20,25 @@ export default {
       isRootComponent: true,
       // clipped: false,
       drawer: true,
-      fixed: false
+      form: '',
+      fixed: false,
+      valid: false,
+      value: '',
+      validate: [
+        v => !!v || 'Please text "DELETE ME!" in textfield.',
+        v => /^DELETE ME!$/.test(v) || 'Please text "DELETE ME!" in textfield.'
+      ]
     }
   },
   mounted () {
-
+    this.value = ''
   },
   methods: {
     onConfirm () {},
-    onCancel () {}
+    onCancel () {
+      this.value = ''
+      this.$emit('onCancel')
+    }
   },
 }
 </script>
@@ -37,29 +47,65 @@ export default {
   <v-dialog 
     v-model="dialog" 
     persistent 
-    max-width="320"
+    max-width="360"
   >
     <v-card>
-      <v-card-title>{{ dialogTitle }}</v-card-title>
-      <v-card-text>{{ dialogText }}</v-card-text>
-      <v-card-actions>
-        <v-btn 
-          class="v-btn--simple"
-          color="danger"
-          round
-          @click.native="$emit('onConfirm')"
+      <v-form
+        ref="form"
+        v-model="valid"
+        lazy-validation
+      >
+        <v-card-title
+          class="subheading font-weight-light"
         >
-          Confirm
-        </v-btn>
-        <v-btn 
-          class="v-btn--simple"
-          color="default"
-          round 
-          @click.native="$emit('onCancel')"
-        >
-          Cancel
-        </v-btn>
-      </v-card-actions>
+          <v-icon color="red lighten-2">
+            warning
+          </v-icon>
+          &nbsp;{{ dialogTitle }}
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-layout column>
+              <v-flex xs12>
+                <h5 class="grey--text body-1 font-weight-medium">
+                  {{ dialogText }}
+                </h5>
+              </v-flex>
+              <v-flex xs6>
+                <v-text-field
+                  v-model="value"
+                  :rules="validate"
+                  append-icon="edit"
+                  class="purple-input"
+                  placeholder="DELETE ME!"
+                  required
+                />
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            v-if="!!value"
+            :disabled="!valid"
+            class="v-btn--simple"
+            color="danger"
+            round
+            @click.native="$emit('onConfirm')"
+          >
+            Confirm
+          </v-btn>
+          <v-btn 
+            class="v-btn--simple"
+            color="default"
+            round 
+            @click.native="onCancel"
+          >
+            Cancel
+          </v-btn>
+        </v-card-actions>
+      </v-form>
     </v-card>
   </v-dialog>
 </template>
