@@ -81,9 +81,12 @@ export const actions = {
         .set(campaignObject)
 
       let data = {}
-       
+      let updatedKey = {}
+      
+      // วน loop keywords ทั้งหมด ลงในที่ที่จะ update ทั้ง KeywordByShortcode และ KeywordReserved
       keyword.forEach(key => {
         data[key] = newCampaign.id
+        updatedKey[`keywords.${key}`] = false
       })
       
       await firestoreApp
@@ -94,9 +97,7 @@ export const actions = {
       await firestoreApp
         .collection('campaignKeywordReserved')
         .doc(`${shortcode}`)
-        .update({
-        [`keywords.${keyword}`]: false
-      })
+        .update(updatedKey)
 
       newValidateCampaign = await firestoreApp
         .collection('campaignValidate')

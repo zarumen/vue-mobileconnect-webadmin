@@ -103,16 +103,17 @@ export const actions = {
   // CREATE Zone
   // ===
   createShortcode({ commit, dispatch }, { shortcode, info }) {
-    // TODO: สร้าง shortcode จอง
 
     let batch = firestoreApp.batch()
 
+    // สร้าง shortcodeInfo ใน shortcodeConfig
     let shortcodeConfigRef = firestoreApp
       .collection('shortcodeConfig')
       .doc(`${shortcode.shortcode}`)
     
-    batch.update(shortcodeConfigRef ,info)
-
+    batch.set(shortcodeConfigRef ,info, { merge: true })
+    
+    // สร้าง shortcode ใน keyword Reserved
     let keywordReservedRef = firestoreApp
       .collection('campaignKeywordReserved')
       .doc(`${shortcode.shortcode}`)
@@ -125,6 +126,7 @@ export const actions = {
       .then(() => {
         console.log("Document written with ID: ", shortcode);
         dispatch('getShortcodesFromFirestore')
+        dispatch('getKeywordsReservedFromFirestore')
         sendSuccessNotice(commit, 'New Shortcode has been added.')
         closeNotice(commit, 1500)
       })
