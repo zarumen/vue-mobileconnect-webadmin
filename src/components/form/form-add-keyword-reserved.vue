@@ -3,7 +3,7 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   props: {
-    addKeywordDialog: {
+    addKeywordReservedDialog: {
       type: [String, Boolean],
       default: ''
     }
@@ -157,7 +157,7 @@ export default {
 <template>
   <div>
     <v-dialog 
-      v-model="addKeywordDialog"
+      v-model="addKeywordReservedDialog"
       persistent
       width="800px"
     >

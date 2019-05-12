@@ -1,15 +1,17 @@
 <script>
 import { shortcodeComputed, shortcodeMethods } from '@state/helpers'
-import FormAddKeyword from '@components/form/form-add-keyword-reserved'
+import FormAddKeywordReserved from '@components/form/form-add-keyword-reserved'
+import FormAddKeywordByShortcode from '@components/form/form-add-keyword-by-shortcode'
 import FormAddShortcode from '@components/form/form-add-shortcode'
 import FormAddOperatorConfig from '@components/form/form-add-operator-config'
 import FormEditOperatorConfig from '@components/form/form-edit-operator-config'
 import FormEditSendername from '@components/form/form-edit-sendername'
 
 export default {
-  components: { FormAddKeyword, FormAddShortcode, FormAddOperatorConfig, FormEditOperatorConfig, FormEditSendername },
+  components: { FormAddKeywordByShortcode, FormAddKeywordReserved, FormAddShortcode, FormAddOperatorConfig, FormEditOperatorConfig, FormEditSendername },
   data: () => ({
-    addKeywordDialog: '',
+    addKeywordByShortcodeDialog: '',
+    addKeywordReservedDialog: '',
     addShortcodeDialog: '',
     addOperatorConfigDialog: '',
     editOperatorConfigDialog: '',
@@ -313,8 +315,7 @@ export default {
             class="v-btn--simple"
             color="light-green darken-2"
             round
-            disabled
-            @click.stop="addKeywordDialog = !addKeywordDialog"
+            @click.stop="addKeywordByShortcodeDialog = !addKeywordByShortcodeDialog"
           >
             #KEYWORD         
           </v-btn>
@@ -335,7 +336,7 @@ export default {
             class="v-btn--simple"
             color="deep-purple darken-2"
             round
-            @click.stop="addKeywordDialog = !addKeywordDialog"
+            @click.stop="addKeywordReservedDialog = !addKeywordReservedDialog"
           >
             +KEY RESERVED         
           </v-btn>
@@ -554,10 +555,15 @@ export default {
       </v-tabs-items>
     </base-card>
     <!-- Pop up Panels -->
-    <form-add-keyword
-      v-if="addKeywordDialog"
-      :add-keyword-dialog="addKeywordDialog" 
-      @emitCloseKeywordDialog="addKeywordDialog=arguments[0]"
+    <form-add-keyword-by-shortcode
+      v-if="addKeywordByShortcodeDialog"
+      :add-keyword-by-shortcode-dialog="addKeywordByShortcodeDialog" 
+      @emitCloseKeywordByShortcodeDialog="addKeywordByShortcodeDialog=arguments[0]"
+    />
+    <form-add-keyword-reserved
+      v-if="addKeywordReservedDialog"
+      :add-keyword-reserved-dialog="addKeywordReservedDialog" 
+      @emitCloseKeywordDialog="addKeywordReservedDialog=arguments[0]"
     />
     <form-add-shortcode
       v-if="addShortcodeDialog"

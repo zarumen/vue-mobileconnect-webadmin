@@ -56,6 +56,9 @@ export const mutations = {
   setElementOperatorConfig (state, payload) {
     assign(state.operatorConfig, payload)
   },
+  setElementKeywordList (state, { position, payload }) {
+    assign(state.keywordList[position], payload)
+  },
   setElementShortcodesList (state, { position, payload }) {
     state.shortcodeList[position].operatorName = []
     assign(state.shortcodeList[position].operatorName, payload)
@@ -154,6 +157,41 @@ export const actions = {
       .catch(error => {
         console.log(error)
         sendErrorNotice(commit, 'Operation Config save failed! Please try again later. ')
+        closeNotice(commit, 1500)
+        return error
+      })
+  },
+  createKeywordByShortcode({ commit, dispatch }, { shortcode, keywordsTestObj, keywordsResObj }) {
+    // สร้าง Keyword Test ใน keywordByShortcode
+
+    let batch = firestoreApp.batch()
+
+    let keywordByShortcodeRef = firestoreApp
+      .collection('campaignKeywordByShortcode')
+      .doc(`${shortcode}`)
+
+      batch.set(keywordByShortcodeRef, keywordsTestObj, { merge: true })
+
+    let keywordReservedRef = firestoreApp
+      .collection('campaignKeywordReserved')
+      .doc(`${shortcode}`)
+
+      batch.set(keywordReservedRef, {
+        keywords: keywordsResObj
+      }, { merge: true })
+
+    return batch.commit()
+      .then(() => {
+
+        console.log("Document written with ID: ", shortcode);
+        dispatch('getKeywordsActiveFromFirestore')
+        dispatch('getKeywordsReservedFromFirestore')
+        sendSuccessNotice(commit, 'TEST Keywords has been added.')
+        closeNotice(commit, 1500)
+      })
+      .catch(error => {
+        console.log(error)
+        sendErrorNotice(commit, 'Operation failed! Please try again later. ')
         closeNotice(commit, 1500)
         return error
       })
