@@ -1,9 +1,10 @@
 <script>
+import { campTestId } from '@utils/campaign-test.js'
 import { mapState, mapActions } from 'vuex'
 
 export default {
   props: {
-    addKeywordDialog: {
+    addKeywordByShortcodeDialog: {
       type: [String, Boolean],
       default: ''
     }
@@ -35,7 +36,7 @@ export default {
     menu: false,
     model: [
       {
-        text: 'DEFAULT',
+        text: 'TEST',
         color: 'blue'
       }
     ],
@@ -82,7 +83,7 @@ export default {
   },
   methods: {
     ...mapActions('shortcodes', [
-        'createKeywordsReserved',
+        'createKeywordByShortcode',
     ]),
     edit (index, item) {
       if (!this.editing) {
@@ -120,26 +121,28 @@ export default {
       
       let object = this.model
 
-      const changeToObject = (array) =>
+      const changeToObject = (array, value) =>
         array.reduce((obj, item) => {
-          obj[item.text] = true
+          obj[item.text] = value
           return obj
         }, {})
 
-      const keywordObject = changeToObject(object)
+      const keywordObject = changeToObject(object, campTestId)
+      const keywordReservedObject = changeToObject(object, false)
 
       const shortcodeResult = ((typeof x === 'string') ? x : y)
 
       // save Data to Firestore & close Dialog
-      this.createKeywordsReserved({
+      this.createKeywordByShortcode({
         shortcode: shortcodeResult,
-        keywords: keywordObject
+        keywordsTestObj: keywordObject,
+        keywordsResObj: keywordReservedObject,
       })
       this.closeDialog()
 
     },
     closeDialog () {
-      this.$emit('emitCloseKeywordDialog', false)
+      this.$emit('emitCloseKeywordByShortcodeDialog', false)
     },
     clearForm () {
 
@@ -157,7 +160,7 @@ export default {
 <template>
   <div>
     <v-dialog 
-      v-model="addKeywordDialog"
+      v-model="addKeywordByShortcodeDialog"
       persistent
       width="800px"
     >
@@ -168,7 +171,7 @@ export default {
       >
         <v-card>
           <v-card-title class="light-green lighten-4 py-4 title">
-            Add New Keywords
+            Add New Test Keywords
           </v-card-title>
           <v-container 
             grid-list-sm 
@@ -241,6 +244,7 @@ export default {
                   multiple
                   small-chips
                   solo
+                  disabled
                   required
                 >
                   <template slot="no-data">

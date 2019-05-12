@@ -81,15 +81,23 @@ export const actions = {
         .set(campaignObject)
 
       let data = {}
-       
+      let updatedKey = {}
+      
+      // วน loop keywords ทั้งหมด ลงในที่ที่จะ update ทั้ง KeywordByShortcode และ KeywordReserved
       keyword.forEach(key => {
         data[key] = newCampaign.id
+        updatedKey[`keywords.${key}`] = false
       })
       
       await firestoreApp
         .collection('campaignKeywordByShortcode')
         .doc(shortcode)
         .set(data, { merge: true })
+
+      await firestoreApp
+        .collection('campaignKeywordReserved')
+        .doc(`${shortcode}`)
+        .update(updatedKey)
 
       newValidateCampaign = await firestoreApp
         .collection('campaignValidate')
@@ -99,6 +107,12 @@ export const actions = {
     } catch (error) { console.log(error)}
 
     if (newValidateCampaign) {
+
+      // switch Shortcode Reserved to Shortcode Active
+      dispatch('shortcodes/mutateKeywordReservedListByCreateCampaign', {
+        shortcode: shortcode,
+        keyword: keyword
+      }, { root:true })
 
       sendSuccessNotice(commit, 'New Campaign has been added.')
       closeNotice(commit, 3000)
@@ -200,15 +214,28 @@ export const actions = {
   // ===
   // DELETE Zone
   // ===
-  deleteCampaign({ commit, dispatch }, campaignId) {
+  async deleteCampaign({ commit, dispatch }, campaignId) {
     
     commit('setLoading', { loading: true })
 
-    return firestoreApp
+    let batch = firestoreApp.batch()
+
+    let campaignRef = firestoreApp
       .collection('campaigns')
-      .doc(campaignId)
-      .delete()
+      .doc(`${campaignId}`)
+
+    batch.delete(campaignRef)
+
+    let campaignValidateRef = firestoreApp
+      .collection('campaignValidate')
+      .doc(`${campaignId}`)
+
+    batch.delete(campaignValidateRef)
+
+    return batch.commit()
       .then(() => {
+        // TODO: dispatch delete keywordByShortcode to tricked return to keywordReserved = true 
+        commit('setLoading', { loading: false })
         dispatch('getAllCampaigns')
         sendSuccessNotice(commit, 'Campaign Deleted!')
         closeNotice(commit, 2000)

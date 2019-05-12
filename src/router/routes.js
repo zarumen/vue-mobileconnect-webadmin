@@ -94,7 +94,7 @@ export default [
     },
     beforeResolve: (routeTo, routeFrom, next) => {
        
-       // TODO check admin role to access
+       // check admin role to access
        if (store.getters['auth/isAdmin']) {
          next()
        }

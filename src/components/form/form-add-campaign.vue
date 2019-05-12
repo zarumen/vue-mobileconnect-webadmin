@@ -443,7 +443,7 @@ export default {
               step="1"
             >
               {{ stepName.one }}
-              <small>v.0.6.3 patch note: เช็ค Keyword ว่ามีซ้ำกับที่ใช้ด้วยรึเปล่า และทำการ map shortcode กับ keyword ที่จองไว้เสมอ</small>
+              <small>v.0.7 patch note: สามารถสร้าง keyword TEST และ RESERVED ได้แล้ว เช็ค Keyword ว่ามีซ้ำกับที่ใช้ด้วยรึเปล่า และทำการ map shortcode กับ keyword ที่จองไว้เสมอ</small>
               <small>road map: ทำ เพิ่ม List Validate รหัสใบเสร็จ และ รหัสสมาชิก, ทำปุ่ม Generate Coupon และ Upload Coupon, ทำตัวช่วย กรอกในสิ่งที่เคยกรอกไปแล้ว (Template) ทั้งในส่วนของ Regex และ ข้อความ (Message Template) และหน้าสุดท้าย ไว้ดูสรุปข้อมูล ก่อน save</small>
             </v-stepper-step>
             <v-stepper-content step="1">

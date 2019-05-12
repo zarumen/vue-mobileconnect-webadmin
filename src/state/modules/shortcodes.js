@@ -56,12 +56,23 @@ export const mutations = {
   setElementOperatorConfig (state, payload) {
     assign(state.operatorConfig, payload)
   },
+  setElementKeywordList (state, { position, payload }) {
+    assign(state.keywordList[position], payload)
+  },
   setElementShortcodesList (state, { position, payload }) {
     state.shortcodeList[position].operatorName = []
     assign(state.shortcodeList[position].operatorName, payload)
   },
+  setElementKeywordReservedByCreateCampaign (state, { position, payloadCreate, payloadReserved }) {
+
+    state.keywordReservedList[position].keywordsArray = []
+    state.keywordReservedList[position].keywordsFalseArray = []
+
+    assign(state.keywordReservedList[position].keywordsArray, payloadCreate)
+    assign(state.keywordReservedList[position].keywordsFalseArray, payloadReserved)
+  },
   setElementKeywordReservedList (state, { position, payload }) {
-    state.keywordReservedList[position].operatorName = []
+    state.keywordReservedList[position].keywordsArray = []
     assign(state.keywordReservedList[position].keywordsArray, payload)
   },
   setSendernameInShortcodesList (state, { position, payload }) {
@@ -95,15 +106,30 @@ export const actions = {
   // CREATE Zone
   // ===
   createShortcode({ commit, dispatch }, { shortcode, info }) {
-    // TODO: สร้าง shortcode จอง
 
-    return firestoreApp
+    let batch = firestoreApp.batch()
+
+    // สร้าง shortcodeInfo ใน shortcodeConfig
+    let shortcodeConfigRef = firestoreApp
       .collection('shortcodeConfig')
       .doc(`${shortcode.shortcode}`)
-      .set(info, { merge: true })
-      .then(docRef => {
+    
+    batch.set(shortcodeConfigRef ,info, { merge: true })
+    
+    // สร้าง shortcode ใน keyword Reserved
+    let keywordReservedRef = firestoreApp
+      .collection('campaignKeywordReserved')
+      .doc(`${shortcode.shortcode}`)
+
+    batch.set(keywordReservedRef, {
+      keywords: {}
+    })
+
+    return batch.commit()
+      .then(() => {
         console.log("Document written with ID: ", shortcode);
         dispatch('getShortcodesFromFirestore')
+        dispatch('getKeywordsReservedFromFirestore')
         sendSuccessNotice(commit, 'New Shortcode has been added.')
         closeNotice(commit, 1500)
       })
@@ -131,6 +157,41 @@ export const actions = {
       .catch(error => {
         console.log(error)
         sendErrorNotice(commit, 'Operation Config save failed! Please try again later. ')
+        closeNotice(commit, 1500)
+        return error
+      })
+  },
+  createKeywordByShortcode({ commit, dispatch }, { shortcode, keywordsTestObj, keywordsResObj }) {
+    // สร้าง Keyword Test ใน keywordByShortcode
+
+    let batch = firestoreApp.batch()
+
+    let keywordByShortcodeRef = firestoreApp
+      .collection('campaignKeywordByShortcode')
+      .doc(`${shortcode}`)
+
+      batch.set(keywordByShortcodeRef, keywordsTestObj, { merge: true })
+
+    let keywordReservedRef = firestoreApp
+      .collection('campaignKeywordReserved')
+      .doc(`${shortcode}`)
+
+      batch.set(keywordReservedRef, {
+        keywords: keywordsResObj
+      }, { merge: true })
+
+    return batch.commit()
+      .then(() => {
+
+        console.log("Document written with ID: ", shortcode);
+        dispatch('getKeywordsActiveFromFirestore')
+        dispatch('getKeywordsReservedFromFirestore')
+        sendSuccessNotice(commit, 'TEST Keywords has been added.')
+        closeNotice(commit, 1500)
+      })
+      .catch(error => {
+        console.log(error)
+        sendErrorNotice(commit, 'Operation failed! Please try again later. ')
         closeNotice(commit, 1500)
         return error
       })
@@ -404,6 +465,24 @@ export const actions = {
   // ===
   mutateOperatorConfig({ commit }, payload) {
     commit('setOperatorConfig', payload)
+  },
+  mutateKeywordReservedListByCreateCampaign({ commit, state }, { shortcode, keyword }) {
+
+    let positionObj = state.keywordReservedList.find(k => k.shortcode === shortcode)
+
+    let position = state.keywordReservedList.indexOf(positionObj)
+
+    let array = state.keywordReservedList[position].keywordsArray
+    let falseArray = state.keywordReservedList[position].keywordsFalseArray
+
+    let addArray = array.push(keyword)
+    let cutArray = falseArray.filter(cutkey => cutkey !== keyword)
+
+    commit('setElementKeywordReservedByCreateCampaign', {
+      position: position,
+      payloadCreate: addArray,
+      payloadReserved: cutArray
+    })
   },
   editOperatorConfig({ commit }, { shortcode, operator, config }) {
 
