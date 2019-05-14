@@ -39,36 +39,43 @@ export default {
           name: 'dashboard',
           icon: 'dashboard',
           title: 'Dashboard',
+          link: '/dashboard'
         },
         {
           name: 'organizations',
           icon: 'business',
           title: 'Organizations Manager',
+          link: '/organizations'
         },
         {
           name: 'users',
           icon: 'supervisor_account',
           title: 'Users Manager',
+          link: '/users'
         },
         {
           name: 'shortcodes',
           icon: 'looks_6',
           title: 'Shortcodes Manager',
+          link: '/shortcodes'
         },
         {
           name: 'campaigns',
           icon: 'store',
           title: 'Campaigns Manager',
+          link: '/campaigns'
         },
         {
           name: 'regex',
           icon: 'code',
           title: 'Regex Manager',
+          link: '/regex'
         },
         {
           name: 'campaignwidgets',
           icon: 'widgets',
           title: 'Widgets Manager',
+          link: '/widgets'
         },
       ]
       let menuUser = [
@@ -76,11 +83,13 @@ export default {
           name: 'reportViewer',
           icon: 'assignment',
           title: 'Reports',
+          link: '/reportViewer'
         },
 /*         {
           name: 'campaignsViewer',
           icon: 'store',
           title: 'Campaigns',
+          link: '/campaignsViewer'
         },
         {
           name: 'campaignWidgetsViewer',
@@ -93,6 +102,7 @@ export default {
           name: 'profile',
           icon: 'face',
           title: 'Profile',
+          link: '/profile'
         },
 /*         {
           name: 'settings',
@@ -103,6 +113,7 @@ export default {
           name: 'logout',
           icon: 'exit_to_app',
           title: 'Logout',
+          link: '/logout'
         },
       ]
       if(value === 1 && this.isAdmin === true) {
@@ -174,7 +185,7 @@ export default {
             <v-list-tile
               v-for="(item, i) in selectedMenuItem(1)"
               :key="i"
-              :to="item.name"
+              :to="item.link"
               :active-class="color"
               avatar
               class="v-list-item"
@@ -201,7 +212,7 @@ export default {
             <v-list-tile
               v-for="(item, i) in selectedMenuItem(2)"
               :key="i"
-              :to="item.name"
+              :to="item.link"
               :active-class="color"
               avatar
               class="v-list-item"
@@ -228,7 +239,7 @@ export default {
             <v-list-tile
               v-for="(item, i) in selectedMenuItem(3)"
               :key="i"
-              :to="item.name"
+              :to="item.link"
               :active-class="color"
               avatar
               class="v-list-item"

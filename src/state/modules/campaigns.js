@@ -29,6 +29,13 @@ export const getters = {
       return state.items.map(item => item.id)
 
     return []
+  },
+  getOneCampaign (state, { id }) {
+
+    if(state.items)
+      return state.items.filter(item => item.id === id)
+
+    return []
   }
 }
 

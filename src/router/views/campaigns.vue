@@ -25,10 +25,9 @@ export default {
         { text: 'Brand', value: 'organizationLevel3Name' },
         { text: 'Header', value: 'campaignName' },
         { text: 'Keyword', value: 'keyword' },
-        { text: 'Shortcode', value: 'shortcode' },
-        { text: 'Start Date', value: 'campaignDateStart' },
-        { text: 'End Date', value: 'campaignDateEnd' },
+        { text: 'Paused', value: 'campaignAvailable' },
         { text: 'Status', value: 'campaignState' },
+        { text: 'Active', value: 'campaignActive' },
       ],
       campaignId: '',
       left: true,
@@ -61,7 +60,7 @@ export default {
       this.getAllCampaigns()
     },
     edit(item) {
-
+      this.$router.push({ name: 'campaignDetails', params: { campaignId: item.id } })
     },
     remove(item) {
       this.campaignId = item.id
