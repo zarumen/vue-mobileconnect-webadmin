@@ -143,14 +143,9 @@ export default {
       let sCheck = this.campaignForm.shortcode
 
       if(sCheck) {
-        let kws = this.keywordList.filter(sc => sc.shortcode === sCheck)
+        let kws = this.keywordList.find(sc => sc.shortcode === sCheck)
 
-        if(kws.length !== 0) {
-
-          return kws[0].keywords
-        }
-
-        return []
+        return kws.keywords
       }
 
       return []
@@ -179,7 +174,7 @@ export default {
           console.log('have keyword Reserved!')
           let kw = this.mutatekwReservedList(scCheck)
 
-          return kw[0].keywordsArray
+          return kw.keywordsArray
         }
 
         return []
@@ -192,7 +187,7 @@ export default {
 
         let scArray = this.mutatescList(this.campaignForm.shortcode)
 
-        return scArray[0].sendername
+        return scArray.sendername
       }
       return []
     }
@@ -229,13 +224,13 @@ export default {
       return true
     },
     mutatekwList(sc) {
-      return this.keywordList.filter(keyword => keyword.shortcode === sc)
+      return this.keywordList.find(keyword => keyword.shortcode === sc)
     },
     mutatekwReservedList(sc) {
-      return this.keywordReservedList.filter(keyword => keyword.shortcode === sc)
+      return this.keywordReservedList.find(keyword => keyword.shortcode === sc)
     },
     mutatescList(sc) {
-      return this.shortcodeList.filter(scList => scList.shortcode === sc)
+      return this.shortcodeList.find(scList => scList.shortcode === sc)
     },
     closeDialog() {
       this.$emit('emitCloseCampaignDialog', false)

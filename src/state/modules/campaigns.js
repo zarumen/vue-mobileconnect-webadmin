@@ -30,10 +30,10 @@ export const getters = {
 
     return []
   },
-  getOneCampaign (state, { id }) {
+  getOneCampaign: (state) => (id) => {
 
     if(state.items)
-      return state.items.filter(item => item.id === id)
+      return state.items.find(item => item.id === id)
 
     return []
   }

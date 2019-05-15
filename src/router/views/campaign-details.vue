@@ -1,5 +1,6 @@
 <script>
 import Layout from '@layouts/main'
+import { mapGetters } from 'vuex'
 
 export default {
   page: {
@@ -7,8 +8,23 @@ export default {
     meta: [{ name: 'description', content: 'CampaignDetails' }],
   },
   components: { Layout },
-  mounted () {
+  data: () => ({
+    text: ''
+  }),
+  computed: {
+    ...mapGetters('campaigns', [
+      'getOneCampaign',
+    ])
+  },
+  created () {
     
+  },
+  methods: {
+    clicked () {
+      this.text = this.getOneCampaign(this.$route.params.campaignId)
+
+      return this.text
+    }
   }
 }
 </script>
@@ -16,6 +32,8 @@ export default {
 <template>
   <Layout>
     <p class="subheading">&nbsp;Campaign "{{ $route.params.campaignId }}" Details</p>
+    <v-btn color="success" @click="clicked()">Click</v-btn>
+    <p>{{ text }}</p>
   </Layout>
 </template>
 
