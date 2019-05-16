@@ -25,7 +25,7 @@ export default {
         { text: 'Brand', value: 'organizationLevel3Name' },
         { text: 'Header', value: 'campaignName' },
         { text: 'Keyword', value: 'keyword' },
-        { text: 'Paused', value: 'campaignAvailable' },
+        { text: 'Start', value: 'campaignDateStart' },
         { text: 'Status', value: 'campaignState' },
         { text: 'Active', value: 'campaignActive' },
       ],

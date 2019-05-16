@@ -75,7 +75,7 @@ export default {
           name: 'campaignwidgets',
           icon: 'widgets',
           title: 'Widgets Manager',
-          link: '/widgets'
+          link: '/campaignwidgets'
         },
       ]
       let menuUser = [

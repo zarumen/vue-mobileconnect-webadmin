@@ -31,8 +31,15 @@ export default {
 
 <template>
   <Layout>
-    <p class="subheading">&nbsp;Campaign "{{ $route.params.campaignId }}" Details</p>
-    <v-btn color="success" @click="clicked()">Click</v-btn>
+    <p class="subheading">
+      &nbsp;Campaign "{{ $route.params.campaignId }}" Details
+    </p>
+    <v-btn
+      color="success"
+      @click="clicked()"
+    >
+      Click
+    </v-btn>
     <p>{{ text }}</p>
   </Layout>
 </template>

@@ -1,6 +1,7 @@
 <script>
 import Layout from '@layouts/main'
 import FormAddOrganization from '@components/form/form-add-organization'
+import FormEditOrganization from '@components/form/form-edit-organization'
 import { orgMethods, orgComputed } from '@state/helpers'
 
 export default {
@@ -8,11 +9,12 @@ export default {
     title: 'Organizations',
     meta: [{ name: 'description', content: 'Organizations' }],
   },
-  components: { Layout, FormAddOrganization },
+  components: { Layout, FormAddOrganization, FormEditOrganization },
   data() {
     return {
       baseModule: 'organizations',
       addDialog: '',
+      editOrgDialog: '',
       dialog: '',
       dialogTitle: "Organization Delete Dialog",
       dialogText: "Do you want to delete this organization?",
@@ -32,7 +34,12 @@ export default {
       rightDrawer: false,
       query: "",
       timeout: 2000,
-      quickSearchFilter: ''
+      quickSearchFilter: '',
+      // set value to props FormEditOrganization
+      selectedLevelOrg: '',
+      selectedOrgLevel1: '',
+      selectedOrgLevel2: '',
+      selectedOrgLevel3: '',
     }
   },
   computed: {
@@ -53,8 +60,24 @@ export default {
       window.print()
     },
     edit (item) {
-      // sending to editPage
-      // this.$router.push({ name: 'organization-edit', params: { id: item.id } })
+      this.selectedLevelOrg = item.organizationAuth
+      
+      switch (this.selectedLevelOrg) {
+        case 'Level1':
+            this.selectedOrgLevel1 = item.organizationLevel1
+          break
+        case 'Level2':
+            this.selectedOrgLevel1 = item.organizationLevel1
+            this.selectedOrgLevel2 = item.organizationLevel2
+          break
+        case 'Level3':
+            this.selectedOrgLevel1 = item.organizationLevel1
+            this.selectedOrgLevel2 = item.organizationLevel2
+            this.selectedOrgLevel3 = item.organizationLevel3
+          break
+      }
+
+      this.editOrgDialog = !this.editOrgDialog
     },
     remove (item) {
       this.organizationId = item.id
@@ -180,9 +203,19 @@ export default {
     >
       <v-icon>add</v-icon>
     </v-btn>
-    <form-add-organization 
+    <form-add-organization
+      v-if="addDialog"
       :add-dialog="addDialog" 
       @emitCloseDialog="addDialog=arguments[0]"
+    />
+    <form-edit-organization
+      v-if="editOrgDialog"
+      :level="selectedLevelOrg"
+      :org-level-one="selectedOrgLevel1"
+      :org-level-two="selectedOrgLevel2"
+      :org-level-three="selectedOrgLevel3"
+      :edit-org-dialog="editOrgDialog" 
+      @emitCloseEditDialog="editOrgDialog=arguments[0]"
     />
   </Layout>
 </template>

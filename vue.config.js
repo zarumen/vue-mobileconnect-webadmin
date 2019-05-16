@@ -6,6 +6,7 @@ module.exports = {
     // We provide the app's title in Webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
     name: appConfig.title,
+    // mode: 'production',
     // Set up all the aliases we use in our app.
     resolve: {
       alias: require('./aliases.config').webpack,
@@ -18,6 +19,12 @@ module.exports = {
         openAnalyzer: process.env.CI !== 'true',
       }),
     ],
+    devtool: 'inline-source-map',
+    optimization: {
+      splitChunks: {
+        chunks: 'all'
+      }
+    },
   },
   css: {
     // Enable CSS source maps.

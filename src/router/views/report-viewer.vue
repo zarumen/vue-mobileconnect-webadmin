@@ -191,6 +191,7 @@ export default {
           jobtmp.push(data);
         });
 
+        console.log(jobtmp)
         this.exportJobs[campaignId].push(jobtmp)  
         this.$forceUpdate()
 

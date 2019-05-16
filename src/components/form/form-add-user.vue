@@ -35,9 +35,9 @@ export default {
       // Drop down Selector
       select: Object.assign({}, defaultDropdown),
       levelItems: [
-        { id: 1, state: 'User Level: Company', value: 'OrganizationLevel1' },
-        { id: 2, state: 'User Level: Department', value: 'OrganizationLevel2' },
-        { id: 3, state: 'User Level: Brand', value: 'OrganizationLevel3' },
+        { id: 1, state: 'User Level 1 (Company)', value: 'OrganizationLevel1' },
+        { id: 2, state: 'User Level 2 (Department)', value: 'OrganizationLevel2' },
+        { id: 3, state: 'User Level 3 (Brand)', value: 'OrganizationLevel3' },
       ],
       genderItems: [
         'Male',
@@ -226,6 +226,7 @@ export default {
                     item-value="value"
                     label="OrganizationLevel Field"
                     prepend-icon="perm_contact_calendar"
+                    class="purple-input"
                     return-object
                     single-line
                   />
@@ -260,6 +261,7 @@ export default {
                   item-text="displayName"
                   prepend-icon="business"
                   label="Company Name"
+                  class="purple-input"
                   required
                   chips
                 />
@@ -275,6 +277,7 @@ export default {
                   item-text="displayName"
                   prepend-icon="business_center"
                   label="Department Name"
+                  class="purple-input"
                   chips
                 >
                   <template 
@@ -317,6 +320,7 @@ export default {
                   item-text="displayName"
                   prepend-icon="shopping_basket"
                   label="Brand Name"
+                  class="purple-input"
                   chips
                 >
                   <template 
