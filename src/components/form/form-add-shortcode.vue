@@ -144,7 +144,6 @@ export default {
       this.select = Object.assign({}, this.defaultDropdown)
     },
     saveShortcode () {
-      // TODO:  added shortcode here!
 
       const shortcodeNew = this.scform
       const shortcodeInfoNew = {

@@ -146,7 +146,7 @@ export default {
       this.closeDialog()
     },
     editOpConfig () {
-      // TODO:  added shortcode here!
+      
       let data = {
         url: this.url,
         type: this.type,

@@ -2,6 +2,9 @@
 import { mapState, mapActions } from 'vuex'
 import { arrayToObject } from '@utils/array-to-object'
 import { helperTH } from '@utils/campaign-create-helper'
+import { fireStorageApp } from '@utils/firestorage.config'
+
+var storageRef = fireStorageApp.ref()
 
 export default {
   props: {
@@ -127,7 +130,15 @@ export default {
       itemstest: [
         { icon: 'code', iconClass: 'blue white--text', title: 'Invalid Format Message 1', subtitle: 'regex 1' },
         { icon: 'code', iconClass: 'blue white--text', title: 'Invalid Format Message 2', subtitle: 'regex 2' }
-      ]
+      ],
+      // Verify Code Variable
+      switchUploadVC: false,
+      fileNameTestVC: '',
+      fileUrlTestVC: '',
+      fileNameProVC: '',
+      fileUrlProVC: '',
+      fileTypeVC: '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'
+      // Coupon Code Variable
     }
   },
   computed: {
@@ -190,10 +201,40 @@ export default {
         return scArray.sendername
       }
       return []
+    },
+    isSwitchUploadOn: {
+      get () {
+
+        if(this.validateForm.campaignHasMsisdnList) {
+          
+          return this.validateForm.campaignHasMsisdnList
+        }
+
+        return this.switchUploadVC
+      },
+      set (val) {
+        this.switchUploadVC = val
+      }
     }
   },
-  watch: {
-
+  watch: {   
+    switchUploadVC: {
+      handler(switchUploadVC) {
+        if(this.validateForm.campaignHasMsisdnList) {
+          this.toggleSwitchUpload(this.switchUploadVC)
+        }
+      },
+      immediate: true
+    },
+    validateForm: {
+      handler(validateForm) {
+        if(this.validateForm.campaignHasMsisdnList) {
+          this.switchUploadVC = !this.switchUploadVC
+          this.toggleSwitchUpload(this.switchUploadVC)
+        }
+      },
+      immediate: true
+    }
   },
   created () {
     this.mapHelper()
@@ -202,6 +243,13 @@ export default {
     ...mapActions('campaigns', [
       'createCampaign'
     ]),
+    toggleSwitchUpload (val) {
+      if(this.validateForm.campaignHasMsisdnList) {
+        return this.validateForm.campaignHasMsisdnList
+      }
+
+      return val
+    },
     checkDuplicatedKeyword (keywordArr) {
 
       if(keywordArr) {
@@ -263,6 +311,13 @@ export default {
         campaignNew['organizationLevel3'] = this.brand.organizationLevel3
         campaignNew['organizationLevel3Name'] = this.brand.organizationLevel3Name
 
+        // set Check Campaign Verify Code
+        if(this.switchUploadVC) {          
+          campaignNew['campaignHasVerifyCode'] = true
+        } else {
+          campaignNew['campaignHasVerifyCode'] = false
+        }
+
         // set Date in here
         campaignNew['campaignDateStart'] = new Date(startDate)
         campaignNew['campaignDateEnd'] = new Date(endDate)
@@ -288,6 +343,26 @@ export default {
         campaignValidationNew['campaignDateEnd'] = new Date(endDate)
         campaignValidationNew['campaignDateTestStart'] = new Date(startTestDate)
         campaignValidationNew['campaignDateTestEnd'] = new Date(endTestDate)
+
+        if(this.switchUploadVC) {
+          // upload Verify_Code here
+
+          // TEST FILE
+          this.uploadVerifyCode({
+            id: this.campaignForm.campaignCode, 
+            state: 'test', 
+            filename: this.fileNameTestVC, 
+            fileUrl: this.fileUrlTestVC
+          })
+
+          // PRODUCTION FILE
+          this.uploadVerifyCode({
+            id: this.campaignForm.campaignCode, 
+            state: 'production', 
+            filename: this.fileNameProVC, 
+            fileUrl: this.fileUrlProVC
+          })
+        }
 
         this.createCampaign({
           campaignObject: campaignNew,
@@ -370,6 +445,16 @@ export default {
       this.rewards = this.rewards.filter(reward => {
         return reward.rewardName !== name
       })
+    },
+    uploadVerifyCode ({ id, state, filename, fileUrl }) {
+
+      let ref = storageRef.child(`campaigns/${id}/verifyCodeFile/${state}/${filename}`)
+
+      ref.putString(fileUrl, 'data_url')
+        .then((snapshot) => {
+        console.log('Uploaded a data_url string!')
+      })
+
     }
   },
 }
@@ -395,7 +480,7 @@ export default {
         >
           <v-toolbar
             dark 
-            color="indigo"
+            color="deep-purple"
           >
             <v-btn 
               icon 
@@ -438,8 +523,8 @@ export default {
               step="1"
             >
               {{ stepName.one }}
-              <small>v.0.7 patch note: สามารถสร้าง keyword TEST และ RESERVED ได้แล้ว เช็ค Keyword ว่ามีซ้ำกับที่ใช้ด้วยรึเปล่า และทำการ map shortcode กับ keyword ที่จองไว้เสมอ</small>
-              <small>road map: ทำ เพิ่ม List Validate รหัสใบเสร็จ และ รหัสสมาชิก, ทำปุ่ม Generate Coupon และ Upload Coupon, ทำตัวช่วย กรอกในสิ่งที่เคยกรอกไปแล้ว (Template) ทั้งในส่วนของ Regex และ ข้อความ (Message Template) และหน้าสุดท้าย ไว้ดูสรุปข้อมูล ก่อน save</small>
+              <small>v.0.8 patch note: ทำ Form upload verify_code โดยแยก เป็น 2 ลิ้งค์คือ ไฟล์สำหรับ TEST และ PRODUCTION </small>
+              <small>road map: ทำปุ่ม Generate Coupon และ Upload Coupon, ทำตัวช่วย กรอกในสิ่งที่เคยกรอกไปแล้ว (Template) ทั้งในส่วนของ Regex และ ข้อความ (Message Template) และหน้าสุดท้าย ไว้ดูสรุปข้อมูล ก่อน save</small>
             </v-stepper-step>
             <v-stepper-content step="1">
               <v-card
@@ -458,7 +543,7 @@ export default {
                     />
                   </v-flex>
                   <v-flex v-if="helper">
-                    <v-subheader class="red--text">
+                    <v-subheader class="helpertext">
                       {{ helperText.campaignCode }}
                     </v-subheader>
                   </v-flex>
@@ -473,7 +558,7 @@ export default {
                     />
                   </v-flex> 
                   <v-flex v-if="helper">
-                    <v-subheader class="red--text">
+                    <v-subheader class="helpertext">
                       {{ helperText.campaignName }}
                     </v-subheader>
                   </v-flex>
@@ -488,7 +573,7 @@ export default {
                     />
                   </v-flex>
                   <v-flex v-if="helper">
-                    <v-subheader class="red--text">
+                    <v-subheader class="helpertext">
                       {{ helperText.campaignDescription }}
                     </v-subheader>
                   </v-flex>
@@ -499,7 +584,7 @@ export default {
                     prepend-icon="assignment"
                   />
                   <v-flex v-if="helper">
-                    <v-subheader class="red--text">
+                    <v-subheader class="helpertext">
                       {{ helperText.campaignType }}
                     </v-subheader>
                   </v-flex>                
@@ -645,7 +730,7 @@ export default {
                     </v-autocomplete>
                   </v-flex>
                   <v-flex v-if="helper">
-                    <v-subheader class="red--text">
+                    <v-subheader class="helpertext">
                       {{ helperText.campaignSenderName }}
                     </v-subheader>
                   </v-flex>
@@ -665,7 +750,7 @@ export default {
                     />
                   </v-flex>
                   <v-flex v-if="helper">
-                    <v-subheader class="red--text">
+                    <v-subheader class="helpertext">
                       {{ helperText.keyword }}
                     </v-subheader>
                   </v-flex> 
@@ -692,6 +777,11 @@ export default {
                   <v-subheader>
                     <small>Campaign Start Status:</small>
                   </v-subheader>
+                  <v-flex v-if="helper">
+                    <v-subheader class="helpertext">
+                      {{ helperText.campaignActive }}
+                    </v-subheader>
+                  </v-flex> 
                   <v-radio-group 
                     v-model="cState"
                     prepend-icon="slideshow"
@@ -708,14 +798,14 @@ export default {
                       value="production"
                     />
                   </v-radio-group>
-                  <v-flex v-if="helper">
-                    <v-subheader class="red--text">
-                      {{ helperText.campaignActive }}
-                    </v-subheader>
-                  </v-flex> 
                   <!-- START DATE PICKER -->
                   <v-flex>
                     <v-subheader>Start Date :</v-subheader>
+                  </v-flex>
+                  <v-flex v-if="helper">
+                    <v-subheader class="helpertext">
+                      {{ helperText.campaignDateStart }}
+                    </v-subheader>
                   </v-flex>
                   <v-layout
                     row 
@@ -822,15 +912,15 @@ export default {
                         </v-btn>
                       </v-menu>
                     </v-flex>
-                  </v-layout>
-                  <v-flex v-if="helper">
-                    <v-subheader class="red--text">
-                      {{ helperText.campaignDateStart }}
-                    </v-subheader>
-                  </v-flex> 
+                  </v-layout> 
                   <!-- END DATE PICKER -->
                   <v-flex>
                     <v-subheader>End Date :</v-subheader>
+                  </v-flex>
+                  <v-flex v-if="helper">
+                    <v-subheader class="helpertext">
+                      {{ helperText.campaignDateEnd }}
+                    </v-subheader>
                   </v-flex>
                   <v-layout
                     row
@@ -938,14 +1028,14 @@ export default {
                       </v-menu>
                     </v-flex>                    
                   </v-layout>
-                  <v-flex v-if="helper">
-                    <v-subheader class="red--text">
-                      {{ helperText.campaignDateEnd }}
-                    </v-subheader>
-                  </v-flex>
                   <!-- START TEST DATE PICKER -->
                   <v-flex>
                     <v-subheader>Start Test Date :</v-subheader>
+                  </v-flex>
+                  <v-flex v-if="helper">
+                    <v-subheader class="helpertext">
+                      {{ helperText.campaignDateTestStart }}
+                    </v-subheader>
                   </v-flex>
                   <v-layout
                     row 
@@ -1052,16 +1142,16 @@ export default {
                         </v-btn>
                       </v-menu>
                     </v-flex>
-                  </v-layout>
-                  <v-flex v-if="helper">
-                    <v-subheader class="red--text">
-                      {{ helperText.campaignDateTestStart }}
-                    </v-subheader>
-                  </v-flex> 
+                  </v-layout> 
                   <!-- END TEST DATE PICKER -->
                   <v-flex>
                     <v-subheader>End Test Date :</v-subheader>
                   </v-flex>
+                  <v-flex v-if="helper">
+                    <v-subheader class="helpertext">
+                      {{ helperText.campaignDateTestEnd }}
+                    </v-subheader>
+                  </v-flex> 
                   <v-layout
                     row
                     wrap
@@ -1168,11 +1258,6 @@ export default {
                       </v-menu>
                     </v-flex>                    
                   </v-layout>
-                  <v-flex v-if="helper">
-                    <v-subheader class="red--text">
-                      {{ helperText.campaignDateTestEnd }}
-                    </v-subheader>
-                  </v-flex> 
                 </v-card-text>
               </v-card>
               <v-btn 
@@ -1203,12 +1288,12 @@ export default {
                 class="mb-5"
               >
                 <v-card-text>
-                  <v-switch
-                    v-model="validateForm.campaignHasMsisdnList"
-                    color="deep-purple"
-                    label="Has Mobile Number List from Client?"
-                  />
                   <v-subheader>Campaign Validate Details</v-subheader>
+                  <v-flex v-if="helper">
+                    <v-subheader class="helpertext">
+                      {{ helperText.contextDelimiter }}
+                    </v-subheader>
+                  </v-flex> 
                   <v-flex 
                     xs8
                     sm6 
@@ -1221,11 +1306,53 @@ export default {
                       label="Delimiter"
                     />
                   </v-flex>
+                  <v-subheader>Upload VerifyCode File:</v-subheader>
                   <v-flex v-if="helper">
-                    <v-subheader class="red--text">
-                      {{ helperText.contextDelimiter }}
+                    <v-subheader class="helpertext">
+                      {{ helperText.campaignHasVerifyCode }}
                     </v-subheader>
                   </v-flex> 
+                  <v-switch
+                    v-model="isSwitchUploadOn"
+                    color="deep-purple"
+                    label="Has VerifyCode (1 Column)"
+                  />
+                  <v-flex v-if="helper">
+                    <v-subheader class="helpertext">
+                      {{ helperText.campaignHasMsisdnList }}
+                    </v-subheader>
+                  </v-flex> 
+                  <v-switch
+                    v-model="validateForm.campaignHasMsisdnList"
+                    color="deep-purple"
+                    label="Has VerifyCode (2 Column)"
+                  />
+                  <v-flex>
+                    <v-flex v-if="helper">
+                      <v-subheader class="helpertext">
+                        {{ helperText.verifyCodeTestUpload }}
+                      </v-subheader>
+                    </v-flex> 
+                    <BaseUploadfield
+                      :accept="fileTypeVC"
+                      :disabled="!switchUploadVC"
+                      :label="`VerifyCode TEST Upload`"
+                      @input="fileNameTestVC=arguments[0]"
+                      @formData="fileUrlTestVC=arguments[0]"
+                    />
+                    <v-flex v-if="helper">
+                      <v-subheader class="helpertext">
+                        {{ helperText.verifyCodeProductionUpload }}
+                      </v-subheader>
+                    </v-flex> 
+                    <BaseUploadfield
+                      :accept="fileTypeVC"
+                      :disabled="!switchUploadVC"
+                      :label="`VerifyCode PRODUCTION Upload`"
+                      @input="fileNameProVC=arguments[0]"
+                      @formData="fileUrlProVC=arguments[0]"
+                    />
+                  </v-flex>
                   <v-subheader>Context Parser: (In Parser Object)</v-subheader>
                   <v-flex
                     xs12
@@ -1289,6 +1416,11 @@ export default {
                       >
                         <v-subheader>Add Context Parser</v-subheader>
                         <v-card-text>
+                          <v-flex v-if="helper">
+                            <v-subheader class="helpertext">
+                              {{ helperText.exclude }}
+                            </v-subheader>
+                          </v-flex>            
                           <v-text-field
                             v-model="anotherParser.contextExclude"
                             :rules="[v => !!v || 'Item is required']"
@@ -1298,10 +1430,10 @@ export default {
                             required
                           />
                           <v-flex v-if="helper">
-                            <v-subheader class="red--text">
-                              {{ helperText.exclude }}
+                            <v-subheader class="helpertext">
+                              {{ helperText.messageContextFailed }}
                             </v-subheader>
-                          </v-flex>            
+                          </v-flex> 
                           <v-text-field 
                             v-model="anotherParser.messageContextFailed"
                             :rules="[v => !!v || 'Item is required']"
@@ -1310,8 +1442,8 @@ export default {
                             required
                           />
                           <v-flex v-if="helper">
-                            <v-subheader class="red--text">
-                              {{ helperText.messageContextFailed }}
+                            <v-subheader class="helpertext">
+                              {{ helperText.validateType }}
                             </v-subheader>
                           </v-flex> 
                           <v-select 
@@ -1323,10 +1455,10 @@ export default {
                             return-object
                           />
                           <v-flex v-if="helper">
-                            <v-subheader class="red--text">
-                              {{ helperText.validateType }}
+                            <v-subheader class="helpertext">
+                              {{ helperText.validateForm }}
                             </v-subheader>
-                          </v-flex> 
+                          </v-flex>
                           <v-text-field 
                             v-model="anotherParser.contextForm"
                             :disabled="regexDisable"
@@ -1334,11 +1466,6 @@ export default {
                             solo-inverted 
                             label="Condition (Regular Expression)"
                           />
-                          <v-flex v-if="helper">
-                            <v-subheader class="red--text">
-                              {{ helperText.validateForm }}
-                            </v-subheader>
-                          </v-flex>
                           <v-btn 
                             color="primary" 
                             round
@@ -1414,7 +1541,7 @@ export default {
                                     label="Specific Condition (Regex)"
                                   />
                                   <v-flex v-if="helper">
-                                    <v-subheader class="red--text">
+                                    <v-subheader class="helpertext">
                                       {{ helperText.validateFailSpecificMsg }}
                                     </v-subheader>
                                   </v-flex>
@@ -1498,7 +1625,7 @@ export default {
                     md6
                   > 
                     <v-flex v-if="helper">
-                      <v-subheader class="red--text">
+                      <v-subheader class="helpertext">
                         {{ helperText.messageCampaignTestNotRegister }}
                       </v-subheader>
                     </v-flex> 
@@ -1508,7 +1635,7 @@ export default {
                       label="Empty Message"
                     />
                     <v-flex v-if="helper">
-                      <v-subheader class="red--text">
+                      <v-subheader class="helpertext">
                         {{ helperText.messageCampaignNotAvailable }}
                       </v-subheader>
                     </v-flex>
@@ -1518,17 +1645,7 @@ export default {
                       label="Pause Service Message"
                     />
                     <v-flex v-if="helper">
-                      <v-subheader class="red--text">
-                        {{ helperText.messageCheckMsisdnNotFound }}
-                      </v-subheader>
-                    </v-flex> 
-                    <v-text-field 
-                      v-model="validateForm.messageCheckMsisdnNotFound"
-                      prepend-icon="chat"
-                      label="Telephone Number Checked Error Message"
-                    />
-                    <v-flex v-if="helper">
-                      <v-subheader class="red--text">
+                      <v-subheader class="helpertext">
                         {{ helperText.messageBoundariesLessError }}
                       </v-subheader>
                     </v-flex> 
@@ -1540,7 +1657,7 @@ export default {
                       required
                     />
                     <v-flex v-if="helper">
-                      <v-subheader class="red--text">
+                      <v-subheader class="helpertext">
                         {{ helperText.messageBoundariesOverError }}
                       </v-subheader>
                     </v-flex> 
@@ -1552,7 +1669,7 @@ export default {
                       required
                     />
                     <v-flex v-if="helper">
-                      <v-subheader class="red--text">
+                      <v-subheader class="helpertext">
                         {{ helperText.messageBeforeStart }}
                       </v-subheader>
                     </v-flex>
@@ -1564,7 +1681,7 @@ export default {
                       required
                     />
                     <v-flex v-if="helper">
-                      <v-subheader class="red--text">
+                      <v-subheader class="helpertext">
                         {{ helperText.messageAfterEnd }}
                       </v-subheader>
                     </v-flex>
@@ -1575,27 +1692,37 @@ export default {
                       label="After Service Active Message"
                       required
                     />
+                    <v-flex v-if="helper">
+                      <v-subheader class="helpertext">
+                        {{ helperText.messageRegisterFail }}
+                      </v-subheader>
+                    </v-flex>
+                    <v-text-field 
+                      v-model="validateForm.messageRegisterFail"
+                      prepend-icon="chat"
+                      label="Already Registered Message"
+                    />
+                    <v-flex v-if="helper">
+                      <v-subheader class="helpertext">
+                        {{ helperText.messageValidateFail }}
+                      </v-subheader>
+                    </v-flex>
+                    <v-text-field 
+                      v-model="validateForm.messageValidateFail"
+                      prepend-icon="chat"
+                      label="Validate Verify Code Failed Message"
+                    />
+                    <v-flex v-if="helper">
+                      <v-subheader class="helpertext">
+                        {{ helperText.messageCheckMsisdnNotFound }}
+                      </v-subheader>
+                    </v-flex> 
+                    <v-text-field 
+                      v-model="validateForm.messageCheckMsisdnNotFound"
+                      prepend-icon="chat"
+                      label="Validate Verify Code with Mobile Number Failed Message"
+                    />
                   </v-flex>
-                  <v-flex v-if="helper">
-                    <v-subheader class="red--text">
-                      {{ helperText.messageRegisterFail }}
-                    </v-subheader>
-                  </v-flex>
-                  <v-text-field 
-                    v-model="validateForm.messageRegisterFail"
-                    prepend-icon="chat"
-                    label="Already Registered Message"
-                  />
-                  <v-flex v-if="helper">
-                    <v-subheader class="red--text">
-                      {{ helperText.messageValidateFail }}
-                    </v-subheader>
-                  </v-flex>
-                  <v-text-field 
-                    v-model="validateForm.messageValidateFail"
-                    prepend-icon="chat"
-                    label="Validate Verify Code Failed Message"
-                  />
                 </v-card-text>
               </v-card>
               <v-btn 
@@ -1636,7 +1763,7 @@ export default {
                       <v-flex>
                         <v-subheader>Rewards Validation:</v-subheader>
                         <v-flex v-if="helper">
-                          <v-subheader class="red--text">
+                          <v-subheader class="helpertext">
                             {{ helperText.rewardHasSequence }}
                           </v-subheader>
                         </v-flex> 
@@ -1646,7 +1773,7 @@ export default {
                           label="Is Sequential Rewards?"
                         />
                         <v-flex v-if="helper">
-                          <v-subheader class="red--text">
+                          <v-subheader class="helpertext">
                             {{ helperText.rewardHasObject }}
                           </v-subheader>
                         </v-flex> 
@@ -1656,7 +1783,7 @@ export default {
                           label="Can Customer Choose your Rewards?"
                         />
                         <v-flex v-if="helper">
-                          <v-subheader class="red--text">
+                          <v-subheader class="helpertext">
                             {{ helperText.limitReward }}
                           </v-subheader>
                         </v-flex> 
@@ -1666,7 +1793,7 @@ export default {
                           label="Limit Rewards"
                         />
                         <v-flex v-if="helper">
-                          <v-subheader class="red--text">
+                          <v-subheader class="helpertext">
                             {{ helperText.messageRewardsFailed }}
                           </v-subheader>
                         </v-flex> 
@@ -1676,7 +1803,7 @@ export default {
                           label="Fail Message"
                         />
                         <v-flex v-if="helper">
-                          <v-subheader class="red--text">
+                          <v-subheader class="helpertext">
                             {{ helperText.messageRewardsInvalid }}
                           </v-subheader>
                         </v-flex>
@@ -1686,7 +1813,7 @@ export default {
                           label="Rewards Invalid Message"
                         />
                         <v-flex v-if="helper">
-                          <v-subheader class="red--text">
+                          <v-subheader class="helpertext">
                             {{ helperText.messageRewardReceivedLimit }}
                           </v-subheader>
                         </v-flex>
@@ -1749,7 +1876,7 @@ export default {
                         >
                           <v-card-title>
                             <v-subheader>
-                              Add Reward Validation Details: <small class="red--text">
+                              Add Reward Validation Details: <small class="helpertext">
                                 &nbsp; ปุ่ม generate และ upload ยังใช้ไม่ได้
                               </small>
                             </v-subheader>
@@ -1790,7 +1917,7 @@ export default {
                           </v-card-actions>
                           <v-card-text>
                             <v-flex v-if="helper">
-                              <v-subheader class="red--text">
+                              <v-subheader class="helpertext">
                                 {{ helperText.rewardId }}
                               </v-subheader>
                             </v-flex>
@@ -1800,7 +1927,7 @@ export default {
                               label="Reward ID"
                             />
                             <v-flex v-if="helper">
-                              <v-subheader class="red--text">
+                              <v-subheader class="helpertext">
                                 {{ helperText.name }}
                               </v-subheader>
                             </v-flex> 
@@ -1812,7 +1939,7 @@ export default {
                               required
                             />
                             <v-flex v-if="helper">
-                              <v-subheader class="red--text">
+                              <v-subheader class="helpertext">
                                 {{ helperText.rewardTotal }}
                               </v-subheader>
                             </v-flex> 
@@ -1825,7 +1952,7 @@ export default {
                               required
                             />
                             <v-flex v-if="helper">
-                              <v-subheader class="red--text">
+                              <v-subheader class="helpertext">
                                 {{ helperText.rewardCondition }}
                               </v-subheader>
                             </v-flex> 
@@ -1837,7 +1964,7 @@ export default {
                               required
                             />
                             <v-flex v-if="helper">
-                              <v-subheader class="red--text">
+                              <v-subheader class="helpertext">
                                 {{ helperText.rewardvalidateForm }}
                               </v-subheader>
                             </v-flex>
@@ -1849,7 +1976,7 @@ export default {
                               required
                             />
                             <v-flex v-if="helper">
-                              <v-subheader class="red--text">
+                              <v-subheader class="helpertext">
                                 {{ helperText.messageRewardSuccess }}
                               </v-subheader>
                             </v-flex>
@@ -1989,18 +2116,41 @@ export default {
                         </strong>
                       </p>
                       <p>
-                        Fail Message: <strong class="green--text">
-                          {{ validateForm.messageRewardsFailed }}
-                        </strong>
-                      </p>
-                      <p>
-                        Limit Reward: <strong class="green--text">
-                          {{ validateForm.rewardsLimit }}
-                        </strong>
-                      </p>
-                      <p>
                         Delimiter: <strong class="green--text">
                           {{ validateForm.contextDelimiter }}
+                        </strong>
+                      </p>
+                      <p>
+                        campaign Has Verifycode: <strong class="green--text">
+                          {{ switchUploadVC }}
+                        </strong>
+                      </p>
+                      <p>
+                        campaign Has Verifycode (2 Column) { MobileNumber:Verifycode }: <strong class="green--text">
+                          {{ validateForm.campaignHasMsisdnList }}
+                        </strong>
+                      </p>
+                      <p>
+                        Verifycode TEST Filename: <strong class="green--text">
+                          {{ fileNameTestVC }}
+                        </strong>
+                      </p>
+                      <p>
+                        Verifycode PRODUCTION Filename: <strong class="green--text">
+                          {{ fileNameProVC }}
+                        </strong>
+                      </p>
+                      <p class="indigo--text">
+                        ------------------------------Services Messages--------------------------------
+                      </p>
+                      <p>
+                        Empty Message: <strong class="green--text">
+                          {{ validateForm.messageCampaignTestNotRegister }}
+                        </strong>
+                      </p>
+                      <p>
+                        Pause Service Message: <strong class="green--text">
+                          {{ validateForm.messageCampaignNotAvailable }}
                         </strong>
                       </p>
                       <p>
@@ -2014,33 +2164,13 @@ export default {
                         </strong>
                       </p>
                       <p>
-                        After Service Active: <strong class="green--text">
-                          {{ validateForm.messageAfterEnd }}
-                        </strong>
-                      </p>
-                      <p>
                         Before Service Active: <strong class="green--text">
                           {{ validateForm.messageBeforeStart }}
                         </strong>
                       </p>
                       <p>
-                        Pause Service Message: <strong class="green--text">
-                          {{ validateForm.messageCampaignNotAvailable }}
-                        </strong>
-                      </p>
-                      <p>
-                        Telephone Number Checked Error Message: <strong class="green--text">
-                          {{ validateForm.messageCheckMsisdnNotFound }}
-                        </strong>
-                      </p>
-                      <p>
-                        Empty Message: <strong class="green--text">
-                          {{ validateForm.messageCampaignTestNotRegister }}
-                        </strong>
-                      </p>
-                      <p>
-                        Already Registered Message: <strong class="green--text">
-                          {{ validateForm.messageRegisterFail }}
+                        After Service Active: <strong class="green--text">
+                          {{ validateForm.messageAfterEnd }}
                         </strong>
                       </p>
                       <p>
@@ -2051,6 +2181,31 @@ export default {
                       <p>
                         Validate Verify Code Failed Message: <strong class="green--text">
                           {{ validateForm.messageValidateFail }}
+                        </strong>
+                      </p>
+                      <p>
+                        Telephone Number Checked Error Message: <strong class="green--text">
+                          {{ validateForm.messageCheckMsisdnNotFound }}
+                        </strong>
+                      </p>
+                      <p>
+                        Limit Reward: <strong class="green--text">
+                          {{ validateForm.rewardsLimit }}
+                        </strong>
+                      </p>
+                      <p>
+                        Rewards Fail Message: <strong class="green--text">
+                          {{ validateForm.messageRewardsFailed }}
+                        </strong>
+                      </p>
+                      <p>
+                        Rewards Invalid Message: <strong class="green--text">
+                          {{ validateForm.messageRewardsInvalid }}
+                        </strong>
+                      </p>
+                      <p>
+                        Reward Received Limit Message: <strong class="green--text">
+                          {{ validateForm.messageRewardReceivedLimit }}
                         </strong>
                       </p>
                       <p class="indigo--text">
@@ -2094,3 +2249,11 @@ export default {
   </v-layout>
 </template>
 
+<style lang="scss" scoped>
+@import '@design';
+
+.helpertext {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: $deep-purple-A700;
+}
+</style>

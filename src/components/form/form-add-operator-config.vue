@@ -59,7 +59,6 @@ export default {
       this.select = Object.assign({}, this.defaultDropdown)
     },
     saveOpConfig () {
-      // TODO:  added shortcode here!
 
       if(this.$refs.oppForm.validate()) {
         let data = this.oppForm

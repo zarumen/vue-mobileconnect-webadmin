@@ -548,7 +548,7 @@ export const actions = {
         return error
       })
   },
-  deleteKeywordReserved({ commit }, { shortcode, keyword}) {
+  deleteKeywordReserved({ commit }, { shortcode, keyword }) {
 
     let keywordRef = firestoreApp.collection('campaignKeywordReserved').doc(`${shortcode}`)
 

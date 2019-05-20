@@ -13,10 +13,16 @@ export default {
   data: () => ({
     imageName: '',
     imageUrl: '',
+    fileXLSName: '',
+    fileXLSUrl: '',
+    xlsFileType: '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'
   }),
   methods: {
     pickFile () {
       this.$refs.image.click ()
+    },
+    pickXLSFile () {
+      this.$refs.xls.click ()
     },
     onFilePicked (e) {
       const files = e.target.files
@@ -47,6 +53,21 @@ export default {
 				this.imageFile = ''
 				this.imageUrl = ''
 			}
+    },
+    onXlsPicked (e) {
+      const xfiles = e.target.files
+      console.log(xfiles)
+      this.fileXLSName = xfiles[0].name
+      if (this.fileXLSName.lastIndexOf('.') <= 0) {
+        return
+      }
+
+      const fileReader = new FileReader()
+      fileReader.readAsDataURL(xfiles[0])
+      fileReader.addEventListener('load', () => {
+        this.fileXLSUrl = fileReader.result
+        console.log(this.fileXLSUrl)
+      })
     }
   }
 }
@@ -78,7 +99,7 @@ export default {
         <v-icon left>
           attach_file
         </v-icon>
-        Upload File
+        Upload Image
       </v-btn>
       <v-text-field
         v-model="imageName"
@@ -93,13 +114,58 @@ export default {
         accept="image/*"
         @change="onFilePicked"
       >
-    </div>
-    <div>
       <img
         v-if="imageUrl"
         :src="imageUrl"
         height="200"
       >
+    </div>
+    <div>
+      <v-btn
+        color="primary"
+        class="white--text"
+        round
+        small
+        @click.native="pickXLSFile"
+      >
+        <v-icon 
+          left 
+          dark
+        >
+          attachment
+        </v-icon>
+        Add File
+      </v-btn>
+      <input
+        ref="xls"
+        type="file"
+        style="display: none"
+        :accept="xlsFileType"
+        @change="onXlsPicked"
+      >
+      {{ fileXLSName }}
+    </div>
+    <div>
+      <v-btn
+        color="primary"
+        round
+        fab
+      >
+        <v-icon 
+          dark
+        >
+          cloud_upload
+        </v-icon>
+      </v-btn>
+    </div>
+    <div>
+      <BaseUploadfield
+        :accept="xlsFileType"
+        :disabled="false"
+        :label="`Coupon File Upload`"
+        @input="fileXLSName=arguments[0]"
+        @formData="fileXLSUrl=arguments[0]"
+      />
     </div>
   </Layout>
 </template>

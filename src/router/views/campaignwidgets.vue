@@ -162,6 +162,7 @@ export default {
             class="elevation-1 pa-2"
             hide-actions
           >
+            <!-- <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>          -->
             <template
               slot="headerCell"
               slot-scope="{ header }"
@@ -170,7 +171,7 @@ export default {
                 class="subheading font-weight-light light-green--text text--darken-1"
                 v-text="header.text"
               />
-            </template>          
+            </template>
             <template 
               slot="items" 
               slot-scope="props"

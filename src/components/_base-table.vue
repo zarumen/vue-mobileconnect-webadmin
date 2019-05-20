@@ -50,7 +50,7 @@ export default {
         val = val ? 'Yes' : 'No'
       }
       if (typeof val === 'object') {
-        // TODO: convert Date format before Render data
+        // convert Date format before Render data
         let object = item[header.value]
         val = formatDate(object.seconds)
       }

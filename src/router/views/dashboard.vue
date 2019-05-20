@@ -14,6 +14,7 @@ export default {
   },
   data () {
     return {
+      today: '2019-01-08',
       test: 'test in data',
       dailySalesChart: {
         info: {
@@ -153,12 +154,76 @@ export default {
         0: false,
         1: false,
         2: false
-      }
+      },
+      events: [
+        {
+          title: 'Vacation',
+          details: 'Going to the beach!',
+          date: '2018-12-30',
+          open: false
+        },
+        {
+          title: 'Vacation',
+          details: 'Going to the beach!',
+          date: '2018-12-31',
+          open: false
+        },
+        {
+          title: 'Vacation',
+          details: 'Going to the beach!',
+          date: '2019-01-01',
+          open: false
+        },
+        {
+          title: 'Meeting',
+          details: 'Spending time on how we do not have enough time',
+          date: '2019-01-07',
+          open: false
+        },
+        {
+          title: '30th Birthday',
+          details: 'Celebrate responsibly',
+          date: '2019-01-03',
+          open: false
+        },
+        {
+          title: 'New Year',
+          details: 'Eat chocolate until you pass out',
+          date: '2019-01-01',
+          open: false
+        },
+        {
+          title: 'Conference',
+          details: 'Mute myself the whole time and wonder why I am on this call',
+          date: '2019-01-21',
+          open: false
+        },
+        {
+          title: 'Hackathon',
+          details: 'Code like there is no tommorrow',
+          date: '2019-02-01',
+          open: false
+        }
+      ]
+    }
+  },
+  computed: {
+    // convert the list of events into a map of lists keyed by date
+    eventsMap () {
+      const map = {}
+      this.events.forEach(e => (map[e.date] = map[e.date] || []).push(e))
+      return map
+    },
+    date () {
+      return this.events.map(x => x.date)
     }
   },
   methods: {
     complete (index) {
       this.list[index] = !this.list[index]
+    },
+    open (event) {
+      alert(event.title)
     }
   }
 }
@@ -344,37 +409,72 @@ export default {
             title="Employee Stats"
             text="New employees on 15th September, 2016"
           >
-            <v-data-table
-              :headers="headers"
-              :items="items"
-              hide-actions
-            >
-              <template
-                slot="headerCell"
-                slot-scope="{ header }"
-              >
-                <span
-                  class="font-weight-light text-warning text--darken-3"
-                  v-text="header.text"
-                />
-              </template>
-              <template
-                slot="items"
-                slot-scope="{ index, item }"
-              >
-                <td>{{ index + 1 }}</td>
-                <td>{{ item.name }}</td>
-                <td class="text-xs-right">
-                  {{ item.salary }}
-                </td>
-                <td class="text-xs-right">
-                  {{ item.country }}
-                </td>
-                <td class="text-xs-right">
-                  {{ item.city }}
-                </td>
-              </template>
-            </v-data-table>
+            <v-layout>
+              <v-flex>
+                <v-sheet height="500">
+                  <v-calendar
+                    :now="today"
+                    :value="today"
+                    color="orange"
+                  >
+                    <template v-slot:day="{ present, past, date }">
+                      <template v-for="event in eventsMap[date]">
+                        <v-menu
+                          :key="event.title"
+                          v-model="event.open"
+                          full-width
+                          offset-x
+                        >
+                          <template v-slot:activator="{ on }">
+                            <v-btn
+                              v-if="!event.time"
+                              class="v-btn--simple"
+                              color="orange darken-2"
+                              v-on="on"
+                            >
+                              {{ event.title }}
+                            </v-btn>
+                          </template>
+                          <v-card
+                            color="grey lighten-4"
+                            min-width="350px"
+                            flat
+                          >
+                            <v-toolbar
+                              color="primary"
+                              dark
+                            >
+                              <v-btn icon>
+                                <v-icon>edit</v-icon>
+                              </v-btn>
+                              <v-toolbar-title>{{ event.title }}</v-toolbar-title>
+                              <v-spacer />
+                              <v-btn icon>
+                                <v-icon>favorite</v-icon>
+                              </v-btn>
+                              <v-btn icon>
+                                <v-icon>more_vert</v-icon>
+                              </v-btn>
+                            </v-toolbar>
+                            <v-card-title primary-title>
+                              <span>{{ event.details }}</span>
+                            </v-card-title>
+                            <v-card-actions>
+                              <v-btn
+                                text
+                                color="secondary"
+                              >
+                                Cancel
+                              </v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </v-menu>
+                      </template>
+                    </template>
+                  </v-calendar>
+                </v-sheet>
+              </v-flex>
+            </v-layout>
           </base-card>
         </v-flex>
         <v-flex
@@ -622,7 +722,22 @@ export default {
   </Layout>
 </template>
 
-<style lang="scss" module>
+<style lang="scss" module scoped>
 @import '@design';
+
+.my-event {
+  width: 100%;
+  padding: 3px;
+  margin-bottom: 1px;
+  overflow: hidden;
+  font-size: 12px;
+  color: rgb(255, 255, 255);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  background-color: #1867c0;
+  border: 1px solid #1867c0;
+  border-radius: 2px;
+}
 </style>
 
