@@ -108,7 +108,6 @@ export default [
     meta: {
       authRequired: true,
     },
-    // TODO check admin role to access
   },
   {
     path: '/shortcodes',
@@ -133,7 +132,6 @@ export default [
     meta: {
       authRequired: true,
     },
-    // TODO check admin role to access
   },
   {
     path: '/campaignDetails/:campaignId',
@@ -177,7 +175,6 @@ export default [
     props: (route) => ({
       user: store.state.auth.userInfo || {}
     }),
-    // TODO check admin role to access
   },
   {
     path: '/campaignwidgets',
@@ -186,7 +183,6 @@ export default [
     meta: {
       authRequired: true,
     },
-    // TODO check admin role to access
   },
   {
     path: '/campaignwidget/:campaignId',
@@ -243,16 +239,14 @@ export default [
     meta: {
       authRequired: true,
     },
-    // TODO check admin role to access
   },
   {
-    path: '/report',
-    name: 'report',
-    component: () => lazyLoadView(import('@views/report')),
+    path: '/reports',
+    name: 'reports',
+    component: () => lazyLoadView(import('@views/reports')),
     meta: {
       authRequired: true,
     },
-    // TODO check admin role to access
   },
   {
     path: '/report/transaction/:campaignId',
@@ -261,7 +255,6 @@ export default [
     meta: {
       authRequired: true,
     },
-    // TODO check admin role to access
   },
   {
     path: '/logout',

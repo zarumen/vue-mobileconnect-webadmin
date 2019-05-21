@@ -66,6 +66,12 @@ export default {
           link: '/campaigns'
         },
         {
+          name: 'reports',
+          icon: 'assignment',
+          title: 'Reports Manager',
+          link: '/reports'
+        },
+        {
           name: 'regex',
           icon: 'code',
           title: 'Regex Manager',

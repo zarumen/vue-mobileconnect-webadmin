@@ -755,7 +755,7 @@ export default {
                     </v-subheader>
                   </v-flex> 
                   <v-flex>
-                    <v-combobox 
+                    <v-select 
                       v-model="campaignForm.keyword"
                       :items="mutateKeywordList"
                       :rules="checkKeywordRules"
@@ -772,7 +772,7 @@ export default {
                           </span>
                         </v-list-tile>
                       </template>
-                    </v-combobox>
+                    </v-select>
                   </v-flex>
                   <v-subheader>
                     <small>Campaign Start Status:</small>
@@ -1973,6 +1973,7 @@ export default {
                               :rules="[v => !!v || 'Item is required']"
                               prepend-icon="phonelink_lock"
                               label="Reward Condition Value"
+                              solo-inverted
                               required
                             />
                             <v-flex v-if="helper">
@@ -2254,6 +2255,6 @@ export default {
 
 .helpertext {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: $deep-purple-A700;
+  color: $purple-A400;
 }
 </style>

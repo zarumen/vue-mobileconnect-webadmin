@@ -22,6 +22,10 @@ export default {
     basemodule: {
       type: String,
       default: '',
+    },
+    actionBtn: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -49,7 +53,11 @@ export default {
       if (typeof val === 'boolean') {
         val = val ? 'Yes' : 'No'
       }
-      if (typeof val === 'object') {
+      if (typeof val === 'object' && val.constructor === Array) {
+        let array = item[header.value]
+        val = array
+      }
+      if (typeof val === 'object' && val.constructor === Object) {
         // convert Date format before Render data
         let object = item[header.value]
         val = formatDate(object.seconds)
@@ -101,22 +109,14 @@ export default {
               :to="{ path: 'campaignwidget/'+props.item.id}"
             >
               <v-icon>widgets</v-icon>
-            </router-link>
-            <a :href="'/campaignwidget/'+props.item.id">
-              <v-icon>widgets</v-icon>
-            </a>                      
-          </small>
-          <small v-if="header.text==='Report'">
-            <a :href="'/report/transaction/'+props.item.id">
-              <v-icon>description</v-icon>
-            </a>                      
+            </router-link>                    
           </small>
         </td>
-        <td 
-          v-if="basemodule != 'campaignwidgets'"
+        <td
           class="text-xs-right"
         >
           <v-btn 
+            v-if="actionBtn"
             class="v-btn--simple"
             color="secondary"
             circle
@@ -126,6 +126,7 @@ export default {
             <v-icon>edit</v-icon>
           </v-btn>
           <v-btn
+            v-if="actionBtn"
             class="v-btn--simple" 
             color="danger" 
             circle

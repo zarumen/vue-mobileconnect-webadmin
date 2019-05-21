@@ -92,7 +92,7 @@ export const actions = {
       
       // วน loop keywords ทั้งหมด ลงในที่ที่จะ update ทั้ง KeywordByShortcode และ KeywordReserved
       keyword.forEach(key => {
-        data[key] = newCampaign.id
+        data[key] = `${campaignObject.campaignCode}`
         updatedKey[`keywords.${key}`] = false
       })
       
@@ -108,12 +108,12 @@ export const actions = {
 
       newValidateCampaign = await firestoreApp
         .collection('campaignValidate')
-        .doc(newCampaign.id)
+        .doc(`${campaignObject.campaignCode}`)
         .set(validationObject)
 
     } catch (error) { console.log(error)}
 
-    if (newValidateCampaign) {
+    if (newCampaign && newValidateCampaign) {
 
       // switch Shortcode Reserved to Shortcode Active
       dispatch('shortcodes/mutateKeywordReservedListByCreateCampaign', {

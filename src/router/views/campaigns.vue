@@ -25,11 +25,13 @@ export default {
         { text: 'Brand', value: 'organizationLevel3Name' },
         { text: 'Header', value: 'campaignName' },
         { text: 'Keyword', value: 'keyword' },
-        { text: 'Start', value: 'campaignDateStart' },
+        { text: 'Shortcode', value: 'shortcode' },
+        { text: 'Running', value: 'campaignAvailable' },
         { text: 'Status', value: 'campaignState' },
         { text: 'Active', value: 'campaignActive' },
       ],
       campaignId: '',
+      quickSearchFilter: '',
       left: true,
       timeout: 2000,
     }
@@ -93,6 +95,7 @@ export default {
             <span class="title">
               Campaigns {{ pagination? "("+pagination.totalItems+")": "" }}
               <v-text-field
+                v-model="quickSearchFilter"
                 append-icon="search"
                 label="Quick Search"
                 single-line
@@ -124,8 +127,10 @@ export default {
             v-if="loading===false"
             :headers="headers"
             :items="items"
+            :search="quickSearchFilter"
             :pagination="pagination"
             :basemodule="baseModule"
+            :action-btn="true"
             @edit="edit"
             @remove="remove"
           />

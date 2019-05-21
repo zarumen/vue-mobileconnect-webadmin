@@ -28,10 +28,8 @@ export default {
         { text: 'Name', value: 'campaignName' },
         { text: 'Keyword', value: 'keyword' },
         { text: 'Shortcode', value: 'shortcode' },
-        { text: 'Start Date', value: 'campaignDateStart' },
-        { text: 'End Date', value: 'campaignDateEnd' },
-        { text: 'Reward', value: 'campaignAvailable' },
-        { text: 'Status', value: 'campaignActive' },
+        { text: 'Running', value: 'campaignAvailable' },
+        { text: 'Status', value: 'campaignState' },
       ],
       campaignId: '',
       left: true,
@@ -187,10 +185,10 @@ export default {
               <td><small>{{ props.item.campaignName }}</small></td>
               <td><small>{{ props.item.keyword }}</small></td>
               <td><small>{{ props.item.shortcode }}</small></td>
-              <td><small>{{ formatDate(props.item.campaignDateStart) }}</small></td>
-              <td><small>{{ formatDate(props.item.campaignDateEnd) }}</small></td>
+              <!-- <td><small>{{ formatDate(props.item.campaignDateStart) }}</small></td>
+              <td><small>{{ formatDate(props.item.campaignDateEnd) }}</small></td> -->
               <td><small>{{ props.item.campaignAvailable }}</small></td>
-              <td><small>{{ props.item.campaignActive }}</small></td>
+              <td><small>{{ props.item.campaignState }}</small></td>
             </template>
           </v-data-table>
           <v-flex

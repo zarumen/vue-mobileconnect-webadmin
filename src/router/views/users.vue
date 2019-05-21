@@ -153,6 +153,7 @@ export default {
                 :search="quickSearchFilter"
                 :pagination="pagination"
                 :basemodule="baseModule"
+                :action-btn="true"
                 @edit="edit"
                 @remove="remove"
               />

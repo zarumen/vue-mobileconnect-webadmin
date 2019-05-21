@@ -1,6 +1,6 @@
 <script>
 import Layout from '@layouts/main'
-import { mapGetters, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import { campaignComputed } from '@state/helpers'
 import firestoreApp from "@utils/firestore.config"
 import axios from 'axios';
@@ -32,9 +32,6 @@ export default {
   },
   computed: {
     ...campaignComputed,
-    ...mapGetters('campaigns', [
-      'hadCampaignList',
-    ]),
     authLevel () {
       // set Auth Level before send to Query
       if(this.user.organizationAuth === 'Level1')

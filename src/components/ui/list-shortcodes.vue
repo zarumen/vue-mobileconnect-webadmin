@@ -317,7 +317,7 @@ export default {
             round
             @click.stop="addKeywordByShortcodeDialog = !addKeywordByShortcodeDialog"
           >
-            #KEYWORD         
+            +TEST Keyword         
           </v-btn>
           <v-btn
             class="v-btn--simple"
