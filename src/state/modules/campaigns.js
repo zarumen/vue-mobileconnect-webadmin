@@ -77,16 +77,21 @@ export const actions = {
     
     let keyword = campaignObject.keyword
     let shortcode = campaignObject.shortcode
-    let newCampaign = null
-    let newValidateCampaign = null
+    let createError = false
 
     try {
 
-      newCampaign = await firestoreApp
+      await firestoreApp
         .collection('campaigns')
         .doc(`${campaignObject.campaignCode}`)
         .set(campaignObject)
-
+      
+      await firestoreApp
+        .collection('campaignValidate')
+        .doc(`${campaignObject.campaignCode}`)
+        .set(validationObject)
+        
+      
       let data = {}
       let updatedKey = {}
       
@@ -106,20 +111,19 @@ export const actions = {
         .doc(`${shortcode}`)
         .update(updatedKey)
 
-      newValidateCampaign = await firestoreApp
-        .collection('campaignValidate')
-        .doc(`${campaignObject.campaignCode}`)
-        .set(validationObject)
 
-    } catch (error) { console.log(error)}
+    } catch (error) { 
+        createError = true
+        console.log(error)
+    }
 
-    if (newCampaign && newValidateCampaign) {
+    if (!createError) {
 
       // switch Shortcode Reserved to Shortcode Active
       dispatch('shortcodes/mutateKeywordReservedListByCreateCampaign', {
         shortcode: shortcode,
         keyword: keyword
-      }, { root:true })
+      }, { root: true })
 
       sendSuccessNotice(commit, 'New Campaign has been added.')
       closeNotice(commit, 3000)
@@ -221,7 +225,7 @@ export const actions = {
   // ===
   // DELETE Zone
   // ===
-  async deleteCampaign({ commit, dispatch }, campaignId) {
+  async deleteCampaign({ state, commit, dispatch }, campaignId) {
     
     commit('setLoading', { loading: true })
 
@@ -241,7 +245,18 @@ export const actions = {
 
     return batch.commit()
       .then(() => {
-        // TODO: dispatch delete keywordByShortcode to tricked return to keywordReserved = true 
+        // dispatch delete keywordByShortcode to tricked return to keywordReserved = true 
+
+        let obj = state.items.find(item => item.id === campaignId)
+
+        let keyworddeleted = obj.keyword
+        let shortcodedeleted = obj.shortcode
+
+        dispatch('shortcodes/deleteKeywordByShortcode', {
+          shortcode: shortcodedeleted,
+          keyword: keyworddeleted
+        }, { root: true })
+
         commit('setLoading', { loading: false })
         dispatch('getAllCampaigns')
         sendSuccessNotice(commit, 'Campaign Deleted!')

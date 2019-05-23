@@ -1,6 +1,6 @@
 <script>
 import Layout from '@layouts/main'
-import { campaignComputed } from '@state/helpers'
+import { campaignComputed, reportMethods } from '@state/helpers'
 
 export default {
   page: {
@@ -20,6 +20,16 @@ export default {
   },
   computed: {
     ...campaignComputed,
+    filteredItems () {
+
+      if(this.search) {
+        return this.items.filter(item => item.campaignName.toLowerCase().includes(this.search.toLowerCase()) ||
+        item.campaignCode.toLowerCase().includes(this.search.toLowerCase()))
+      } else {
+        return this.items
+      }
+
+    },
   },
   created () {
     // query by auth user specific
@@ -27,6 +37,7 @@ export default {
       this.getAllCampaigns()
   },
   methods: {
+    ...reportMethods,
     reloadData () {
       this.getAllCampaigns()
     },
@@ -37,7 +48,7 @@ export default {
 
 <template>
   <Layout>
-    <!-- <v-container fluid>
+    <v-container fluid>
       <v-flex xs12>
         <base-card
           color="light-green"
@@ -68,7 +79,7 @@ export default {
           <v-card-text>
             <v-list three-line>
               <v-list-group
-                v-for="(item,index) in items"
+                v-for="(item,index) in filteredItems"
                 :key="index"
               >
                 <v-list-tile 
@@ -115,9 +126,9 @@ export default {
                 <v-divider 
                   v-if="index + 1 < items.length" 
                   :key="`divider-${index}`"
-                />  -->
-    <!--TODO:  SUBLIST -->
-    <!-- <template v-if="exportJobs[item.id]">
+                /> 
+                <!-- SUBLIST -->
+                <template v-if="exportJobs[item.id]">
                   <v-list-tile-content 
                     v-for="(job) in exportJobs[item.id][0].sort((a,b)=>{     
                       var x = a.fileName; var y = b.fileName
@@ -172,7 +183,7 @@ export default {
           Close
         </v-btn>
       </v-snackbar>
-    </v-container> -->
+    </v-container>
   </Layout>
 </template>
 

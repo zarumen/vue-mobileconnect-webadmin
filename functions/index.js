@@ -115,3 +115,47 @@ exports.deleteAggregationInShortcodeConfig = functions.firestore
       })
       .catch(err => console.log(err));
   });
+
+exports.aggregationInExportJobs = functions.firestore
+  .document("exportJobs/{campaignId}/jobs/{jobId}")
+  .onWrite((change, context) => {
+
+    const id = context.params.campaignId;
+
+    // const document = change.after.exists ? change.after.data() : null;
+
+    const jobRef = admin
+      .firestore()
+      .collection("exportJobs")
+      .doc(id);
+
+    return jobRef
+      .collection("jobs")
+      .orderBy("createTime", "desc")
+      .get()
+      .then(querySnapshot => {
+
+        let jobsCount = querySnapshot.size;
+        let allJobs = [];
+        let recentJobs = [];
+
+        // add data from the 5 most recent comments to the array
+        querySnapshot.forEach(doc => {
+          allJobs.push(doc.data());
+        });
+
+        recentJobs = allJobs.slice(0, 3);
+
+
+
+        // data to update on the document
+        let data = {
+          jobsCount,
+          recentJobs
+        };
+
+        // run update
+        return jobRef.update(data);
+      })
+      .catch(err => console.log(err));
+  });

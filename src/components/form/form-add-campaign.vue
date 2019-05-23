@@ -1,5 +1,5 @@
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import { arrayToObject } from '@utils/array-to-object'
 import { helperTH } from '@utils/campaign-create-helper'
 import { fireStorageApp } from '@utils/firestorage.config'
@@ -71,7 +71,20 @@ export default {
         'register',
         'vote',
         'text&win',
-        'api'
+        'api',
+        'reward'
+      ],
+      rewardConditionTypeList: [
+        'all',
+        'regx'
+        // 'lastDigit',
+        // 'sequentialRegx'
+      ],
+      campaignCodeRule: [
+        v => !!v || 'This Field is required',
+        v => /^[a-zA-Z0-9_]*$/.test(v) || 'Code รูปแบบไม่ถูกต้อง',
+        v => this.checkDuplicatedcampaignId(v) || 'มี ID ซ้ำ ซ้ำกับที่มีอยู่แล้ว กรุณาเปลี่ยนใหม่',
+        v => !(v.length <= 8) || 'ID must be more than 8 characters'
       ],
       checkKeywordRules: [
         v => !!v || 'This Field is required',
@@ -102,7 +115,6 @@ export default {
       rewardValid: true,
       // reward array
       anotherReward: Object.assign({}, defaultrForm),
-      checkObjectReward: false,
       // ---------**-------------------------------------
       // Check all value
       // ---------**------------------------------------- 
@@ -150,6 +162,13 @@ export default {
       keywordList: 'keywordList',
       keywordReservedList: 'keywordReservedList'
     }),
+    ...mapGetters('campaigns', [
+      'getAllCampaignsId',
+    ]),
+    checkObjectReward () {
+
+      return (this.campaignType === 'reward')
+    },
     keywordInKeywordList () {
       let sCheck = this.campaignForm.shortcode
 
@@ -271,6 +290,30 @@ export default {
       // doesn't show Error
       return true
     },
+    checkDuplicatedcampaignId (id) {
+
+      if(id) {
+
+        let arr = []
+        arr.push(id)
+
+        if(!this.getAllCampaignsId) return true
+        // ถ้ามี keyword เข้ามาให้ เช็คว่า มี keyword ที่ใช้อยู่รึิเปล่า
+        let checkArr = arr.map(element => {
+          // return เป็น Boolean Array ของ keywords [true, false, true]
+          return this.getAllCampaignsId.includes(element)
+        })
+        // ถ้ามี แม้แต่ 1 ตัวที่เป็น true ให้โชว์ error ว่า มี keyword ซ้ำ
+        if(checkArr.includes(true)) {
+          // show Error
+          return false
+        }
+        // doesn't show Error
+        return true
+      }
+      // doesn't show Error
+      return true
+    },
     mutatekwList(sc) {
       return this.keywordList.find(keyword => keyword.shortcode === sc)
     },
@@ -302,6 +345,7 @@ export default {
         campaignNew['campaignAvailable'] = true // check campaign paused or unpaused
         campaignNew['campaignActive'] = true // check campaign delete or not deleted
         campaignNew['campaignState'] = this.cState // check campaign status {test, production, close} 
+        campaignNew['campaignType'] = this.campaignType // added campaign type
 
         campaignNew['organizationAuth'] = this.brand.organizationAuth
         campaignNew['organizationLevel1'] = this.brand.organizationLevel1
@@ -539,7 +583,9 @@ export default {
                     <v-text-field 
                       v-model="campaignForm.campaignCode"
                       prepend-icon="fiber_new"
+                      :rules="campaignCodeRule"
                       label="Campaign Code"
+                      required
                     />
                   </v-flex>
                   <v-flex v-if="helper">
@@ -1307,6 +1353,12 @@ export default {
                     />
                   </v-flex>
                   <v-subheader>Upload VerifyCode File:</v-subheader>
+                  <v-subheader
+                    v-if="contextType === 'validate'"
+                    class="red--text"
+                  >
+                    เมื่อ Parser มี Condition Type = "validate" ให้ UPLOAD VERIFY_CODE ตรงนี้ด้วย
+                  </v-subheader>
                   <v-flex v-if="helper">
                     <v-subheader class="helpertext">
                       {{ helperText.campaignHasVerifyCode }}
@@ -1354,6 +1406,18 @@ export default {
                     />
                   </v-flex>
                   <v-subheader>Context Parser: (In Parser Object)</v-subheader>
+                  <v-subheader
+                    v-if="checkObjectReward"
+                    class="red--text"
+                  >
+                    ตอนเพิ่ม Parser ให้เลือก Condition Type อย่างน้อย 1 ตัวเป็น Type "REWARD"
+                  </v-subheader>
+                  <v-subheader
+                    v-if="campaignType === 'register'"
+                    class="red--text"
+                  >
+                    ตอนเพิ่ม Parser ให้เลือก Condition Type อย่างน้อย 1 ตัวเป็น Type "REGISTER"
+                  </v-subheader>
                   <v-flex
                     xs12
                     md6
@@ -1956,8 +2020,9 @@ export default {
                                 {{ helperText.rewardCondition }}
                               </v-subheader>
                             </v-flex> 
-                            <v-text-field 
+                            <v-select
                               v-model="anotherReward.rewardCondition"
+                              :items="rewardConditionTypeList"
                               :rules="[v => !!v || 'Item is required']"
                               prepend-icon="phonelink_setup"
                               label="Reward Condition Type"
@@ -1970,11 +2035,10 @@ export default {
                             </v-flex>
                             <v-text-field 
                               v-model="anotherReward.rewardConditionForm"
-                              :rules="[v => !!v || 'Item is required']"
+                              :disabled="anotherReward.rewardCondition === 'all'"
                               prepend-icon="phonelink_lock"
                               label="Reward Condition Value"
                               solo-inverted
-                              required
                             />
                             <v-flex v-if="helper">
                               <v-subheader class="helpertext">

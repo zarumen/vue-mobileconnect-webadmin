@@ -95,6 +95,12 @@ export const campaignMethods = {
   ]),
 }
 
+export const reportMethods = {
+  ...mapActions('campaigns', [
+    'getAllCampaigns',
+  ]),
+}
+
 export const operatorComputed = {
   ...mapState('shortcodes', {
     // ListItem of Data Table 

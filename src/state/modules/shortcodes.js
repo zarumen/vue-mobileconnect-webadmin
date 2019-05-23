@@ -472,8 +472,8 @@ export const actions = {
 
     let position = state.keywordReservedList.indexOf(positionObj)
 
-    let array = state.keywordReservedList[position].keywordsArray
-    let falseArray = state.keywordReservedList[position].keywordsFalseArray
+    let array = state.keywordReservedList[position].keywordsArray.slice()
+    let falseArray = state.keywordReservedList[position].keywordsFalseArray.slice()
 
     let addArray = array.push(keyword)
     let cutArray = falseArray.filter(cutkey => cutkey !== keyword)
@@ -483,6 +483,43 @@ export const actions = {
       payloadCreate: addArray,
       payloadReserved: cutArray
     })
+  },
+  mutateKeywordReservedListByDeleteCampaign({ commit, state }, { shortcode, keyword }) {
+    let positionObj
+    let position
+    let array
+    let falseArray
+    let addArray
+    let cutArray
+    
+    positionObj = state.keywordReservedList.find(k => k.shortcode === shortcode)
+    position = state.keywordReservedList.indexOf(positionObj)
+    
+    array = state.keywordReservedList[position].keywordsArray.slice()
+    falseArray = state.keywordReservedList[position].keywordsFalseArray.slice()
+
+    if(typeof keyword === 'string') {
+  
+      cutArray = array.filter(cutkey => cutkey !== keyword)
+      addArray = falseArray.push(keyword)
+
+    } else {
+
+      keyword.forEach(key => {
+
+        cutArray = array.filter(cutkey => cutkey !== key)
+        addArray = falseArray.push(key)
+
+      })
+    }
+
+    commit('setElementKeywordReservedByCreateCampaign', {
+      position: position,
+      payloadCreate: cutArray,
+      payloadReserved: addArray
+    })
+
+
   },
   editOperatorConfig({ commit }, { shortcode, operator, config }) {
 
@@ -503,6 +540,45 @@ export const actions = {
         closeNotice(commit, 1500)
         return error
       })
+  },
+  updatedKeywordReservedByDeleteCampaign({ commit, dispatch }, { shortcode, keyword }) {
+
+    let keywordRef = firestoreApp.collection('campaignKeywordReserved').doc(`${shortcode}`)
+
+    let updateObj = {}
+
+    if (typeof keyword === 'string') {
+      updateObj = {
+        [`keywords.${keyword}`]: true
+      }
+    } else {
+      keyword.forEach(key => {
+        updateObj[`keywords.${key}`] = true
+      })
+    }
+
+    return keywordRef
+      .update(updateObj)
+      .then(() => {
+
+        // dispatch('mutateKeywordReservedListByDeleteCampaign', {
+        //   shortcode: shortcode,
+        //   keyword: keyword
+        // })
+        dispatch('getKeywordsReservedFromFirestore')
+
+        console.log(`Delete Keyword Byshortcode!`);
+        sendSuccessNotice(commit, 'Keyword reserved has been updated.')
+        closeNotice(commit, 1500)
+        return `yes`
+      })
+      .catch(error => {
+        console.log(error)
+        sendErrorNotice(commit, 'Keyword reserved update failed! Please try again later. ')
+        closeNotice(commit, 1500)
+        return error
+      })
+
   },
   editSenderName({ commit }, { shortcode, senderArray }) {
 
@@ -548,6 +624,45 @@ export const actions = {
         return error
       })
   },
+  deleteKeywordByShortcode({ commit, dispatch }, { shortcode, keyword }) {
+
+    let keywordRef = firestoreApp.collection('campaignKeywordByShortcode').doc(`${shortcode}`)
+
+    let updateObj = {}
+
+    if (typeof keyword === 'string') {
+      updateObj = {
+        [`${keyword}`]: firebase.firestore.FieldValue.delete()
+      }
+    } else {
+      keyword.forEach(key => {
+        updateObj[`${key}`] = firebase.firestore.FieldValue.delete()
+      })
+    }
+
+    return keywordRef
+      .update(updateObj)
+      .then(() => {
+
+        dispatch('updatedKeywordReservedByDeleteCampaign', {
+          shortcode: shortcode,
+          keyword: keyword
+        })
+
+        dispatch('getKeywordsActiveFromFirestore')
+
+        console.log(`Delete Keyword Byshortcode!`);
+        sendSuccessNotice(commit, 'Keyword active has been deleted.')
+        closeNotice(commit, 1500)
+        return `yes`
+      })
+      .catch(error => {
+        console.log(error)
+        sendErrorNotice(commit, 'Keyword delete failed! Please try again later. ')
+        closeNotice(commit, 1500)
+        return error
+      })
+  },
   deleteKeywordReserved({ commit }, { shortcode, keyword }) {
 
     let keywordRef = firestoreApp.collection('campaignKeywordReserved').doc(`${shortcode}`)
@@ -565,7 +680,7 @@ export const actions = {
       })
       .catch(error => {
         console.log(error)
-        sendErrorNotice(commit, 'Operation Config delete failed! Please try again later. ')
+        sendErrorNotice(commit, 'Keyword delete failed! Please try again later. ')
         closeNotice(commit, 1500)
         return error
       })

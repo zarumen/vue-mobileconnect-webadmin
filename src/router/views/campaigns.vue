@@ -70,7 +70,6 @@ export default {
     },
     onConfirm () {
       this.deleteCampaign(this.campaignId)
-      this.closeSnackbar(2000)
       this.dialog = false
     },
     onCancel () {

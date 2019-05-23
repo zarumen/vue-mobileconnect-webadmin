@@ -2,9 +2,9 @@
 import Layout from '@layouts/main'
 import { mapActions } from 'vuex'
 import { campaignComputed } from '@state/helpers'
-import firestoreApp from "@utils/firestore.config"
-import axios from 'axios';
-import version from "@utils/aws-api.config"
+// import fireauth from '@utils/fireauth.config'
+import firestoreApp from '@utils/firestore.config'
+import axios from "@utils/aws-api.config"
 
 // 2Do: Delete Job Button
 
@@ -46,14 +46,12 @@ export default {
       return null
     },
     filteredItems() {
-      return this.items.filter(item => {
-        if(!this.search){
-          return this.items
-        }else{
-          return (item.campaignCode.toLowerCase().includes(this.search.toLowerCase()) || 
-            item.campaignName.toLowerCase().includes(this.search.toLowerCase()) )
-        }
-      })
+      if(this.search) {
+        return this.items.filter(item => item.campaignName.toLowerCase().includes(this.search.toLowerCase()) ||
+        item.campaignCode.toLowerCase().includes(this.search.toLowerCase()))
+      } else {
+        return this.items
+      }
     }
   },
   watch: {
@@ -82,20 +80,14 @@ export default {
         orgId: this.authLevel
       })
     },
-    createExportJob(campaignId,filename,maxRow,type){
+    createExportJob (campaignId,filename,maxRow,type) {
       // สั่งให้สร้าง Zip file ใหม่
       // 2Do: ทำ API Config สำหรับ Config Staging Version
-      axios.post(`https://api.sms2mkt.com/2waysms/${version}/jobs/${campaignId}/export`,
-          {
-                  "maxRow": maxRow,
-                  "exportType": type,
-                  "fileName": filename
-          }
-        ,{
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
+      axios.postData(`jobs/${campaignId}/export`, {
+            "maxRow": maxRow,
+            "exportType": type,
+            "fileName": filename
+          })
         .then(response => {
           // JSON responses are automatically parsed.
           this.parsedData = response.data
@@ -120,16 +112,10 @@ export default {
     getAWSExportJobsListByCampaign(campaignId){
       // JobsList[campainId][filename][key for path]
       
-      return axios.post(`https://api.sms2mkt.com/2waysms/${version}/jobs/${campaignId}/list`,
-          {
-            "maxFile":100,
+      return axios.postData(`jobs/${campaignId}/list`, {
+            "maxFile": 10,
             "prefixFile": "",
             "startAfter": ""
-          }
-        ,{
-          headers: {
-            'Content-Type': 'application/json'
-          }
         })
         .then(response => {
           // JSON responses are automatically parsed.
@@ -144,6 +130,8 @@ export default {
             joblist[filename] = item.Key
           });
 
+        // fireauth.currentUser.getIdToken(/* forceRefresh */ true).then(token => console.log(token))
+
           return joblist
         })
         .catch(e => {
@@ -152,7 +140,7 @@ export default {
     },
     getS3DownloadLink(campaignId,key){
       
-      axios.get(`https://api.sms2mkt.com/2waysms/${version}/jobs/${campaignId}/download?downloadKey=${key}`)
+      axios.getData(`jobs/${campaignId}/download?downloadKey=${key}`)
         .then(response => {
           // JSON responses are automatically parsed.
           this.parsedData = response.data

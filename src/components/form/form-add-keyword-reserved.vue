@@ -50,8 +50,8 @@ export default {
       v => !!v || 'Shortcode is required'
     ],
     secondRules: [
-      v => !!v || 'Keywords is required'
-    ], 
+      v => v.length > 0  || 'Keyword is required'
+    ],
   }),
   computed: {
     ...mapState('shortcodes', {
@@ -59,6 +59,17 @@ export default {
       keywordList: 'keywordList',
       keywordReservedList: 'keywordReservedList'
     }),
+    keywordInKeywordList () {
+      let sCheck = this.keyform.shortcode.shortcode
+
+      if(sCheck) {
+        let kws = this.keywordReservedList.find(sc => sc.shortcode === sCheck)
+
+        return [...kws.keywordsFalseArray, ...kws.keywordsArray]
+      }
+
+      return []
+    },
   },
   watch: {
     model (val, prev) {
@@ -84,6 +95,27 @@ export default {
     ...mapActions('shortcodes', [
         'createKeywordsReserved',
     ]),
+    checkDupKeyword (keywordArr) {
+
+      if(keywordArr) {
+
+        if(!this.keywordInKeywordList) return true
+        // ถ้ามี keyword เข้ามาให้ เช็คว่า มี keyword ที่ใช้อยู่รึิเปล่า
+        let checkArr = keywordArr.map(element => {
+          // return เป็น Boolean Array ของ keywords [true, false, true]
+          return this.keywordInKeywordList.includes(element.text)
+        })
+        // ถ้ามี แม้แต่ 1 ตัวที่เป็น true ให้โชว์ error ว่า มี keyword ซ้ำ
+        if(checkArr.includes(true)) {
+          // show Error
+          return false
+        }
+        // doesn't show Error
+        return true
+      }
+      // doesn't show Error
+      return true
+    },
     edit (index, item) {
       if (!this.editing) {
         this.editing = item
@@ -111,6 +143,12 @@ export default {
       if(!this.keyform.shortcode)
         this.openSnackBar("You cannot fill Data in Textfields!")
 
+      if(!this.checkDupKeyword(this.model)) {
+        
+        this.openSnackBar("KEYWORDS ซ้ำ+")
+
+      } else {
+
       // reformat Data Informations
       let x
       if(typeof this.keyform.shortcode === 'string')
@@ -136,7 +174,7 @@ export default {
         keywords: keywordObject
       })
       this.closeDialog()
-
+      }
     },
     closeDialog () {
       this.$emit('emitCloseKeywordDialog', false)
