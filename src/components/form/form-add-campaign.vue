@@ -149,8 +149,20 @@ export default {
       fileUrlTestVC: '',
       fileNameProVC: '',
       fileUrlProVC: '',
-      fileTypeVC: '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'
+      fileTypeVC: '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel',
       // Coupon Code Variable
+      fileNameTestCP: [],
+      fileUrlTestCP: [],
+      fileNameProCP: [],
+      fileUrlProCP: [],
+      fileTypeCP: '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel',
+      // Coupon Code Generator Variable
+      couponGenDialog: '',
+      couponTestGen: false,
+      couponProductionGen: false,
+      couponDigits: 0,
+      couponTotals: 0,
+      couponResult: [],
     }
   },
   computed: {
@@ -408,6 +420,26 @@ export default {
           })
         }
 
+        if(this.switch1) {
+          // upload Coupons here
+
+          // TEST FILE
+          this.uploadCoupons({
+            id: this.campaignForm.campaignCode, 
+            state: 'test', 
+            filename: this.fileNameTestCP, 
+            fileUrl: this.fileUrlTestCP
+          })
+
+          // PRODUCTION FILE
+          this.uploadCoupons({
+            id: this.campaignForm.campaignCode,
+            state: 'production',
+            filename: this.fileNameProCP, 
+            fileUrl: this.fileUrlProCP
+          })
+        }
+
         this.createCampaign({
           campaignObject: campaignNew,
           validationObject: campaignValidationNew
@@ -490,6 +522,7 @@ export default {
         return reward.rewardName !== name
       })
     },
+    // VERIFY CODE ZONE
     uploadVerifyCode ({ id, state, filename, fileUrl }) {
 
       let ref = storageRef.child(`campaigns/${id}/verifyCodeFile/${state}/${filename}`)
@@ -499,6 +532,69 @@ export default {
         console.log('Uploaded a data_url string!')
       })
 
+    },
+    // ADD COUPONS METHODS
+    updatedTestArrayName (e) {
+      this.fileNameTestCP.push(e)
+    },
+    updatedTestArrayUrl (e) {
+      this.fileUrlTestCP.push(e)
+    },
+    updatedProArrayName (e) {
+      this.fileNameProCP.push(e)
+    },
+    updatedProArrayUrl (e) {
+      this.fileUrlProCP.push(e)
+    },
+    uploadCoupons ({ id, state, fileName, fileUrl }) {
+      fileName.forEach((file, index) => {
+
+        let ref = storageRef.child(`campaigns/${id}/couponsFile/${state}/${index}-${file}`)
+
+        ref.putString(fileUrl[index], 'data_url')
+          .then((snapshot) => {
+          console.log('Uploaded a data_url string!')
+        })
+
+      })
+    },
+    clickedGen () {
+      for(let i = 0; i < this.couponTotals; i++){
+        this.couponResult.push(this.generateId(this.couponDigits))
+      }
+
+      let csvContent = 'data:text/csv;charset=utf-8,'
+
+      this.couponResult.forEach((rowArray) => {
+          csvContent += rowArray + "\r\n";
+      })
+
+      let encodedUri = encodeURI(csvContent)
+
+      if(this.couponTestGen) {
+        
+        this.fileNameTestCP.push(`coupons_${this.couponTotals}_generated.csv`)
+        this.fileUrlTestCP.push(encodedUri)
+      }
+
+      if(this.couponProductionGen) {
+        
+        this.fileNameProCP.push(`coupons_${this.couponTotals}_generated.csv`)
+        this.fileUrlProCP.push(encodedUri)
+      }
+
+      this.couponGenDialog = !this.couponGenDialog
+
+      return encodedUri
+    },
+    dec2hex (dec) {
+      return ('0' + dec.toString(36)).substr(-2)
+    },
+    // generateId :: Integer -> String
+    generateId (len) {
+      let arr = new Uint8Array((len || 40) / 2)
+      window.crypto.getRandomValues(arr)
+      return Array.from(arr, this.dec2hex).join('')
     }
   },
 }
@@ -567,8 +663,8 @@ export default {
               step="1"
             >
               {{ stepName.one }}
-              <small>v.0.8 patch note: ทำ Form upload verify_code โดยแยก เป็น 2 ลิ้งค์คือ ไฟล์สำหรับ TEST และ PRODUCTION </small>
-              <small>road map: ทำปุ่ม Generate Coupon และ Upload Coupon, ทำตัวช่วย กรอกในสิ่งที่เคยกรอกไปแล้ว (Template) ทั้งในส่วนของ Regex และ ข้อความ (Message Template) และหน้าสุดท้าย ไว้ดูสรุปข้อมูล ก่อน save</small>
+              <small>v.0.8.1 patch note: Generate Coupon และ Upload Coupon ได้แล้ว, ทำ Form upload verify_code โดยแยก เป็น 2 ลิ้งค์คือ ไฟล์สำหรับ TEST และ PRODUCTION </small>
+              <small>road map: ทำตัวช่วย กรอกในสิ่งที่เคยกรอกไปแล้ว (Template) ทั้งในส่วนของ Regex และ ข้อความ (Message Template) และหน้าสุดท้าย ไว้ดูสรุปข้อมูล ก่อน save</small>
             </v-stepper-step>
             <v-stepper-content step="1">
               <v-card
@@ -694,7 +790,7 @@ export default {
                           </v-list-tile-avatar>
                           <v-list-tile-content>
                             <v-list-tile-title>{{ data.item.displayName }}</v-list-tile-title>
-                            <v-list-tile-sub-title>{{ data.item.organizationLevel2Name }}</v-list-tile-sub-title>
+                            <v-list-tile-sub-title>{{ data.item.organizationLevel1Name }} > {{ data.item.organizationLevel2Name }}</v-list-tile-sub-title>
                           </v-list-tile-content>
                         </template>
                         <template v-else>
@@ -703,7 +799,7 @@ export default {
                           </v-list-tile-avatar>
                           <v-list-tile-content>
                             <v-list-tile-title>{{ data.item.displayName }}</v-list-tile-title>
-                            <v-list-tile-sub-title>{{ data.item.organizationLevel2Name }}</v-list-tile-sub-title>
+                            <v-list-tile-sub-title>{{ data.item.organizationLevel1Name }} > {{ data.item.organizationLevel2Name }}</v-list-tile-sub-title>
                           </v-list-tile-content>
                         </template>
                         <template
@@ -1940,9 +2036,7 @@ export default {
                         >
                           <v-card-title>
                             <v-subheader>
-                              Add Reward Validation Details: <small class="helpertext">
-                                &nbsp; ปุ่ม generate และ upload ยังใช้ไม่ได้
-                              </small>
+                              Add Reward Validation Details:
                             </v-subheader>
                           </v-card-title>
                           <v-card-actions>
@@ -1955,13 +2049,14 @@ export default {
                             <v-spacer />
                             <v-btn
                               :disabled="!switch1"
-                              color="blue-grey"
+                              color="deep-purple lighten-2"
                               class="white--text"
                               round
+                              @click.stop="couponGenDialog = !couponGenDialog"
                             >
                               Generated
                             </v-btn>
-                            <v-btn
+                            <!-- <v-btn
                               :loading="loading1"
                               :disabled="!switch1"
                               color="blue-grey"
@@ -1976,10 +2071,36 @@ export default {
                                 cloud_upload
                               </v-icon>
                               Upload
-                            </v-btn>
+                            </v-btn> -->
                             <p />
                           </v-card-actions>
                           <v-card-text>
+                            <v-flex>
+                              <v-flex v-if="helper">
+                                <v-subheader class="helpertext">
+                                  {{ helperText.couponsTestUpload }}
+                                </v-subheader>
+                              </v-flex> 
+                              <BaseUploadfield
+                                :accept="fileTypeCP"
+                                :disabled="!switch1"
+                                :label="`Coupons TEST Upload`"
+                                @input="updatedTestArrayName"
+                                @formData="updatedTestArrayUrl"
+                              />
+                              <v-flex v-if="helper">
+                                <v-subheader class="helpertext">
+                                  {{ helperText.couponsProductionUpload }}
+                                </v-subheader>
+                              </v-flex> 
+                              <BaseUploadfield
+                                :accept="fileTypeCP"
+                                :disabled="!switch1"
+                                :label="`Coupons PRODUCTION Upload`"
+                                @input="updatedProArrayName"
+                                @formData="updatedProArrayUrl"
+                              />
+                            </v-flex>
                             <v-flex v-if="helper">
                               <v-subheader class="helpertext">
                                 {{ helperText.rewardId }}
@@ -2309,6 +2430,86 @@ export default {
             </v-stepper-content>
           </v-stepper>
         </v-form>
+      </v-card>
+    </v-dialog>
+    <v-dialog
+      v-model="couponGenDialog"
+      max-width="500px"
+    >
+      <v-card>
+        <v-card-title>
+          <span class="headline">
+            Create Coupons
+          </span>
+        </v-card-title>
+
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex
+                xs12
+                sm6
+                md4
+              >
+                <v-text-field
+                  v-model="couponDigits"
+                  :rules="[v => v > 0 || 'DIGITS always is more than 0']"
+                  mask="##"
+                  label="Digits"
+                />
+              </v-flex>
+              <v-flex
+                xs12
+                sm6
+                md4
+              >
+                <v-text-field
+                  v-model="couponTotals"
+                  mask="#######"
+                  label="Totals"
+                />
+              </v-flex>
+              <v-flex
+                xs12
+                sm6
+                md4
+              >
+                <v-checkbox
+                  v-model="couponTestGen"
+                  label="TEST"
+                  color="deep-purple lighten-3"
+                  hide-details
+                />
+                <v-checkbox
+                  v-model="couponProductionGen"
+                  label="PRODUCTION"
+                  color="deep-purple lighten-1"
+                  hide-details
+                />
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            class="v-btn--simple" 
+            color="primary"
+            round
+            @click="couponGenDialog = !couponGenDialog"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            class=""
+            color="primary"
+            round
+            @click="clickedGen"
+          >
+            Generated
+          </v-btn>
+        </v-card-actions>
       </v-card>
     </v-dialog>
   </v-layout>

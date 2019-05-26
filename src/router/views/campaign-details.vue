@@ -131,7 +131,7 @@ export default {
                 SHORTCODE: {{ text.shortcode }}
               </p>
               <p class="category text-gray font-weight-thin mb-3">
-                STATUS: {{ text.campaignState.toUpperCase() }}
+                STATUS: {{ text.campaignState }}
               </p>
               <v-btn
                 color="primary"

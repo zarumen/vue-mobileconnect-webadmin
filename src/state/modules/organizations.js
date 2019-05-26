@@ -1,5 +1,4 @@
-import firebase from '@firebase/app'
-import '@firebase/firestore'
+import getserverTimestamp from '@utils/firestore-timestamp'
 import firestoreApp from '@utils/firestore.config'
 
 import {
@@ -269,6 +268,6 @@ export const actions = {
 // Private helpers
 // ===
 
-function getserverTimestamp() {
-  return firebase.firestore.FieldValue.serverTimestamp()
-}
+// function getserverTimestamp() {
+//   return firebase.firestore.FieldValue.serverTimestamp()
+// }

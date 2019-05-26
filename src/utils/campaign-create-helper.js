@@ -49,4 +49,6 @@ export const helperTH = {
     messageValidateFail: 'msg ตอบกลับเมื่อไม่ใช่สมาชิก (ต้องมี verifyCode)',
     verifyCodeTestUpload: 'ฟอร์ม upload verifycode สำหรับ TEST',
     verifyCodeProductionUpload: 'ฟอร์ม upload verifycode สำหรับ PRODUCTION',
+    couponsTestUpload: 'ฟอร์ม upload coupons สำหรับ TEST',
+    couponsProductionUpload: 'ฟอร์ม upload coupons สำหรับ PRODUCTION',
 }

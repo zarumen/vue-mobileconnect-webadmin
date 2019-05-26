@@ -11,10 +11,14 @@ export default {
   },
   components: { Layout },
   data: () => ({
+    couponGenDialog: '',
+    digits: 0,
+    totals: 0,
+    result: [],
     imageName: '',
     imageUrl: '',
-    fileXLSName: '',
-    fileXLSUrl: '',
+    fileXLSName: [],
+    fileXLSUrl: [],
     xlsFileType: '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'
   }),
   methods: {
@@ -37,16 +41,11 @@ export default {
 				fr.readAsDataURL(files[0])
 				fr.addEventListener('load', () => {
 					this.imageUrl = fr.result
-          this.imageFile = files[0] // this is an image file that can be sent to server...
-          this.imageName = files[0].name
+          this.imageFile.push(files[0]) // this is an image file that can be sent to server...
+          this.imageName.push(files[0].name)
 
           console.log('in the listener:',this.imageName)
-          let ref = storageRef.child(`sunsmile/${this.imageName}`)
-
-          ref.putString(this.imageUrl, 'data_url')
-            .then((snapshot) => {
-            console.log('Uploaded a data_url string!')
-          })
+          
 				})
 			} else {
 				this.imageName = ''
@@ -68,6 +67,53 @@ export default {
         this.fileXLSUrl = fileReader.result
         console.log(this.fileXLSUrl)
       })
+    },
+    updatedarrayName (e) {
+      this.fileXLSName.push(e)
+    },
+    updatearrayUrl (e) {
+      this.fileXLSUrl.push(e)
+    },
+    sendToStorage () {
+      this.fileXLSName.forEach((file, index) => {
+
+        let ref = storageRef.child(`sunsmile/${index}-${file}`)
+
+        ref.putString(this.fileXLSUrl[index], 'data_url')
+          .then((snapshot) => {
+          console.log('Uploaded a data_url string!')
+        })
+
+      })
+    },
+    dec2hex (dec) {
+      return ('0' + dec.toString(36)).substr(-2)
+    },
+    clickedGen () {
+      for(let i = 0; i < this.totals; i++){
+        this.result.push(this.generateId(this.digits))
+      }
+
+      let csvContent = 'data:text/csv;charset=utf-8,'
+
+      this.result.forEach((rowArray) => {
+          csvContent += rowArray + "\r\n";
+      })
+
+      let encodedUri = encodeURI(csvContent)
+
+      this.fileXLSName.push('file_generated.csv')
+      this.fileXLSUrl.push(encodedUri)
+
+      this.couponGenDialog = !this.couponGenDialog
+
+      return encodedUri
+    },
+		// generateId :: Integer -> String
+    generateId (len) {
+      let arr = new Uint8Array((len || 40) / 2)
+      window.crypto.getRandomValues(arr)
+      return Array.from(arr, this.dec2hex).join('')
     }
   }
 }
@@ -150,6 +196,7 @@ export default {
         color="primary"
         round
         fab
+        @click="sendToStorage"
       >
         <v-icon 
           dark
@@ -163,10 +210,77 @@ export default {
         :accept="xlsFileType"
         :disabled="false"
         :label="`Coupon File Upload`"
-        @input="fileXLSName=arguments[0]"
-        @formData="fileXLSUrl=arguments[0]"
+        @input="updatedarrayName"
+        @formData="updatearrayUrl"
       />
     </div>
+    <v-btn
+      color="blue-grey"
+      class="white--text"
+      round
+      @click="couponGenDialog = !couponGenDialog"
+    >
+      Generated
+    </v-btn>
+    <v-dialog
+      v-model="couponGenDialog"
+      max-width="500px"
+    >
+      <v-card>
+        <v-card-title>
+          <span class="headline">
+            Create Coupons
+          </span>
+        </v-card-title>
+
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex
+                xs12
+                sm6
+                md4
+              >
+                <v-text-field
+                  v-model="digits"
+                  label="Digits"
+                />
+              </v-flex>
+              <v-flex
+                xs12
+                sm6
+                md4
+              >
+                <v-text-field
+                  v-model="totals"
+                  label="Totals"
+                />
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            class="v-btn--simple" 
+            color="primary"
+            round
+            @click="couponGenDialog = !couponGenDialog"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            class=""
+            color="primary"
+            round
+            @click="clickedGen"
+          >
+            Generated
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </Layout>
 </template>
 

@@ -1,4 +1,5 @@
 import firestoreApp from "@utils/firestore.config"
+import getServerTimestamp from '@utils/firestore-timestamp'
 
 import {
   sendSuccessNotice,
@@ -73,7 +74,7 @@ export const actions = {
 
     commit('setLoading', { loading: true })
 
-    console.log(campaignObject)
+    campaignObject['campaignCreateTime'] = getServerTimestamp()
     
     let keyword = campaignObject.keyword
     let shortcode = campaignObject.shortcode
@@ -148,6 +149,7 @@ export const actions = {
     
     return firestoreApp
       .collection('campaigns')
+      .orderBy('campaignCreateTime', 'desc')
       .get()
       .then(querySnapshot => {
 
@@ -300,3 +302,4 @@ export function getExportJobsByCampaign(campaignId) {
       return error
     })
 }
+
