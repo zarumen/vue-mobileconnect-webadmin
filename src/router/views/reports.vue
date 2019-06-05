@@ -1,6 +1,8 @@
 <script>
+// import { mapState, mapActions, mapGetters } from 'vuex'
 import Layout from '@layouts/main'
-import { campaignComputed, reportMethods } from '@state/helpers'
+import formatDateRelative from '@utils/format-date-relative'
+import { campaignComputed, reportComputed, reportMethods } from '@state/helpers'
 
 export default {
   page: {
@@ -14,12 +16,13 @@ export default {
       left: true,
       timeout: 2000,
       exportJobs: [],
-      s3downloadlink: '',
+      selectedCampaign: '',
       search: ''
     }
   },
   computed: {
     ...campaignComputed,
+    ...reportComputed,
     filteredItems () {
 
       if(this.search) {
@@ -28,7 +31,6 @@ export default {
       } else {
         return this.items
       }
-
     },
   },
   created () {
@@ -41,148 +43,222 @@ export default {
     reloadData () {
       this.getAllCampaigns()
     },
+    convertTime (time) {
+      return formatDateRelative(time.seconds)
+    },
+    clicked (i) {
+      return console.log(i)
+    },
+    createExportJob (id, code) {
 
+      this.selectedCampaign = id
+      
+      this.createS3DownloadFileJob({
+        campaignId: id,
+        fileName: code
+      })
+
+      this.getCampaignExportJobsListener({
+        campaignId: id
+      })
+
+      return true
+    },
+    downloadExportFile (id, file) {
+
+      this.getFileDownloadFromS3({
+        campaignId: this.selectedCampaign,
+        fileName: file
+      })
+
+      return id
+    },
+    clickedSelectedCampaignReports (id) {
+      this.selectedCampaign = id
+
+      this.getCampaignExportJobsListener({
+        campaignId: id
+      })
+    }
   }
 }
 </script>
 
 <template>
   <Layout>
-    <v-container fluid>
-      <v-flex xs12>
-        <base-card
-          color="light-green"
-          title="Report All Campaign"
+    <v-container 
+      fluid
+      fill-height
+      grid-list-xl
+    >
+      <v-layout
+        wrap
+      >
+        <v-flex
+          md12
+          lg6
         >
-          <v-card-title>
-            <span class="title">
-              Campaigns {{ pagination? "("+pagination.totalItems+")": "" }}
-              <v-text-field
-                v-model="search"
-                append-icon="search"
-                label="Quick Search"
-                single-line
-                hide-details
-              />
-            </span>
-            <v-spacer />
-            <v-btn 
-              class="v-btn--simple"
-              color="primary"
-              circle
-              icon
-              @click.native="reloadData()"
-            >
-              <BaseIcon name="syncAlt" />            
-            </v-btn>
-          </v-card-title>
-          <v-card-text>
-            <v-list three-line>
-              <v-list-group
-                v-for="(item,index) in filteredItems"
-                :key="index"
+          <base-card
+            color="light-green"
+            title="List All Campaign"
+            text="List of campaigns to get reported"
+          >
+            <v-card-title>
+              <span class="title">
+                Campaigns {{ pagination? "("+pagination.totalItems+")": "" }}
+                <v-text-field
+                  v-model="search"
+                  append-icon="search"
+                  label="Quick Search"
+                  single-line
+                  hide-details
+                />
+              </span>
+              <v-spacer />
+              <v-btn 
+                class="v-btn--simple"
+                color="primary"
+                circle
+                icon
+                @click.native="reloadData()"
               >
-                <v-list-tile 
-                  slot="activator" 
+                <BaseIcon name="syncAlt" />            
+              </v-btn>
+            </v-card-title>
+            <v-card-text>
+              <v-list three-line>
+                <template
+                  v-for="(item,index) in filteredItems"
                 >
-                  <v-list-tile-content 
-                    @click="getAWSExportJobsListByCampaign(item.id).then((result)=>{
-                      getFirebaseExportJobsByCampaign(item.id,result)
-                    })"
+                  <v-list-tile 
+                    :key="index"
+                    @click.stop="clickedSelectedCampaignReports(item.id)"
                   >
-                    <div style="width: 100%">
-                      <v-layout 
-                        justify-space-between 
-                        row
-                      >
-                        <v-flex 
-                          align-content-center 
-                          xs11
-                        >
-                          {{ item.campaignCode }}: {{ item.campaignName }} <br>
-                          <v-list-tile-sub-title>{{ item.campaignActive }}</v-list-tile-sub-title>
-                        </v-flex>
-                        <v-flex xs1>
-                          <v-tooltip
-                            top
-                            content-class="top"
-                          >
-                            <v-btn
-                              slot="activator"
-                              class="v-btn--simple"
-                              color="secondary"
-                              icon
-                              @click="createExportJob(item.id,item.campaignCode,100000,'XLSX')"
-                            >
-                              <v-icon>view_comfy</v-icon>
-                            </v-btn>
-                            <span>Create Excel Export Job</span>
-                          </v-tooltip>
-                        </v-flex>
-                      </v-layout>
-                    </div>
-                  </v-list-tile-content>
-                </v-list-tile>
-                <v-divider 
-                  v-if="index + 1 < items.length" 
-                  :key="`divider-${index}`"
-                /> 
-                <!-- SUBLIST -->
-                <template v-if="exportJobs[item.id]">
-                  <v-list-tile-content 
-                    v-for="(job) in exportJobs[item.id][0].sort((a,b)=>{     
-                      var x = a.fileName; var y = b.fileName
-                      return ((x < y) ? 1 : ((x > y) ? -1 : 0))     
-                    })" 
-                    :key="job.id"
-                  >
-                    <div class="d-flex">
-                      <v-list-tile-sub-title style="display: flex; align-items: center; justify-content: center">
-                        Type: {{ job.type }}
-                      </v-list-tile-sub-title>
-                      <v-list-tile-sub-title style="display: flex; align-items: center; justify-content: center">
-                        {{ job.fileName }}
-                      </v-list-tile-sub-title>
+                    <v-list-tile-action>
                       <v-tooltip
                         top
                         content-class="top"
                       >
                         <v-btn
                           slot="activator"
-                          :disabled="!job.key"
                           class="v-btn--simple"
                           color="secondary"
                           icon
-                          @click="getS3DownloadLink(item.id,job.key)"
+                          @click.stop="createExportJob(item.id, item.campaignCode)"
                         >
                           <v-icon>cloud_download</v-icon>
                         </v-btn>
-                        <span>Download</span>
+                        <span>Download New File From S3</span>
                       </v-tooltip>
-                    </div>
-                  </v-list-tile-content>
+                    </v-list-tile-action>
+                    <v-list-tile-content class="ma-2">
+                      <div style="width: 100%">
+                        <v-layout 
+                          justify-space-between 
+                          row
+                        >
+                          <v-flex 
+                            align-content-center 
+                            class="my-2"
+                          >
+                            {{ item.campaignName }} <br>
+                            <v-list-tile-sub-title>{{ item.campaignCode }} : {{ item.campaignActive }}</v-list-tile-sub-title>
+                          </v-flex>
+                        </v-layout>
+                      </div>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                  <v-divider 
+                    v-if="index + 1 < items.length" 
+                    :key="`divider-${index}`"
+                  />
                 </template>
-              </v-list-group>
-            </v-list>
-          </v-card-text>
-        </base-card>
-      </v-flex>
-      <v-snackbar 
-        v-if="loading===false" 
-        v-model="snackbar" 
-        :left="true" 
-        :timeout="timeout" 
-        :color="mode"
-      >
-        {{ notice }}
-        <v-btn 
-          dark 
-          flat 
-          @click.native="exitSnackbar"
+              </v-list>
+            </v-card-text>
+          </base-card>
+        </v-flex>
+        <v-flex
+          md12
+          lg6
         >
-          Close
-        </v-btn>
-      </v-snackbar>
+          <base-card
+            color="deep-purple"
+            title="Report Files Management"
+            text="List of Report from Selected Campaign"
+          >
+            <v-card-title class="title">
+              Campaign: {{ selectedCampaign }}
+            </v-card-title>
+            <v-card-text>
+              <v-list two-line>
+                <template
+                  v-for="(item,index) in jobList"
+                >
+                  <v-list-tile 
+                    :key="index"
+                    @click="clicked"
+                  >
+                    <v-list-tile-avatar>
+                      <v-chip
+                        color="light-green white--text"
+                        small
+                        label
+                      >
+                        {{ item.type }}
+                      </v-chip>
+                    </v-list-tile-avatar>
+                    <v-list-tile-content 
+                      class="ma-2"
+                    >
+                      <v-list-tile-title>
+                        {{ item.fileName }}
+                      </v-list-tile-title>
+                      <v-list-tile-sub-title>create Time: {{ convertTime(item.createTime) }}</v-list-tile-sub-title>
+                    </v-list-tile-content>
+                    <v-list-tile-action>
+                      <v-tooltip
+                        top
+                        content-class="top"
+                      >
+                        <v-btn
+                          slot="activator"
+                          class="v-btn--simple"
+                          color="primary"
+                          icon
+                          @click.stop="downloadExportFile(index, item.fileName)"
+                        >
+                          <v-icon>save_alt</v-icon>
+                        </v-btn>
+                        <span>Download Recent File</span>
+                      </v-tooltip>
+                    </v-list-tile-action>
+                  </v-list-tile>
+                  <v-divider 
+                    v-if="index + 1 < items.length" 
+                    :key="`divider-${index}`"
+                  />
+                </template>
+              </v-list>
+            </v-card-text>
+          </base-card>
+        </v-flex>
+        <v-snackbar 
+          v-if="loading===false" 
+          v-model="snackbar" 
+          :left="true" 
+          :timeout="timeout" 
+          :color="mode"
+        >
+          {{ notice }}
+          <v-btn 
+            dark 
+            flat 
+            @click.native="exitSnackbar"
+          >
+            Close
+          </v-btn>
+        </v-snackbar>
+      </v-layout>
     </v-container>
   </Layout>
 </template>

@@ -1,33 +1,41 @@
-import firebase from '@firebase/app'
-import '@firebase/firestore'
+// import firebase from '@firebase/app'
+// import '@firebase/firestore'
 // import { mapActions } from 'vuex'
+import { set } from '@state/helpers'
 import axios from "@utils/aws-api.config"
 import firestoreApp from "@utils/firestore.config"
 
 export const state = {
-
+  campaignSelected: {},
   jobList: [],
-  maxRow: 100000,
-  type: 'XLSX',
-  maxFile: 100,
-
+  fileName: '',
+  maxFile: 50,
+  maxRow: 10000,
+  exportType: 'XLSX',
+  prefixFile: '',
+  startAfter: '',
+  downloadKey: '',
+  downloadUrl: ''
 }
 
 export const getters = {
 
 }
 
-export const mutations = {}
+export const mutations = {
+  setCampaignSelected: set('campaignSelected'),
+  setJobList: set('jobList')
+}
 
 export const actions = {
   // ===
   // CREATE Zone
   // ===
-  async createExportJob ({ state, commit }, { campaignId, fileName }) {
+  async createS3DownloadFileJob ({ state, dispatch }, { campaignId, fileName }) {
 
     let data = {
       "maxRow": state.maxRow,
-      "exportType": state.type,
+      "exportType": state.exportType,
       "fileName": fileName
     }
 
@@ -36,31 +44,36 @@ export const actions = {
       // JSON responses are automatically parsed.
       let parsedData = response.data
 
+      console.log('create file: ', parsedData.output.S3FileName)
+
       let exportJobObject = {
-        'fileName': parsedData.output.S3FileName,
-        'type': state.type,
-        'createTime': getserverTimestamp()
+        'campaignId': campaignId,
+        'jobsCount': 0
       }
 
-      this.saveJobObjectToFirestore({
+      dispatch('saveCampaignObjectToFirestore', {
         campaignId: campaignId,
         jobObject: exportJobObject
+      })
+
+      dispatch('getFileDownloadFromS3', {
+        campaignId: campaignId,
+        fileName: parsedData.output.S3FileName
       })
     })
     .catch(error => {
       console.log(error)
     })
   },
-  async saveJobObjectToFirestore ({ commit }, { campaignId, jobObject }) {
-
+  async saveCampaignObjectToFirestore ({ commit }, { campaignId, jobObject }) {
 
     return firestoreApp
       .collection('exportJobs')
       .doc(campaignId)
-      .collection('jobs')
-      .add(jobObject)
+      .set(jobObject, { merge: true })
       .then(() => {
-
+        // TODO: send Snackbar to Views
+        console.log('create Object ExportsJob done!')
       })
       .catch(error => {
         console.log(error)
@@ -69,7 +82,48 @@ export const actions = {
   // ===
   // READ Zone
   // ===
+  getFileDownloadFromS3({ commit }, { campaignId, fileName }) {
 
+    return axios.getData(`jobs/${campaignId}/download?downloadKey=${fileName}`)
+      .then(response => {
+
+        let data = response.data
+        console.log(response.data.output.link)
+
+        // Download file to Client
+        // window.location = data.output.link
+        return data.output.link
+      })
+      .catch(e => console.log(e))
+  },
+  async getCampaignExportJobsListener({ commit }, { campaignId }) {
+
+    return firestoreApp
+      .collection('exportJobs')
+      .doc(campaignId)
+      .collection('jobs')
+      .orderBy('createTime', 'desc')
+      .limit(10)
+      .get()
+      .then((snap) => {
+
+        let jobList = []
+        console.log(snap.size)
+
+        snap.forEach(doc => {
+          let data = {}
+          data = doc.data()
+          jobList.push(data)
+        })
+
+        commit('setJobList', jobList)
+        return jobList
+      })
+      .catch(error => {
+        console.log(error)
+        return error
+      })
+  },
   // ===
   // UPDATE Zone
   // ===
@@ -82,6 +136,6 @@ export const actions = {
 // Private helpers
 // ===
 
-function getserverTimestamp() {
-  return firebase.firestore.FieldValue.serverTimestamp()
-}
+// function getserverTimestamp() {
+//   return firebase.firestore.FieldValue.serverTimestamp()
+// }

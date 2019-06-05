@@ -366,6 +366,7 @@ export default {
         campaignNew['organizationLevel2Name'] = this.brand.organizationLevel2Name
         campaignNew['organizationLevel3'] = this.brand.organizationLevel3
         campaignNew['organizationLevel3Name'] = this.brand.organizationLevel3Name
+        campaignNew['brandPicUrl'] = this.brand.picURL
 
         // set Check Campaign Verify Code
         if(this.switchUploadVC) {          
@@ -672,6 +673,11 @@ export default {
                 class="mb-5"
               >
                 <v-card-text>
+                  <v-flex v-if="helper">
+                    <v-subheader class="helpertext">
+                      {{ helperText.campaignCode }}
+                    </v-subheader>
+                  </v-flex>
                   <v-flex 
                     xs12
                     md4
@@ -680,13 +686,14 @@ export default {
                       v-model="campaignForm.campaignCode"
                       prepend-icon="fiber_new"
                       :rules="campaignCodeRule"
+                      :counter="20"
                       label="Campaign Code"
                       required
                     />
                   </v-flex>
                   <v-flex v-if="helper">
                     <v-subheader class="helpertext">
-                      {{ helperText.campaignCode }}
+                      {{ helperText.campaignName }}
                     </v-subheader>
                   </v-flex>
                   <v-flex 
@@ -701,7 +708,7 @@ export default {
                   </v-flex> 
                   <v-flex v-if="helper">
                     <v-subheader class="helpertext">
-                      {{ helperText.campaignName }}
+                      {{ helperText.campaignDescription }}
                     </v-subheader>
                   </v-flex>
                   <v-flex 
@@ -716,20 +723,15 @@ export default {
                   </v-flex>
                   <v-flex v-if="helper">
                     <v-subheader class="helpertext">
-                      {{ helperText.campaignDescription }}
+                      {{ helperText.campaignType }}
                     </v-subheader>
-                  </v-flex>
+                  </v-flex>                
                   <v-select 
                     v-model="campaignType"
                     :items="cTypeList"
                     label="Campaign Type"
                     prepend-icon="assignment"
                   />
-                  <v-flex v-if="helper">
-                    <v-subheader class="helpertext">
-                      {{ helperText.campaignType }}
-                    </v-subheader>
-                  </v-flex>                
                 </v-card-text>
               </v-card>
               <v-btn 
@@ -1597,6 +1599,7 @@ export default {
                           <v-text-field 
                             v-model="anotherParser.messageContextFailed"
                             :rules="[v => !!v || 'Item is required']"
+                            :counter="70"
                             prepend-icon="message"
                             label="Invalid Format Message"
                             required
@@ -1690,6 +1693,7 @@ export default {
                                   <v-text-field 
                                     v-model="contextFailed.messageContextFailed"
                                     :rules="[v => !!v || 'Item is required']"
+                                    :counter="70"
                                     prepend-icon="message"
                                     label="Invalid Format Message Specific"
                                     required
@@ -1791,6 +1795,7 @@ export default {
                     </v-flex> 
                     <v-text-field 
                       v-model="validateForm.messageCampaignTestNotRegister"
+                      :counter="70"
                       prepend-icon="chat"
                       label="Empty Message"
                     />
@@ -1801,6 +1806,7 @@ export default {
                     </v-flex>
                     <v-text-field 
                       v-model="validateForm.messageCampaignNotAvailable"
+                      :counter="70"
                       prepend-icon="chat"
                       label="Pause Service Message"
                     />
@@ -1812,6 +1818,7 @@ export default {
                     <v-text-field 
                       v-model="validateForm.messageBoundariesLessError"
                       :rules="[v => !!v || 'Item is required']"
+                      :counter="70"
                       prepend-icon="chat"
                       label="Less Content Message"
                       required
@@ -1824,6 +1831,7 @@ export default {
                     <v-text-field 
                       v-model="validateForm.messageBoundariesOverError"
                       :rules="[v => !!v || 'Item is required']"
+                      :counter="70"
                       prepend-icon="chat"
                       label="Over Content Message"
                       required
@@ -1836,6 +1844,7 @@ export default {
                     <v-text-field 
                       v-model="validateForm.messageBeforeStart"
                       :rules="[v => !!v || 'Item is required']"
+                      :counter="70"
                       prepend-icon="chat"
                       label="Before Service Active Message"
                       required
@@ -1848,6 +1857,7 @@ export default {
                     <v-text-field 
                       v-model="validateForm.messageAfterEnd"
                       :rules="[v => !!v || 'Item is required']"
+                      :counter="70"
                       prepend-icon="chat"
                       label="After Service Active Message"
                       required
@@ -1859,6 +1869,7 @@ export default {
                     </v-flex>
                     <v-text-field 
                       v-model="validateForm.messageRegisterFail"
+                      :counter="70"
                       prepend-icon="chat"
                       label="Already Registered Message"
                     />
@@ -1869,6 +1880,7 @@ export default {
                     </v-flex>
                     <v-text-field 
                       v-model="validateForm.messageValidateFail"
+                      :counter="70"
                       prepend-icon="chat"
                       label="Validate Verify Code Failed Message"
                     />
@@ -1879,6 +1891,7 @@ export default {
                     </v-flex> 
                     <v-text-field 
                       v-model="validateForm.messageCheckMsisdnNotFound"
+                      :counter="70"
                       prepend-icon="chat"
                       label="Validate Verify Code with Mobile Number Failed Message"
                     />
@@ -1948,9 +1961,10 @@ export default {
                           </v-subheader>
                         </v-flex> 
                         <v-text-field 
-                          v-model="validateForm.rewardsLimit"
+                          v-model.number="validateForm.rewardsLimit"
                           prepend-icon="phonelink_off"
                           label="Limit Rewards"
+                          type="number"
                         />
                         <v-flex v-if="helper">
                           <v-subheader class="helpertext">
@@ -1959,6 +1973,7 @@ export default {
                         </v-flex> 
                         <v-text-field 
                           v-model="validateForm.messageRewardsFailed"
+                          :counter="70"
                           prepend-icon="chat_bubble"
                           label="Fail Message"
                         />
@@ -1969,6 +1984,7 @@ export default {
                         </v-flex>
                         <v-text-field 
                           v-model="validateForm.messageRewardsInvalid"
+                          :counter="70"
                           prepend-icon="chat_bubble"
                           label="Rewards Invalid Message"
                         />
@@ -1979,6 +1995,7 @@ export default {
                         </v-flex>
                         <v-text-field 
                           v-model="validateForm.messageRewardReceivedLimit"
+                          :counter="70"
                           prepend-icon="chat_bubble"
                           label="Rewards Limited Message"
                         />
@@ -2129,8 +2146,8 @@ export default {
                               </v-subheader>
                             </v-flex> 
                             <v-text-field 
-                              v-model="anotherReward.rewardTotal"
-                              :rules="[v => !!v || 'Item is required']"
+                              v-model.number="anotherReward.rewardTotal"
+                              :rules="[v => v >= 0 || 'User Number']"
                               prepend-icon="filter_9"
                               label="Reward Total"
                               type="number"
@@ -2169,6 +2186,7 @@ export default {
                             <v-text-field 
                               v-model="anotherReward.messageRewardSuccess"
                               :rules="[v => !!v || 'Item is required']"
+                              :counter="70"
                               prepend-icon="chat_bubble_outline"
                               label="Success Message"
                               required

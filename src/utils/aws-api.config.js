@@ -6,7 +6,7 @@ const baseURL = `https://api.sms2mkt.com/2waysms/${version}/`
 
 const instance = axios.create({
   baseURL: baseURL,
-  timeout: 3600,
+  timeout: 60000,
   headers: {
     'Content-Type': 'application/json'
   }

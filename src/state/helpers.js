@@ -95,9 +95,21 @@ export const campaignMethods = {
   ]),
 }
 
+export const reportComputed = {
+  ...mapState('reports', {
+    jobList: state => state.jobList,
+    campaignSelected: state => state.campaignSelected
+  })
+}
+
 export const reportMethods = {
   ...mapActions('campaigns', [
     'getAllCampaigns',
+  ]),
+  ...mapActions('reports', [
+    'createS3DownloadFileJob',
+    'getCampaignExportJobsListener',
+    'getFileDownloadFromS3',
   ]),
 }
 

@@ -23,7 +23,7 @@ export default {
           value: 'campaignCode'
         },
         { text: 'Brand', value: 'organizationLevel3Name' },
-        { text: 'Header', value: 'campaignName' },
+        // { text: 'Header', value: 'campaignName' },
         { text: 'Keyword', value: 'keyword' },
         { text: 'Shortcode', value: 'shortcode' },
         { text: 'Running', value: 'campaignAvailable' },
@@ -172,6 +172,7 @@ export default {
       <v-icon>add</v-icon>
     </v-btn>
     <form-add-campaign
+      v-if="addCampaignDialog"
       :add-campaign-dialog="addCampaignDialog"
       @emitCloseCampaignDialog="addCampaignDialog=arguments[0]"
     />

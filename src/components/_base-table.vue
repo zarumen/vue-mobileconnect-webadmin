@@ -1,5 +1,6 @@
 <script>
 import formatDate from '@utils/format-date'
+import formatDateRelative from '@utils/format-date-relative'
 
 export default {
   props: {
@@ -51,7 +52,14 @@ export default {
         val = item[header.value]
       }
       if (typeof val === 'boolean') {
-        val = val ? 'Yes' : 'No'
+        
+        if (header.text === 'Active') {
+
+          val = val ? 'Active' : 'Non-Active'
+        } else {
+
+          val = val ? 'Yes' : 'No'
+        }
       }
       if (typeof val === 'object' && val.constructor === Array) {
         let array = item[header.value]
@@ -60,7 +68,15 @@ export default {
       if (typeof val === 'object' && val.constructor === Object) {
         // convert Date format before Render data
         let object = item[header.value]
-        val = formatDate(object.seconds)
+
+        if (header.text === 'Create Time') {
+          // ถ้า เป็น create time ให้ใช้ relatives time
+          val = formatDateRelative(object.seconds)
+
+        } else {
+          // format time ปกติ
+          val = formatDate(object.seconds)
+        }
       }
       return val;
     },
@@ -106,7 +122,7 @@ export default {
           </small>
           <small v-else>
             <router-link 
-              :to="{ path: 'campaignwidget/'+props.item.id}"
+              :to="{ path: 'campaignwidget/'+props.item.id }"
             >
               <v-icon>widgets</v-icon>
             </router-link>                    
