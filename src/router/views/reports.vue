@@ -6,8 +6,8 @@ import { campaignComputed, reportComputed, reportMethods } from '@state/helpers'
 
 export default {
   page: {
-    title: 'Reports',
-    meta: [{ name: 'description', content: 'Reports' }],
+    title: 'Reports Manager',
+    meta: [{ name: 'description', content: 'Campaigns Reports Managemnet' }],
   },
   components: { Layout },
   data() {
@@ -16,7 +16,6 @@ export default {
       left: true,
       timeout: 2000,
       exportJobs: [],
-      selectedCampaign: '',
       search: ''
     }
   },
@@ -32,6 +31,9 @@ export default {
         return this.items
       }
     },
+    checkedJobList () {
+      return (this.jobList.length > 0) ? 1 : 0
+    }
   },
   created () {
     // query by auth user specific
@@ -50,8 +52,6 @@ export default {
       return console.log(i)
     },
     createExportJob (id, code) {
-
-      this.selectedCampaign = id
       
       this.createS3DownloadFileJob({
         campaignId: id,
@@ -67,14 +67,13 @@ export default {
     downloadExportFile (id, file) {
 
       this.getFileDownloadFromS3({
-        campaignId: this.selectedCampaign,
+        campaignId: this.getCampaignSelected,
         fileName: file
       })
 
       return id
     },
     clickedSelectedCampaignReports (id) {
-      this.selectedCampaign = id
 
       this.getCampaignExportJobsListener({
         campaignId: id
@@ -105,11 +104,12 @@ export default {
           >
             <v-card-title>
               <span class="title">
-                Campaigns {{ pagination? "("+pagination.totalItems+")": "" }}
+                Campaigns {{ filteredItems? `(${filteredItems.length})` : '' }}
                 <v-text-field
                   v-model="search"
                   append-icon="search"
                   label="Quick Search"
+                  class="purple-input"
                   single-line
                   hide-details
                 />
@@ -187,58 +187,96 @@ export default {
             text="List of Report from Selected Campaign"
           >
             <v-card-title class="title">
-              Campaign: {{ selectedCampaign }}
+              <span>
+                Campaign: {{ campaignSelected }}
+              </span>
+              <v-spacer />
+              <v-btn 
+                class="v-btn--simple"
+                color="primary"
+                circle
+                icon
+                @click.native="clickedSelectedCampaignReports(campaignSelected)"
+              >
+                <BaseIcon name="syncAlt" />            
+              </v-btn>
             </v-card-title>
             <v-card-text>
-              <v-list two-line>
-                <template
-                  v-for="(item,index) in jobList"
+              <div v-if="!checkedJobList">
+                <v-alert
+                  color="deep-purple lighten-2"
+                  class="v-alert--notification"
+                  icon="new_releases"
+                  :value="true"
                 >
-                  <v-list-tile 
-                    :key="index"
-                    @click="clicked"
+                  Sorry, nothing to display here, <br> Please select another Campaign or Load New One.
+                </v-alert>
+              </div>
+              <div v-else>
+                <v-list two-line>
+                  <template
+                    v-for="(item,index) in jobList"
                   >
-                    <v-list-tile-avatar>
-                      <v-chip
-                        color="light-green white--text"
-                        small
-                        label
-                      >
-                        {{ item.type }}
-                      </v-chip>
-                    </v-list-tile-avatar>
-                    <v-list-tile-content 
-                      class="ma-2"
+                    <v-list-tile 
+                      :key="index"
+                      @click="clicked"
                     >
-                      <v-list-tile-title>
-                        {{ item.fileName }}
-                      </v-list-tile-title>
-                      <v-list-tile-sub-title>create Time: {{ convertTime(item.createTime) }}</v-list-tile-sub-title>
-                    </v-list-tile-content>
-                    <v-list-tile-action>
-                      <v-tooltip
-                        top
-                        content-class="top"
-                      >
-                        <v-btn
-                          slot="activator"
-                          class="v-btn--simple"
-                          color="primary"
-                          icon
-                          @click.stop="downloadExportFile(index, item.fileName)"
+                      <!-- <v-list-tile-avatar>
+                        <v-chip
+                          color="light-green white--text"
+                          small
+                          label
                         >
-                          <v-icon>save_alt</v-icon>
-                        </v-btn>
-                        <span>Download Recent File</span>
-                      </v-tooltip>
-                    </v-list-tile-action>
-                  </v-list-tile>
-                  <v-divider 
-                    v-if="index + 1 < items.length" 
-                    :key="`divider-${index}`"
-                  />
-                </template>
-              </v-list>
+                          {{ item.type }}
+                        </v-chip>
+                      </v-list-tile-avatar> -->
+                      <v-list-tile-content 
+                        class="ma-2"
+                      >
+                        <v-list-tile-title>
+                          {{ item.fileName }}
+                        </v-list-tile-title>
+                        <v-list-tile-sub-title>create Time: {{ convertTime(item.createTime) }}</v-list-tile-sub-title>
+                      </v-list-tile-content>
+                      <v-list-tile-action>
+                        <v-tooltip
+                          top
+                          content-class="top"
+                        >
+                          <v-btn
+                            slot="activator"
+                            class="v-btn--simple"
+                            color="primary"
+                            icon
+                            @click.stop="downloadExportFile(index, item.fileName)"
+                          >
+                            <v-icon>save_alt</v-icon>
+                          </v-btn>
+                          <span>Download Recent File</span>
+                        </v-tooltip>
+                        <v-tooltip
+                          top
+                          content-class="top"
+                        >
+                          <v-btn
+                            slot="activator"
+                            class="v-btn--simple"
+                            color="danger"
+                            icon
+                          >
+                            <v-icon>close</v-icon>
+                          </v-btn>
+                          <span>Deleted Recent File</span>
+                        </v-tooltip>
+                      </v-list-tile-action>
+                    </v-list-tile>
+                    <v-divider 
+                      v-if="index + 1 < items.length" 
+                      :key="`divider-${index}`"
+                    />
+                  </template>
+                </v-list>
+              </div>
             </v-card-text>
           </base-card>
         </v-flex>

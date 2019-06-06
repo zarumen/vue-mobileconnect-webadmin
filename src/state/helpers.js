@@ -99,7 +99,10 @@ export const reportComputed = {
   ...mapState('reports', {
     jobList: state => state.jobList,
     campaignSelected: state => state.campaignSelected
-  })
+  }),
+  ...mapGetters('reports', [
+    'getCampaignSelected',
+  ])
 }
 
 export const reportMethods = {

@@ -9,20 +9,25 @@ export default {
   },
   components: { Layout },
   data: () => ({
-    text: ''
+    text: '',
+    text2: '',
   }),
   computed: {
     ...mapGetters('campaigns', [
       'getOneCampaign',
+      'getOneCampaignValidate',
     ])
   },
   created () {
-    
+    this.$store.dispatch('campaigns/getCampaignValidate', {
+      campaignId: this.$route.params.campaignId
+    })
   },
   methods: {
     clicked () {
       this.text = this.getOneCampaign(this.$route.params.campaignId)
-
+      this.text2 = this.getOneCampaignValidate
+      
       return this.text
     }
   }
@@ -41,6 +46,7 @@ export default {
       Click
     </v-btn>
     <p>{{ text }}</p>
+    <p>{{ text2 }}</p>
     <section
       id="about"
       class="hide-overflow"

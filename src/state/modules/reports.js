@@ -6,7 +6,7 @@ import axios from "@utils/aws-api.config"
 import firestoreApp from "@utils/firestore.config"
 
 export const state = {
-  campaignSelected: {},
+  campaignSelected: '',
   jobList: [],
   fileName: '',
   maxFile: 50,
@@ -19,7 +19,7 @@ export const state = {
 }
 
 export const getters = {
-
+  getCampaignSelected: (state) => state.campaignSelected
 }
 
 export const mutations = {
@@ -56,10 +56,13 @@ export const actions = {
         jobObject: exportJobObject
       })
 
-      dispatch('getFileDownloadFromS3', {
-        campaignId: campaignId,
-        fileName: parsedData.output.S3FileName
-      })
+      setTimeout(() => {
+        // delayed function set in 3 seconds
+        dispatch('getFileDownloadFromS3', {
+          campaignId: campaignId,
+          fileName: parsedData.output.S3FileName
+        })
+      }, 3000)
     })
     .catch(error => {
       console.log(error)
@@ -82,17 +85,24 @@ export const actions = {
   // ===
   // READ Zone
   // ===
-  getFileDownloadFromS3({ commit }, { campaignId, fileName }) {
+  getFileDownloadFromS3({ dispatch }, { campaignId, fileName }) {
 
-    return axios.getData(`jobs/${campaignId}/download?downloadKey=${fileName}`)
+    let key = `reports/campaigns/${campaignId}/${fileName}`
+
+    return axios.getData(`jobs/${campaignId}/download?downloadKey=${key}`)
       .then(response => {
 
-        let data = response.data
-        console.log(response.data.output.link)
+        let data = response.data.output.link
 
         // Download file to Client
-        // window.location = data.output.link
-        return data.output.link
+        window.location = data
+        // forceFileDownload(response)
+        // refresh List Report Management
+        dispatch('getCampaignExportJobsListener', {
+          campaignId: campaignId
+        })
+
+        return data
       })
       .catch(e => console.log(e))
   },
@@ -115,7 +125,7 @@ export const actions = {
           data = doc.data()
           jobList.push(data)
         })
-
+        commit('setCampaignSelected', campaignId)
         commit('setJobList', jobList)
         return jobList
       })
@@ -138,4 +148,13 @@ export const actions = {
 
 // function getserverTimestamp() {
 //   return firebase.firestore.FieldValue.serverTimestamp()
+// }
+
+// function forceFileDownload (response) {
+//   const url = window.URL.createObjectURL(new Blob([response.data.output.link]))
+//   const link = document.createElement('a')
+//   link.href = url
+//   // link.setAttribute('download', 'reports.zip') // or any other extension
+//   document.body.appendChild(link)
+//   link.click()
 // }

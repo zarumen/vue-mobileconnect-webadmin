@@ -2,11 +2,7 @@
 import Layout from '@layouts/main'
 import { mapActions } from 'vuex'
 import { campaignComputed } from '@state/helpers'
-// import fireauth from '@utils/fireauth.config'
-import firestoreApp from '@utils/firestore.config'
-import axios from "@utils/aws-api.config"
-
-// 2Do: Delete Job Button
+// TODO: Delete Job Button
 
 export default {
   page: {
@@ -25,8 +21,6 @@ export default {
       baseModule: 'reportViewer',
       left: true,
       timeout: 2000,
-      exportJobs: [],
-      s3downloadlink: '',
       search: ''
     }
   },
@@ -45,7 +39,8 @@ export default {
 
       return null
     },
-    filteredItems() {
+    filteredItems () {
+
       if(this.search) {
         return this.items.filter(item => item.campaignName.toLowerCase().includes(this.search.toLowerCase()) ||
         item.campaignCode.toLowerCase().includes(this.search.toLowerCase()))
@@ -67,6 +62,9 @@ export default {
     ...mapActions('campaigns', [
       'getCampaignsByOrg',
     ]),
+    ...mapActions('reports', [
+      'createS3DownloadFileJob',
+    ]),
     print() {
       window.print()
     },
@@ -80,112 +78,15 @@ export default {
         orgId: this.authLevel
       })
     },
-    createExportJob (campaignId,filename,maxRow,type) {
-      // สั่งให้สร้าง Zip file ใหม่
-      // 2Do: ทำ API Config สำหรับ Config Staging Version
-      axios.postData(`jobs/${campaignId}/export`, {
-            "maxRow": maxRow,
-            "exportType": type,
-            "fileName": filename
-          })
-        .then(response => {
-          // JSON responses are automatically parsed.
-          this.parsedData = response.data
-
-          let exportJobObject = {"fileName": this.parsedData.output.S3FileName,"type": type }
-
-          try{
-              firestoreApp
-                .collection('exportJobs').doc(campaignId).collection('jobs')
-                .add(exportJobObject)
-
-                this.getAWSExportJobsListByCampaign(campaignId).then((result)=>{
-                  this.getFirebaseExportJobsByCampaign(campaignId,result)
-                })
-
-          } catch (error) { console.log(error)}
-        })
-        .catch(e => {
-          this.errors.push(e)
-        })
-    },
-    getAWSExportJobsListByCampaign(campaignId){
-      // JobsList[campainId][filename][key for path]
+    createExportJob (id, code) {
       
-      return axios.postData(`jobs/${campaignId}/list`, {
-            "maxFile": 10,
-            "prefixFile": "",
-            "startAfter": ""
-        })
-        .then(response => {
-          // JSON responses are automatically parsed.
-          this.parsedData = response.data
-
-          let joblist = []
-          this.parsedData.output.File.Contents.forEach(function(item) {
-
-            let filename = item.Key.substr(39,item.Key.length-39)
-
-            joblist[filename] = []
-            joblist[filename] = item.Key
-          });
-
-        // fireauth.currentUser.getIdToken(/* forceRefresh */ true).then(token => console.log(token))
-
-          return joblist
-        })
-        .catch(e => {
-          console.log(e)
-        })
-    },
-    getS3DownloadLink(campaignId,key){
-      
-      axios.getData(`jobs/${campaignId}/download?downloadKey=${key}`)
-        .then(response => {
-          // JSON responses are automatically parsed.
-          this.parsedData = response.data
-          console.log(this.parsedData.output.link)
-
-          // Download file to Client
-          window.location = this.parsedData.output.link
-        })
-        .catch(e => {
-          console.log(e)
-        })
-    },
-    async getFirebaseExportJobsByCampaign(campaignId,awsjoblist) {
-      // Get generated files list from firebase
-      let tmp
-      try {
-      tmp = await firestoreApp
-        .collection('exportJobs').doc(campaignId).collection('jobs')
-        .get()
-
-        } catch (error) { console.log(error)}
-
-        this.exportJobs[campaignId] = []
-        let jobtmp = []
-        tmp.forEach(function(item) {
-          let data = {}
-          data = item.data()
-          data['id'] = item.id
-          if(awsjoblist[data.fileName]){
-            data['key'] = awsjoblist[data.fileName]  
-          }
-          
-          jobtmp.push(data);
-        });
-
-        console.log(jobtmp)
-        this.exportJobs[campaignId].push(jobtmp)  
-        this.$forceUpdate()
-
-    },
-    test(campaignId){
-      this.getAWSExportJobsListByCampaign(campaignId).then((result)=>{
-        console.log(result)
+      this.createS3DownloadFileJob({
+        campaignId: id,
+        fileName: code
       })
-    }
+
+      return true
+    },
   },
 }
 </script>
@@ -196,16 +97,17 @@ export default {
       <v-flex xs12>
         <base-card
           color="light-green"
-          title="Report All Campaign"
+          title="List All Campaign"
+          text="List of campaigns to get reported"
         >
-          <!-- Controller Tools Panels -->
           <v-card-title>
             <span class="title">
-              Campaigns {{ pagination? "("+pagination.totalItems+")": "" }}
+              Campaigns {{ filteredItems? `(${filteredItems.length})` : '' }}
               <v-text-field
                 v-model="search"
                 append-icon="search"
                 label="Quick Search"
+                class="purple-input"
                 single-line
                 hide-details
               />
@@ -221,22 +123,32 @@ export default {
               <BaseIcon name="syncAlt" />            
             </v-btn>
           </v-card-title>
-
-
           <v-card-text>
             <v-list three-line>
-              <v-list-group
+              <template
                 v-for="(item,index) in filteredItems"
-                :key="index"
               >
                 <v-list-tile 
-                  slot="activator" 
+                  :key="index"
                 >
-                  <v-list-tile-content 
-                    @click="getAWSExportJobsListByCampaign(item.id).then((result)=>{
-                      getFirebaseExportJobsByCampaign(item.id,result)
-                    })"
-                  >
+                  <v-list-tile-action>
+                    <v-tooltip
+                      top
+                      content-class="top"
+                    >
+                      <v-btn
+                        slot="activator"
+                        class="v-btn--simple"
+                        color="secondary"
+                        icon
+                        @click.stop="createExportJob(item.id, item.campaignCode)"
+                      >
+                        <v-icon>cloud_download</v-icon>
+                      </v-btn>
+                      <span>Download New File From S3</span>
+                    </v-tooltip>
+                  </v-list-tile-action>
+                  <v-list-tile-content class="ma-2">
                     <div style="width: 100%">
                       <v-layout 
                         justify-space-between 
@@ -244,27 +156,10 @@ export default {
                       >
                         <v-flex 
                           align-content-center 
-                          xs11
+                          class="my-2"
                         >
-                          {{ item.campaignCode }}: {{ item.campaignName }} <br>
-                          <v-list-tile-sub-title>{{ item.campaignActive }}</v-list-tile-sub-title>
-                        </v-flex>
-                        <v-flex xs1>
-                          <v-tooltip
-                            top
-                            content-class="top"
-                          >
-                            <v-btn
-                              slot="activator"
-                              class="v-btn--simple"
-                              color="secondary"
-                              icon
-                              @click="createExportJob(item.id,item.campaignCode,100000,'XLSX')"
-                            >
-                              <v-icon>view_comfy</v-icon>
-                            </v-btn>
-                            <span>Create Excel Export Job</span>
-                          </v-tooltip>
+                          {{ item.campaignName }} <br>
+                          <v-list-tile-sub-title>{{ item.campaignCode }} : {{ item.campaignActive }}</v-list-tile-sub-title>
                         </v-flex>
                       </v-layout>
                     </div>
@@ -274,45 +169,7 @@ export default {
                   v-if="index + 1 < items.length" 
                   :key="`divider-${index}`"
                 />
-
-  
-    
-                <!--  subList -->
-                <template v-if="exportJobs[item.id]">
-                  <v-list-tile-content 
-                    v-for="(job) in exportJobs[item.id][0].sort((a,b)=>{     
-                      var x = a.fileName; var y = b.fileName
-                      return ((x < y) ? 1 : ((x > y) ? -1 : 0))     
-                    })" 
-                    :key="job.id"
-                  >
-                    <div class="d-flex">
-                      <v-list-tile-sub-title style="display: flex; align-items: center; justify-content: center">
-                        Type: {{ job.type }}
-                      </v-list-tile-sub-title>
-                      <v-list-tile-sub-title style="display: flex; align-items: center; justify-content: center">
-                        {{ job.fileName }}
-                      </v-list-tile-sub-title>
-                      <v-tooltip
-                        top
-                        content-class="top"
-                      >
-                        <v-btn
-                          slot="activator"
-                          :disabled="!job.key"
-                          class="v-btn--simple"
-                          color="secondary"
-                          icon
-                          @click="getS3DownloadLink(item.id,job.key)"
-                        >
-                          <v-icon>cloud_download</v-icon>
-                        </v-btn>
-                        <span>Download</span>
-                      </v-tooltip>
-                    </div>
-                  </v-list-tile-content>
-                </template>
-              </v-list-group>
+              </template>
             </v-list>
           </v-card-text>
         </base-card>

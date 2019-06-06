@@ -1,3 +1,5 @@
+import { set } from '@state/helpers'
+import assign from 'lodash/assign'
 import firestoreApp from "@utils/firestore.config"
 import getServerTimestamp from '@utils/firestore-timestamp'
 
@@ -13,6 +15,7 @@ export const state = {
   // Data Table Initial Setup Variables
   items: null,
   item: null,
+  itemValidate: null,
   pagination: getDefaultPagination(),
   loading: false,
   mode: '',
@@ -37,10 +40,15 @@ export const getters = {
       return state.items.find(item => item.id === id)
 
     return []
-  }
+  },
+  getOneCampaignValidate: (state) => state.itemValidate,
 }
 
 export const mutations = {
+  setItemValidate: set('itemValidate'),
+  setElementItemValidate (state, payload) {
+    assign(state.itemValidate, payload)
+  },
   setPagination (state, pagination) {
     state.pagination = pagination
   },
@@ -217,7 +225,33 @@ export const actions = {
         return error
       })
   },
+  getCampaignValidate ({ commit }, { campaignId }) {
 
+    return firestoreApp
+    .collection('campaignValidate')
+    .doc(campaignId)
+    .get()
+    .then(doc => {
+      if (doc.exists) {
+
+        let data = doc.data()
+        
+        commit('setItemValidate', data)
+
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!")
+        commit('setItemValidate', null)
+      }
+    })
+    .catch(error => {
+      console.log(error)
+      commit('setLoading', { loading: false })
+      sendErrorNotice(commit, 'Load Failed!')
+      closeNotice(commit, 2000)
+      return error
+    })
+  },
   // ===
   // UPDATE Zone
   // ===
