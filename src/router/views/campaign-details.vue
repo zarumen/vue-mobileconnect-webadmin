@@ -36,25 +36,75 @@ export default {
 
 <template>
   <Layout>
-    <p class="subheading">
-      &nbsp;Campaign "{{ $route.params.campaignId }}" Details
-    </p>
-    <v-btn
-      color="success"
-      @click="clicked()"
+    <v-container
+      fill-height
+      fluid
+      grid-list-xl
     >
-      Click
-    </v-btn>
-    <p>{{ text }}</p>
-    <p>{{ text2 }}</p>
-    <section
-      id="about"
-      class="hide-overflow"
-    >
-      <v-layout>
-        <v-flex
+      <v-layout wrap>
+        <v-flex 
+          sm6
           xs12
           md6
+          lg3
+        >
+          <base-stats-card
+            color="green"
+            icon="store"
+            title="SMS Transactions"
+            value="18,413"
+            sub-icon="alarm"
+            sub-text="Last 24 Hours"
+          />
+        </v-flex>
+        <v-flex 
+          sm6
+          xs12
+          md6
+          lg3
+        >
+          <base-stats-card
+            color="orange"
+            icon="store"
+            title="SMS Registration"
+            value="8,049"
+            sub-icon="alarm"
+            sub-text="Last 24 Hours"
+          />
+        </v-flex>
+        <v-flex 
+          sm6
+          xs12
+          md6
+          lg3
+        >
+          <base-stats-card
+            color="blue"
+            icon="store"
+            title="Rewards Remaining"
+            value="945"
+            sub-icon="alarm"
+            sub-text="Last 24 Hours"
+          />
+        </v-flex>
+        <v-flex 
+          sm6
+          xs12
+          md6
+          lg3
+        >
+          <base-stats-card
+            color="purple"
+            icon="money"
+            title="Revenue"
+            value="$34,245"
+            sub-icon="alarm"
+            sub-text="Last 24 Hours"
+          />
+        </v-flex>
+        <v-flex
+          xs12
+          md8
           pa-5
         >
           <base-card>
@@ -106,7 +156,7 @@ export default {
           </base-card>
         </v-flex>
         <v-flex
-          md6
+          md4
         >
           <base-card
             v-if="text"
@@ -149,8 +199,37 @@ export default {
             </v-card-text>
           </base-card>
         </v-flex>
+        <v-flex
+          md12
+          sm12
+          lg4
+        >
+          <p class="subheading">
+            &nbsp;Campaign "{{ $route.params.campaignId }}" Details
+          </p>
+          <v-btn
+            color="success"
+            @click="clicked()"
+          >
+            Click
+          </v-btn>
+        </v-flex>
+        <v-flex
+          md12
+          sm12
+          lg4
+        >
+          <p>{{ text }}</p>
+        </v-flex>
+        <v-flex
+          md12
+          sm12
+          lg4
+        >
+          <p>{{ text2 }}</p>
+        </v-flex>
       </v-layout>
-    </section>
+    </v-container>
   </Layout>
 </template>
 

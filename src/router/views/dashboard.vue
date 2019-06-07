@@ -14,7 +14,7 @@ export default {
   },
   data () {
     return {
-      today: '2019-01-08',
+      today: new Date(),
       test: 'test in data',
       dailySalesChart: {
         info: {
