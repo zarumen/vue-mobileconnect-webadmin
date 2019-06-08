@@ -39,4 +39,27 @@ module.exports = {
       : // Proxy API endpoints a local mock API.
         { before: require('./tests/mock-api') }),
   },
+  // pwa: {
+  //   // configure the workbox plugin
+  //   workboxPluginMode: 'GenerateSW',
+  //   workboxOptions: {
+  //       navigateFallback: '/index.html',
+  //       // swSrc is required in InjectManifest mode.
+  //       // swSrc: './src/utils/register-service-worker.js',
+  //       // ...other Workbox options...
+  //       runtimeCaching: [
+  //         {
+  //           urlPattern: new RegExp('^https://mobile-connect-sms.web.app/'),
+  //           handler: 'networkFirst',
+  //           options: {
+  //             networkTimeoutSeconds: 20,
+  //             cacheName: 'api-cache',
+  //             cacheableResponse: {
+  //               statuses: [0, 200]
+  //             }
+  //           }
+  //         }
+  //       ]
+  //   }
+  // }
 }

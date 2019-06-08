@@ -1,5 +1,4 @@
 <script>
-import Layout from '@layouts/main'
 const appConfig = require('@/app.config')
 
 export default {
@@ -7,10 +6,18 @@ export default {
     title: 'Home',
     meta: [{ name: 'description', content: appConfig.description }],
   },
-  components: { Layout },
+  components: { 
+    Layout: () => import('@layouts/main')
+  },
   data: () => ({
-    image: 'http://www.mobileconnect.co.th/img/slider/revolution/moblie-slider1.jpg',
-    image2: 'http://www.mobileconnect.co.th/img/slider/revolution/moblie-slider3.jpg'
+    image: 'https://firebasestorage.googleapis.com/v0/b/mobile-connect-sms-webadmin/o/img%2Fmoblie-slider1.jpg?alt=media&token=565426b8-16de-4179-8532-2f7c6b7bcd98',
+    image2: 'https://firebasestorage.googleapis.com/v0/b/mobile-connect-sms-webadmin/o/img%2Fmoblie-slider3.jpg?alt=media&token=6f91507f-35b6-4bf2-9425-778b670d7ca2',
+    sp01: 'https://firebasestorage.googleapis.com/v0/b/mobile-connect-sms-webadmin/o/img%2F2waysp01_s.jpg?alt=media&token=7a9a499d-47ca-48f0-b241-0934168e6061',
+    sp03: 'https://firebasestorage.googleapis.com/v0/b/mobile-connect-sms-webadmin/o/img%2F2waysp03_s.jpg?alt=media&token=484a8cb5-9e5c-48ed-bc00-dafbdb2516a6',
+    sp05: 'https://firebasestorage.googleapis.com/v0/b/mobile-connect-sms-webadmin/o/img%2F2waysp05s.jpg?alt=media&token=8d7e2928-1ec2-4b80-a7b9-6bcfb20f964f',
+    sp06: 'https://firebasestorage.googleapis.com/v0/b/mobile-connect-sms-webadmin/o/img%2F2waysp06_s.jpg?alt=media&token=d44daf2b-9e9c-45d8-b771-07bec604ee60',
+    sp07: 'https://firebasestorage.googleapis.com/v0/b/mobile-connect-sms-webadmin/o/img%2F2waysp07_s.jpg?alt=media&token=91595ab5-60e9-434e-aed0-5b539ccbd8a8',
+    sp08: 'https://firebasestorage.googleapis.com/v0/b/mobile-connect-sms-webadmin/o/img%2F2waysp08_s.jpg?alt=media&token=499481e7-200c-4c7c-8067-f60961f48200',
   })
 }
 </script>
@@ -206,7 +213,7 @@ export default {
                 xs12 
               >
                 <v-img
-                  src="http://www.mobileconnect.co.th/img/2way_pic01.jpg"
+                  src="https://firebasestorage.googleapis.com/v0/b/mobile-connect-sms-webadmin/o/img%2F2way_pic01.jpg?alt=media&token=c8429ae1-e344-40f0-9ae7-2a31077453b3"
                 />
               </v-flex>
             </v-layout>
@@ -251,45 +258,154 @@ export default {
                   xs12
                   md4
                 >
-                  <v-img
-                    src="http://www.mobileconnect.co.th/img/2way_ads/ex2ways/2waysp01_s.jpg"
-                  />
+                  <v-hover>
+                    <v-card
+                      slot-scope="{ hover }"
+                      :class="`elevation-${hover ? 12 : 2}`"
+                      raised
+                      ripple
+                    >
+                      <v-img :src="sp01">
+                        <v-expand-transition>
+                          <div
+                            v-if="hover"
+                            class="d-flex transition-fast-in-fast-out green darken-2 display-3 white--text"
+                            style="height: 100%; opacity: .7; align-items: center; justify-content: center;"
+                          >
+                            ชิงโชค ชิงรางวัล
+                          </div>
+                        </v-expand-transition>
+                      </v-img>
+                    </v-card>
+                  </v-hover>
+                </v-flex>
+                <v-flex 
+                  xs12
+                  md4
+                >
+                  <v-hover>
+                    <v-card
+                      slot-scope="{ hover }"
+                      :class="`elevation-${hover ? 12 : 2}`"
+                      raised
+                      ripple
+                    >
+                      <v-img :src="sp08">
+                        <v-expand-transition>
+                          <div
+                            v-if="hover"
+                            class="d-flex transition-fast-in-fast-out green darken-2 display-3 white--text"
+                            style="height: 100%; opacity: .7; align-items: center; justify-content: center;"
+                          >
+                            รับส่วนลด
+                          </div>
+                        </v-expand-transition>
+                      </v-img>
+                    </v-card>
+                  </v-hover>
                 </v-flex>
 
                 <v-flex 
                   xs12
                   md4
                 >
-                  <v-img src="http://www.mobileconnect.co.th/img/2way_ads/ex2ways/2waysp08_s.jpg" />
+                  <v-hover>
+                    <v-card
+                      slot-scope="{ hover }"
+                      :class="`elevation-${hover ? 12 : 2}`"
+                      raised
+                      ripple
+                    >
+                      <v-img :src="sp03">
+                        <v-expand-transition>
+                          <div
+                            v-if="hover"
+                            class="d-flex transition-fast-in-fast-out green darken-2 display-3 white--text"
+                            style="height: 100%; opacity: .7; align-items: center; justify-content: center;"
+                          >
+                            <small>&nbsp;&nbsp;ลงทะเบียนใบเสร็จ</small>
+                          </div>
+                        </v-expand-transition>
+                      </v-img>
+                    </v-card>
+                  </v-hover>
+                </v-flex>
+                <v-flex 
+                  xs12
+                  md4
+                >
+                  <v-hover>
+                    <v-card
+                      slot-scope="{ hover }"
+                      :class="`elevation-${hover ? 12 : 2}`"
+                      raised
+                      ripple
+                    >
+                      <v-img :src="sp07">
+                        <v-expand-transition>
+                          <div
+                            v-if="hover"
+                            class="d-flex transition-fast-in-fast-out green darken-2 display-3 white--text"
+                            style="height: 100%; opacity: .7; align-items: center; justify-content: center;"
+                          >
+                            ลงทะเบียน
+                          </div>
+                        </v-expand-transition>
+                      </v-img>
+                    </v-card>
+                  </v-hover>
                 </v-flex>
 
                 <v-flex 
                   xs12
                   md4
                 >
-                  <v-img src="http://www.mobileconnect.co.th/img/2way_ads/ex2ways/2waysp03_s.jpg" />
-                </v-flex>
-                <v-flex 
-                  xs12
-                  md4
-                >
-                  <v-img
-                    src="http://www.mobileconnect.co.th/img/2way_ads/ex2ways/2waysp07_s.jpg"
-                  />
+                  <v-hover>
+                    <v-card
+                      slot-scope="{ hover }"
+                      :class="`elevation-${hover ? 12 : 2}`"
+                      raised
+                      ripple
+                    >
+                      <v-img :src="sp06">
+                        <v-expand-transition>
+                          <div
+                            v-if="hover"
+                            class="d-flex transition-fast-in-fast-out green darken-2 display-3 white--text"
+                            style="height: 100%; opacity: .7; align-items: center; justify-content: center;"
+                          >
+                            ส่ง SMS
+                          </div>
+                        </v-expand-transition>
+                      </v-img>
+                    </v-card>
+                  </v-hover>
                 </v-flex>
 
                 <v-flex 
                   xs12
                   md4
                 >
-                  <v-img src="http://www.mobileconnect.co.th/img/2way_ads/ex2ways/2waysp06_s.jpg" />
-                </v-flex>
-
-                <v-flex 
-                  xs12
-                  md4
-                >
-                  <v-img src="http://www.mobileconnect.co.th/img/2way_ads/exussd/ussd_p05s.jpg" />
+                  <v-hover>
+                    <v-card
+                      slot-scope="{ hover }"
+                      :class="`elevation-${hover ? 12 : 2}`"
+                      raised
+                      ripple
+                    >
+                      <v-img :src="sp05">
+                        <v-expand-transition>
+                          <div
+                            v-if="hover"
+                            class="d-flex transition-fast-in-fast-out green darken-2 display-3 white--text"
+                            style="height: 100%; opacity: .7; align-items: center; justify-content: center;"
+                          >
+                            ส่ง USSD
+                          </div>
+                        </v-expand-transition>
+                      </v-img>
+                    </v-card>
+                  </v-hover>
                 </v-flex>
               </v-layout>  
             </v-container>
@@ -310,7 +426,7 @@ export default {
               </div>
               <em>One Stop Service : เราคือ ผู้นำด้านให้บริการ 2Ways SMS ที่ดีที่สุด</em>
               <v-btn
-                class="indigo mt-5"
+                class="green darken-2 mt-5"
                 dark
                 large
                 round

@@ -1,7 +1,8 @@
 <script>
 export default {
   data: () => ({
-    isBooted: false
+    isBooted: false,
+    picUrl: 'https://firebasestorage.googleapis.com/v0/b/mobile-connect-sms-webadmin/o/img%2Fmoblie-slider2.jpg?alt=media&token=01ceefff-f6f5-42b1-bfc7-6d7b9bfc11a6'
   }),
   computed: {
     isHome () {
@@ -22,7 +23,7 @@ export default {
       v-if="namespace"
       :key="$route.path"
       :height="isHome ? '80vh' : '30vh'"
-      :src="`http://www.mobileconnect.co.th/img/slider/revolution/moblie-slider2.jpg`"
+      :src="picUrl"
       class="white--text"
       gradient="to top, rgba(13, 3, 29, .85), rgba(25, 25, 38, .85)"
     >
