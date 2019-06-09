@@ -1,5 +1,4 @@
 <script>
-import Layout from '@layouts/main'
 
 export default {
   page: {
@@ -8,7 +7,9 @@ export default {
       { name: 'description', content: 'The page timed out while loading.' },
     ],
   },
-  components: { Layout },
+  components: { 
+    Layout: () => import('@layouts/main')  
+  },
 }
 </script>
 

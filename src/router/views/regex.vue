@@ -1,6 +1,5 @@
 <script>
 import { fireStorageApp } from '@utils/firestorage.config'
-import Layout from '@layouts/main'
 
 var storageRef = fireStorageApp.ref()
 
@@ -9,7 +8,9 @@ export default {
     title: 'Regex',
     meta: [{ name: 'description', content: 'Regex' }],
   },
-  components: { Layout },
+  components: { 
+    Layout: () => import('@layouts/main')
+  },
   data: () => ({
     couponGenDialog: '',
     digits: 0,

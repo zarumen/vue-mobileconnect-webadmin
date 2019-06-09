@@ -1,14 +1,15 @@
 <script>
-import Layout from '@layouts/main'
-import ListOperators from '@components/ui/list-operators'
-import ListShortcodes from '@components/ui/list-shortcodes'
 
 export default {
   page: {
     title: 'Shortcodes',
     meta: [{ name: 'description', content: 'Shortcodes' }],
   },
-  components: { Layout, ListOperators, ListShortcodes }
+  components: { 
+    Layout: () => import('@layouts/main'), 
+    ListOperators: () => import('@components/ui/list-operators'), 
+    ListShortcodes: () => import('@components/ui/list-shortcodes')
+  }
 }
 </script>
 

@@ -1,5 +1,4 @@
 <script>
-import Layout from '@layouts/main'
 import fireauth from '@utils/fireauth.config'
 // import { mapActions, mapMutations } from 'vuex'
 
@@ -15,7 +14,9 @@ export default {
       ],
     }
   },
-  components: { Layout },
+  components: { 
+    Layout: () => import('@layouts/main')
+  },
   props: {
     user: {
       type: Object,

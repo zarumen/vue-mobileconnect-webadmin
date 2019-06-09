@@ -1,5 +1,4 @@
 <script>
-import Layout from '@layouts/main'
 import { authMethods } from '@state/helpers'
 const appConfig = require('@/app.config')
 
@@ -8,16 +7,16 @@ export default {
     title: 'Log in',
     meta: [{ name: 'description', content: `Log in to ${appConfig.title}` }],
   },
-  components: { Layout },
-  data() {
-    return {
-      username: '',
-      ePass: true,
-      password: '',
-      authError: null,
-      tryingToLogIn: false,
-    }
+  components: { 
+    Layout: () => import('@layouts/main')
   },
+  data: () => ({
+    username: '',
+    ePass: true,
+    password: '',
+    authError: null,
+    tryingToLogIn: false,
+  }),
   methods: {
     ...authMethods,
     // Try to log the user in with the username

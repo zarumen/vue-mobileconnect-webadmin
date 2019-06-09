@@ -1,9 +1,10 @@
 <script>
-import Toolbar from './tool-bar'
-import Drawer from './drawer'
 
 export default {
-  components: { Toolbar, Drawer },
+  components: { 
+    Toolbar: () => import('./tool-bar'), 
+    Drawer: () => import('./drawer')
+  },
   data() {
     return {
       drawer: true,

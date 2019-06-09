@@ -1,6 +1,4 @@
 <script>
-import Layout from '@layouts/main'
-import FormAddCampaign from '@components/form/form-add-campaign'
 import { mapGetters, mapActions } from 'vuex'
 import { campaignComputed } from '@state/helpers'
 
@@ -9,7 +7,10 @@ export default {
     title: 'Transaction',
     meta: [{ name: 'description', content: 'Campaign Transaction' }],
   },
-  components: { Layout, FormAddCampaign },
+  components: { 
+    Layout: () => import('@layouts/main'), 
+    FormAddCampaign: () => import('@components/form/form-add-campaign')
+  },
   data() {
     return {
       baseModule: 'transaction',

@@ -1,14 +1,15 @@
 <script>
 import { shortcodeComputed, shortcodeMethods } from '@state/helpers'
-import FormAddKeywordReserved from '@components/form/form-add-keyword-reserved'
-import FormAddKeywordByShortcode from '@components/form/form-add-keyword-by-shortcode'
-import FormAddShortcode from '@components/form/form-add-shortcode'
-import FormAddOperatorConfig from '@components/form/form-add-operator-config'
-import FormEditOperatorConfig from '@components/form/form-edit-operator-config'
-import FormEditSendername from '@components/form/form-edit-sendername'
 
 export default {
-  components: { FormAddKeywordByShortcode, FormAddKeywordReserved, FormAddShortcode, FormAddOperatorConfig, FormEditOperatorConfig, FormEditSendername },
+  components: { 
+    FormAddKeywordByShortcode: () => import('@components/form/form-add-keyword-by-shortcode'), 
+    FormAddKeywordReserved: () => import('@components/form/form-add-keyword-reserved'), 
+    FormAddShortcode: () => import('@components/form/form-add-shortcode'), 
+    FormAddOperatorConfig: () => import('@components/form/form-add-operator-config'), 
+    FormEditOperatorConfig: () => import('@components/form/form-edit-operator-config'), 
+    FormEditSendername: () => import('@components/form/form-edit-sendername') 
+  },
   data: () => ({
     addKeywordByShortcodeDialog: '',
     addKeywordReservedDialog: '',

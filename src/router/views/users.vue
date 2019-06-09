@@ -1,6 +1,4 @@
 <script>
-import Layout from '@layouts/main'
-import FormAddUser from '@components/form/form-add-user'
 import { mapGetters, mapActions } from 'vuex'
 import { 
   userMethods, 
@@ -12,7 +10,10 @@ export default {
     title: 'Users',
     meta: [{ name: 'description', content: 'Users' }],
   },
-  components: { Layout, FormAddUser },
+  components: {
+    Layout: () => import('@layouts/main'), 
+    FormAddUser: () => import('@components/form/form-add-user')
+  },
   data() {
     return {
       baseModule: 'users',

@@ -1,5 +1,4 @@
 <script>
-import Layout from '@layouts/main'
 import { mapActions } from 'vuex'
 import { campaignComputed } from '@state/helpers'
 // TODO: Delete Job Button
@@ -9,7 +8,9 @@ export default {
     title: 'Reports',
     meta: [{ name: 'description', content: 'Campaigns Report Viewer' }],
   },
-  components: { Layout },
+  components: { 
+    Layout: () => import('@layouts/main')
+  },
   props: {
     user: {
       type: Object,

@@ -1,8 +1,4 @@
 <script>
-import Layout from '@layouts/main'
-// import Bar from '@utils/chart/Bar'
-// import Doughnut from '@utils/chart/Doughnut'
-// import LineChart from '@utils/chart/LineChart'
 
 export default {
   page: {
@@ -10,7 +6,7 @@ export default {
     meta: [{ name: 'description', content: 'Dashboard' }],
   },
   components: { 
-    Layout,
+    Layout: () => import('@layouts/main'),
   },
   data () {
     return {

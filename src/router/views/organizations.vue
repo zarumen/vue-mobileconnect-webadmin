@@ -1,7 +1,4 @@
 <script>
-import Layout from '@layouts/main'
-import FormAddOrganization from '@components/form/form-add-organization'
-import FormEditOrganization from '@components/form/form-edit-organization'
 import { orgMethods, orgComputed } from '@state/helpers'
 
 export default {
@@ -9,39 +6,41 @@ export default {
     title: 'Organizations',
     meta: [{ name: 'description', content: 'Organizations' }],
   },
-  components: { Layout, FormAddOrganization, FormEditOrganization },
-  data() {
-    return {
-      baseModule: 'organizations',
-      addDialog: '',
-      editOrgDialog: '',
-      dialog: '',
-      dialogTitle: "Organization Delete Dialog",
-      dialogText: "Do you want to delete this organization?",
-      headers: [
-        {
-          text: 'Level',
-          left: true,
-          value: 'organizationAuth'
-        },
-        { text: 'Company',left: true, value: 'organizationLevel1Name' },
-        { text: 'Department', value: 'organizationLevel2Name' },
-        { text: 'Brand', value: 'organizationLevel3Name' },
-      ],
-      organizationId: '',
-      left: true,
-      // NOT USE! now
-      rightDrawer: false,
-      query: "",
-      timeout: 2000,
-      quickSearchFilter: '',
-      // set value to props FormEditOrganization
-      selectedLevelOrg: '',
-      selectedOrgLevel1: '',
-      selectedOrgLevel2: '',
-      selectedOrgLevel3: '',
-    }
+  components: { 
+    Layout: () => import('@layouts/main'), 
+    FormAddOrganization: () => import('@components/form/form-add-organization'), 
+    FormEditOrganization: () => import('@components/form/form-edit-organization')
   },
+  data: () => ({
+    baseModule: 'organizations',
+    addDialog: '',
+    editOrgDialog: '',
+    dialog: '',
+    dialogTitle: "Organization Delete Dialog",
+    dialogText: "Do you want to delete this organization?",
+    headers: [
+      {
+        text: 'Level',
+        left: true,
+        value: 'organizationAuth'
+      },
+      { text: 'Company',left: true, value: 'organizationLevel1Name' },
+      { text: 'Department', value: 'organizationLevel2Name' },
+      { text: 'Brand', value: 'organizationLevel3Name' },
+    ],
+    organizationId: '',
+    left: true,
+    // NOT USE! now
+    rightDrawer: false,
+    query: "",
+    timeout: 2000,
+    quickSearchFilter: '',
+    // set value to props FormEditOrganization
+    selectedLevelOrg: '',
+    selectedOrgLevel1: '',
+    selectedOrgLevel2: '',
+    selectedOrgLevel3: '',
+  }),
   computed: {
     ...orgComputed,
   },

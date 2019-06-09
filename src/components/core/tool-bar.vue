@@ -1,10 +1,9 @@
 <script>
 import { authComputed } from '@state/helpers'
-import NavBarRoutes from './nav-bar-routes'
 import { mapMutations } from 'vuex'
 
 export default {
-  components: { NavBarRoutes },
+  components: { NavBarRoutes: () => import('./nav-bar-routes') },
   data() {
     return {
       isScrolling: false,

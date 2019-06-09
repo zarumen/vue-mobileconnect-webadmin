@@ -1,6 +1,5 @@
 <script>
 // import { mapState, mapActions, mapGetters } from 'vuex'
-import Layout from '@layouts/main'
 import formatDateRelative from '@utils/format-date-relative'
 import { campaignComputed, reportComputed, reportMethods } from '@state/helpers'
 
@@ -9,7 +8,9 @@ export default {
     title: 'Reports Manager',
     meta: [{ name: 'description', content: 'Campaigns Reports Managemnet' }],
   },
-  components: { Layout },
+  components: {
+    Layout: () => import('@layouts/main')
+  },
   data() {
     return {
       baseModule: 'reports',

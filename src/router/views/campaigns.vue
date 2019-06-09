@@ -1,6 +1,4 @@
 <script>
-import Layout from '@layouts/main'
-import FormAddCampaign from '@components/form/form-add-campaign'
 import { campaignComputed, campaignMethods } from '@state/helpers'
 
 export default {
@@ -8,7 +6,10 @@ export default {
     title: 'Campaigns',
     meta: [{ name: 'description', content: 'Campaigns' }],
   },
-  components: { Layout, FormAddCampaign },
+  components: { 
+    Layout: () => import('@layouts/main'), 
+    FormAddCampaign: () => import('@components/form/form-add-campaign')
+  },
   data() {
     return {
       baseModule: 'campaigns',

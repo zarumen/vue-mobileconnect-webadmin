@@ -347,6 +347,7 @@ export default {
             justify-center 
             column
             style="    
+
               height: 315px;
               width: 560px;
               border: 1px solid black;"
@@ -404,7 +405,8 @@ export default {
             align-center 
             justify-center 
             column
-            style="    
+            style="
+              
               height: 315px;
               width: 560px;
               border: 1px solid black;"
@@ -456,7 +458,8 @@ export default {
           <v-container 
             fluid
             left 
-            style="    
+            style="
+
               height: 315px;
               width: 580px;"
           >

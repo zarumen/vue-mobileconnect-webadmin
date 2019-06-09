@@ -1,12 +1,13 @@
 <script>
-import Layout from '@layouts/main'
 
 export default {
   page: {
     title: 'Loading page...',
     meta: [{ name: 'description', content: 'Loading page...' }],
   },
-  components: { Layout },
+  components: { 
+    Layout: () => import('@layouts/main')
+  },
 }
 </script>
 

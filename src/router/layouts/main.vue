@@ -1,8 +1,7 @@
 <script>
-import NavBar from '@components/core/nav-bar'
 
 export default {
-  components: { NavBar },
+  components: { NavBar: () => import('@components/core/nav-bar') },
 }
 </script>
 
