@@ -34,8 +34,16 @@ export default {
       this.setDrawer(!this.$store.state.app.drawer)
     },
     onScroll () {
-      this.isScrolling = (window.pageYOffset ||
-        document.documentElement.scrollTop || 0) > 100
+      if(this.$route.name ==='home') {
+        
+        this.isScrolling = (window.pageYOffset ||
+          document.documentElement.scrollTop || 0) > 100
+
+      } else {
+
+        this.isScrolling = (window.pageYOffset ||
+          document.documentElement.scrollTop || 0) > 50
+      }
     }
   }
 }
@@ -43,7 +51,7 @@ export default {
 
 <template>
   <v-toolbar
-    id="core-toolbar"
+    id="coretoolbar"
     v-scroll="onScroll"
     :color="!isScrolling ? 'transparent' : 'green lighten-5'"
     :flat="!isScrolling"
@@ -75,7 +83,7 @@ export default {
 <style lang="scss" scoped>
 @import '@design';
 
-#core-toolbar {
+#coretoolbar {
   background-color: rgba(238, 238, 238, 0);
 }
 </style>

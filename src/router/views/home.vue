@@ -18,7 +18,10 @@ export default {
     sp06: 'https://firebasestorage.googleapis.com/v0/b/mobile-connect-sms-webadmin/o/img%2F2waysp06_s.jpg?alt=media&token=d44daf2b-9e9c-45d8-b771-07bec604ee60',
     sp07: 'https://firebasestorage.googleapis.com/v0/b/mobile-connect-sms-webadmin/o/img%2F2waysp07_s.jpg?alt=media&token=91595ab5-60e9-434e-aed0-5b539ccbd8a8',
     sp08: 'https://firebasestorage.googleapis.com/v0/b/mobile-connect-sms-webadmin/o/img%2F2waysp08_s.jpg?alt=media&token=499481e7-200c-4c7c-8067-f60961f48200',
-  })
+  }),
+  created () {
+    this.$vuetify.goTo(100)
+  }
 }
 </script>
 
@@ -59,9 +62,9 @@ export default {
                 dark
                 large
                 round
-                href="/login"
+                href="/profile"
               >
-                TEL. 06 5895 8328
+                เข้าสู่โปรแกรม
               </v-btn>
             </v-layout>
           </v-parallax>
@@ -256,6 +259,7 @@ export default {
               >
                 <v-flex 
                   xs12
+                  sm6
                   md4
                 >
                   <v-hover>
@@ -281,6 +285,7 @@ export default {
                 </v-flex>
                 <v-flex 
                   xs12
+                  sm6
                   md4
                 >
                   <v-hover>
@@ -307,6 +312,7 @@ export default {
 
                 <v-flex 
                   xs12
+                  sm6
                   md4
                 >
                   <v-hover>
@@ -323,7 +329,7 @@ export default {
                             class="d-flex transition-fast-in-fast-out green darken-2 display-3 white--text"
                             style="height: 100%; opacity: .7; align-items: center; justify-content: center;"
                           >
-                            <small>&nbsp;&nbsp;ลงทะเบียนใบเสร็จ</small>
+                            ชิงโชคใบเสร็จ
                           </div>
                         </v-expand-transition>
                       </v-img>
@@ -332,6 +338,7 @@ export default {
                 </v-flex>
                 <v-flex 
                   xs12
+                  sm6
                   md4
                 >
                   <v-hover>
@@ -358,6 +365,7 @@ export default {
 
                 <v-flex 
                   xs12
+                  sm6
                   md4
                 >
                   <v-hover>
@@ -384,6 +392,7 @@ export default {
 
                 <v-flex 
                   xs12
+                  sm6
                   md4
                 >
                   <v-hover>
@@ -430,9 +439,9 @@ export default {
                 dark
                 large
                 round
-                href="/login"
+                href="tel:+66658958328"
               >
-                TEL. 06 5895 8328
+                TEL. 06-5895-8328
               </v-btn>
             </v-layout>
           </v-parallax>
@@ -459,25 +468,22 @@ export default {
                     </div>
                   </v-card-title>
                   <v-card-text>
-                    บริษัท โมบาย คอนเน็ค จำกัด เป็นผู้ให้บริการ Mobile Marketing & CRM แบบครบวงจร ด้วยทีมงานที่มีความ
-                    เชี่ยวชาญ และ มีประสบการณ์ให้บริการแก่องค์กรชั้นนำต่าง ๆ ทั้งในประเทศไทย และต่างประเทศ การันตีจากประสบการณ์ 18 ปี
-        
+                    บริษัท โมบาย คอนเน็ค จำกัด เป็นผู้ให้บริการ Mobile Marketing & CRM แบบครบวงจร ด้วยทีมงานที่มีความเชี่ยวชาญ <br>และมีประสบการณ์ให้บริการแก่องค์กรชั้นนำต่าง ๆ ทั้งในประเทศไทย <br>และต่างประเทศ การันตีจากประสบการณ์ 18 ปี
+
                     <p />
-                    <v-list-tile class="layout justify-center">
-                      <v-list-tile-action>
-                        <v-flex row>
-                          <a href="https://www.facebook.com/MC.MobileConnect/">
-                            <img src="https://img.icons8.com/material/50/6FC2F4/facebook-f.png">
-                          </a>  &nbsp;
-                          <a href="http://line.me/R/ti/p/%40mobileconnect">
-                            <img src="https://img.icons8.com/material/50/6FC2F4/email.png">
-                          </a>&nbsp;
-                          <a href="http://mobileconnect.co.th/#">
-                            <img src="https://img.icons8.com/material/50/6FC2F4/twitter-squared.png">
-                          </a>
-                        </v-flex>
-                      </v-list-tile-action>
-                    </v-list-tile>
+                    <v-card-actions>
+                      <v-flex class="layout justify-center">
+                        <a href="https://www.facebook.com/MC.MobileConnect/">
+                          <img src="https://img.icons8.com/color/48/000000/facebook-new.png">
+                        </a>
+                        <a href="http://line.me/R/ti/p/%40mobileconnect">
+                          <img src="https://img.icons8.com/color/48/000000/facebook-messenger.png">
+                        </a>
+                        <a href="http://mobileconnect.co.th/#">
+                          <img src="https://img.icons8.com/color/48/000000/twitter-squared.png">
+                        </a>
+                      </v-flex>
+                    </v-card-actions>
                   </v-card-text>
                 </v-card>
               </v-flex>
