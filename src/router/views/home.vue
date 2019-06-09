@@ -62,7 +62,7 @@ export default {
                 dark
                 large
                 round
-                href="/profile"
+                to="/profile"
               >
                 เข้าสู่โปรแกรม
               </v-btn>
