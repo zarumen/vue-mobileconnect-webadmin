@@ -70,171 +70,168 @@ export default {
 
 <template>
   <Layout>
-    <v-content>
-      <v-container
-        fill-height
-        fluid
-        grid-list-xl
+    <v-container
+      fill-height
+      fluid
+      grid-list-xl
+    >
+      <v-layout
+        justify-center
+        wrap
       >
-        <v-layout
-          justify-center
-          wrap
+        <v-flex
+          xs12
+          md4
         >
-          <v-flex
-            xs12
-            md4
-          >
-            <base-card class="v-card-profile">
-              <v-avatar
-                slot="offset"
-                class="mx-auto d-block"
-                size="150"
+          <base-card class="v-card-profile">
+            <v-avatar
+              slot="offset"
+              class="mx-auto d-block"
+              size="150"
+            >
+              <img
+                src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png"
               >
-                <img
-                  src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png"
-                >
-              </v-avatar>
-              <v-card-text 
-                class="text-xs-center" 
-                style="width:200px"
+            </v-avatar>
+            <v-card-text 
+              class="text-xs-center" 
+            >
+              <h4 class="card-title font-weight-light">
+                {{ displayName }}
+              </h4>
+              <h6 class="category text-gray font-weight-thin mb-3">
+                {{ user.jobPosition }}
+              </h6>
+              <v-btn
+                color="primary"
+                round
+                class="font-weight-light"
+                @click="dialog=!dialog"
               >
-                <h4 class="card-title font-weight-light">
-                  {{ displayName }}
-                </h4>
-                <h6 class="category text-gray font-weight-thin mb-3">
-                  {{ user.jobPosition }}
-                </h6>
-                <v-btn
-                  color="primary"
-                  round
-                  class="font-weight-light"
-                  @click="dialog=!dialog"
-                >
-                  Change Name
-                </v-btn>
-              </v-card-text>
-            </base-card>
-          </v-flex>
-          <v-flex
-            xs12
-            md8
+                Change Name
+              </v-btn>
+            </v-card-text>
+          </base-card>
+        </v-flex>
+        <v-flex
+          xs12
+          md8
+        >
+          <base-card
+            color="deep-purple"
+            title="Profile"
           >
-            <base-card
-              color="deep-purple"
-              title="Profile"
-            >
-              <v-form>
-                <v-container py-0>
-                  <v-layout wrap>
-                    <v-flex
-                      xs12
-                      md4
-                    >
-                      <v-text-field
-                        v-model="user.organizationLevel1Name"
-                        label="Company"
-                        disabled
-                      />
-                      <v-text-field
-                        v-if="user.organizationAuth === `Level2`"
-                        v-model="user.organizationLevel2Name"
-                        label="Department"
-                        disabled
-                      />
-                      <v-text-field
-                        v-if="user.organizationAuth === `Level3`"
-                        v-model="user.organizationLevel3Name"
-                        label="Brand"
-                        disabled
-                      />
-                    </v-flex>
-                    <v-flex
-                      xs12
-                      md8
-                    >
-                      <v-text-field
-                        v-model="user.email"
-                        label="Email Address"
-                        class="purple-input"
-                        disabled
-                      />
-                    </v-flex>
-                    <v-flex
-                      xs12
-                      md6
-                    >
-                      <v-text-field
-                        v-model="user.firstName"
-                        label="First Name"
-                        class="purple-input"
-                        disabled
-                      />
-                    </v-flex>
-                    <v-flex
-                      xs12
-                      md6
-                    >
-                      <v-text-field
-                        v-model="user.lastName"  
-                        label="Last Name"
-                        class="purple-input"
-                        disabled
-                      />
-                    </v-flex>
-                    <v-flex
-                      xs12
-                      md12
-                    >
-                      <v-text-field
-                        v-model="user.mobileTelNumber"
-                        label="Mobile Number"
-                        class="purple-input"
-                        disabled
-                      />
-                    </v-flex>
-                  </v-layout>
-                </v-container>
-              </v-form>
-            </base-card>
-          </v-flex>
-        </v-layout>
-      </v-container>
-      <v-dialog
-        v-model="dialog"
-        max-width="500px"
-      >
-        <v-card>
-          <v-card-title>
-            Change Your Display Name
-          </v-card-title>
-          <v-card-text>
-            <v-text-field
-              v-model="profileName"
-              color="white"
-              label="Name"
-              disabled
-            />
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer />
-            <v-btn
-              class="v-btn--simple"
-              round 
-              color="primary" 
-              @click="dialog=false"
-            >
-              CANCEL
-            </v-btn>
-            <v-btn
-              round
-              color="primary"
-              @click="save()"
-            >
-              SAVE
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-content>
+            <v-form>
+              <v-container py-0>
+                <v-layout wrap>
+                  <v-flex
+                    xs12
+                    md4
+                  >
+                    <v-text-field
+                      v-model="user.organizationLevel1Name"
+                      label="Company"
+                      disabled
+                    />
+                    <v-text-field
+                      v-if="user.organizationAuth === `Level2`"
+                      v-model="user.organizationLevel2Name"
+                      label="Department"
+                      disabled
+                    />
+                    <v-text-field
+                      v-if="user.organizationAuth === `Level3`"
+                      v-model="user.organizationLevel3Name"
+                      label="Brand"
+                      disabled
+                    />
+                  </v-flex>
+                  <v-flex
+                    xs12
+                    md8
+                  >
+                    <v-text-field
+                      v-model="user.email"
+                      label="Email Address"
+                      class="purple-input"
+                      disabled
+                    />
+                  </v-flex>
+                  <v-flex
+                    xs12
+                    md6
+                  >
+                    <v-text-field
+                      v-model="user.firstName"
+                      label="First Name"
+                      class="purple-input"
+                      disabled
+                    />
+                  </v-flex>
+                  <v-flex
+                    xs12
+                    md6
+                  >
+                    <v-text-field
+                      v-model="user.lastName"  
+                      label="Last Name"
+                      class="purple-input"
+                      disabled
+                    />
+                  </v-flex>
+                  <v-flex
+                    xs12
+                    md12
+                  >
+                    <v-text-field
+                      v-model="user.mobileTelNumber"
+                      label="Mobile Number"
+                      class="purple-input"
+                      disabled
+                    />
+                  </v-flex>
+                </v-layout>
+              </v-container>
+            </v-form>
+          </base-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
+    <v-dialog
+      v-model="dialog"
+      max-width="500px"
+    >
+      <v-card>
+        <v-card-title>
+          Change Your Display Name
+        </v-card-title>
+        <v-card-text>
+          <v-text-field
+            v-model="profileName"
+            color="white"
+            label="Name"
+            disabled
+          />
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            class="v-btn--simple"
+            round 
+            color="primary" 
+            @click="dialog=false"
+          >
+            CANCEL
+          </v-btn>
+          <v-btn
+            round
+            color="primary"
+            @click="save()"
+          >
+            SAVE
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </Layout>
 </template>

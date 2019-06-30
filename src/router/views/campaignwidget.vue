@@ -137,9 +137,9 @@ export default {
     }
   },
   created() {
-    this.$socket.emit('register', 'totals','test',this.$route.params.campaignId);
-    this.$socket.emit('register', 'keyword','test',this.$route.params.campaignId);
-    this.$socket.emit('register', 'rewards','test',this.$route.params.campaignId);
+    this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);
+    this.$socket.emit('register', 'keyword','production',this.$route.params.campaignId);
+    this.$socket.emit('register', 'rewards','production',this.$route.params.campaignId);
     this.getCampaignWidget(this.$route.params.campaignId)
 
     this.$options.sockets.transactionRewards = (newdata) => {
@@ -341,7 +341,11 @@ export default {
             </v-flex>
           </v-layout>
         </section>
-        <section>
+        <base-card
+          color="deep-purple"
+          title="Mobile Connect Info"
+          text="Operator's General Informations"
+        >
           <v-layout 
             align-center 
             justify-center 
@@ -372,7 +376,7 @@ export default {
               </div>
             </v-flex>
           </v-layout>
-        </section>
+        </base-card>
         <p />
         <section align-center>
           <v-layout

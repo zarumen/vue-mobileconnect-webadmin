@@ -145,11 +145,13 @@ export const actions = {
     }
   },
 
-  logOut({ commit }) {
+  logOut({ commit, dispatch }) {
 
     commit('SET_CURRENT_USER', null)
     commit('setUserInfo', null)
     commit('setAdminRole', false)
+
+    dispatch('transactions/removeLocalStorageAll', null, { root: true })
 
     removeState('auth.currentUser')
     removeState('auth.userInfo')

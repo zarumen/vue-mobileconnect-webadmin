@@ -31,16 +31,45 @@ export default {
   },
   data () {
     return {
-      mutablePagination: this.pagination
+
     }
   },
   computed: {
     isNotEmpty () {
       return this.items && this.items.length > 0;
     },
+    mutablePagination: {
+      get () {
+        return this.pagination
+      },
+      set (value) {
+        this.$store.dispatch(`${this.basemodule}/updatePagination`, value)
+      }
+    },
+    page: {
+      get () {
+        return this.pagination.page
+      },
+      set (value) {
+        this.$store.dispatch(`${this.basemodule}/updatePage`, value)
+      }
+    },
+    pages: {
+      get () {
+        if(!this.search) {
+
+          return this.pagination.pages
+        }
+
+        return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
+      },
+      set (value) {
+        this.$store.dispatch(`${this.basemodule}/updatePages`, value)
+      }
+    },
   },
   created () {
-     console.log(this.basemodule)
+
   },
   methods: {
     renderData (item, header) {
@@ -173,8 +202,8 @@ export default {
       class="text-xs-center pt-2"
     >
       <v-pagination
-        v-model="mutablePagination.page" 
-        :length="mutablePagination.pages"
+        v-model="page" 
+        :length="pages"
         next-icon="arrow_right"
         prev-icon="arrow_left"
         color="light-green"

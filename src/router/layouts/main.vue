@@ -2,6 +2,14 @@
 
 export default {
   components: { NavBar: () => import('@components/core/nav-bar') },
+  created () {
+    window.addEventListener('beforeunload', this.removeCachedTx)
+  },
+  methods: {
+    removeCachedTx () {
+      return this.$store.dispatch('transactions/removeLocalStorageAll', null)
+    }
+  }
 }
 </script>
 

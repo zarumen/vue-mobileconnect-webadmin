@@ -1,5 +1,5 @@
 <script>
-import Layout from '@layouts/main'
+import formatDateRelative from '@utils/format-date-relative'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -7,19 +7,44 @@ export default {
     title: 'CampaignDetails',
     meta: [{ name: 'description', content: 'CampaignDetails' }],
   },
-  components: { Layout },
+  components: { Layout: () => import('@layouts/main'), },
   data: () => ({
     text: '',
     text2: '',
+    totals: ''
   }),
   computed: {
     ...mapGetters('campaigns', [
       'getOneCampaign',
       'getOneCampaignValidate',
-    ])
+    ]),
+    ...mapGetters('transactions', [
+      'getTransactionTotals',
+      'getTimestampTxTotals'
+    ]),
+    updatedTimestampTxTotals () {
+
+      let date = (Date.parse(this.getTimestampTxTotals))/1000
+
+      return formatDateRelative(date)
+    },
   },
   created () {
     this.$store.dispatch('campaigns/getCampaignValidate', {
+      campaignId: this.$route.params.campaignId
+    })
+
+    this.$store.dispatch('transactions/socketRegister', {
+      campaignState: 'production',
+      campaignId: this.$route.params.campaignId
+    })
+
+    this.initializeData()
+  },
+  destroyed () {
+
+    this.$store.dispatch('transactions/socketUnRegister', {
+      campaignState: 'production',
       campaignId: this.$route.params.campaignId
     })
   },
@@ -29,8 +54,12 @@ export default {
       this.text2 = this.getOneCampaignValidate
       
       return this.text
+    },
+    initializeData () {
+
+      this.totals = this.getTransactionTotals
     }
-  }
+  },
 }
 </script>
 
@@ -52,9 +81,9 @@ export default {
             color="green"
             icon="store"
             title="SMS Transactions"
-            value="18,413"
+            :value="getTransactionTotals"
             sub-icon="alarm"
-            sub-text="Last 24 Hours"
+            :sub-text="updatedTimestampTxTotals"
           />
         </v-flex>
         <v-flex 
@@ -215,6 +244,7 @@ export default {
           </v-btn>
         </v-flex>
         <v-flex
+          v-if="text"
           md12
           sm12
           lg4
@@ -222,6 +252,7 @@ export default {
           <p>{{ text }}</p>
         </v-flex>
         <v-flex
+          v-if="text2"
           md12
           sm12
           lg4

@@ -77,7 +77,7 @@ export default {
       default: undefined
     },
     value: {
-      type: String,
+      type: [String, Number],
       default: undefined
     },
     smallValue: {

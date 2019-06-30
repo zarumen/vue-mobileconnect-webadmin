@@ -63,6 +63,7 @@ export default {
       this.getAllCampaigns()
     },
     edit(item) {
+      this.$store.commit('campaigns/setCampaignSelected', item.id)
       this.$router.push({ name: 'campaignDetails', params: { campaignId: item.id } })
     },
     remove(item) {

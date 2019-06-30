@@ -20,7 +20,6 @@ export default {
     sp08: 'https://firebasestorage.googleapis.com/v0/b/mobile-connect-sms-webadmin/o/img%2F2waysp08_s.jpg?alt=media&token=499481e7-200c-4c7c-8067-f60961f48200',
   }),
   created () {
-    this.$vuetify.goTo(100)
   }
 }
 </script>
@@ -36,7 +35,8 @@ export default {
           <v-parallax
             :src="image"
             :gradient="`to top, rgba(13, 3, 29, .85), rgba(25, 25, 38, .85)`"
-            height="600"
+            height="800"
+            style="top: -80px;"
           >
             <v-layout
               column
@@ -274,7 +274,7 @@ export default {
                           <div
                             v-if="hover"
                             class="d-flex transition-fast-in-fast-out green darken-2 display-3 white--text"
-                            style="height: 100%; opacity: .7; align-items: center; justify-content: center;"
+                            style="align-items: center; justify-content: center; height: 100%; opacity: .7;"
                           >
                             ชิงโชค ชิงรางวัล
                           </div>
@@ -300,7 +300,7 @@ export default {
                           <div
                             v-if="hover"
                             class="d-flex transition-fast-in-fast-out green darken-2 display-3 white--text"
-                            style="height: 100%; opacity: .7; align-items: center; justify-content: center;"
+                            style="align-items: center; justify-content: center; height: 100%; opacity: .7;"
                           >
                             รับส่วนลด
                           </div>
@@ -327,7 +327,7 @@ export default {
                           <div
                             v-if="hover"
                             class="d-flex transition-fast-in-fast-out green darken-2 display-3 white--text"
-                            style="height: 100%; opacity: .7; align-items: center; justify-content: center;"
+                            style="align-items: center; justify-content: center; height: 100%; opacity: .7;"
                           >
                             ชิงโชคใบเสร็จ
                           </div>
@@ -353,7 +353,7 @@ export default {
                           <div
                             v-if="hover"
                             class="d-flex transition-fast-in-fast-out green darken-2 display-3 white--text"
-                            style="height: 100%; opacity: .7; align-items: center; justify-content: center;"
+                            style="align-items: center; justify-content: center; height: 100%; opacity: .7;"
                           >
                             ลงทะเบียน
                           </div>
@@ -380,7 +380,7 @@ export default {
                           <div
                             v-if="hover"
                             class="d-flex transition-fast-in-fast-out green darken-2 display-3 white--text"
-                            style="height: 100%; opacity: .7; align-items: center; justify-content: center;"
+                            style="align-items: center; justify-content: center; height: 100%; opacity: .7;"
                           >
                             ส่ง SMS
                           </div>
@@ -407,7 +407,7 @@ export default {
                           <div
                             v-if="hover"
                             class="d-flex transition-fast-in-fast-out green darken-2 display-3 white--text"
-                            style="height: 100%; opacity: .7; align-items: center; justify-content: center;"
+                            style="align-items: center; justify-content: center; height: 100%; opacity: .7;"
                           >
                             ส่ง USSD
                           </div>

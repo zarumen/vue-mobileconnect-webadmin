@@ -1,5 +1,6 @@
 import getserverTimestamp from '@utils/firestore-timestamp'
 import firestoreApp from '@utils/firestore.config'
+import assign from 'lodash/assign'
 
 import {
   sendSuccessNotice,
@@ -58,8 +59,8 @@ export const mutations = {
     state.pagination = pagination
   },
   // update Page
-  setPage(state, paginationPage) {
-    state.pagination.page = paginationPage
+  setPage (state, paginationElement) {
+    assign(state.pagination, paginationElement)
   },
   // Mutate Value in Pagination
   setLoading(state, { loading }) {
@@ -224,8 +225,14 @@ export const actions = {
   // ===
   // UPDATED Zone
   // ===
-  updatePage({ commit }, { pageNumber }) {
-    commit('setPage', pageNumber)
+  updatePage({ commit }, pageNumber) {
+    commit('setPage', { page: pageNumber })
+  },
+  updatePages({ commit }, pagesNumber) {
+    commit('setPage', { pages: pagesNumber })
+  },
+  updatePagination({ commit }, pagiObj) {
+    commit('setPage', pagiObj)
   },
   // ===
   // DELETE Zone

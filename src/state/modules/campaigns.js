@@ -13,6 +13,7 @@ import {
 
 export const state = {
   // Data Table Initial Setup Variables
+  campaignSelected: null,
   items: null,
   item: null,
   itemValidate: null,
@@ -42,10 +43,12 @@ export const getters = {
     return []
   },
   getOneCampaignValidate: (state) => state.itemValidate,
+  getOneCampaignSelected: (state) => state.campaignSelected,
 }
 
 export const mutations = {
   setItemValidate: set('itemValidate'),
+  setCampaignSelected: set('campaignSelected'),
   setElementItemValidate (state, payload) {
     assign(state.itemValidate, payload)
   },
@@ -53,8 +56,8 @@ export const mutations = {
     state.pagination = pagination
   },
   // update Page
-  setPage (state, paginationPage) {
-    state.pagination.page = paginationPage
+  setPage (state, paginationElement) {
+    assign(state.pagination, paginationElement)
   },
   // Mutate Value in Pagination
   setItems (state, items) {
@@ -255,8 +258,14 @@ export const actions = {
   // ===
   // UPDATE Zone
   // ===
-  updatePage({ commit }, { pageNumber }) {
-    commit('setPage', pageNumber)
+  updatePage({ commit }, pageNumber) {
+    commit('setPage', { page: pageNumber })
+  },
+  updatePages({ commit }, pagesNumber) {
+    commit('setPage', { pages: pagesNumber })
+  },
+  updatePagination({ commit }, pagiObj) {
+    commit('setPage', pagiObj)
   },
   // ===
   // DELETE Zone
@@ -311,6 +320,9 @@ export const actions = {
   },
   clearItem ({ commit }) {
     commit('setItems', null)
+  },
+  setLoadingFromAnotherModule ({ commit }, bool) {
+    commit('setLoading', { loading: bool })
   }
 }
 

@@ -80,6 +80,7 @@ export default {
       })
     },
     createExportJob (id, code) {
+      this.$store.commit('campaigns/setLoading', { loading: true })
       
       this.createS3DownloadFileJob({
         campaignId: id,
@@ -134,6 +135,7 @@ export default {
                 >
                   <v-list-tile-action>
                     <v-tooltip
+                      v-if="!loading"
                       top
                       content-class="top"
                     >
@@ -147,6 +149,22 @@ export default {
                         <v-icon>cloud_download</v-icon>
                       </v-btn>
                       <span>Download New File From S3</span>
+                    </v-tooltip>
+                    <v-tooltip
+                      v-else
+                      top
+                      content-class="top"
+                    >
+                      <v-btn
+                        slot="activator"
+                        class="v-btn--simple"
+                        color="secondary"
+                        icon
+                        :loading="loading"
+                      >
+                        <v-icon>cloud_download</v-icon>
+                      </v-btn>
+                      <span>Downloading...</span>
                     </v-tooltip>
                   </v-list-tile-action>
                   <v-list-tile-content class="ma-2">

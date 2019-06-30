@@ -1,6 +1,3 @@
-// import firebase from '@firebase/app'
-// import '@firebase/firestore'
-// import { mapActions } from 'vuex'
 import { set } from '@state/helpers'
 import axios from "@utils/aws-api.config"
 import firestoreApp from "@utils/firestore.config"
@@ -10,7 +7,7 @@ export const state = {
   jobList: [],
   fileName: '',
   maxFile: 50,
-  maxRow: 10000,
+  maxRow: 100000,
   exportType: 'XLSX',
   prefixFile: '',
   startAfter: '',
@@ -93,7 +90,7 @@ export const actions = {
       .then(response => {
 
         let data = response.data.output.link
-
+        dispatch('campaigns/setLoadingFromAnotherModule', false, { root: true })
         // Download file to Client
         window.location = data
         // forceFileDownload(response)
@@ -157,4 +154,18 @@ export const actions = {
 //   // link.setAttribute('download', 'reports.zip') // or any other extension
 //   document.body.appendChild(link)
 //   link.click()
+// }
+
+// function to(promise) {
+//   return promise.then(data => {
+//      return {
+//        error: null,
+//        result: data
+//      }
+//   })
+//   .catch(err => {
+//     return {
+//       error: err
+//     }
+//   })
 // }
