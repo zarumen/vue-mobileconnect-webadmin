@@ -408,7 +408,7 @@ export default {
             <v-layout>
               <v-flex>
                 <v-sheet height="500">
-                  <v-calendar
+                  <!-- <v-calendar
                     :now="today"
                     :value="today"
                     color="orange"
@@ -467,7 +467,7 @@ export default {
                         </v-menu>
                       </template>
                     </template>
-                  </v-calendar>
+                  </v-calendar> -->
                 </v-sheet>
               </v-flex>
             </v-layout>

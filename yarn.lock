@@ -3619,7 +3619,7 @@ chart.js@2.7.x:
     chartjs-color "^2.1.0"
     moment "^2.10.2"
 
-chartist@^0.11.0:
+chartist@^0.11.0, chartist@^0.11.2:
   version "0.11.2"
   resolved "https://registry.yarnpkg.com/chartist/-/chartist-0.11.2.tgz#cd8aed966a81cc950d280b91224f97e39cf602d1"
   integrity sha512-k81nArypp1eG/ecvWzzVsTJeHhGULsqocbX+Kh/kJbAosqp3hvoHMzjJ/ibLHqbDGurQFeZGJHF7uYQbVvy3NQ==
