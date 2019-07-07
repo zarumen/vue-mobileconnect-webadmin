@@ -3619,11 +3619,6 @@ chart.js@2.7.x:
     chartjs-color "^2.1.0"
     moment "^2.10.2"
 
-chartist@^0.11.0, chartist@^0.11.2:
-  version "0.11.2"
-  resolved "https://registry.yarnpkg.com/chartist/-/chartist-0.11.2.tgz#cd8aed966a81cc950d280b91224f97e39cf602d1"
-  integrity sha512-k81nArypp1eG/ecvWzzVsTJeHhGULsqocbX+Kh/kJbAosqp3hvoHMzjJ/ibLHqbDGurQFeZGJHF7uYQbVvy3NQ==
-
 chartjs-color-string@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/chartjs-color-string/-/chartjs-color-string-0.6.0.tgz#1df096621c0e70720a64f4135ea171d051402f71"
@@ -14483,13 +14478,6 @@ vm-browserify@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.0.tgz#bd76d6a23323e2ca8ffa12028dc04559c75f9019"
   integrity sha512-iq+S7vZJE60yejDYM0ek6zg308+UZsdtPExWP9VZoCFCz1zkJoXFnAX7aZfd/ZwrkidzdUZL0C/ryW+JwAiIGw==
-
-vue-chartist@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/vue-chartist/-/vue-chartist-2.2.0.tgz#08a05cb0bc1fc629befe3ca503a9af2d6def1ce7"
-  integrity sha512-LlTL4BvBqFe7yX0fD+PY12bblgVm7ZZHsVtWssmHXi6YVh/D2pfnV7Sm9+HFOVr3vqRvKpl6F048K2BWpGC4qw==
-  dependencies:
-    chartist "^0.11.0"
 
 vue-chartjs@^3.3.1:
   version "3.4.2"

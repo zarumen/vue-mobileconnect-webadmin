@@ -1,6 +1,7 @@
 <script>
 import { mapActions } from 'vuex'
 import { campaignComputed } from '@state/helpers'
+import formatDate from '@utils/format-date'
 // TODO: Delete Job Button
 
 export default {
@@ -89,6 +90,22 @@ export default {
 
       return true
     },
+    renderDate (state, item) {
+      let val = ''
+
+      if (state === 'start') {
+        if (item.campaignDateStart) {
+          val = formatDate(item.campaignDateStart.seconds)
+        }
+      }
+      if (state === 'end') {
+        if (item.campaignDateEnd) {
+          val = formatDate(item.campaignDateEnd.seconds)
+        }
+      }
+
+      return val
+    }
   },
 }
 </script>
@@ -178,7 +195,8 @@ export default {
                           class="my-2"
                         >
                           {{ item.campaignName }} <br>
-                          <v-list-tile-sub-title>{{ item.campaignCode }} : {{ item.campaignActive }}</v-list-tile-sub-title>
+                          <v-list-tile-sub-title>Campaign Start : {{ renderDate('start', item) }}</v-list-tile-sub-title>
+                          <v-list-tile-sub-title>Campaign End : {{ renderDate('end', item) }}</v-list-tile-sub-title>
                         </v-flex>
                       </v-layout>
                     </div>

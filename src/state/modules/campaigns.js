@@ -203,6 +203,7 @@ export const actions = {
     return firestoreApp
       .collection('campaigns')
       .where(authQuery, "==", orgId)
+      .orderBy('campaignDateStart', 'desc')
       .get()
       .then(querySnapshot => {
 

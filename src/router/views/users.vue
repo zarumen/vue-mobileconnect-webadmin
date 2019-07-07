@@ -80,11 +80,10 @@ export default {
       this.dialog = true
     },
     onConfirm () {
-      // NOT FINISHED YET!
       
-      // this.$store.dispatch('users/deleteUser', this.organizationId)
-      // this.$store.dispatch('users/closeSnackBar', 2000)
-      // this.dialog = false
+      this.$store.dispatch('users/deleteUser', this.userId)
+      this.$store.dispatch('users/closeSnackBar', 2000)
+      this.dialog = false
     },
     onCancel () {
       this.userId = ''

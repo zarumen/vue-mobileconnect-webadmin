@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import './plugins/chartist'
 import './plugins/vuetify'
 import './plugins/vueSocketIO'
 import App from './App'

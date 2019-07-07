@@ -238,7 +238,7 @@ exports.everyFiveMinuteJob = functions.pubsub
   const now = admin.firestore.Timestamp.now();
 
   function formatDate(date) {
-    let t = new Date(1970, 0, 1)
+    let t = new Date(1970, 0, 1, 7, 0)
     // date = parseDate(date)
     t.setSeconds(date)
     return t
@@ -298,7 +298,7 @@ exports.everyFiveMinuteJob = functions.pubsub
           method: "POST",
           headers: {
             'Content-Type': 'application/x-www- form-urlencoded', 
-            'Authorization':  `Bearer ${ONE_ONE_TOKEN}`
+            'Authorization':  `Bearer ${LINE_ACCESS_TOKEN}`
           },
           form: {
             'message': finalMessage
@@ -308,4 +308,19 @@ exports.everyFiveMinuteJob = functions.pubsub
           console.log('response:', response);
           return response.status;
         }).catch (err => console.log(err));
+  });
+
+exports.deleteUserFromAuth = functions.firestore
+  .document("users/{userId}")
+  .onDelete((snap, context) => {
+
+    const uId = context.params.userId;
+
+    admin.auth().deleteUser(uId)
+      .then(function() {
+        console.log('Successfully deleted user');
+      })
+      .catch(function(error) {
+        console.log('Error deleting user:', error);
+      });
   });

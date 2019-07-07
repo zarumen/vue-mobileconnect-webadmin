@@ -71,12 +71,12 @@ export default {
           title: 'Reports Manager',
           link: '/reports'
         },
-        {
-          name: 'regex',
-          icon: 'code',
-          title: 'Regex Manager',
-          link: '/regex'
-        },
+        // {
+        //   name: 'regex',
+        //   icon: 'code',
+        //   title: 'Regex Manager',
+        //   link: '/regex'
+        // },
         {
           name: 'campaignwidgets',
           icon: 'widgets',

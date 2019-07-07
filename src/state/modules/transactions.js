@@ -66,11 +66,11 @@ export const mutations = {
   },
   setFlagTotals (state, payload) {
     state.flagTotals = payload
-    // saveState(`transactions.${state.campaignSelected}.txTotals`, payload)
+    saveState(`transactions.${state.campaignSelected}.txTotals`, payload)
   },
   setFlagTimeStampTxTotals (state, payload) {
     state.flagTimestampTxTotals = payload
-    // saveState(`transactions.${state.campaignSelected}.timestampTxTotals`, payload)
+    saveState(`transactions.${state.campaignSelected}.timestampTxTotals`, payload)
   },
   setCampaignSelected (state, payload) {
     state.campaignSelected = payload
