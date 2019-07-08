@@ -2,6 +2,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const appConfig = require('./src/app.config')
 
 module.exports = {
+  transpileDependencies:['vuetify'],
   configureWebpack: {
     // We provide the app's title in Webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
