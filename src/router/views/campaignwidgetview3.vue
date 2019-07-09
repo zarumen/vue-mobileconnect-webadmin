@@ -293,7 +293,7 @@ export default {
         <v-layout> 
           <v-flex 
             xs-12
-            style="width: 100%; padding-left: 20px; padding-bottom: 20px; padding-right: 20px;"        
+            style="width: 100%; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;"        
           >
             <div class="text-xs-center">
               <canvas id="widget-chart" />
