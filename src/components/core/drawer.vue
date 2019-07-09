@@ -141,130 +141,122 @@ export default {
     app
     dark
     floating
-    persistent
+    permanent
+    expand-on-hover
+    :src="image"
     class="elevation-4"
     mobile-break-point="991"
     width="260"
   >
-    <v-img
-      :src="image"
-      height="100%"
+    <v-layout
+      tag="v-list"
+      column
     >
-      <v-layout
-        class="fill-height"
-        tag="v-list"
-        column
-      >
-        <v-list-tile avatar>
-          <v-list-tile-avatar
-            color="white"
-          >
-            <v-img
-              :src="avatar"
-              contain
-            />
-          </v-list-tile-avatar>
-          <v-list-tile-title class="title">
-            <img src="@assets/images/logo.png">
-          </v-list-tile-title>
-        </v-list-tile>
-        <v-divider />
-        <!-- <v-list-tile
-          v-if="responsive"
+      <v-list-item>
+        <v-list-item-avatar
+          color="white"
         >
-          <v-text-field
-            class="purple-input search-input"
-            label="Search..."
-            color="primary"
+          <v-img
+            :src="avatar"
+            contain
           />
-        </v-list-tile> -->
-        <!-- -->
-        <v-list>
-          <v-list-group
-            v-if="isAdmin"
-            prepend-icon="supervised_user_circle"
-            value="true"
+        </v-list-item-avatar>
+        <v-list-item-title class="title">
+          <img src="@assets/images/logo.png" height="40px">
+        </v-list-item-title>
+      </v-list-item>
+      <v-divider />
+      <v-list>
+        <v-list-group
+          v-if="isAdmin"
+          prepend-icon="supervised_user_circle"
+          value="true"
+        >
+          <template v-slot:activator>
+            <v-list-item>
+              <v-list-item-title>2Way Admin</v-list-item-title>
+            </v-list-item>
+          </template>
+          <v-list-item
+            v-for="(item, i) in selectedMenuItem(1)"
+            :key="i"
+            :to="item.link"
+            :active-class="color"
+            class="v-list-item"
           >
-            <v-list-tile slot="activator">
-              <v-list-tile-title>2Way Admin</v-list-tile-title>
-            </v-list-tile>
-            <v-list-tile
-              v-for="(item, i) in selectedMenuItem(1)"
-              :key="i"
-              :to="item.link"
-              :active-class="color"
-              avatar
-              class="v-list-item"
-            >
-              <v-list-tile-action>
-                <v-icon>
-                  {{ item.icon }}
-                </v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title class="white--text">
-                  {{ item.title }}
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile> 
-          </v-list-group>
-          <v-list-group
-            prepend-icon="message"
-            value="true"
+            <v-list-item-action>
+              <v-icon>
+                {{ item.icon }}
+              </v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title class="white--text">
+                {{ item.title }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item> 
+        </v-list-group>
+        <v-list-group
+          prepend-icon="message"
+          value="true"
+        >
+          <template v-slot:activator>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>2Way User</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+          <v-list-item
+            v-for="(item, i) in selectedMenuItem(2)"
+            :key="i"
+            :to="item.link"
+            :active-class="color"
           >
-            <v-list-tile slot="activator">
-              <v-list-tile-title>2Way User</v-list-tile-title>
-            </v-list-tile>
-            <v-list-tile
-              v-for="(item, i) in selectedMenuItem(2)"
-              :key="i"
-              :to="item.link"
-              :active-class="color"
-              avatar
-              class="v-list-item"
-            >
-              <v-list-tile-action>
-                <v-icon>
-                  {{ item.icon }}
-                </v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title class="white--text">
-                  {{ item.title }}
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile> 
-          </v-list-group>
-          <v-list-group
-            prepend-icon="account_circle"
-            value="true"
+            <v-list-item-action>
+              <v-icon>
+                {{ item.icon }}
+              </v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title class="white--text">
+                {{ item.title }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item> 
+        </v-list-group>
+        <v-list-group
+          prepend-icon="account_circle"
+          value="true"
+        >
+          <template v-slot:activator>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>Account</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+          <v-list-item
+            v-for="(item, i) in selectedMenuItem(3)"
+            :key="i"
+            :to="item.link"
+            :active-class="color"
+            class="v-list-item"
           >
-            <v-list-tile slot="activator">
-              <v-list-tile-title>Account</v-list-tile-title>
-            </v-list-tile>
-            <v-list-tile
-              v-for="(item, i) in selectedMenuItem(3)"
-              :key="i"
-              :to="item.link"
-              :active-class="color"
-              avatar
-              class="v-list-item"
-            >
-              <v-list-tile-action>
-                <v-icon>
-                  {{ item.icon }}
-                </v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title class="white--text">
-                  {{ item.title }}
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list-group>
-        </v-list>
-      </v-layout>
-    </v-img>
+            <v-list-item-action>
+              <v-icon>
+                {{ item.icon }}
+              </v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title class="white--text">
+                {{ item.title }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-group>
+      </v-list>
+    </v-layout>
   </v-navigation-drawer>
 </template>
 

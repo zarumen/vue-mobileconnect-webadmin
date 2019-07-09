@@ -639,14 +639,14 @@ export default {
             <v-toolbar-items>
               <v-btn
                 dark
-                flat
+                text
                 @click.native="helper = !helper"
               >
                 Helper: TH
               </v-btn>
               <v-btn 
                 dark 
-                flat 
+                text 
                 @click.native="saveCampaign()"
               >
                 Save
@@ -784,25 +784,25 @@ export default {
                         slot-scope="data"
                       >
                         <template v-if="data.item.picURL === 'undefine'">
-                          <v-list-tile-avatar 
+                          <v-list-item-avatar 
                             color="primary"
                             class="green--text"
                           >
                             {{ data.item.displayName.slice(0, 2).toUpperCase() }}
-                          </v-list-tile-avatar>
-                          <v-list-tile-content>
-                            <v-list-tile-title>{{ data.item.displayName }}</v-list-tile-title>
-                            <v-list-tile-sub-title>{{ data.item.organizationLevel1Name }} > {{ data.item.organizationLevel2Name }}</v-list-tile-sub-title>
-                          </v-list-tile-content>
+                          </v-list-item-avatar>
+                          <v-list-item-content>
+                            <v-list-item-title>{{ data.item.displayName }}</v-list-item-title>
+                            <v-list-item-subtitle>{{ data.item.organizationLevel1Name }} > {{ data.item.organizationLevel2Name }}</v-list-item-subtitle>
+                          </v-list-item-content>
                         </template>
                         <template v-else>
-                          <v-list-tile-avatar>
+                          <v-list-item-avatar>
                             <img :src="data.item.picURL">
-                          </v-list-tile-avatar>
-                          <v-list-tile-content>
-                            <v-list-tile-title>{{ data.item.displayName }}</v-list-tile-title>
-                            <v-list-tile-sub-title>{{ data.item.organizationLevel1Name }} > {{ data.item.organizationLevel2Name }}</v-list-tile-sub-title>
-                          </v-list-tile-content>
+                          </v-list-item-avatar>
+                          <v-list-item-content>
+                            <v-list-item-title>{{ data.item.displayName }}</v-list-item-title>
+                            <v-list-item-subtitle>{{ data.item.organizationLevel1Name }} > {{ data.item.organizationLevel2Name }}</v-list-item-subtitle>
+                          </v-list-item-content>
                         </template>
                         <template
                           slot="selection" 
@@ -849,12 +849,12 @@ export default {
                         slot-scope="data"
                       >
                         <template v-if="typeof data.item !== 'object'">
-                          <v-list-tile-content v-text="data.item" />
+                          <v-list-item-content v-text="data.item" />
                         </template>
                         <template v-else>
-                          <v-list-tile-content>
-                            <v-list-tile-title>{{ data.item.shortcode }}</v-list-tile-title>
-                          </v-list-tile-content>
+                          <v-list-item-content>
+                            <v-list-item-title>{{ data.item.shortcode }}</v-list-item-title>
+                          </v-list-item-content>
                         </template>
                         <template 
                           slot="selection"
@@ -910,11 +910,11 @@ export default {
                       solo
                     >
                       <template slot="no-data">
-                        <v-list-tile>
+                        <v-list-item>
                           <span class="subheading">
                             Please back to add Keyword in "Shortcode Management" Menu
                           </span>
-                        </v-list-tile>
+                        </v-list-item>
                       </template>
                     </v-select>
                   </v-flex>
@@ -1036,7 +1036,7 @@ export default {
                         />
                         <v-spacer />
                         <v-btn
-                          flat
+                          text
                           disabled
                         />
                         <v-btn 
@@ -1151,7 +1151,7 @@ export default {
                         />
                         <v-spacer />
                         <v-btn
-                          flat
+                          text
                           disabled
                         />
                         <v-btn 
@@ -1266,7 +1266,7 @@ export default {
                         />
                         <v-spacer />
                         <v-btn
-                          flat
+                          text
                           disabled
                         />
                         <v-btn 
@@ -1381,7 +1381,7 @@ export default {
                         />
                         <v-spacer />
                         <v-btn
-                          flat
+                          text
                           disabled
                         />
                         <v-btn 
@@ -1521,26 +1521,26 @@ export default {
                     md6
                   > 
                     <v-list two-line>
-                      <v-list-tile 
+                      <v-list-item 
                         v-for="item in contextParser" 
                         :key="item.key" 
                         avatar
                       >
-                        <v-list-tile-avatar>
+                        <v-list-item-avatar>
                           <v-icon class="blue white--text">
                             code
                           </v-icon>
-                        </v-list-tile-avatar>
-                        <v-list-tile-content>
-                          <v-list-tile-title>msg: "{{ item.messageContextFailed }}"</v-list-tile-title>
-                          <v-list-tile-sub-title>
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                          <v-list-item-title>msg: "{{ item.messageContextFailed }}"</v-list-item-title>
+                          <v-list-item-subtitle>
                             type: {{ item.contextType }} 
                             <span class="blue--text">
                               {{ item.contextForm }}
                             </span>
-                          </v-list-tile-sub-title>
-                        </v-list-tile-content>
-                        <v-list-tile-action>
+                          </v-list-item-subtitle>
+                        </v-list-item-content>
+                        <v-list-item-action>
                           <v-btn
                             icon
                             ripple
@@ -1550,8 +1550,8 @@ export default {
                               delete_forever
                             </v-icon>
                           </v-btn>
-                        </v-list-tile-action>
-                      </v-list-tile>
+                        </v-list-item-action>
+                      </v-list-item>
                     </v-list>
                   </v-flex>
                   <p />
@@ -1645,26 +1645,26 @@ export default {
                             md6
                           > 
                             <v-list two-line>
-                              <v-list-tile 
+                              <v-list-item 
                                 v-for="item in subContextArray" 
                                 :key="item.key" 
                                 avatar
                               >
-                                <v-list-tile-avatar>
+                                <v-list-item-avatar>
                                   <v-icon class="blue white--text">
                                     code
                                   </v-icon>
-                                </v-list-tile-avatar>
-                                <v-list-tile-content>
-                                  <v-list-tile-title>msg: {{ item.messageContextFailed }}</v-list-tile-title>
-                                  <v-list-tile-sub-title>
+                                </v-list-item-avatar>
+                                <v-list-item-content>
+                                  <v-list-item-title>msg: {{ item.messageContextFailed }}</v-list-item-title>
+                                  <v-list-item-subtitle>
                                     regx: 
                                     <span class="blue--text">
                                       {{ item.contextSubForm }}
                                     </span>
-                                  </v-list-tile-sub-title>
-                                </v-list-tile-content>
-                                <v-list-tile-action>
+                                  </v-list-item-subtitle>
+                                </v-list-item-content>
+                                <v-list-item-action>
                                   <v-btn
                                     icon
                                     ripple
@@ -1674,8 +1674,8 @@ export default {
                                       delete_forever
                                     </v-icon>
                                   </v-btn>
-                                </v-list-tile-action>
-                              </v-list-tile>
+                                </v-list-item-action>
+                              </v-list-item>
                             </v-list>
                           </v-flex>
                           <v-flex 
@@ -2006,21 +2006,21 @@ export default {
                       > 
                         <v-subheader>Rewards List:</v-subheader>
                         <v-list two-line>
-                          <v-list-tile 
+                          <v-list-item 
                             v-for="item in rewards" 
                             :key="item.key" 
                             avatar
                           >
-                            <v-list-tile-avatar>
+                            <v-list-item-avatar>
                               <v-icon class="deep-purple white--text">
                                 redeem
                               </v-icon>
-                            </v-list-tile-avatar>
-                            <v-list-tile-content>
-                              <v-list-tile-title>{{ item.rewardName }}</v-list-tile-title>
-                              <v-list-tile-sub-title>{{ item.messageRewardSuccess }}</v-list-tile-sub-title>
-                            </v-list-tile-content>
-                            <v-list-tile-action>
+                            </v-list-item-avatar>
+                            <v-list-item-content>
+                              <v-list-item-title>{{ item.rewardName }}</v-list-item-title>
+                              <v-list-item-subtitle>{{ item.messageRewardSuccess }}</v-list-item-subtitle>
+                            </v-list-item-content>
+                            <v-list-item-action>
                               <v-btn
                                 icon
                                 ripple
@@ -2030,8 +2030,8 @@ export default {
                                   delete_forever
                                 </v-icon>
                               </v-btn>
-                            </v-list-tile-action>
-                          </v-list-tile>
+                            </v-list-item-action>
+                          </v-list-item>
                         </v-list>
                       </v-flex>
                       <v-btn 

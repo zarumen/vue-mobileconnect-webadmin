@@ -147,24 +147,26 @@ export default {
               <template
                 v-for="(item,index) in filteredItems"
               >
-                <v-list-tile 
+                <v-list-item 
                   :key="index"
                 >
-                  <v-list-tile-action>
+                  <v-list-item-action>
                     <v-tooltip
                       v-if="!loading"
                       top
                       content-class="top"
                     >
-                      <v-btn
-                        slot="activator"
-                        class="v-btn--simple"
-                        color="secondary"
-                        icon
-                        @click.stop="createExportJob(item.id, item.campaignCode)"
-                      >
-                        <v-icon>cloud_download</v-icon>
-                      </v-btn>
+                      <template v-slot:activator="{ on }">
+                        <v-btn
+                          class="v-btn--simple"
+                          color="secondary"
+                          icon
+                          v-on="on"
+                          @click.stop="createExportJob(item.id, item.campaignCode)"
+                        >
+                          <v-icon>cloud_download</v-icon>
+                        </v-btn>
+                      </template>
                       <span>Download New File From S3</span>
                     </v-tooltip>
                     <v-tooltip
@@ -172,19 +174,21 @@ export default {
                       top
                       content-class="top"
                     >
-                      <v-btn
-                        slot="activator"
-                        class="v-btn--simple"
-                        color="secondary"
-                        icon
-                        :loading="loading"
-                      >
-                        <v-icon>cloud_download</v-icon>
-                      </v-btn>
+                      <template v-slot:activator="{ on }">
+                        <v-btn
+                          class="v-btn--simple"
+                          color="secondary"
+                          icon
+                          :loading="loading"
+                          v-on="on"
+                        >
+                          <v-icon>cloud_download</v-icon>
+                        </v-btn>
+                      </template>
                       <span>Downloading...</span>
                     </v-tooltip>
-                  </v-list-tile-action>
-                  <v-list-tile-content class="ma-2">
+                  </v-list-item-action>
+                  <v-list-item-content class="ma-2">
                     <div style="width: 100%">
                       <v-layout 
                         justify-space-between 
@@ -195,13 +199,13 @@ export default {
                           class="my-2"
                         >
                           {{ item.campaignName }} <br>
-                          <v-list-tile-sub-title>Campaign Start : {{ renderDate('start', item) }}</v-list-tile-sub-title>
-                          <v-list-tile-sub-title>Campaign End : {{ renderDate('end', item) }}</v-list-tile-sub-title>
+                          <v-list-item-subtitle>Campaign Start : {{ renderDate('start', item) }}</v-list-item-subtitle>
+                          <v-list-item-subtitle>Campaign End : {{ renderDate('end', item) }}</v-list-item-subtitle>
                         </v-flex>
                       </v-layout>
                     </div>
-                  </v-list-tile-content>
-                </v-list-tile>
+                  </v-list-item-content>
+                </v-list-item>
                 <v-divider 
                   v-if="index + 1 < items.length" 
                   :key="`divider-${index}`"
@@ -221,7 +225,7 @@ export default {
         {{ notice }}
         <v-btn 
           dark 
-          flat 
+          text 
           @click.native="exitSnackbar"
         >
           Close

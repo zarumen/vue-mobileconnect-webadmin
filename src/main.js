@@ -1,6 +1,6 @@
 import '@babel/polyfill'
 import Vue from 'vue'
-import './plugins/vuetify'
+import vuetify from './plugins/vuetify'
 import './plugins/vueSocketIO'
 import App from './App'
 import router from '@router'
@@ -16,7 +16,8 @@ new Vue({
     connect() {
       console.log('socket connected')
     }
-  },  
+  },
+  vuetify,
   router,
   store,
   render: h => h(App),

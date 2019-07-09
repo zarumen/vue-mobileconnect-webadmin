@@ -285,13 +285,13 @@ export default {
                     slot-scope="data"
                   >
                     <template v-if="typeof data.item !== 'object'">
-                      <v-list-tile-content v-text="data.item" />
+                      <v-list-item-content v-text="data.item" />
                     </template>
                     <template v-else>
-                      <v-list-tile-content>
-                        <v-list-tile-title>{{ data.item.displayName }}</v-list-tile-title>
-                        <v-list-tile-sub-title>{{ data.item.organizationLevel1Name }}</v-list-tile-sub-title>
-                      </v-list-tile-content>
+                      <v-list-item-content>
+                        <v-list-item-title>{{ data.item.displayName }}</v-list-item-title>
+                        <v-list-item-subtitle>{{ data.item.organizationLevel1Name }}</v-list-item-subtitle>
+                      </v-list-item-content>
                     </template>
                     <template 
                       slot="selection" 
@@ -328,13 +328,13 @@ export default {
                     slot-scope="data"
                   >
                     <template v-if="typeof data.item !== 'object'">
-                      <v-list-tile-content v-text="data.item" />
+                      <v-list-item-content v-text="data.item" />
                     </template>
                     <template v-else>
-                      <v-list-tile-content>
-                        <v-list-tile-title>{{ data.item.displayName }}</v-list-tile-title>
-                        <v-list-tile-sub-title>{{ data.item.organizationLevel1Name }} > {{ data.item.organizationLevel2Name }}</v-list-tile-sub-title>
-                      </v-list-tile-content>
+                      <v-list-item-content>
+                        <v-list-item-title>{{ data.item.displayName }}</v-list-item-title>
+                        <v-list-item-subtitle>{{ data.item.organizationLevel1Name }} > {{ data.item.organizationLevel2Name }}</v-list-item-subtitle>
+                      </v-list-item-content>
                     </template>
                     <template 
                       slot="selection" 
@@ -446,7 +446,7 @@ export default {
             <v-spacer />
             <v-btn
               class="v-btn--simple"
-              round 
+              rounded 
               color="secondary" 
               @click="clearForm()"
             >
@@ -454,7 +454,7 @@ export default {
             </v-btn>
             <v-btn
               class="v-btn--simple"
-              round 
+              rounded 
               color="primary" 
               @click="closeDialog()"
             >
@@ -462,7 +462,7 @@ export default {
             </v-btn>
             <v-btn
               :disabled="!valid"
-              round
+              rounded
               color="primary"
               @click="saveUser()"
             >
@@ -482,7 +482,7 @@ export default {
       {{ textError }}
       <v-btn
         dark
-        flat
+        text
         @click="snackbar = false"
       >
         Close

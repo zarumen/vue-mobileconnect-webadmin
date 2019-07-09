@@ -101,7 +101,7 @@ export default {
                 :disabled="tryingToLogIn"
                 color="primary"
                 type="submit"
-                round
+                rounded
               >
                 <BaseIcon
                   v-if="tryingToLogIn"

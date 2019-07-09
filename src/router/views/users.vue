@@ -179,7 +179,7 @@ export default {
         {{ notice }}
         <v-btn 
           dark 
-          flat 
+          text 
           @click.native="exitSnackbar"
         >
           Close
@@ -189,6 +189,7 @@ export default {
     <!-- FAB panel -->
     <v-btn
       fab
+      large
       bottom
       right
       color="primary"

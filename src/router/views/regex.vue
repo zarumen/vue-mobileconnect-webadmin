@@ -128,7 +128,7 @@ export default {
       color="success"
       href="https://materialdesignicons.com/"
       target="_blank"
-      round
+      rounded
     >
       <v-icon left>
         code
@@ -140,7 +140,7 @@ export default {
         v-model="imageName"
         color="secondary"
         class="v-btn--simple"
-        round
+        rounded
         @click="pickFile"
       >
         <v-icon left>
@@ -171,7 +171,7 @@ export default {
       <v-btn
         color="primary"
         class="white--text"
-        round
+        rounded
         small
         @click.native="pickXLSFile"
       >
@@ -195,7 +195,7 @@ export default {
     <div>
       <v-btn
         color="primary"
-        round
+        rounded
         fab
         @click="sendToStorage"
       >
@@ -218,7 +218,7 @@ export default {
     <v-btn
       color="blue-grey"
       class="white--text"
-      round
+      rounded
       @click="couponGenDialog = !couponGenDialog"
     >
       Generated
@@ -266,7 +266,7 @@ export default {
           <v-btn
             class="v-btn--simple" 
             color="primary"
-            round
+            rounded
             @click="couponGenDialog = !couponGenDialog"
           >
             Cancel
@@ -274,7 +274,7 @@ export default {
           <v-btn
             class=""
             color="primary"
-            round
+            rounded
             @click="clickedGen"
           >
             Generated

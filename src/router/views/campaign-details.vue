@@ -220,7 +220,7 @@ export default {
               </p>
               <v-btn
                 color="primary"
-                round
+                rounded
                 class="font-weight-light"
               >
                 Change to Production

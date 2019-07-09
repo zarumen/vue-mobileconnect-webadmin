@@ -174,7 +174,7 @@ export default {
             <v-spacer />
             <v-btn
               class="v-btn--simple"
-              round 
+              rounded 
               color="secondary" 
               @click="clearOppForm()"
             >
@@ -182,7 +182,7 @@ export default {
             </v-btn>
             <v-btn
               class="v-btn--simple"
-              round 
+              rounded 
               color="primary" 
               @click="closeDialog()"
             >
@@ -190,7 +190,7 @@ export default {
             </v-btn>
             <v-btn
               :disabled="!valid"
-              round
+              rounded
               color="primary"
               @click="saveOpConfig()"
             >

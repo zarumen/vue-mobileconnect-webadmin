@@ -247,14 +247,14 @@ export default {
                           :key="`${index}-divider`"
                           class="line"
                         />
-                        <v-list-tile 
+                        <v-list-item 
                           :key="index"
                           class="pa-2"
                         >
-                          <v-list-tile-avatar class="hidden-xs-only">
+                          <v-list-item-avatar class="hidden-xs-only">
                             {{ index+1 }}
-                          </v-list-tile-avatar>
-                          <v-list-tile-content>
+                          </v-list-item-avatar>
+                          <v-list-item-content>
                             <v-layout row>
                               <v-flex>
                                 <v-chip
@@ -273,13 +273,13 @@ export default {
                                 />
                               </v-flex>
                             </v-layout>
-                          </v-list-tile-content>
-                          <v-list-tile-action>
+                          </v-list-item-content>
+                          <v-list-item-action>
                             <v-avatar class="indigo darken-4 white--text">
                               {{ Math.round(VoteData.data.datasets[0].percent[index]) }}%
                             </v-avatar>
-                          </v-list-tile-action>
-                        </v-list-tile>
+                          </v-list-item-action>
+                        </v-list-item>
                       </template>
                     </transition-group>
                   </v-layout>

@@ -6,16 +6,16 @@ export default {
 
 <template>
   <v-list three-line>
-    <v-list-tile @click="complete(0)">
-      <v-list-tile-actiosn>
+    <v-list-item @click="complete(0)">
+      <v-list-item-actiosn>
         <v-checkbox
           :value="list[0]"
           color="green"
         />
-      </v-list-tile-actiosn>
-      <v-list-tile-title>
+      </v-list-item-actiosn>
+      <v-list-item-title>
         Sign contract for "What are conference organized afraid of?"
-      </v-list-tile-title>
+      </v-list-item-title>
       <div class="d-flex">
         <v-tooltip
           top
@@ -48,18 +48,18 @@ export default {
           <span>Close</span>
         </v-tooltip>
       </div>
-    </v-list-tile>
+    </v-list-item>
     <v-divider />
-    <v-list-tile @click="complete(1)">
-      <v-list-tile-action>
+    <v-list-item @click="complete(1)">
+      <v-list-item-action>
         <v-checkbox
           :value="list[1]"
           color="green"
         />
-      </v-list-tile-action>
-      <v-list-tile-title>
+      </v-list-item-action>
+      <v-list-item-title>
         Lines From Great Russian Literature? Or E-mails From My Boss?
-      </v-list-tile-title>
+      </v-list-item-title>
       <div class="d-flex">
         <v-tooltip
           top
@@ -93,18 +93,18 @@ export default {
           <span>Close</span>
         </v-tooltip>
       </div>
-    </v-list-tile>
+    </v-list-item>
     <v-divider />
-    <v-list-tile @click="complete(2)">
-      <v-list-tile-action>
+    <v-list-item @click="complete(2)">
+      <v-list-item-action>
         <v-checkbox
           :value="list[2]"
           color="green"
         />
-      </v-list-tile-action>
-      <v-list-tile-title>
+      </v-list-item-action>
+      <v-list-item-title>
         Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
-      </v-list-tile-title>
+      </v-list-item-title>
       <div class="d-flex">
         <v-tooltip
           top
@@ -137,7 +137,7 @@ export default {
           <span>Close</span>
         </v-tooltip>
       </div>
-    </v-list-tile>
+    </v-list-item>
   </v-list>
 </template>
 

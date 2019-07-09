@@ -240,7 +240,7 @@ export default {
                     solo
                   >
                     <template slot="no-data">
-                      <v-list-tile>
+                      <v-list-item>
                         <span class="subheading">
                           Create
                         </span>
@@ -251,7 +251,7 @@ export default {
                         >
                           {{ search }}
                         </v-chip>
-                      </v-list-tile>
+                      </v-list-item>
                     </template>
                     <template
                       v-if="item === Object(item)"
@@ -279,12 +279,12 @@ export default {
                       slot="item"
                       slot-scope="{ ind, item }"
                     >
-                      <v-list-tile-content>
+                      <v-list-item-content>
                         <v-text-field
                           v-if="editing === item"
                           v-model="editing.text"
                           autofocus
-                          flat
+                          text
                           background-color="transparent"
                           hide-details
                           solo
@@ -299,9 +299,9 @@ export default {
                         >
                           {{ item.text }}
                         </v-chip>
-                      </v-list-tile-content>
+                      </v-list-item-content>
                       <v-spacer />
-                      <v-list-tile-action @click.stop>
+                      <v-list-item-action @click.stop>
                         <v-btn
                           class="v-btn--simple"
                           color="primary"
@@ -310,7 +310,7 @@ export default {
                         >
                           <v-icon>{{ editing !== item ? 'edit' : 'check' }}</v-icon>
                         </v-btn>
-                      </v-list-tile-action>
+                      </v-list-item-action>
                     </template>
                   </v-combobox>
                 </v-flex>
@@ -318,27 +318,27 @@ export default {
                   xs12
                 >
                   <v-list two-line>
-                    <v-list-tile
+                    <v-list-item
                       v-for="item in 3"
                       :key="item.key"
                       avatar
                     >
-                      <v-list-tile-avatar>
+                      <v-list-item-avatar>
                         <v-icon class="blue white--text">
                           code
                         </v-icon>
-                      </v-list-tile-avatar>
-                      <v-list-tile-content>
-                        <v-list-tile-title>title</v-list-tile-title>
-                        <v-list-tile-sub-title>{{ item }}</v-list-tile-sub-title>
-                      </v-list-tile-content>
-                    </v-list-tile>
+                      </v-list-item-avatar>
+                      <v-list-item-content>
+                        <v-list-item-title>title</v-list-item-title>
+                        <v-list-item-subtitle>{{ item }}</v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
                   </v-list>
                 </v-flex>
                 <p />
                 <v-btn 
                   color="primary" 
-                  round
+                  rounded
                   @click.native="addOperatorConfig = !addOperatorConfig"
                 >
                   <v-icon dark>
@@ -354,7 +354,7 @@ export default {
             <v-spacer />
             <v-btn
               class="v-btn--simple"
-              round 
+              rounded 
               color="secondary" 
               @click="clearForm()"
             >
@@ -362,7 +362,7 @@ export default {
             </v-btn>
             <v-btn
               class="v-btn--simple"
-              round 
+              rounded 
               color="primary" 
               @click="closeDialog()"
             >
@@ -370,7 +370,7 @@ export default {
             </v-btn>
             <v-btn
               :disabled="!valid"
-              round
+              rounded
               color="primary"
               @click="saveShortcode()"
             >
@@ -394,7 +394,7 @@ export default {
       {{ textError }}
       <v-btn
         dark
-        flat
+        text
         @click="snackbar = false"
       >
         Close

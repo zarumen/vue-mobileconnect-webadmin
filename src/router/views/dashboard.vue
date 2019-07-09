@@ -360,7 +360,7 @@ export default {
                           <v-card
                             color="grey lighten-4"
                             min-width="350px"
-                            flat
+                            text
                           >
                             <v-toolbar
                               color="primary"
@@ -457,7 +457,7 @@ export default {
                 v-if="tabs === 0"
                 class="v-btn--simple"
                 color="light-green darken-2"
-                round
+                rounded
               >
                 +SHORTCODE            
               </v-btn>
@@ -465,7 +465,7 @@ export default {
                 v-if="tabs === 1"
                 class="v-btn--simple"
                 color="light-green darken-2"
-                round
+                rounded
               >
                 +KEYWORD            
               </v-btn>
@@ -473,7 +473,7 @@ export default {
                 v-if="tabs === 2"
                 class="v-btn--simple"
                 color="light-green darken-2"
-                round
+                rounded
               >
                 +KEYWORD RESERVED            
               </v-btn>
@@ -482,73 +482,79 @@ export default {
             <v-tabs-items v-model="tabs">
               <v-tab-item :value="0">
                 <v-list three-line>
-                  <v-list-tile @click="complete(0)">
-                    <v-list-tile-action>
+                  <v-list-item @click="complete(0)">
+                    <v-list-item-action>
                       <v-checkbox
                         :value="list[0]"
                         color="green"
                       />
-                    </v-list-tile-action>
-                    <v-list-tile-title>
+                    </v-list-item-action>
+                    <v-list-item-title>
                       Sign contract for "What are conference organized afraid of?"
-                    </v-list-tile-title>
+                    </v-list-item-title>
                     <div class="d-flex">
                       <v-tooltip
                         top
                         content-class="top"
                       >
-                        <v-btn
-                          slot="activator"
-                          class="v-btn--simple"
-                          color="secondary"
-                          icon
-                        >
-                          <v-icon>create</v-icon>
-                        </v-btn>
+                        <template v-slot:activator="{ on }">
+                          <v-btn
+                            class="v-btn--simple"
+                            color="secondary"
+                            icon
+                            v-on="on"
+                          >
+                            <v-icon>create</v-icon>
+                          </v-btn>
+                        </template>
                         <span>Edit</span>
                       </v-tooltip>
                       <v-tooltip
                         top
                         content-class="top"
                       >
-                        <v-btn
-                          slot="activator"
-                          class="v-btn--simple"
-                          color="danger"
-                          icon
-                        >
-                          <v-icon color="error">
-                            close
-                          </v-icon>
-                        </v-btn>
+                        <template v-slot:activator="{ on }">
+                          <v-btn
+                            class="v-btn--simple"
+                            color="danger"
+                            icon
+                            v-on="on"
+                          >
+                            <v-icon color="error">
+                              close
+                            </v-icon>
+                          </v-btn>
+                        </template>
                         <span>Close</span>
                       </v-tooltip>
                     </div>
-                  </v-list-tile>
+                  </v-list-item>
                   <v-divider />
-                  <v-list-tile @click="complete(1)">
-                    <v-list-tile-action>
+                  <v-list-item @click="complete(1)">
+                    <v-list-item-action>
                       <v-checkbox
                         :value="list[1]"
                         color="green"
                       />
-                    </v-list-tile-action>
-                    <v-list-tile-title>
+                    </v-list-item-action>
+                    <v-list-item-title>
                       Lines From Great Russian Literature? Or E-mails From My Boss?
-                    </v-list-tile-title>
+                    </v-list-item-title>
                     <div class="d-flex">
                       <v-tooltip
                         top
                         content-class="top"
                       >
-                        <v-btn
-                          slot="activator"
-                          class="v-btn--simple"
-                          color="secondary"
-                          icon
-                        >
-                          <v-icon>create</v-icon>
-                        </v-btn>
+                        <template v-slot:activator="{ on }">
+                          <v-btn
+                            class="v-btn--simple"
+                            color="secondary"
+                            icon
+                            v-on="on"
+                          >
+                            <v-icon>create</v-icon>
+                          </v-btn>
+                        </template>
                         <span>Edit</span>
                       </v-tooltip>
 
@@ -556,64 +562,70 @@ export default {
                         top
                         content-class="top"
                       >
-                        <v-btn
-                          slot="activator"
-                          class="v-btn--simple"
-                          color="danger"
-                          icon
-                        >
-                          <v-icon color="error">
-                            close
-                          </v-icon>
-                        </v-btn>
+                        <template v-slot:activator="{ on }">
+                          <v-btn
+                            class="v-btn--simple"
+                            color="danger"
+                            icon
+                            v-on="on"
+                          >
+                            <v-icon color="error">
+                              close
+                            </v-icon>
+                          </v-btn>
+                        </template>
                         <span>Close</span>
                       </v-tooltip>
                     </div>
-                  </v-list-tile>
+                  </v-list-item>
                   <v-divider />
-                  <v-list-tile @click="complete(2)">
-                    <v-list-tile-action>
+                  <v-list-item @click="complete(2)">
+                    <v-list-item-action>
                       <v-checkbox
                         :value="list[2]"
                         color="green"
                       />
-                    </v-list-tile-action>
-                    <v-list-tile-title>
+                    </v-list-item-action>
+                    <v-list-item-title>
                       Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
-                    </v-list-tile-title>
+                    </v-list-item-title>
                     <div class="d-flex">
                       <v-tooltip
                         top
                         content-class="top"
                       >
-                        <v-btn
-                          slot="activator"
-                          class="v-btn--simple"
-                          color="secondary"
-                          icon
-                        >
-                          <v-icon>create</v-icon>
-                        </v-btn>
+                        <template v-slot:activator="{ on }">
+                          <v-btn
+                            class="v-btn--simple"
+                            color="secondary"
+                            icon
+                            v-on="on"
+                          >
+                            <v-icon>create</v-icon>
+                          </v-btn>
+                        </template>
                         <span>Edit</span>
                       </v-tooltip>
                       <v-tooltip
                         top
                         content-class="top"
                       >
-                        <v-btn
-                          slot="activator"
-                          class="v-btn--simple"
-                          color="danger"
-                          icon
-                        >
-                          <v-icon color="error">
-                            close
-                          </v-icon>
-                        </v-btn>
+                        <template v-slot:activator="{ on }">
+                          <v-btn
+                            class="v-btn--simple"
+                            color="danger"
+                            icon
+                            v-on="on"
+                          >
+                            <v-icon color="error">
+                              close
+                            </v-icon>
+                          </v-btn>
+                        </template>
                         <span>Close</span>
                       </v-tooltip>
                     </div>
-                  </v-list-tile>
+                  </v-list-item>
                 </v-list>
               </v-tab-item>
               <v-tab-item :value="1">

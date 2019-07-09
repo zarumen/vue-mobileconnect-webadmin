@@ -131,11 +131,11 @@ export default {
                 <template
                   v-for="(item,index) in filteredItems"
                 >
-                  <v-list-tile 
+                  <v-list-item 
                     :key="index"
                     @click.stop="clickedSelectedCampaignReports(item.id)"
                   >
-                    <v-list-tile-action>
+                    <v-list-item-action>
                       <v-tooltip
                         top
                         content-class="top"
@@ -151,8 +151,8 @@ export default {
                         </v-btn>
                         <span>Download New File From S3</span>
                       </v-tooltip>
-                    </v-list-tile-action>
-                    <v-list-tile-content class="ma-2">
+                    </v-list-item-action>
+                    <v-list-item-content class="ma-2">
                       <div style="width: 100%">
                         <v-layout 
                           justify-space-between 
@@ -163,12 +163,12 @@ export default {
                             class="my-2"
                           >
                             {{ item.campaignName }} <br>
-                            <v-list-tile-sub-title>{{ item.campaignCode }} : {{ item.campaignActive }}</v-list-tile-sub-title>
+                            <v-list-item-subtitle>{{ item.campaignCode }} : {{ item.campaignActive }}</v-list-item-subtitle>
                           </v-flex>
                         </v-layout>
                       </div>
-                    </v-list-tile-content>
-                  </v-list-tile>
+                    </v-list-item-content>
+                  </v-list-item>
                   <v-divider 
                     v-if="index + 1 < items.length" 
                     :key="`divider-${index}`"
@@ -218,11 +218,11 @@ export default {
                   <template
                     v-for="(item,index) in jobList"
                   >
-                    <v-list-tile 
+                    <v-list-item 
                       :key="index"
                       @click="clicked"
                     >
-                      <!-- <v-list-tile-avatar>
+                      <!-- <v-list-item-avatar>
                         <v-chip
                           color="light-green white--text"
                           small
@@ -230,16 +230,16 @@ export default {
                         >
                           {{ item.type }}
                         </v-chip>
-                      </v-list-tile-avatar> -->
-                      <v-list-tile-content 
+                      </v-list-item-avatar> -->
+                      <v-list-item-content 
                         class="ma-2"
                       >
-                        <v-list-tile-title>
+                        <v-list-item-title>
                           {{ item.fileName }}
-                        </v-list-tile-title>
-                        <v-list-tile-sub-title>create Time: {{ convertTime(item.createTime) }}</v-list-tile-sub-title>
-                      </v-list-tile-content>
-                      <v-list-tile-action>
+                        </v-list-item-title>
+                        <v-list-item-subtitle>create Time: {{ convertTime(item.createTime) }}</v-list-item-subtitle>
+                      </v-list-item-content>
+                      <v-list-item-action>
                         <v-tooltip
                           top
                           content-class="top"
@@ -269,8 +269,8 @@ export default {
                           </v-btn>
                           <span>Deleted Recent File</span>
                         </v-tooltip>
-                      </v-list-tile-action>
-                    </v-list-tile>
+                      </v-list-item-action>
+                    </v-list-item>
                     <v-divider 
                       v-if="index + 1 < items.length" 
                       :key="`divider-${index}`"
@@ -291,7 +291,7 @@ export default {
           {{ notice }}
           <v-btn 
             dark 
-            flat 
+            text 
             @click.native="exitSnackbar"
           >
             Close

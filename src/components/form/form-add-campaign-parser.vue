@@ -61,7 +61,7 @@ export default {
             Save
           </v-btn>
           <v-btn 
-            flat
+            text
           >
             Cancel
           </v-btn>

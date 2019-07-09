@@ -238,12 +238,12 @@ export default {
                     slot-scope="data"
                   >
                     <template v-if="typeof data.item !== 'object'">
-                      <v-list-tile-content v-text="data.item" />
+                      <v-list-item-content v-text="data.item" />
                     </template>
                     <template v-else>
-                      <v-list-tile-content>
-                        <v-list-tile-title>{{ data.item.shortcode }}</v-list-tile-title>
-                      </v-list-tile-content>
+                      <v-list-item-content>
+                        <v-list-item-title>{{ data.item.shortcode }}</v-list-item-title>
+                      </v-list-item-content>
                     </template>
                     <template 
                       slot="selection" 
@@ -283,7 +283,7 @@ export default {
                   required
                 >
                   <template slot="no-data">
-                    <v-list-tile>
+                    <v-list-item>
                       <span class="subheading">
                         Create
                       </span>
@@ -294,7 +294,7 @@ export default {
                       >
                         {{ search }}
                       </v-chip>
-                    </v-list-tile>
+                    </v-list-item>
                   </template>
                   <template
                     v-if="item === Object(item)"
@@ -322,12 +322,12 @@ export default {
                     slot="item"
                     slot-scope="{ index, item }"
                   >
-                    <v-list-tile-content>
+                    <v-list-item-content>
                       <v-text-field
                         v-if="editing === item"
                         v-model="editing.text"
                         autofocus
-                        flat
+                        text
                         background-color="transparent"
                         hide-details
                         solo
@@ -342,16 +342,16 @@ export default {
                       >
                         {{ item.text }}
                       </v-chip>
-                    </v-list-tile-content>
+                    </v-list-item-content>
                     <v-spacer />
-                    <v-list-tile-action @click.stop>
+                    <v-list-item-action @click.stop>
                       <v-btn
                         icon
                         @click.stop.prevent="edit(index, item)"
                       >
                         <v-icon>{{ editing !== item ? 'edit' : 'check' }}</v-icon>
                       </v-btn>
-                    </v-list-tile-action>
+                    </v-list-item-action>
                   </template>
                 </v-combobox>
               </v-flex>
@@ -362,7 +362,7 @@ export default {
             <v-spacer />
             <v-btn
               class="v-btn--simple"
-              round 
+              rounded 
               color="secondary" 
               @click="clearForm()"
             >
@@ -370,7 +370,7 @@ export default {
             </v-btn>
             <v-btn
               class="v-btn--simple"
-              round 
+              rounded 
               color="primary" 
               @click="closeDialog()"
             >
@@ -378,7 +378,7 @@ export default {
             </v-btn>
             <v-btn
               :disabled="!valid"
-              round
+              rounded
               color="primary"
               @click="saveKeyword()"
             >
@@ -398,7 +398,7 @@ export default {
       {{ textError }}
       <v-btn
         dark
-        flat
+        text
         @click="snackbar = false"
       >
         Close

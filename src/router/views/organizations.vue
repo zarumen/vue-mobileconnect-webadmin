@@ -185,7 +185,7 @@ export default {
         {{ notice }}
         <v-btn 
           dark 
-          flat 
+          text 
           @click.native="exitSnackbar"
         >
           Close
@@ -195,10 +195,12 @@ export default {
     <!-- FAB panel -->
     <v-btn
       fab
+      large
       bottom
       right
-      color="primary"
+      absolute
       fixed
+      color="primary"
       @click.stop="addDialog = !addDialog"
     >
       <v-icon>add</v-icon>

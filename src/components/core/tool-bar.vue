@@ -50,16 +50,16 @@ export default {
 </script>
 
 <template>
-  <v-toolbar
+  <v-app-bar
     id="coretoolbar"
     v-scroll="onScroll"
-    :color="!isScrolling ? 'transparent' : 'green lighten-5'"
-    :flat="!isScrolling"
+    :color="!isScrolling ? 'transparent' : 'green lighten-3'"
+    :text="!isScrolling"
     app
-    prominent
+    dark
     class="elevation-0"
   >
-    <v-toolbar-side-icon
+    <v-app-bar-nav-icon
       v-if="loggedIn"
       @click.stop="onClickBtn"
     />
@@ -67,17 +67,15 @@ export default {
       Mobile Connect
     </v-toolbar-title>
     <v-spacer />
-    <v-toolbar-items>
-      <NavBarRoutes
-        v-if="loggedIn"
-        :routes="loggedInNavRoutes"
-      />
-      <NavBarRoutes
-        v-else
-        :routes="loggedOutNavRoutes"
-      />
-    </v-toolbar-items>
-  </v-toolbar>
+    <NavBarRoutes
+      v-if="loggedIn"
+      :routes="loggedInNavRoutes"
+    />
+    <NavBarRoutes
+      v-else
+      :routes="loggedOutNavRoutes"
+    />
+  </v-app-bar>
 </template>
 
 <style lang="scss" scoped>

@@ -104,7 +104,7 @@ export default {
               </h6>
               <v-btn
                 color="primary"
-                round
+                rounded
                 class="font-weight-light"
                 @click="dialog=!dialog"
               >
@@ -217,14 +217,14 @@ export default {
           <v-spacer />
           <v-btn
             class="v-btn--simple"
-            round 
+            rounded 
             color="primary" 
             @click="dialog=false"
           >
             CANCEL
           </v-btn>
           <v-btn
-            round
+            rounded
             color="primary"
             @click="save()"
           >

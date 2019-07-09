@@ -294,7 +294,7 @@ export default {
           <v-btn  
             class="v-btn--simple"
             color="light-green darken-2"
-            round
+            rounded
             @click.stop="addShortcodeDialog = !addShortcodeDialog"
           >
             +SHORTCODE            
@@ -315,7 +315,7 @@ export default {
           <v-btn
             class="v-btn--simple"
             color="light-green darken-2"
-            round
+            rounded
             @click.stop="addKeywordByShortcodeDialog = !addKeywordByShortcodeDialog"
           >
             +TEST Keyword         
@@ -336,7 +336,7 @@ export default {
           <v-btn
             class="v-btn--simple"
             color="deep-purple darken-2"
-            round
+            rounded
             @click.stop="addKeywordReservedDialog = !addKeywordReservedDialog"
           >
             +KEY RESERVED         
@@ -360,24 +360,24 @@ export default {
           <!-- shortcode list -->
           <v-list three-line>
             <template v-for="(item0, index) in filteredList">
-              <v-list-tile 
+              <v-list-item 
                 :key="index"
                 ripple
                 @click="onClicked(item0)"
               >
-                <v-list-tile-avatar>
+                <v-list-item-avatar>
                   <v-icon small>
                     filter_6
                   </v-icon>
-                </v-list-tile-avatar>
-                <v-list-tile-content>
-                  <v-list-tile-title class="pt-2 subheading font-weight-medium">
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title class="pt-2 subheading font-weight-medium">
                     {{ item0.shortcode }}
-                  </v-list-tile-title>
-                  <v-list-tile-action-text>
+                  </v-list-item-title>
+                  <v-list-item-action-text>
                     &nbsp;Sender Name:
-                  </v-list-tile-action-text>
-                  <v-list-tile-sub-title class="body-2 font-weight-thin">
+                  </v-list-item-action-text>
+                  <v-list-item-subtitle class="body-2 font-weight-thin">
                     <span
                       v-for="i in item0.sendername"
                       :key="i"
@@ -391,9 +391,9 @@ export default {
                       </v-chip>
                       &nbsp;
                     </span>
-                  </v-list-tile-sub-title>
-                </v-list-tile-content>
-                <v-list-tile-action>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+                <v-list-item-action>
                   <v-flex 
                     xs12 
                     class="py-2"
@@ -435,8 +435,8 @@ export default {
                       TRUE
                     </v-btn>
                   </v-flex>
-                </v-list-tile-action>
-              </v-list-tile>
+                </v-list-item-action>
+              </v-list-item>
               <v-divider
                 v-if="index + 1 < filteredList.length" 
                 :key="`divider-${index}`"
@@ -448,23 +448,23 @@ export default {
           <!-- keyword list -->
           <v-list three-line>
             <template v-for="(item1, index) in filteredKeywordList">
-              <v-list-tile 
+              <v-list-item 
                 :key="index"
                 ripple
               >
-                <v-list-tile-avatar>
+                <v-list-item-avatar>
                   <v-icon small>
                     filter_6
                   </v-icon>
-                </v-list-tile-avatar>
-                <v-list-tile-content>
-                  <v-list-tile-title class="pt-2 subheading font-weight-medium">
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title class="pt-2 subheading font-weight-medium">
                     {{ item1.shortcode }}
-                  </v-list-tile-title>
-                  <v-list-tile-action-text>
+                  </v-list-item-title>
+                  <v-list-item-action-text>
                     &nbsp;Keywords Used:
-                  </v-list-tile-action-text>
-                  <v-list-tile-sub-title class="body-2 font-weight-thin">
+                  </v-list-item-action-text>
+                  <v-list-item-subtitle class="body-2 font-weight-thin">
                     <v-chip
                       v-for="k in item1.keywords" 
                       :key="k"
@@ -474,9 +474,9 @@ export default {
                     >
                       {{ k }}
                     </v-chip>
-                  </v-list-tile-sub-title>
-                </v-list-tile-content>
-              </v-list-tile>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
               <v-divider 
                 v-if="index + 1 < filteredKeywordList.length" 
                 :key="`divider-${index}`"
@@ -488,25 +488,25 @@ export default {
           <!-- keyword reserved -->
           <v-list three-line>
             <template v-for="(item2, index) in filteredKeywordReservedList">
-              <v-list-tile 
+              <v-list-item 
                 :key="item2.shortcode"
                 ripple
                 @click.stop="onClicked(item2)"
               >
-                <v-list-tile-avatar>
+                <v-list-item-avatar>
                   <v-icon small>
                     filter_6
                   </v-icon>
-                </v-list-tile-avatar>
-                <v-list-tile-content>
-                  <v-list-tile-title class="pt-2 subheading font-weight-medium">
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title class="pt-2 subheading font-weight-medium">
                     {{ item2.shortcode }}
-                  </v-list-tile-title>
+                  </v-list-item-title>
                   <div>
-                    <v-list-tile-action-text>
+                    <v-list-item-action-text>
                       &nbsp;Keywords Reserved:
-                    </v-list-tile-action-text>
-                    <v-list-tile-sub-title class="body-2 font-weight-thin">
+                    </v-list-item-action-text>
+                    <v-list-item-subtitle class="body-2 font-weight-thin">
                       <!-- Keyword ที่กำลัง reserved -->
                       <v-chip
                         v-for="i in item2.keywordsArray" 
@@ -527,13 +527,13 @@ export default {
                       >
                         {{ i }}
                       </v-chip>
-                    </v-list-tile-sub-title>
+                    </v-list-item-subtitle>
                   </div>
                   <!-- <div v-if="item2.keywordsFalseArray.length > 0">
-                    <v-list-tile-action-text>
+                    <v-list-item-action-text>
                       &nbsp;Keywords Reserved Used:
-                    </v-list-tile-action-text>
-                    <v-list-tile-sub-title class="body-2 font-weight-thin">
+                    </v-list-item-action-text>
+                    <v-list-item-subtitle class="body-2 font-weight-thin">
                       <v-chip
                         v-for="i in item2.keywordsFalseArray" 
                         :key="i"
@@ -542,10 +542,10 @@ export default {
                       >
                         {{ i }}
                       </v-chip>
-                    </v-list-tile-sub-title>
+                    </v-list-item-subtitle>
                   </div> -->
-                </v-list-tile-content>
-              </v-list-tile>
+                </v-list-item-content>
+              </v-list-item>
               <v-divider 
                 v-if="index + 1 < filteredKeywordReservedList.length" 
                 :key="`divider-${index}`"
@@ -619,8 +619,8 @@ export default {
           <v-spacer />
           <v-btn
             color="green darken-1"
-            round
-            flat
+            rounded
+            text
             @click="dialog = false"
           >
             Agree

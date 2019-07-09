@@ -115,7 +115,7 @@ export default {
             </span>
             <v-spacer />
             <v-btn 
-              flat 
+              text 
               icon 
               color="green"
               @click.native="reloadData()"
@@ -123,7 +123,7 @@ export default {
               <BaseIcon name="syncAlt" />            
             </v-btn>
             <v-btn 
-              flat 
+              text 
               icon 
               color="indigo"
             >
@@ -162,7 +162,7 @@ export default {
         {{ notice }}
         <v-btn 
           dark 
-          flat 
+          text 
           @click.native="exitSnackbar"
         >
           Close

@@ -123,14 +123,13 @@ export default {
       :headers="headers" 
       :items="items" 
       :search="search" 
-      :pagination.sync="mutablePagination"
-      sort-icon="keyboard_arrow_down"
+      :options.sync="mutablePagination"
       class="elevation-1 pa-2"
-      hide-actions
+      hide-default-footer
     >
+      <!-- TODO: implement paginations (in pagination Utils) and render Function NEW! -->
       <template
-        slot="headerCell"
-        slot-scope="{ header }"
+        v-slot:header="{ header }"
       >
         <span
           class="subheading font-weight-light light-green--text text--darken-1"
@@ -138,8 +137,7 @@ export default {
         />
       </template>
       <template 
-        slot="items" 
-        slot-scope="props"
+        v-slot:item="{ item }"
         class="body-2" 
       >
         <td  

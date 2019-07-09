@@ -14724,10 +14724,10 @@ vue@^2.5.18:
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
   integrity sha512-ImThpeNU9HbdZL3utgMCq0oiMzAkt1mcgy3/E6zWC/G6AaQoeuFdsl9nDhTDU3X1R6FK7nsIUuRACVcjI+A2GQ==
 
-vuetify@^1.5.16:
-  version "1.5.16"
-  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-1.5.16.tgz#cc9d0199c389d64d15787ddc85ca47a28225eeee"
-  integrity sha512-yBgOsfurKQkeS+l+rrTQZ2bFk0D9ezjHhkuVM5A/yVzcg62sY2nfYaq/H++uezBWC9WYFrp/5OmSocJQcWn9Qw==
+vuetify@^2.0.0-beta.5:
+  version "2.0.0-beta.5"
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-2.0.0-beta.5.tgz#3cb929d3b2af1c057e83a68a6bd11d12323e2a19"
+  integrity sha512-YJBTs681yHrQ/mZpmjHNDtM6CPjIRr6CLnmKTWWGGuHEUtKc7hSv+JHd3myvSowlcN+5c3gxQHjW2nn7l2Wz1A==
 
 vuex-persistedstate@^2.5.4:
   version "2.5.4"

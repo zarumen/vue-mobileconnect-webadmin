@@ -143,7 +143,7 @@ export default {
               <BaseIcon name="syncAlt" />            
             </v-btn>
             <v-btn 
-              flat 
+              text 
               icon 
               color="indigo"
             >
@@ -158,7 +158,7 @@ export default {
             :pagination.sync="mutablePagination"
             sort-icon="keyboard_arrow_down"
             class="elevation-1 pa-2"
-            hide-actions
+            hide-default-footer
           >
             <!-- <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>          -->
             <template
@@ -225,7 +225,7 @@ export default {
         {{ notice }}
         <v-btn 
           dark 
-          flat 
+          text 
           @click.native="exitSnackbar"
         >
           Close

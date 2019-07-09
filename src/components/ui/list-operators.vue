@@ -69,7 +69,7 @@ export default {
         <v-spacer />
         <v-btn
           color="primary"
-          round
+          rounded
           circle
         >
           NEW OPERATOR            
@@ -118,27 +118,27 @@ export default {
               <v-list 
                 dense 
               >
-                <v-list-tile>
-                  <v-list-tile-content>Company:</v-list-tile-content>
-                  <v-list-tile-content class="align-end">
+                <v-list-item>
+                  <v-list-item-content>Company:</v-list-item-content>
+                  <v-list-item-content class="align-end">
                     {{ props.item.displayName }}
-                  </v-list-tile-content>
-                </v-list-tile>
-                <v-list-tile>
-                  <v-list-tile-content>ISO Code:</v-list-tile-content>
-                  <v-list-tile-content class="align-end">
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-content>ISO Code:</v-list-item-content>
+                  <v-list-item-content class="align-end">
                     {{ props.item.isoCode }}
-                  </v-list-tile-content>
-                </v-list-tile>
-                <v-list-tile>
-                  <v-list-tile-content>Country:</v-list-tile-content>
-                  <v-list-tile-content class="align-end">
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-content>Country:</v-list-item-content>
+                  <v-list-item-content class="align-end">
                     {{ props.item.country }}
-                  </v-list-tile-content>
-                </v-list-tile>
-                <v-list-tile>
-                  <v-list-tile-content>PLMN Number:</v-list-tile-content>
-                  <v-list-tile-content 
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-content>PLMN Number:</v-list-item-content>
+                  <v-list-item-content 
                     v-for="pn in props.item.numberPLMN" 
                     :key="pn.key" 
                     class="align-end"
@@ -149,8 +149,8 @@ export default {
                     >
                       {{ pn }}
                     </v-badge>
-                  </v-list-tile-content>
-                </v-list-tile>
+                  </v-list-item-content>
+                </v-list-item>
               </v-list>
             </v-card>
           </v-flex>
@@ -168,7 +168,7 @@ export default {
       {{ notice }}
       <v-btn 
         dark 
-        flat 
+        text 
         @click.native="exitSnackbar"
       >
         Close

@@ -57,7 +57,7 @@ export default {
               class="green mt-5"
               dark
               large
-              round
+              rounded
               to="/profile"
             >
               เข้าสู่โปรแกรม
@@ -434,7 +434,7 @@ export default {
               class="green darken-2 mt-5"
               dark
               large
-              round
+              rounded
               href="tel:+66658958328"
             >
               TEL. 06-5895-8328
@@ -504,36 +504,36 @@ export default {
                   Mobile Connect Co., Ltd. 1111/84 Ladprao Rd., Chankasem Chatuchak Bangkok 10900
                 </v-card-text>
                 <v-list class="transparent">
-                  <v-list-tile>
-                    <v-list-tile-action>
+                  <v-list-item>
+                    <v-list-item-action>
                       <v-icon class="blue--text text--lighten-2">
                         phone
                       </v-icon>
-                    </v-list-tile-action>
-                    <v-list-tile-content>
-                      <v-list-tile-title>06 5895 8328</v-list-tile-title>
-                    </v-list-tile-content>
-                  </v-list-tile>
-                  <v-list-tile>
-                    <v-list-tile-action>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                      <v-list-item-title>06 5895 8328</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-list-item>
+                    <v-list-item-action>
                       <v-icon class="blue--text text--lighten-2">
                         place
                       </v-icon>
-                    </v-list-tile-action>
-                    <v-list-tile-content>
-                      <v-list-tile-title>กรุงเทพมหานคร, ประเทศไทย</v-list-tile-title>
-                    </v-list-tile-content>
-                  </v-list-tile>
-                  <v-list-tile>
-                    <v-list-tile-action>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                      <v-list-item-title>กรุงเทพมหานคร, ประเทศไทย</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-list-item>
+                    <v-list-item-action>
                       <v-icon class="blue--text text--lighten-2">
                         email
                       </v-icon>
-                    </v-list-tile-action>
-                    <v-list-tile-content>
-                      <v-list-tile-title>info@mobileconnect.co.th</v-list-tile-title>
-                    </v-list-tile-content>
-                  </v-list-tile>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                      <v-list-item-title>info@mobileconnect.co.th</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
                 </v-list>
               </v-card>
             </v-flex>

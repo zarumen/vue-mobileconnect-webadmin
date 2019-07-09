@@ -91,7 +91,7 @@ export default {
             :disabled="!valid"
             class="v-btn--simple"
             color="danger"
-            round
+            rounded
             @click.native="$emit('onConfirm')"
           >
             Confirm
@@ -99,7 +99,7 @@ export default {
           <v-btn 
             class="v-btn--simple"
             color="default"
-            round 
+            rounded 
             @click.native="onCancel"
           >
             Cancel

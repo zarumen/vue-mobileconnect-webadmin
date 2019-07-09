@@ -114,7 +114,7 @@ export default {
               <BaseIcon name="syncAlt" />            
             </v-btn>
             <v-btn 
-              flat 
+              text 
               icon 
               color="indigo"
             >
@@ -155,7 +155,7 @@ export default {
         {{ notice }}
         <v-btn 
           dark 
-          flat 
+          text 
           @click.native="exitSnackbar"
         >
           Close
@@ -165,6 +165,7 @@ export default {
     <!-- FAB panel -->
     <v-btn
       fab
+      large
       bottom
       right
       color="primary"
