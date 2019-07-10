@@ -8,22 +8,8 @@ fontAwesomeIconLibrary.add(
   // https://fontawesome.com/icons
   // Add new icons to this list as you need them
   // free solid
-  require('@fortawesome/free-solid-svg-icons/faAddressCard').definition,
-  require('@fortawesome/free-solid-svg-icons/faChartLine').definition,
-  require('@fortawesome/free-solid-svg-icons/faChartPie').definition,
   require('@fortawesome/free-solid-svg-icons/faSync').definition,
   require('@fortawesome/free-solid-svg-icons/faSyncAlt').definition,
-  require('@fortawesome/free-solid-svg-icons/faSitemap').definition,
-  require('@fortawesome/free-solid-svg-icons/faStoreAlt').definition,
-  require('@fortawesome/free-solid-svg-icons/faUser').definition,
-  require('@fortawesome/free-solid-svg-icons/faUserFriends').definition,
-  require('@fortawesome/free-solid-svg-icons/faUserCircle').definition,
-  require('@fortawesome/free-solid-svg-icons/faSchool').definition,
-  require('@fortawesome/free-solid-svg-icons/faSignOutAlt').definition,
-  require('@fortawesome/free-solid-svg-icons/faCaretLeft').definition,
-  require('@fortawesome/free-solid-svg-icons/faCaretRight').definition,
-  require('@fortawesome/free-solid-svg-icons/faSortNumericDown').definition,
-  require('@fortawesome/free-solid-svg-icons/faDiceSix').definition,
   // brands
   require('@fortawesome/free-solid-svg-icons/faFileExcel').definition,
   require('@fortawesome/free-solid-svg-icons/faFileCode').definition,

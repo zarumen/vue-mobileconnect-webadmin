@@ -162,18 +162,28 @@ export default {
           />
         </v-list-item-avatar>
         <v-list-item-title class="title">
-          <img src="@assets/images/logo.png" height="40px">
+          <img
+            src="@assets/images/logo.png"
+            height="40px"
+          >
         </v-list-item-title>
       </v-list-item>
       <v-divider />
-      <v-list>
+      <v-list
+        nav
+        dense
+      >
         <v-list-group
           v-if="isAdmin"
-          prepend-icon="supervised_user_circle"
           value="true"
         >
           <template v-slot:activator>
             <v-list-item>
+              <v-list-item-avatar>
+                <v-icon color="primary">
+                  supervised_user_circle
+                </v-icon>
+              </v-list-item-avatar>
               <v-list-item-title>2Way Admin</v-list-item-title>
             </v-list-item>
           </template>
@@ -197,14 +207,16 @@ export default {
           </v-list-item> 
         </v-list-group>
         <v-list-group
-          prepend-icon="message"
           value="true"
         >
           <template v-slot:activator>
             <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title>2Way User</v-list-item-title>
-              </v-list-item-content>
+              <v-list-item-avatar>
+                <v-icon color="primary">
+                  message
+                </v-icon>
+              </v-list-item-avatar>
+              <v-list-item-title>2Way User</v-list-item-title>
             </v-list-item>
           </template>
           <v-list-item
@@ -226,14 +238,16 @@ export default {
           </v-list-item> 
         </v-list-group>
         <v-list-group
-          prepend-icon="account_circle"
           value="true"
         >
           <template v-slot:activator>
             <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title>Account</v-list-item-title>
-              </v-list-item-content>
+              <v-list-item-avatar>
+                <v-icon color="primary">
+                  account_circle
+                </v-icon>
+              </v-list-item-avatar>
+              <v-list-item-title>Account</v-list-item-title>
             </v-list-item>
           </template>
           <v-list-item

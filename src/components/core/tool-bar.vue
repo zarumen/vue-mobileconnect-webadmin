@@ -11,22 +11,37 @@ export default {
         {
           name: 'profile',
           title: () => 'Logged in as ' + this.currentUser.displayName,
+          color: 'primary'
         },
         {
           name: 'logout',
           title: 'Logout',
+          color: 'primary'
         },
       ],
       loggedOutNavRoutes: [
         {
           name: 'login',
           title: 'Login',
+          color: 'primary'
         },
       ],
     }
   },
   computed: {
     ...authComputed,
+    loggedInRoute () {
+      return (this.$route.name ==='home') ? this.loggedInNavRoutes.map(route => {
+          route.color = 'white'
+        return route
+      }) : this.loggedInNavRoutes
+    },
+    loggedOutRoute () {
+      return (this.$route.name ==='home') ? this.loggedOutNavRoutes.map(route => {
+          route.color = 'white'
+        return route
+      }) : this.loggedOutNavRoutes
+    }
   },
   methods: {
     ...mapMutations('app', ['setDrawer', 'toggleDrawer']),
@@ -54,7 +69,7 @@ export default {
     id="coretoolbar"
     v-scroll="onScroll"
     :color="!isScrolling ? 'transparent' : 'green lighten-3'"
-    :text="!isScrolling"
+    :flat="!isScrolling"
     app
     dark
     class="elevation-0"
@@ -69,11 +84,11 @@ export default {
     <v-spacer />
     <NavBarRoutes
       v-if="loggedIn"
-      :routes="loggedInNavRoutes"
+      :routes="loggedInRoute"
     />
     <NavBarRoutes
       v-else
-      :routes="loggedOutNavRoutes"
+      :routes="loggedOutRoute"
     />
   </v-app-bar>
 </template>

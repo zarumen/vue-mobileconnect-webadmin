@@ -116,8 +116,7 @@ export default {
                 />
               </span>
               <v-spacer />
-              <v-btn 
-                class="v-btn--simple"
+              <v-btn
                 color="primary"
                 circle
                 icon
@@ -127,7 +126,7 @@ export default {
               </v-btn>
             </v-card-title>
             <v-card-text>
-              <v-list three-line>
+              <v-list two-line>
                 <template
                   v-for="(item,index) in filteredItems"
                 >
@@ -135,23 +134,24 @@ export default {
                     :key="index"
                     @click.stop="clickedSelectedCampaignReports(item.id)"
                   >
-                    <v-list-item-action>
+                    <v-list-item-avatar>
                       <v-tooltip
                         top
                         content-class="top"
                       >
-                        <v-btn
-                          slot="activator"
-                          class="v-btn--simple"
-                          color="secondary"
-                          icon
-                          @click.stop="createExportJob(item.id, item.campaignCode)"
-                        >
-                          <v-icon>cloud_download</v-icon>
-                        </v-btn>
+                        <template v-slot:activator="{ on }">
+                          <v-btn 
+                            color="secondary"
+                            icon
+                            v-on="on"
+                            @click.stop="createExportJob(item.id, item.campaignCode)"
+                          >
+                            <v-icon>cloud_download</v-icon>
+                          </v-btn>
+                        </template>
                         <span>Download New File From S3</span>
                       </v-tooltip>
-                    </v-list-item-action>
+                    </v-list-item-avatar>
                     <v-list-item-content class="ma-2">
                       <div style="width: 100%">
                         <v-layout 
@@ -193,7 +193,6 @@ export default {
               </span>
               <v-spacer />
               <v-btn 
-                class="v-btn--simple"
                 color="primary"
                 circle
                 icon
@@ -222,7 +221,7 @@ export default {
                       :key="index"
                       @click="clicked"
                     >
-                      <!-- <v-list-item-avatar>
+                      <v-list-item-avatar>
                         <v-chip
                           color="light-green white--text"
                           small
@@ -230,7 +229,7 @@ export default {
                         >
                           {{ item.type }}
                         </v-chip>
-                      </v-list-item-avatar> -->
+                      </v-list-item-avatar>
                       <v-list-item-content 
                         class="ma-2"
                       >
@@ -244,29 +243,31 @@ export default {
                           top
                           content-class="top"
                         >
-                          <v-btn
-                            slot="activator"
-                            class="v-btn--simple"
-                            color="primary"
-                            icon
-                            @click.stop="downloadExportFile(index, item.fileName)"
-                          >
-                            <v-icon>save_alt</v-icon>
-                          </v-btn>
+                          <template v-slot:activator="{ on }">
+                            <v-btn 
+                              color="primary"
+                              icon
+                              v-on="on"
+                              @click.stop="downloadExportFile(index, item.fileName)"
+                            >
+                              <BaseIcon name="fileExcel" /> 
+                            </v-btn>
+                          </template>
                           <span>Download Recent File</span>
                         </v-tooltip>
                         <v-tooltip
                           top
                           content-class="top"
                         >
-                          <v-btn
-                            slot="activator"
-                            class="v-btn--simple"
-                            color="danger"
-                            icon
-                          >
-                            <v-icon>close</v-icon>
-                          </v-btn>
+                          <template v-slot:activator="{ on }">
+                            <v-btn
+                              color="red"
+                              icon
+                              v-on="on"
+                            >
+                              <v-icon>close</v-icon>
+                            </v-btn>
+                          </template>
                           <span>Deleted Recent File</span>
                         </v-tooltip>
                       </v-list-item-action>

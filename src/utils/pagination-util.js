@@ -51,7 +51,7 @@ export function setPagination (commit, page, totalItems, pages, rowsPerPage) {
     page,
     totalItems,
     pages,
-    rowsPerPage: rowsPerPage || DEFAULT_ROW_PER_PAGE
+    itemsPerPage: rowsPerPage || DEFAULT_ROW_PER_PAGE
   })
 }
 
@@ -80,5 +80,5 @@ export function commitPagination (commit, items) {
   const pages = Math.ceil(totalItems / DEFAULT_ROW_PER_PAGE)
 
   commit('setItems', items)
-  commit('setPagination', { totalItems, pages, page: 1, rowsPerPage: DEFAULT_ROW_PER_PAGE})
+  commit('setPagination', { totalItems, pages, page: 1, itemsPerPage: DEFAULT_ROW_PER_PAGE})
 }

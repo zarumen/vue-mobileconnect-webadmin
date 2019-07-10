@@ -24,7 +24,7 @@ export default {
     // to return an array of children, rather than a single
     // root node.
     return props.routes.map(route => (
-      <VBtn text key={route.name} to={route}>
+      <VBtn text color={route.color} key={route.name} to={route}>
         {getRouteTitle(route)}
       </VBtn>
     ))

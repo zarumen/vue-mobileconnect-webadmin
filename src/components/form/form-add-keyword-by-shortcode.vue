@@ -216,7 +216,7 @@ export default {
                     >
                       <v-chip
                         :key="JSON.stringify(idata.item)"
-                        :selected="idata.selected"
+                        :input-value="idata.selected"
                         color="deep-purple"
                         close
                         @input="idata.parent.selectItem(idata.item)"
@@ -268,7 +268,7 @@ export default {
                   >
                     <v-chip
                       :color="`${item.color} lighten-3`"
-                      :selected="selected"
+                      :input-value="selected"
                       label
                       small
                     >

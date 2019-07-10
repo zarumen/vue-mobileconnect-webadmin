@@ -4,12 +4,12 @@ export default [
   {
     path: '/',
     name: 'home',
-    component: () => lazyLoadView(import('@views/home')),
+    component: () => lazyLoadView(import(/* webpackPrefetch: true */ '@views/home')),
   },
   {
     path: '/login',
     name: 'login',
-    component: () => lazyLoadView(import('@views/login')),
+    component: () => lazyLoadView(import(/* webpackPrefetch: true */ '@views/login')),
     meta: {
       beforeResolve(routeTo, routeFrom, next) {
         console.log('render login page!')
@@ -27,7 +27,7 @@ export default [
   {
     path: '/profile',
     name: 'profile',
-    component: () => lazyLoadView(import('@views/profile')),
+    component: () => lazyLoadView(import(/* webpackPrefetch: true */ '@views/profile')),
     meta: {
       authRequired: true,
       beforeEach: (routeTo, routeFrom, next) => {

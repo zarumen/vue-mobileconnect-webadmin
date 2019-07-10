@@ -1,7 +1,11 @@
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const webpack = require('webpack')
 const appConfig = require('./src/app.config')
 
 module.exports = {
+  chainWebpack: config => {
+    config.plugins.delete('prefetch')
+  },
   transpileDependencies:['vuetify'],
   configureWebpack: {
     // We provide the app's title in Webpack's name field, so that
@@ -19,6 +23,8 @@ module.exports = {
         analyzerMode: process.env.ANALYZE ? 'static' : 'disabled',
         openAnalyzer: process.env.CI !== 'true',
       }),
+      // eslint-disable-next-line no-useless-escape
+      new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en|th/)
     ],
     devtool: 'inline-source-map',
     optimization: {

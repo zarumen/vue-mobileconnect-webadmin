@@ -4,6 +4,7 @@ import { operatorComputed, operatorMethods } from '@state/helpers'
 export default {
   data: () => ({
     mutablePagination: '',
+    expand: false,
     left: true,
     timeout: 2000,
     showed: true,
@@ -38,7 +39,7 @@ export default {
       return this.getAllOperators()
     },
     toTitleCase (string) {
-      return string.replace(/\w\S*/g, (text) => text.charAt(0).toUpperCase() + text.substr(1).toLowerCase())
+      return string.replace(/\w\S*/g, (text) => text.toUpperCase())
     },
     exitSnackbar () {
       this.$store.commit('shortcodes/setSnackbar', { snackbar: false })
@@ -94,66 +95,83 @@ export default {
       >
         <v-data-iterator
           :items="items"
-          :pagination.sync="mutablePagination"
-          content-tag="v-layout"
-          row
-          wrap
+          item-key="displayName"
+          :items-per-page="4"
+          :single-expand="expand"
+          hide-default-footer
         >
-          <v-flex
-            slot="item"
-            slot-scope="props"
-            xs12
-            sm6
-            md4
-            lg3
-          >
-            <v-card>
-              <v-card-title 
-                class="headline" 
-                avatar
+          <template v-slot:default="{ items, isExpanded, expand }">
+            <v-layout row wrap>
+              <v-flex
+                v-for="item in items"
+                :key="item.displayName"
+                xs12
+                sm6
+                md4
+                lg3
               >
-                {{ toTitleCase(props.item.operator) }}
-              </v-card-title>
-              <v-divider />
-              <v-list 
-                dense 
-              >
-                <v-list-item>
-                  <v-list-item-content>Company:</v-list-item-content>
-                  <v-list-item-content class="align-end">
-                    {{ props.item.displayName }}
-                  </v-list-item-content>
-                </v-list-item>
-                <v-list-item>
-                  <v-list-item-content>ISO Code:</v-list-item-content>
-                  <v-list-item-content class="align-end">
-                    {{ props.item.isoCode }}
-                  </v-list-item-content>
-                </v-list-item>
-                <v-list-item>
-                  <v-list-item-content>Country:</v-list-item-content>
-                  <v-list-item-content class="align-end">
-                    {{ props.item.country }}
-                  </v-list-item-content>
-                </v-list-item>
-                <v-list-item>
-                  <v-list-item-content>PLMN Number:</v-list-item-content>
-                  <v-list-item-content 
-                    v-for="pn in props.item.numberPLMN" 
-                    :key="pn.key" 
-                    class="align-end"
+                <v-card>
+                  <v-card-title 
+                    class="headline align-text-center" 
+                    avatar
                   >
-                    <v-badge
-                      small  
-                      class="deep-purple lighten-1 white--text caption font-weight-thin"
-                    >
-                      {{ pn }}
-                    </v-badge>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list>
-            </v-card>
-          </v-flex>
+                    {{ toTitleCase(item.operator) }}
+                  </v-card-title>
+                  <v-switch
+                    color="primary"
+                    :input-value="isExpanded(item)"
+                    :label="isExpanded(item) ? 'Expanded' : 'Closed'"
+                    class="pl-3 mt-0"
+                    @change="(v) => expand(item, v)"
+                  ></v-switch>
+                  <v-divider />
+                  <v-list
+                    v-if="isExpanded(item)"
+                    dense 
+                  >
+                    <v-list-item>
+                      <v-list-item-content>Company:</v-list-item-content>
+                      <v-list-item-content class="align-end">
+                        {{ item.displayName }}
+                      </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-list-item-content>ISO Code:</v-list-item-content>
+                      <v-list-item-content class="align-end">
+                        {{ item.isoCode }}
+                      </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-list-item-content>Country:</v-list-item-content>
+                      <v-list-item-content class="align-end">
+                        {{ item.country }}
+                      </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-list-item-content>PLMN Number:</v-list-item-content>
+                      <v-list-item-content 
+                        class="align-end"
+                      >
+                        <v-chip-group
+                          active-class="primary--text"
+                          next-icon="arrow_right"
+                          prev-icon="arrow_left"
+                          mandatory
+                        >
+                          <v-chip
+                            v-for="pn in item.numberPLMN" 
+                            :key="pn.key" 
+                            x-small
+                            v-text="pn"
+                          />
+                        </v-chip-group>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list>
+                </v-card>
+              </v-flex>
+            </v-layout>
+          </template>
         </v-data-iterator>
       </v-container>
     </base-card>

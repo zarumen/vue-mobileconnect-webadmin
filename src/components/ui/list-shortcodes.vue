@@ -217,8 +217,13 @@ export default {
       >
         <v-tabs
           v-model="tabs"
-          color="transparent"
+          background-color="transparent"
           slider-color="deep-purple"
+          dark
+          next-icon="arrow_right"
+          prev-icon="arrow_left"
+          show-arrows
+          grow
         >
           <span
             class="subheading font-weight-light mr-3"
@@ -291,8 +296,8 @@ export default {
         </span>
         <v-spacer />
         <span v-if="tabs === 0">
-          <v-btn  
-            class="v-btn--simple"
+          <v-btn
+            dark
             color="light-green darken-2"
             rounded
             @click.stop="addShortcodeDialog = !addShortcodeDialog"
@@ -300,7 +305,6 @@ export default {
             +SHORTCODE            
           </v-btn>
           <v-btn 
-            class="v-btn--simple"
             color="secondary"
             circle
             icon
@@ -313,7 +317,7 @@ export default {
         </span>
         <span v-if="tabs === 1">
           <v-btn
-            class="v-btn--simple"
+            dark
             color="light-green darken-2"
             rounded
             @click.stop="addKeywordByShortcodeDialog = !addKeywordByShortcodeDialog"
@@ -321,7 +325,6 @@ export default {
             +TEST Keyword         
           </v-btn>
           <v-btn
-            class="v-btn--simple"
             color="secondary"
             circle
             icon
@@ -334,15 +337,14 @@ export default {
         </span>
         <span v-if="tabs === 2">
           <v-btn
-            class="v-btn--simple"
+            dark
             color="deep-purple darken-2"
             rounded
             @click.stop="addKeywordReservedDialog = !addKeywordReservedDialog"
           >
             +KEY RESERVED         
           </v-btn>
-          <v-btn 
-            class="v-btn--simple"
+          <v-btn
             color="primary"
             circle
             icon
@@ -378,19 +380,18 @@ export default {
                     &nbsp;Sender Name:
                   </v-list-item-action-text>
                   <v-list-item-subtitle class="body-2 font-weight-thin">
-                    <span
-                      v-for="i in item0.sendername"
-                      :key="i"
-                    >
+                    <v-chip-group dark>
                       <v-chip
-                        small  
-                        class="mb-2 light-green darken-2 white--text caption font-weight-thin"
+                        v-for="i in item0.sendername"
+                        :key="i"
+                        x-small
+                        class="mb-2 light-green"
                         @click.stop="clickedSenderName(item0)"
                       >
                         {{ i }}
                       </v-chip>
                       &nbsp;
-                    </span>
+                    </v-chip-group>
                   </v-list-item-subtitle>
                 </v-list-item-content>
                 <v-list-item-action>
@@ -399,40 +400,36 @@ export default {
                     class="py-2"
                   >
                     <v-btn
-                      fab
-                      class="v-btn--simple"
-                      small
+                      text
+                      x-small
                       :color="checkedOperatorNameColor('ais', item0)"
                       @click.stop="clickedOperator('ais', item0)"
                     >
-                      AIS
+                      <small>AIS</small>
                     </v-btn>
                     <v-btn
-                      fab
-                      class="v-btn--simple"
-                      small
+                      text
+                      x-small
                       :color="checkedOperatorNameColor('cat', item0)"
                       @click.stop="clickedOperator('cat', item0)"
                     >
-                      CAT
+                      <small>CAT</small>
                     </v-btn>
                     <v-btn
-                      fab
-                      class="v-btn--simple"
-                      small
+                      text
+                      x-small
                       :color="checkedOperatorNameColor('dtac', item0)"
                       @click.stop="clickedOperator('dtac', item0)"
                     >
-                      DTAC
+                      <small>DTAC</small>
                     </v-btn>
                     <v-btn
-                      fab
-                      class="v-btn--simple"
-                      small
+                      text
+                      x-small
                       :color="checkedOperatorNameColor('true', item0)"
                       @click.stop="clickedOperator('true', item0)"
                     >
-                      TRUE
+                      <small>TRUE</small>
                     </v-btn>
                   </v-flex>
                 </v-list-item-action>

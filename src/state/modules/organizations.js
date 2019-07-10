@@ -56,7 +56,7 @@ export const mutations = {
     state.brandList = newValue
   },
   setPagination (state, pagination) {
-    state.pagination = pagination
+    assign(state.pagination, pagination)
   },
   // update Page
   setPage (state, paginationElement) {
