@@ -37,7 +37,7 @@ export default {
 
 .active a {
   font-weight: 600;
-  color: $color-link-text-active;
+  // color: $color-link-text-active;
   text-decoration: none;
   cursor: default;
 }

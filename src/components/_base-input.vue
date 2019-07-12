@@ -38,7 +38,7 @@ export default {
 @import '@design';
 
 .input {
-  @extend %typography-small;
+  // @extend %typography-small;
 
   display: block;
   width: 100%;

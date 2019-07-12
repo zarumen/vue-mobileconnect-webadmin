@@ -19,7 +19,7 @@
     </v-card>
     <div class="text-xs-right">
       <p
-        class="category grey--text font-weight-light"
+        class="category blue-grey--text font-weight-light"
         v-text="title"
       />
       <h3 class="title display-1 font-weight-medium">

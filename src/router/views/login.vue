@@ -66,7 +66,10 @@ export default {
             wrap
           >
             <v-flex>
-              <img src="@assets/images/logo.png">
+              <v-img 
+                class="mx-2" 
+                :src="require('@assets/images/logo.png')" 
+              />
             </v-flex>
             <v-flex
               class="title"

@@ -24,7 +24,7 @@ export default {
       headers: [
         {
           text: 'User Level',
-          left: true,
+          align: 'start',
           value: 'organizationAuth'
         },
         { text: 'First Name', value: 'firstName' },

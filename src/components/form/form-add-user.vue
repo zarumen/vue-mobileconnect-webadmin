@@ -299,7 +299,7 @@ export default {
                     >
                       <v-chip
                         :key="JSON.stringify(idata.item)"
-                        :selected="idata.selected"
+                        :input-value="idata.selected"
                         close
                         @input="idata.parent.selectItem(idata.item)"
                       >
@@ -342,7 +342,7 @@ export default {
                     >
                       <v-chip
                         :key="JSON.stringify(idata.item)"
-                        :selected="idata.selected"
+                        :input-value="idata.selected"
                         close
                         @input="idata.parent.selectItem(idata.item)"
                       >

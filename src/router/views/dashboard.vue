@@ -10,7 +10,7 @@ export default {
   },
   data () {
     return {
-      today: new Date(),
+      today: new Date().toString(),
       test: 'test in data',
       headers: [
         {
@@ -334,8 +334,7 @@ export default {
             <v-layout>
               <v-flex>
                 <v-sheet height="500">
-                  <!-- <v-calendar
-                    :now="today"
+                  <v-calendar
                     :value="today"
                     color="orange"
                   >
@@ -393,7 +392,7 @@ export default {
                         </v-menu>
                       </template>
                     </template>
-                  </v-calendar> -->
+                  </v-calendar>
                 </v-sheet>
               </v-flex>
             </v-layout>
@@ -483,15 +482,17 @@ export default {
               <v-tab-item :value="0">
                 <v-list three-line>
                   <v-list-item @click="complete(0)">
-                    <v-list-item-action>
-                      <v-checkbox
-                        :value="list[0]"
-                        color="green"
-                      />
-                    </v-list-item-action>
-                    <v-list-item-title>
-                      Sign contract for "What are conference organized afraid of?"
-                    </v-list-item-title>
+                    <template v-slot:default="{ active, toggle }">
+                      <v-list-item-action>
+                        <v-checkbox
+                          :value="list[0]"
+                          color="green"
+                        />
+                      </v-list-item-action>
+                      <v-list-item-title>
+                        Sign contract for "What are conference organized afraid of?"
+                      </v-list-item-title>
+                    </template>
                     <div class="d-flex">
                       <v-tooltip
                         top

@@ -66,7 +66,7 @@ export default {
       <v-card
         v-if="!$slots.offset"
         :color="color"
-        :class="`elevation-${elevation}`"
+        :class="`elevation-${elevation} pa-2`"
         class="v-card--material__header"
         dark
       >
@@ -76,11 +76,11 @@ export default {
         />
         <span v-else>
           <h4
-            class="title white--text font-weight-medium mb-2"
+            class="title white--text font-weight-medium ma-2"
             v-text="title"
           />
           <p
-            class="category font-weight-thin"
+            class="category font-weight-thin mx-2"
             v-text="text"
           />
         </span>

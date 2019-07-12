@@ -128,15 +128,7 @@ export default {
       hide-default-footer
     >
       <!-- TODO: implement paginations (in pagination Utils) and render Function NEW! -->
-      <template
-        v-slot:header="{ header }"
-      >
-        <span
-          class="subheading font-weight-light light-green--text text--darken-1"
-          v-text="header.text"
-        />
-      </template>
-      <template 
+      <!-- <template 
         v-slot:item="{ item }"
         class="body-2" 
       >
@@ -145,7 +137,7 @@ export default {
           :key="index"
         >
           <small v-if="header.text!=='Widget'">
-            {{ renderData(props.item, header) }}
+            {{ renderData(item, header) }}
           </small>
           <small v-else>
             <router-link 
@@ -192,7 +184,7 @@ export default {
             Sorry, nothing to display here :(
           </p>
         </span>
-      </template>
+      </template> -->
     </v-data-table>
     <!-- footer page running page number -->
     <v-flex
@@ -212,7 +204,21 @@ export default {
   </div>
 </template>
 
-<style lang="scss" module scoped>
-@import '@design';
+<style lang="scss">
+
+.v-data-table-header th {
+  font-size: 1.2em;
+  font-weight: 500;
+  color: #8cc249 !important;
+}
+
+.v-data-table-header th.sortable.active {
+  color: #33ac41 !important;
+}
+
+.v-data-table__mobile-row__header {
+  font-weight: 500;
+  color: #8cc249 !important;
+}
 
 </style>

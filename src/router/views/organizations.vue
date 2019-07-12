@@ -21,10 +21,10 @@ export default {
     headers: [
       {
         text: 'Level',
-        left: true,
+        align: 'start',
         value: 'organizationAuth'
       },
-      { text: 'Company',left: true, value: 'organizationLevel1Name' },
+      { text: 'Company',align: 'start', value: 'organizationLevel1Name' },
       { text: 'Department', value: 'organizationLevel2Name' },
       { text: 'Brand', value: 'organizationLevel3Name' },
     ],

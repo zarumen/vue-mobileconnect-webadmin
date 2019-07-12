@@ -260,7 +260,7 @@ export default {
                     >
                       <v-chip
                         :color="`${item.color} lighten-3`"
-                        :selected="selected"
+                        :input-value="selected"
                         label
                         small
                       >

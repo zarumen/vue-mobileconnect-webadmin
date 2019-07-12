@@ -71,7 +71,6 @@ export default {
     :color="!isScrolling ? 'transparent' : 'green lighten-3'"
     :flat="!isScrolling"
     app
-    dark
     class="elevation-0"
   >
     <v-app-bar-nav-icon

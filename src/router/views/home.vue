@@ -29,7 +29,7 @@ export default {
     <div>
       <section>
         <v-parallax
-          :src="image"
+          :src="`${image}`"
           :gradient="`to top, rgba(13, 3, 29, .85), rgba(25, 25, 38, .85)`"
           height="800"
           style="top: -80px;"
@@ -473,7 +473,7 @@ export default {
                         <img src="https://img.icons8.com/color/48/000000/facebook-new.png">
                       </a>
                       <a href="http://line.me/R/ti/p/%40mobileconnect">
-                        <img src="https://img.icons8.com/color/48/000000/facebook-messenger.png">
+                        <img src="https://img.icons8.com/color/48/000000/line-me.png">
                       </a>
                       <a href="http://mobileconnect.co.th/#">
                         <img src="https://img.icons8.com/color/48/000000/twitter-squared.png">

@@ -220,7 +220,7 @@ export default {
                   >
                     <v-chip
                       :key="JSON.stringify(idata.item)"
-                      :selected="idata.selected"
+                      :input-value="idata.selected"
                       color="primary"
                       text-color="white"
                       close
@@ -283,7 +283,7 @@ export default {
                   >
                     <v-chip
                       :key="JSON.stringify(idata.item)"
-                      :selected="idata.selected"
+                      :input-value="idata.selected"
                       color="primary"
                       text-color="white"
                       close

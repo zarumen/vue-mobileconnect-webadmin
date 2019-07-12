@@ -101,7 +101,10 @@ export default {
           hide-default-footer
         >
           <template v-slot:default="{ items, isExpanded, expand }">
-            <v-layout row wrap>
+            <v-layout
+              row
+              wrap
+            >
               <v-flex
                 v-for="item in items"
                 :key="item.displayName"
@@ -123,7 +126,7 @@ export default {
                     :label="isExpanded(item) ? 'Expanded' : 'Closed'"
                     class="pl-3 mt-0"
                     @change="(v) => expand(item, v)"
-                  ></v-switch>
+                  />
                   <v-divider />
                   <v-list
                     v-if="isExpanded(item)"
