@@ -253,6 +253,7 @@ exports.everyFiveMinuteJob = functions.pubsub
   const queryProductionState = admin
     .firestore()
     .collection("campaignValidate")
+    .where("campaignState", "==", "production")
     .where("campaignDateStart", ">", now)
 
   const tasks = await queryTestState.get();
