@@ -121,14 +121,14 @@ export default {
 </script>
 <style>
   .superbig {
+    font-family: "Roboto",sans-serif;
     font-size: 70px;
     color: #1CABE2;
-    font-family: "Roboto",sans-serif;
   }
   .big {
+    font-family: "Roboto",sans-serif;
     font-size: 30px;
     color: #1CABE2;
-    font-family: "Roboto",sans-serif;
     text-align: center;
   }
   .area {
