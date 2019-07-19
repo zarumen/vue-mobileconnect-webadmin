@@ -68,15 +68,14 @@ export default {
           /> -->
         </span>
         <v-spacer />
-        <v-btn
+        <base-button
           color="primary"
           rounded
           circle
         >
           NEW OPERATOR            
-        </v-btn>
-        <v-btn 
-          class="v-btn--simple"
+        </base-button>
+        <base-button 
           color="primary"
           circle
           icon
@@ -85,7 +84,7 @@ export default {
           <v-icon>
             refresh
           </v-icon>
-        </v-btn>
+        </base-button>
       </v-card-title>
       <!-- Insert in Base-Table Component -->
       <v-container
@@ -134,7 +133,7 @@ export default {
                   >
                     <v-list-item>
                       <v-list-item-content>Company:</v-list-item-content>
-                      <v-list-item-content class="align-end">
+                      <v-list-item-content class="opsname align-end">
                         {{ item.displayName }}
                       </v-list-item-content>
                     </v-list-item>
@@ -187,14 +186,21 @@ export default {
       :color="mode"
     >
       {{ notice }}
-      <v-btn 
+      <base-button 
         dark 
         text 
         @click.native="exitSnackbar"
       >
         Close
-      </v-btn>
+      </base-button>
     </v-snackbar>
   </base-helper-offset>
 </template>
 
+<style lang="scss">
+  .opsname {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style>

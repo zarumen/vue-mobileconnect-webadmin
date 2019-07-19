@@ -53,7 +53,7 @@ export default {
               Mobile Connect
             </div>
             <!--               <div class="subheading mb-3 text-xs-center">by Mobile Connect</div> -->
-            <v-btn
+            <base-button
               class="green mt-5"
               dark
               large
@@ -61,7 +61,7 @@ export default {
               to="/profile"
             >
               เข้าสู่โปรแกรม
-            </v-btn>
+            </base-button>
           </v-layout>
         </v-parallax>
       </section>
@@ -430,7 +430,7 @@ export default {
               หากสนใจและต้องการสอบถามข้อมูลเพิ่มเติม ติดต่อฝ่ายขาย
             </div>
             <em>One Stop Service : เราคือ ผู้นำด้านให้บริการ 2Ways SMS ที่ดีที่สุด</em>
-            <v-btn
+            <base-button
               class="green darken-2 mt-5"
               dark
               large
@@ -438,7 +438,7 @@ export default {
               href="tel:+66658958328"
             >
               TEL. 06-5895-8328
-            </v-btn>
+            </base-button>
           </v-layout>
         </v-parallax>
       </section>

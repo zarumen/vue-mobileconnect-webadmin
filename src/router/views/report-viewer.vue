@@ -132,15 +132,14 @@ export default {
               />
             </span>
             <v-spacer />
-            <v-btn 
-              class="v-btn--simple"
+            <base-button
               color="primary"
               circle
               icon
               @click.native="reloadData()"
             >
               <BaseIcon name="syncAlt" />            
-            </v-btn>
+            </base-button>
           </v-card-title>
           <v-card-text>
             <v-list three-line>
@@ -157,15 +156,14 @@ export default {
                       content-class="top"
                     >
                       <template v-slot:activator="{ on }">
-                        <v-btn
-                          class="v-btn--simple"
+                        <base-button
                           color="secondary"
                           icon
                           v-on="on"
                           @click.stop="createExportJob(item.id, item.campaignCode)"
                         >
                           <v-icon>cloud_download</v-icon>
-                        </v-btn>
+                        </base-button>
                       </template>
                       <span>Download New File From S3</span>
                     </v-tooltip>
@@ -175,15 +173,14 @@ export default {
                       content-class="top"
                     >
                       <template v-slot:activator="{ on }">
-                        <v-btn
-                          class="v-btn--simple"
+                        <base-button
                           color="secondary"
                           icon
                           :loading="loading"
                           v-on="on"
                         >
                           <v-icon>cloud_download</v-icon>
-                        </v-btn>
+                        </base-button>
                       </template>
                       <span>Downloading...</span>
                     </v-tooltip>
@@ -223,13 +220,13 @@ export default {
         :color="mode"
       >
         {{ notice }}
-        <v-btn 
+        <base-button 
           dark 
           text 
           @click.native="exitSnackbar"
         >
           Close
-        </v-btn>
+        </base-button>
       </v-snackbar>
     </v-container>
   </Layout>

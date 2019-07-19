@@ -122,7 +122,7 @@ export default {
 
 <template>
   <Layout>
-    <v-btn
+    <base-button
       large
       class="mx-0 font-weight-light"
       color="success"
@@ -134,12 +134,11 @@ export default {
         code
       </v-icon>
       <span>See all icons</span>
-    </v-btn>
+    </base-button>
     <div>
-      <v-btn
+      <base-button
         v-model="imageName"
         color="secondary"
-        class="v-btn--simple"
         rounded
         @click="pickFile"
       >
@@ -147,7 +146,7 @@ export default {
           attach_file
         </v-icon>
         Upload Image
-      </v-btn>
+      </base-button>
       <v-text-field
         v-model="imageName"
         label="Select Image"
@@ -168,7 +167,7 @@ export default {
       >
     </div>
     <div>
-      <v-btn
+      <base-button
         color="primary"
         class="white--text"
         rounded
@@ -182,7 +181,7 @@ export default {
           attachment
         </v-icon>
         Add File
-      </v-btn>
+      </base-button>
       <input
         ref="xls"
         type="file"
@@ -193,7 +192,7 @@ export default {
       {{ fileXLSName }}
     </div>
     <div>
-      <v-btn
+      <base-button
         color="primary"
         rounded
         fab
@@ -204,7 +203,7 @@ export default {
         >
           cloud_upload
         </v-icon>
-      </v-btn>
+      </base-button>
     </div>
     <div>
       <BaseUploadfield
@@ -215,14 +214,14 @@ export default {
         @formData="updatearrayUrl"
       />
     </div>
-    <v-btn
+    <base-button
       color="blue-grey"
       class="white--text"
       rounded
       @click="couponGenDialog = !couponGenDialog"
     >
       Generated
-    </v-btn>
+    </base-button>
     <v-dialog
       v-model="couponGenDialog"
       max-width="500px"
@@ -263,22 +262,21 @@ export default {
 
         <v-card-actions>
           <v-spacer />
-          <v-btn
-            class="v-btn--simple" 
+          <base-button
             color="primary"
             rounded
             @click="couponGenDialog = !couponGenDialog"
           >
             Cancel
-          </v-btn>
-          <v-btn
+          </base-button>
+          <base-button
             class=""
             color="primary"
             rounded
             @click="clickedGen"
           >
             Generated
-          </v-btn>
+          </base-button>
         </v-card-actions>
       </v-card>
     </v-dialog>

@@ -296,15 +296,15 @@ export default {
         </span>
         <v-spacer />
         <span v-if="tabs === 0">
-          <v-btn
+          <base-button
             dark
             color="light-green darken-2"
             rounded
             @click.stop="addShortcodeDialog = !addShortcodeDialog"
           >
             +SHORTCODE            
-          </v-btn>
-          <v-btn 
+          </base-button>
+          <base-button 
             color="secondary"
             circle
             icon
@@ -313,18 +313,18 @@ export default {
             <v-icon>
               refresh
             </v-icon>
-          </v-btn>
+          </base-button>
         </span>
         <span v-if="tabs === 1">
-          <v-btn
+          <base-button
             dark
             color="light-green darken-2"
             rounded
             @click.stop="addKeywordByShortcodeDialog = !addKeywordByShortcodeDialog"
           >
             +TEST Keyword         
-          </v-btn>
-          <v-btn
+          </base-button>
+          <base-button
             color="secondary"
             circle
             icon
@@ -333,18 +333,18 @@ export default {
             <v-icon>
               refresh
             </v-icon>      
-          </v-btn>
+          </base-button>
         </span>
         <span v-if="tabs === 2">
-          <v-btn
+          <base-button
             dark
             color="deep-purple darken-2"
             rounded
             @click.stop="addKeywordReservedDialog = !addKeywordReservedDialog"
           >
             +KEY RESERVED         
-          </v-btn>
-          <v-btn
+          </base-button>
+          <base-button
             color="primary"
             circle
             icon
@@ -353,7 +353,7 @@ export default {
             <v-icon>
               refresh
             </v-icon>      
-          </v-btn>
+          </base-button>
         </span>
       </v-card-title>
 
@@ -399,38 +399,38 @@ export default {
                     xs12 
                     class="py-2"
                   >
-                    <v-btn
+                    <base-button
                       text
                       x-small
                       :color="checkedOperatorNameColor('ais', item0)"
                       @click.stop="clickedOperator('ais', item0)"
                     >
                       <small>AIS</small>
-                    </v-btn>
-                    <v-btn
+                    </base-button>
+                    <base-button
                       text
                       x-small
                       :color="checkedOperatorNameColor('cat', item0)"
                       @click.stop="clickedOperator('cat', item0)"
                     >
                       <small>CAT</small>
-                    </v-btn>
-                    <v-btn
+                    </base-button>
+                    <base-button
                       text
                       x-small
                       :color="checkedOperatorNameColor('dtac', item0)"
                       @click.stop="clickedOperator('dtac', item0)"
                     >
                       <small>DTAC</small>
-                    </v-btn>
-                    <v-btn
+                    </base-button>
+                    <base-button
                       text
                       x-small
                       :color="checkedOperatorNameColor('true', item0)"
                       @click.stop="clickedOperator('true', item0)"
                     >
                       <small>TRUE</small>
-                    </v-btn>
+                    </base-button>
                   </v-flex>
                 </v-list-item-action>
               </v-list-item>
@@ -614,14 +614,14 @@ export default {
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn
+          <base-button
             color="green darken-1"
             rounded
             text
             @click="dialog = false"
           >
             Agree
-          </v-btn>
+          </base-button>
         </v-card-actions>
       </v-card>
     </v-dialog>

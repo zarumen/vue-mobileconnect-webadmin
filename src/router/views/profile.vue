@@ -102,14 +102,14 @@ export default {
               <h6 class="category text-gray font-weight-thin mb-3">
                 {{ user.jobPosition }}
               </h6>
-              <v-btn
+              <base-button
                 color="primary"
                 rounded
                 class="font-weight-light"
                 @click="dialog=!dialog"
               >
                 Change Name
-              </v-btn>
+              </base-button>
             </v-card-text>
           </base-card>
         </v-flex>
@@ -215,21 +215,20 @@ export default {
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn
-            class="v-btn--simple"
+          <base-button
             rounded 
             color="primary" 
             @click="dialog=false"
           >
             CANCEL
-          </v-btn>
-          <v-btn
+          </base-button>
+          <base-button
             rounded
             color="primary"
             @click="save()"
           >
             SAVE
-          </v-btn>
+          </base-button>
         </v-card-actions>
       </v-card>
     </v-dialog>

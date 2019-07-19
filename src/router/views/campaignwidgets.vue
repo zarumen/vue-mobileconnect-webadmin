@@ -133,16 +133,15 @@ export default {
               />
             </span>
             <v-spacer />
-            <v-btn 
-              class="v-btn--simple"
+            <base-button 
               color="primary"
               circle
               icon
               @click.native="reloadData()"
             >
               <BaseIcon name="syncAlt" />            
-            </v-btn>
-            <v-btn 
+            </base-button>
+            <base-button 
               text 
               icon 
               color="indigo"
@@ -150,7 +149,7 @@ export default {
               <v-icon>
                 print
               </v-icon>
-            </v-btn>
+            </base-button>
           </v-card-title>
           <v-data-table
             :headers="headers"
@@ -223,13 +222,13 @@ export default {
         :color="mode"
       >
         {{ notice }}
-        <v-btn 
+        <base-button 
           dark 
           text 
           @click.native="exitSnackbar"
         >
           Close
-        </v-btn>
+        </base-button>
       </v-snackbar>
     </v-container>
   </Layout>

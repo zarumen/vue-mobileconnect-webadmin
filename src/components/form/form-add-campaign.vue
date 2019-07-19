@@ -623,7 +623,7 @@ export default {
             dark 
             color="deep-purple"
           >
-            <v-btn 
+            <base-button 
               icon 
               dark 
               @click.native="closeDialog()"
@@ -631,26 +631,26 @@ export default {
               <v-icon>
                 close
               </v-icon>
-            </v-btn>
+            </base-button>
             <v-toolbar-title class="white--text">
               Add New Campaign
             </v-toolbar-title>
             <v-spacer />
             <v-toolbar-items>
-              <v-btn
+              <base-button
                 dark
                 text
                 @click.native="helper = !helper"
               >
                 Helper: TH
-              </v-btn>
-              <v-btn 
+              </base-button>
+              <base-button 
                 dark 
                 text 
                 @click.native="saveCampaign()"
               >
                 Save
-              </v-btn>
+              </base-button>
             </v-toolbar-items>
           </v-toolbar>
           <!-- Content is here -->
@@ -734,21 +734,20 @@ export default {
                   />
                 </v-card-text>
               </v-card>
-              <v-btn 
+              <base-button 
                 color="primary"
-                round
+                roundeded
                 @click.native="step = 2"
               >
                 Continue
-              </v-btn>
-              <v-btn 
-                class="v-btn--simple"
-                color="default"
-                round
+              </base-button>
+              <base-button 
+                color="primary"
+                text
                 @click.native="closeDialog()"
               >
                 Cancel
-              </v-btn>
+              </base-button>
             </v-stepper-content>
             <v-stepper-step 
               editable
@@ -987,21 +986,20 @@ export default {
                           color="deep-purple"
                         >
                           <v-spacer />
-                          <v-btn 
-                            class="v-btn--simple"
-                            round
+                          <base-button
+                            text
                             color="primary" 
                             @click="menu = false"
                           >
                             Cancel
-                          </v-btn>
-                          <v-btn 
+                          </base-button>
+                          <base-button 
                             color="primary"
-                            round
+                            roundeded
                             @click="$refs.menu.save(date)"
                           >
                             OK
-                          </v-btn>
+                          </base-button>
                         </v-date-picker>
                       </v-menu>
                     </v-flex>
@@ -1035,25 +1033,24 @@ export default {
                           color="deep-purple"
                         />
                         <v-spacer />
-                        <v-btn
+                        <base-button
                           text
                           disabled
                         />
-                        <v-btn 
-                          class="v-btn--simple"
-                          round
+                        <base-button 
+                          text
                           color="primary"
                           @click="menu2 = false"
                         >
                           Cancel
-                        </v-btn>
-                        <v-btn 
-                          round 
+                        </base-button>
+                        <base-button 
+                          rounded
                           color="primary" 
                           @click="$refs.menu2.save(time)"
                         >
                           OK
-                        </v-btn>
+                        </base-button>
                       </v-menu>
                     </v-flex>
                   </v-layout> 
@@ -1102,21 +1099,20 @@ export default {
                           color="deep-purple"
                         >
                           <v-spacer />
-                          <v-btn 
-                            class="v-btn--simple"
-                            round
+                          <base-button
+                            rounded
                             color="primary"
                             @click="menu3 = false"
                           >
                             Cancel
-                          </v-btn>
-                          <v-btn 
-                            round
+                          </base-button>
+                          <base-button 
+                            rounded
                             color="primary" 
                             @click="$refs.menu3.save(date2)"
                           >
                             OK
-                          </v-btn>
+                          </base-button>
                         </v-date-picker>
                       </v-menu>
                     </v-flex>
@@ -1150,25 +1146,24 @@ export default {
                           color="deep-purple"
                         />
                         <v-spacer />
-                        <v-btn
+                        <base-button
                           text
                           disabled
                         />
-                        <v-btn 
-                          class="v-btn--simple"
-                          round
+                        <base-button 
+                          rounded
                           color="primary" 
                           @click="menu4 = false"
                         >
                           Cancel
-                        </v-btn>
-                        <v-btn 
-                          round 
+                        </base-button>
+                        <base-button 
+                          rounded
                           color="primary"  
                           @click="$refs.menu4.save(time2)"
                         >
                           OK
-                        </v-btn>
+                        </base-button>
                       </v-menu>
                     </v-flex>                    
                   </v-layout>
@@ -1217,21 +1212,20 @@ export default {
                           color="deep-purple"
                         >
                           <v-spacer />
-                          <v-btn 
-                            class="v-btn--simple"
-                            round
+                          <base-button 
+                            rounded
                             color="primary" 
                             @click="menu5 = false"
                           >
                             Cancel
-                          </v-btn>
-                          <v-btn 
+                          </base-button>
+                          <base-button 
                             color="primary"
-                            round
+                            rounded
                             @click="$refs.menu5.save(date3)"
                           >
                             OK
-                          </v-btn>
+                          </base-button>
                         </v-date-picker>
                       </v-menu>
                     </v-flex>
@@ -1265,25 +1259,24 @@ export default {
                           color="deep-purple"
                         />
                         <v-spacer />
-                        <v-btn
+                        <base-button
                           text
                           disabled
                         />
-                        <v-btn 
-                          class="v-btn--simple"
-                          round
+                        <base-button 
+                          rounded
                           color="primary"
                           @click="menu6 = false"
                         >
                           Cancel
-                        </v-btn>
-                        <v-btn 
-                          round 
+                        </base-button>
+                        <base-button 
+                          rounded 
                           color="primary" 
                           @click="$refs.menu6.save(time3)"
                         >
                           OK
-                        </v-btn>
+                        </base-button>
                       </v-menu>
                     </v-flex>
                   </v-layout> 
@@ -1332,21 +1325,20 @@ export default {
                           color="deep-purple"
                         >
                           <v-spacer />
-                          <v-btn 
-                            class="v-btn--simple"
-                            round
+                          <base-button 
+                            rounded
                             color="primary"
                             @click="menu7 = false"
                           >
                             Cancel
-                          </v-btn>
-                          <v-btn 
-                            round
+                          </base-button>
+                          <base-button 
+                            rounded
                             color="primary" 
                             @click="$refs.menu7.save(date4)"
                           >
                             OK
-                          </v-btn>
+                          </base-button>
                         </v-date-picker>
                       </v-menu>
                     </v-flex>
@@ -1380,45 +1372,45 @@ export default {
                           color="deep-purple"
                         />
                         <v-spacer />
-                        <v-btn
+                        <base-button
                           text
                           disabled
                         />
-                        <v-btn 
-                          class="v-btn--simple"
-                          round
+                        <base-button 
+                          class="base-button--simple"
+                          rounded
                           color="primary" 
                           @click="menu8 = false"
                         >
                           Cancel
-                        </v-btn>
-                        <v-btn 
-                          round 
+                        </base-button>
+                        <base-button 
+                          rounded 
                           color="primary"  
                           @click="$refs.menu8.save(time4)"
                         >
                           OK
-                        </v-btn>
+                        </base-button>
                       </v-menu>
                     </v-flex>                    
                   </v-layout>
                 </v-card-text>
               </v-card>
-              <v-btn 
+              <base-button 
                 color="primary"
-                round
+                rounded
                 @click.native="step = 3"
               >
                 Continue
-              </v-btn>
-              <v-btn 
-                class="v-btn--simple"
+              </base-button>
+              <base-button 
+                class="base-button--simple"
                 color="default"
-                round
+                rounded
                 @click.native="step = 1"
               >
                 Cancel
-              </v-btn>
+              </base-button>
             </v-stepper-content>
             <v-stepper-step 
               editable
@@ -1541,7 +1533,7 @@ export default {
                           </v-list-item-subtitle>
                         </v-list-item-content>
                         <v-list-item-action>
-                          <v-btn
+                          <base-button
                             icon
                             ripple
                             @click="deleteContextParser(item.messageContextFailed)"
@@ -1549,22 +1541,22 @@ export default {
                             <v-icon color="grey lighten-1">
                               delete_forever
                             </v-icon>
-                          </v-btn>
+                          </base-button>
                         </v-list-item-action>
                       </v-list-item>
                     </v-list>
                   </v-flex>
                   <p />
-                  <v-btn 
+                  <base-button 
                     color="primary" 
-                    round
+                    rounded
                     @click.native="cardOpen = !cardOpen"
                   >
                     <v-icon dark>
                       add
                     </v-icon>
                     Add Parser
-                  </v-btn>
+                  </base-button>
                   <p />
                   <v-flex 
                     xs12
@@ -1629,16 +1621,16 @@ export default {
                             solo-inverted 
                             label="Condition (Regular Expression)"
                           />
-                          <v-btn 
+                          <base-button 
                             color="primary" 
-                            round
+                            rounded
                             @click.native="subcardOpen = !subcardOpen"
                           >
                             <v-icon dark>
                               add
                             </v-icon>
                             Add Specific Condition
-                          </v-btn>
+                          </base-button>
                           <v-subheader>Specific Condition: (In Parser Object)</v-subheader>
                           <v-flex
                             xs12
@@ -1665,7 +1657,7 @@ export default {
                                   </v-list-item-subtitle>
                                 </v-list-item-content>
                                 <v-list-item-action>
-                                  <v-btn
+                                  <base-button
                                     icon
                                     ripple
                                     @click="deleteSubContextArray(item.messageContextFailed)"
@@ -1673,7 +1665,7 @@ export default {
                                     <v-icon color="grey lighten-1">
                                       delete_forever
                                     </v-icon>
-                                  </v-btn>
+                                  </base-button>
                                 </v-list-item-action>
                               </v-list-item>
                             </v-list>
@@ -1712,21 +1704,19 @@ export default {
                                 </v-card-text>
                                 <v-card-actions>
                                   <v-spacer />
-                                  <v-btn 
-                                    class="v-btn--simple"
+                                  <base-button 
                                     color="primary"
-                                    round
+                                    rounded
                                     @click.native="clearSubContextArray()"
                                   >
                                     Cancel
-                                  </v-btn>
-                                  <v-btn
-                                    color="primary"
-                                    round
+                                  </base-button>
+                                  <base-button
+                                    rounded
                                     @click.native="addSubContextArray()"
                                   >
                                     Save
-                                  </v-btn>
+                                  </base-button>
                                 </v-card-actions>
                               </v-form>
                             </v-card>
@@ -1734,43 +1724,41 @@ export default {
                         </v-card-text>
                         <v-card-actions>
                           <v-spacer />
-                          <v-btn 
-                            class="v-btn--simple"
+                          <base-button 
                             color="primary"
-                            round
+                            rounded
                             @click.native="clearContextParser()"
                           >
                             Cancel
-                          </v-btn>
-                          <v-btn 
+                          </base-button>
+                          <base-button 
                             :disabled="!parserValid"
                             color="primary"
-                            round
+                            rounded
                             @click.native="addContextParser()"
                           >
                             Save
-                          </v-btn>
+                          </base-button>
                         </v-card-actions>
                       </v-form>
                     </v-card>
                   </v-flex>
                 </v-card-text>
               </v-card>
-              <v-btn 
+              <base-button 
                 color="primary" 
-                round
+                rounded
                 @click.native="step = 4"
               >
                 Continue
-              </v-btn>
-              <v-btn 
-                class="v-btn--simple"
+              </base-button>
+              <base-button
                 color="default"
-                round
+                rounded
                 @click.native="step = 2"
               >
                 Cancel
-              </v-btn>
+              </base-button>
             </v-stepper-content>
             <v-stepper-step
               editable
@@ -1898,21 +1886,20 @@ export default {
                   </v-flex>
                 </v-card-text>
               </v-card>
-              <v-btn 
+              <base-button 
                 color="primary" 
-                round
+                rounded
                 @click.native="step = 5"
               >
                 Continue
-              </v-btn>
-              <v-btn 
-                class="v-btn--simple"
+              </base-button>
+              <base-button 
                 color="default"
-                round
+                rounded
                 @click.native="step = 3"
               >
                 Cancel
-              </v-btn>
+              </base-button>
             </v-stepper-content>
             <v-stepper-step 
               editable
@@ -2021,7 +2008,7 @@ export default {
                               <v-list-item-subtitle>{{ item.messageRewardSuccess }}</v-list-item-subtitle>
                             </v-list-item-content>
                             <v-list-item-action>
-                              <v-btn
+                              <base-button
                                 icon
                                 ripple
                                 @click="deleteReward(item.rewardName)"
@@ -2029,21 +2016,21 @@ export default {
                                 <v-icon color="grey lighten-1">
                                   delete_forever
                                 </v-icon>
-                              </v-btn>
+                              </base-button>
                             </v-list-item-action>
                           </v-list-item>
                         </v-list>
                       </v-flex>
-                      <v-btn 
+                      <base-button 
                         color="primary"
-                        round
+                        rounded
                         @click.native="cardOpen = !cardOpen"
                       >
                         <v-icon dark>
                           add
                         </v-icon>
                         Add Reward
-                      </v-btn>
+                      </base-button>
                       <p />
                       <v-card v-if="cardOpen">
                         <v-form
@@ -2064,21 +2051,21 @@ export default {
                               label="is Coupon"
                             />
                             <v-spacer />
-                            <v-btn
+                            <base-button
                               :disabled="!switch1"
                               color="deep-purple lighten-2"
                               class="white--text"
-                              round
+                              rounded
                               @click.stop="couponGenDialog = !couponGenDialog"
                             >
                               Generated
-                            </v-btn>
-                            <!-- <v-btn
+                            </base-button>
+                            <!-- <base-button
                               :loading="loading1"
                               :disabled="!switch1"
                               color="blue-grey"
                               class="white--text"
-                              round
+                              rounded
                               @click.native="loader = 'loading1'"
                             >
                               <v-icon 
@@ -2088,7 +2075,7 @@ export default {
                                 cloud_upload
                               </v-icon>
                               Upload
-                            </v-btn> -->
+                            </base-button> -->
                             <p />
                           </v-card-actions>
                           <v-card-text>
@@ -2194,22 +2181,21 @@ export default {
                           </v-card-text>
                           <v-card-actions>
                             <v-spacer />
-                            <v-btn
-                              class="v-btn--simple" 
-                              round
+                            <base-button
+                              rounded
                               color="primary"
                               @click.native="clearReward()"
                             >
                               Cancel
-                            </v-btn>
-                            <v-btn 
+                            </base-button>
+                            <base-button 
                               :disabled="!rewardValid"
-                              round
+                              rounded
                               color="primary"
                               @click.native="addReward()"
                             >
                               Save
-                            </v-btn>
+                            </base-button>
                           </v-card-actions>
                         </v-form>
                       </v-card>
@@ -2217,21 +2203,20 @@ export default {
                   </v-layout>
                 </v-card-text>
               </v-card>
-              <v-btn
+              <base-button
                 color="primary"
-                round
+                rounded
                 @click.native="step = 6"
               >
                 Continue
-              </v-btn>
-              <v-btn 
-                class="v-btn--simple"
+              </base-button>
+              <base-button
                 color="default"
-                round
+                rounded
                 @click.native="step = 4"
               >
                 Cancel
-              </v-btn>
+              </base-button>
             </v-stepper-content>
             <v-stepper-step 
               step="6" 
@@ -2430,21 +2415,20 @@ export default {
                   </v-layout>
                 </v-card-text>
               </v-card>
-              <v-btn
+              <base-button
                 color="primary"
-                round
+                rounded
                 @click.native="step = 1"
               >
                 Continue
-              </v-btn>
-              <v-btn 
-                class="v-btn--simple"
+              </base-button>
+              <base-button 
                 color="default"
-                round
+                rounded
                 @click.native="step = 5"
               >
                 Cancel
-              </v-btn>
+              </base-button>
             </v-stepper-content>
           </v-stepper>
         </v-form>
@@ -2511,22 +2495,21 @@ export default {
 
         <v-card-actions>
           <v-spacer />
-          <v-btn
-            class="v-btn--simple" 
+          <base-button
             color="primary"
-            round
+            rounded
             @click="couponGenDialog = !couponGenDialog"
           >
             Cancel
-          </v-btn>
-          <v-btn
+          </base-button>
+          <base-button
             class=""
             color="primary"
-            round
+            rounded
             @click="clickedGen"
           >
             Generated
-          </v-btn>
+          </base-button>
         </v-card-actions>
       </v-card>
     </v-dialog>

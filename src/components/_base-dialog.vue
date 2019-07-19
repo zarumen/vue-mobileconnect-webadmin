@@ -56,9 +56,9 @@ export default {
         lazy-validation
       >
         <v-card-title
-          class="subheading font-weight-light"
+          class="subtitle-1"
         >
-          <v-icon color="red lighten-2">
+          <v-icon color="red">
             warning
           </v-icon>
           &nbsp;{{ dialogTitle }}
@@ -86,24 +86,22 @@ export default {
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn
+          <base-button
+            color="red"
+            text 
+            @click.native="onCancel"
+          >
+            Cancel
+          </base-button>
+          <base-button
             v-if="!!value"
             :disabled="!valid"
-            class="v-btn--simple"
-            color="danger"
+            color="error"
             rounded
             @click.native="$emit('onConfirm')"
           >
             Confirm
-          </v-btn>
-          <v-btn 
-            class="v-btn--simple"
-            color="default"
-            rounded 
-            @click.native="onCancel"
-          >
-            Cancel
-          </v-btn>
+          </base-button>
         </v-card-actions>
       </v-form>
     </v-card>

@@ -121,17 +121,15 @@ export default {
                 />
               </span>
               <v-spacer />
-              <v-btn 
-                class="v-btn--simple"
+              <base-button 
                 color="primary"
                 circle
                 icon
                 @click.native="reloadData()"
               >
                 <BaseIcon name="syncAlt" />            
-              </v-btn>
-              <v-btn 
-                class="v-btn--simple"
+              </base-button>
+              <base-button 
                 color="primary"
                 circle
                 icon
@@ -139,7 +137,7 @@ export default {
                 <v-icon>
                   print
                 </v-icon>
-              </v-btn>
+              </base-button>
             </v-card-title>
             <br>
             <base-helper-offset
@@ -177,17 +175,17 @@ export default {
         :color="mode"
       >
         {{ notice }}
-        <v-btn 
+        <base-button 
           dark 
           text 
           @click.native="exitSnackbar"
         >
           Close
-        </v-btn>
+        </base-button>
       </v-snackbar>
     </v-container>
     <!-- FAB panel -->
-    <v-btn
+    <base-button
       fab
       large
       bottom
@@ -197,7 +195,7 @@ export default {
       @click.stop="addUserDialog = !addUserDialog"
     >
       <v-icon>add</v-icon>
-    </v-btn>
+    </base-button>
     <FormAddUser 
       :add-user-dialog="addUserDialog" 
       @emitCloseUserDialog="addUserDialog=arguments[0]"

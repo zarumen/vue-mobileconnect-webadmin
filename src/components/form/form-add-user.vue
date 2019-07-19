@@ -444,30 +444,28 @@ export default {
           <v-card-actions>
             <!-- Button Action in below card-->
             <v-spacer />
-            <v-btn
-              class="v-btn--simple"
-              rounded 
-              color="secondary" 
+            <base-button
+              text 
+              color="primary" 
               @click="clearForm()"
             >
               Clear
-            </v-btn>
-            <v-btn
-              class="v-btn--simple"
-              rounded 
-              color="primary" 
+            </base-button>
+            <base-button
+              text
+              color="secondary darken-2" 
               @click="closeDialog()"
             >
               CANCEL
-            </v-btn>
-            <v-btn
+            </base-button>
+            <base-button
               :disabled="!valid"
               rounded
-              color="primary"
+              color="secondary darken-2"
               @click="saveUser()"
             >
               SAVE
-            </v-btn>
+            </base-button>
           </v-card-actions>
         </v-card>
       </v-form>
@@ -480,13 +478,13 @@ export default {
       color="error"
     > 
       {{ textError }}
-      <v-btn
+      <base-button
         dark
         text
         @click="snackbar = false"
       >
         Close
-      </v-btn>
+      </base-button>
     </v-snackbar>
   </div>
 </template>

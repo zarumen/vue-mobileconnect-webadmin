@@ -48,13 +48,13 @@ export default {
                   class="subheading"
                   v-html="subTitle"
                 />
-                <v-btn
+                <base-button
                   v-if="isHome"
                   color="primary px-4 mt-5"
                   dark
                 >
                   {{ $t('Home.callToActionBtn') }}
-                </v-btn>
+                </base-button>
               </v-flex>
             </v-fade-transition>
           </v-layout>

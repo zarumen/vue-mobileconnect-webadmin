@@ -302,28 +302,27 @@ export default {
           </v-layout>
         </v-container>
         <v-card-actions>
-          <!-- <v-btn 
+          <!-- <base-button 
             text 
             color="indigo"
           >
             More
-          </v-btn> -->
+          </base-button> -->
           <v-spacer />
-          <v-btn 
-            class="v-btn--simple"
-            rounded 
-            color="primary"
+          <base-button 
+            text 
+            color="secondary darken-2"
             @click="closeDialog()"
           >
             Cancel
-          </v-btn>
-          <v-btn
+          </base-button>
+          <base-button
             rounded
-            color="primary"
+            color="secondary darken-2"
             @click="save()"
           >
             Save
-          </v-btn>
+          </base-button>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -335,13 +334,13 @@ export default {
       color="error"
     > 
       {{ text }}
-      <v-btn
+      <base-button
         dark
         text
         @click="snackbar = false"
       >
         Close
-      </v-btn>
+      </base-button>
     </v-snackbar>
   </div>
 </template>

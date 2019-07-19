@@ -30,8 +30,8 @@
 
 @mixin material-placeholder() {
   &::-moz-placeholder {@content; } // Firefox
-  &:-ms-input-placeholder {@content; } // Internet Explorer 10+
   &::-webkit-input-placeholder  {@content; } // Safari and Chrome
+  &:-ms-input-placeholder {@content; } // Internet Explorer 10+
 }
 
 @mixin inputs-color($color, $color-name) {
@@ -106,26 +106,6 @@
 
     background-color: darken($color, 3%) !important;
   }
-
-  &.v-btn--simple{
-      &,
-      &:hover,
-      &:focus,
-      &:active,
-      &.active,
-      &:active:focus,
-      &:active:hover,
-      &.active:focus,
-      &.active:hover{
-        color: $color !important;
-        background-color: transparent !important;
-        box-shadow: none !important;
-
-        i{
-          color: $color !important;
-        }
-      }
-  }
 }
 
 @mixin social-buttons-color ($color){
@@ -146,25 +126,5 @@
         background-color: $color !important;
 
         @include button-shadow-color($color);
-    }
-
-    &.v-btn--simple{
-      &,
-      &:hover,
-      &:focus,
-      &:active,
-      &.active,
-      &:active:focus,
-      &:active:hover,
-      &.active:focus,
-      &.active:hover{
-        color: $color !important;
-        background-color: transparent;
-        box-shadow: none;
-
-        i{
-          color: $color !important;
-        }
-      }
     }
 }

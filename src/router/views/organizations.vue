@@ -125,8 +125,7 @@ export default {
                 />
               </span>
               <v-spacer />
-              <v-btn 
-                class="v-btn--simple"
+              <base-button
                 color="primary"
                 circle
                 icon
@@ -135,9 +134,8 @@ export default {
                 <v-icon>
                   refresh
                 </v-icon>      
-              </v-btn>
-              <v-btn 
-                class="v-btn--simple"
+              </base-button>
+              <base-button
                 color="primary"
                 circle
                 icon
@@ -145,7 +143,7 @@ export default {
                 <v-icon>
                   print
                 </v-icon>
-              </v-btn>
+              </base-button>
             </v-card-title>
             <br>
             <!-- Insert in Base-Table Component -->
@@ -183,17 +181,17 @@ export default {
         :color="mode"
       >
         {{ notice }}
-        <v-btn 
+        <base-button 
           dark 
           text 
           @click.native="exitSnackbar"
         >
           Close
-        </v-btn>
+        </base-button>
       </v-snackbar>
     </v-container>
     <!-- FAB panel -->
-    <v-btn
+    <base-button
       fab
       large
       bottom
@@ -204,7 +202,7 @@ export default {
       @click.stop="addDialog = !addDialog"
     >
       <v-icon>add</v-icon>
-    </v-btn>
+    </base-button>
     <form-add-organization
       v-if="addDialog"
       :add-dialog="addDialog" 

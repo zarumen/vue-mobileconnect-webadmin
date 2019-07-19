@@ -256,14 +256,13 @@ export default {
                     </v-list-item-content>
                     <v-spacer />
                     <v-list-item-action @click.stop>
-                      <v-btn
-                        class="v-btn--simple"
+                      <base-button
                         color="primary"
                         icon
                         @click.stop.prevent="edit(ind, item)"
                       >
                         <v-icon>{{ editing !== item ? 'edit' : 'check' }}</v-icon>
-                      </v-btn>
+                      </base-button>
                     </v-list-item-action>
                   </template>
                 </v-combobox>
@@ -273,30 +272,28 @@ export default {
           <v-card-actions>
             <!-- Button Action in below card-->
             <v-spacer />
-            <v-btn
-              class="v-btn--simple"
-              rounded 
-              color="secondary" 
+            <base-button
+              text
+              color="primary" 
               @click="clearForm()"
             >
               Clear
-            </v-btn>
-            <v-btn
-              class="v-btn--simple"
-              rounded 
-              color="primary" 
+            </base-button>
+            <base-button
+              text 
+              color="secondary darken-2" 
               @click="closeDialog()"
             >
               CANCEL
-            </v-btn>
-            <v-btn
+            </base-button>
+            <base-button
               :disabled="!valid"
               rounded
-              color="primary"
+              color="secondary darken-2"
               @click="saveEditSendername()"
             >
               SAVE
-            </v-btn>
+            </base-button>
           </v-card-actions>
         </v-card>
       </v-form>

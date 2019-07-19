@@ -150,26 +150,24 @@ export default {
         <td
           class="text-xs-right"
         >
-          <v-btn 
+          <base-button 
             v-if="actionBtn"
-            class="v-btn--simple"
             color="secondary"
             circle
             icon
             @click.native="$emit('edit', props.item)"
           >
             <v-icon>edit</v-icon>
-          </v-btn>
-          <v-btn
+          </base-button>
+          <base-button
             v-if="actionBtn"
-            class="v-btn--simple" 
-            color="danger" 
+            color="error" 
             circle
             icon
             @click.native="$emit('remove', props.item)"
           >
             <v-icon>close</v-icon>
-          </v-btn>
+          </base-button>
         </td>
       </template>
       <template slot="no-data">
@@ -213,7 +211,7 @@ export default {
 }
 
 .v-data-table-header th.sortable.active {
-  color: #33ac41 !important;
+  color: #699e37 !important;
 }
 
 .v-data-table__mobile-row__header {

@@ -116,14 +116,14 @@ export default {
                 />
               </span>
               <v-spacer />
-              <v-btn
+              <base-button
                 color="primary"
                 circle
                 icon
                 @click.native="reloadData()"
               >
                 <BaseIcon name="syncAlt" />            
-              </v-btn>
+              </base-button>
             </v-card-title>
             <v-card-text>
               <v-list two-line>
@@ -140,14 +140,14 @@ export default {
                         content-class="top"
                       >
                         <template v-slot:activator="{ on }">
-                          <v-btn 
+                          <base-button 
                             color="secondary"
                             icon
                             v-on="on"
                             @click.stop="createExportJob(item.id, item.campaignCode)"
                           >
                             <v-icon>cloud_download</v-icon>
-                          </v-btn>
+                          </base-button>
                         </template>
                         <span>Download New File From S3</span>
                       </v-tooltip>
@@ -192,14 +192,14 @@ export default {
                 Campaign: {{ campaignSelected }}
               </span>
               <v-spacer />
-              <v-btn 
+              <base-button 
                 color="primary"
                 circle
                 icon
                 @click.native="clickedSelectedCampaignReports(campaignSelected)"
               >
                 <BaseIcon name="syncAlt" />            
-              </v-btn>
+              </base-button>
             </v-card-title>
             <v-card-text>
               <div v-if="!checkedJobList">
@@ -244,14 +244,14 @@ export default {
                           content-class="top"
                         >
                           <template v-slot:activator="{ on }">
-                            <v-btn 
+                            <base-button 
                               color="primary"
                               icon
                               v-on="on"
                               @click.stop="downloadExportFile(index, item.fileName)"
                             >
                               <BaseIcon name="fileExcel" /> 
-                            </v-btn>
+                            </base-button>
                           </template>
                           <span>Download Recent File</span>
                         </v-tooltip>
@@ -260,13 +260,13 @@ export default {
                           content-class="top"
                         >
                           <template v-slot:activator="{ on }">
-                            <v-btn
+                            <base-button
                               color="red"
                               icon
                               v-on="on"
                             >
                               <v-icon>close</v-icon>
-                            </v-btn>
+                            </base-button>
                           </template>
                           <span>Deleted Recent File</span>
                         </v-tooltip>
@@ -290,13 +290,13 @@ export default {
           :color="mode"
         >
           {{ notice }}
-          <v-btn 
+          <base-button 
             dark 
             text 
             @click.native="exitSnackbar"
           >
             Close
-          </v-btn>
+          </base-button>
         </v-snackbar>
       </v-layout>
     </v-container>

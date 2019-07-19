@@ -218,13 +218,13 @@ export default {
               <p class="category text-gray font-weight-thin mb-3">
                 STATUS: {{ text.campaignState }}
               </p>
-              <v-btn
+              <base-button
                 color="primary"
                 rounded
                 class="font-weight-light"
               >
                 Change to Production
-              </v-btn>
+              </base-button>
             </v-card-text>
           </base-card>
         </v-flex>
@@ -236,12 +236,12 @@ export default {
           <p class="subheading">
             &nbsp;Campaign "{{ $route.params.campaignId }}" Details
           </p>
-          <v-btn
+          <base-button
             color="success"
             @click="clicked()"
           >
             Click
-          </v-btn>
+          </base-button>
         </v-flex>
         <v-flex
           v-if="text"

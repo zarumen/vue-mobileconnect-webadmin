@@ -54,17 +54,17 @@ export default {
         </v-card-text> 
         <v-card-actions>
           <v-spacer/>
-          <v-btn 
+          <base-button 
             color="blue" 
             class="white--text"
           >
             Save
-          </v-btn>
-          <v-btn 
+          </base-button>
+          <base-button 
             text
           >
             Cancel
-          </v-btn>
+          </base-button>
         </v-card-actions>
       </v-card>
     </v-form>

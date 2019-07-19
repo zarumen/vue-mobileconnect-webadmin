@@ -21,30 +21,28 @@ export default {
           top
           content-class="top"
         >
-          <v-btn
+          <base-button
             slot="activator"
-            class="v-btn--simple"
             color="secondary"
             icon
           >
             <v-icon>create</v-icon>
-          </v-btn>
+          </base-button>
           <span>Edit</span>
         </v-tooltip>
         <v-tooltip
           top
           content-class="top"
         >
-          <v-btn
+          <base-button
             slot="activator"
-            class="v-btn--simple"
-            color="danger"
+            color="error"
             icon
           >
-            <v-icon color="error">
+            <v-icon>
               close
             </v-icon>
-          </v-btn>
+          </base-button>
           <span>Close</span>
         </v-tooltip>
       </div>
@@ -65,14 +63,13 @@ export default {
           top
           content-class="top"
         >
-          <v-btn
+          <base-button
             slot="activator"
-            class="v-btn--simple"
             color="secondary"
             icon
           >
             <v-icon>create</v-icon>
-          </v-btn>
+          </base-button>
           <span>Edit</span>
         </v-tooltip>
 
@@ -80,16 +77,15 @@ export default {
           top
           content-class="top"
         >
-          <v-btn
+          <base-button
             slot="activator"
-            class="v-btn--simple"
-            color="danger"
+            color="error"
             icon
           >
-            <v-icon color="error">
+            <v-icon>
               close
             </v-icon>
-          </v-btn>
+          </base-button>
           <span>Close</span>
         </v-tooltip>
       </div>
@@ -110,30 +106,28 @@ export default {
           top
           content-class="top"
         >
-          <v-btn
+          <base-button
             slot="activator"
-            class="v-btn--simple"
             color="secondary"
             icon
           >
             <v-icon>create</v-icon>
-          </v-btn>
+          </base-button>
           <span>Edit</span>
         </v-tooltip>
         <v-tooltip
           top
           content-class="top"
         >
-          <v-btn
+          <base-button
             slot="activator"
-            class="v-btn--simple"
-            color="danger"
+            color="error"
             icon
           >
             <v-icon color="error">
               close
             </v-icon>
-          </v-btn>
+          </base-button>
           <span>Close</span>
         </v-tooltip>
       </div>

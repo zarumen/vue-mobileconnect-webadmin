@@ -114,15 +114,15 @@ export default {
               />
             </span>
             <v-spacer />
-            <v-btn 
+            <base-button 
               text 
               icon 
               color="green"
               @click.native="reloadData()"
             >
               <BaseIcon name="syncAlt" />            
-            </v-btn>
-            <v-btn 
+            </base-button>
+            <base-button 
               text 
               icon 
               color="indigo"
@@ -130,7 +130,7 @@ export default {
               <v-icon>
                 print
               </v-icon>
-            </v-btn>
+            </base-button>
           </v-card-title>
           <!-- Insert in Base-Table Component -->
           <BaseTable
@@ -160,17 +160,17 @@ export default {
         :color="mode"
       >
         {{ notice }}
-        <v-btn 
+        <base-button 
           dark 
           text 
           @click.native="exitSnackbar"
         >
           Close
-        </v-btn>
+        </base-button>
       </v-snackbar>
     </v-container>
     <!-- FAB panel -->
-    <v-btn
+    <base-button
       fab
       bottom
       right
@@ -180,7 +180,7 @@ export default {
       @click.stop="addCampaignDialog = !addCampaignDialog"
     >
       <v-icon>add</v-icon>
-    </v-btn>
+    </base-button>
     <form-add-campaign
       :add-campaign-dialog="addCampaignDialog"
       @emitCloseCampaignDialog="addCampaignDialog=arguments[0]"

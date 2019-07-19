@@ -347,14 +347,13 @@ export default {
                           offset-x
                         >
                           <template v-slot:activator="{ on }">
-                            <v-btn
+                            <base-button
                               v-if="!event.time"
-                              class="v-btn--simple"
                               color="orange darken-2"
                               v-on="on"
                             >
                               {{ event.title }}
-                            </v-btn>
+                            </base-button>
                           </template>
                           <v-card
                             color="grey lighten-4"
@@ -365,28 +364,28 @@ export default {
                               color="primary"
                               dark
                             >
-                              <v-btn icon>
+                              <base-button icon>
                                 <v-icon>edit</v-icon>
-                              </v-btn>
+                              </base-button>
                               <v-toolbar-title>{{ event.title }}</v-toolbar-title>
                               <v-spacer />
-                              <v-btn icon>
+                              <base-button icon>
                                 <v-icon>favorite</v-icon>
-                              </v-btn>
-                              <v-btn icon>
+                              </base-button>
+                              <base-button icon>
                                 <v-icon>more_vert</v-icon>
-                              </v-btn>
+                              </base-button>
                             </v-toolbar>
                             <v-card-title primary-title>
                               <span>{{ event.details }}</span>
                             </v-card-title>
                             <v-card-actions>
-                              <v-btn
+                              <base-button
                                 text
                                 color="secondary"
                               >
                                 Cancel
-                              </v-btn>
+                              </base-button>
                             </v-card-actions>
                           </v-card>
                         </v-menu>
@@ -452,30 +451,27 @@ export default {
                 />
               </span>
               <v-spacer />
-              <v-btn 
+              <base-button 
                 v-if="tabs === 0"
-                class="v-btn--simple"
                 color="light-green darken-2"
                 rounded
               >
                 +SHORTCODE            
-              </v-btn>
-              <v-btn 
+              </base-button>
+              <base-button 
                 v-if="tabs === 1"
-                class="v-btn--simple"
                 color="light-green darken-2"
                 rounded
               >
                 +KEYWORD            
-              </v-btn>
-              <v-btn 
+              </base-button>
+              <base-button 
                 v-if="tabs === 2"
-                class="v-btn--simple"
                 color="light-green darken-2"
                 rounded
               >
                 +KEYWORD RESERVED            
-              </v-btn>
+              </base-button>
             </v-card-title>
 
             <v-tabs-items v-model="tabs">
@@ -499,14 +495,13 @@ export default {
                         content-class="top"
                       >
                         <template v-slot:activator="{ on }">
-                          <v-btn
-                            class="v-btn--simple"
+                          <base-button
                             color="secondary"
                             icon
                             v-on="on"
                           >
                             <v-icon>create</v-icon>
-                          </v-btn>
+                          </base-button>
                         </template>
                         <span>Edit</span>
                       </v-tooltip>
@@ -515,8 +510,7 @@ export default {
                         content-class="top"
                       >
                         <template v-slot:activator="{ on }">
-                          <v-btn
-                            class="v-btn--simple"
+                          <base-button
                             color="danger"
                             icon
                             v-on="on"
@@ -524,7 +518,7 @@ export default {
                             <v-icon color="error">
                               close
                             </v-icon>
-                          </v-btn>
+                          </base-button>
                         </template>
                         <span>Close</span>
                       </v-tooltip>
@@ -547,14 +541,13 @@ export default {
                         content-class="top"
                       >
                         <template v-slot:activator="{ on }">
-                          <v-btn
-                            class="v-btn--simple"
+                          <base-button
                             color="secondary"
                             icon
                             v-on="on"
                           >
                             <v-icon>create</v-icon>
-                          </v-btn>
+                          </base-button>
                         </template>
                         <span>Edit</span>
                       </v-tooltip>
@@ -564,8 +557,7 @@ export default {
                         content-class="top"
                       >
                         <template v-slot:activator="{ on }">
-                          <v-btn
-                            class="v-btn--simple"
+                          <base-button
                             color="danger"
                             icon
                             v-on="on"
@@ -573,7 +565,7 @@ export default {
                             <v-icon color="error">
                               close
                             </v-icon>
-                          </v-btn>
+                          </base-button>
                         </template>
                         <span>Close</span>
                       </v-tooltip>
@@ -596,14 +588,13 @@ export default {
                         content-class="top"
                       >
                         <template v-slot:activator="{ on }">
-                          <v-btn
-                            class="v-btn--simple"
+                          <base-button
                             color="secondary"
                             icon
                             v-on="on"
                           >
                             <v-icon>create</v-icon>
-                          </v-btn>
+                          </base-button>
                         </template>
                         <span>Edit</span>
                       </v-tooltip>
@@ -612,8 +603,7 @@ export default {
                         content-class="top"
                       >
                         <template v-slot:activator="{ on }">
-                          <v-btn
-                            class="v-btn--simple"
+                          <base-button
                             color="danger"
                             icon
                             v-on="on"
@@ -621,7 +611,7 @@ export default {
                             <v-icon color="error">
                               close
                             </v-icon>
-                          </v-btn>
+                          </base-button>
                         </template>
                         <span>Close</span>
                       </v-tooltip>
