@@ -40,6 +40,7 @@ export default {
       // NOT USE! now
       rightDrawer: false,
       query: "",
+      userRemaining: null,
       quickSearchFilter: ''
     }
   },
@@ -111,7 +112,7 @@ export default {
             <!-- Controller Tools Panels -->
             <v-card-title>
               <span class="title">
-                Users {{ pagination? "("+pagination.totalItems+")": "" }}
+                Users {{ userRemaining? "("+userRemaining.length+")": "" }}
                 <v-text-field
                   v-model="quickSearchFilter"
                   class="purple-input"
@@ -153,6 +154,7 @@ export default {
                 :pagination="pagination"
                 :basemodule="baseModule"
                 :action-btn="true"
+                @updated-items="userRemaining = $event"
                 @edit="edit"
                 @remove="remove"
               />

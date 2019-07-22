@@ -33,6 +33,7 @@ export default {
         { text: 'Actions', value: 'action', align: 'center', sortable: false },
       ],
       campaignId: '',
+      campaignRemaining: null,
       quickSearchFilter: '',
       left: true,
       timeout: 2000,
@@ -95,7 +96,7 @@ export default {
           <!-- Controller Tools Panels -->
           <v-card-title>
             <span class="title">
-              Campaigns {{ pagination? "("+pagination.totalItems+")": "" }}
+              Campaigns {{ campaignRemaining? "("+campaignRemaining.length+")": "" }}
               <v-text-field
                 v-model="quickSearchFilter"
                 append-icon="search"
@@ -132,6 +133,7 @@ export default {
             :pagination="pagination"
             :basemodule="baseModule"
             :action-btn="true"
+            @updated-items="campaignRemaining = $event"
             @edit="edit"
             @remove="remove"
           />

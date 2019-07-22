@@ -36,6 +36,7 @@ export default {
     query: "",
     timeout: 2000,
     quickSearchFilter: '',
+    orgRemaining: null,
     // set value to props FormEditOrganization
     selectedLevelOrg: '',
     selectedOrgLevel1: '',
@@ -115,7 +116,7 @@ export default {
             <!-- Controller Tools Panels -->
             <v-card-title class="title">
               <span>
-                Organizations {{ pagination? "("+pagination.totalItems+")": "" }}
+                Organizations {{ orgRemaining? "("+orgRemaining.length+")": "" }}
                 <v-text-field
                   v-model="quickSearchFilter"
                   class="purple-input"
@@ -159,6 +160,7 @@ export default {
                 :pagination="pagination"
                 :basemodule="baseModule"
                 :action-btn="true"
+                @updated-items="orgRemaining = $event"
                 @edit="edit"
                 @remove="remove"
               />

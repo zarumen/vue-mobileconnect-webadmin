@@ -2,7 +2,6 @@
 import Layout from '@layouts/main'
 import { mapGetters, mapActions } from 'vuex'
 import { campaignComputed } from '@state/helpers'
-import formatDateData from '@utils/format-date'
 
 
 export default {
@@ -13,7 +12,7 @@ export default {
   components: { Layout },
   data() {
     return {
-      baseModule: 'campaignwidgets',
+      baseModule: 'campaigns',
       dialog: '',
       dialogTitle: "Campaign Delete Dialog",
       dialogText: "Do you want to delete this campaign?",
@@ -34,8 +33,8 @@ export default {
       campaignId: '',
       left: true,
       timeout: 2000,
-      mutablePagination: '',
-      search: ''
+      search: '',
+      campaignWidgetRemaining: null
     }
   },
   computed: {
@@ -43,25 +42,6 @@ export default {
     ...mapGetters('organizations', [
       'hadList',
     ]),
-    isNotEmpty () {
-      return this.items && this.items.length > 0;
-    },
-    filteredItems() {
-      return this.items.filter(item => {
-        if(!this.search){
-          return this.items
-        }else{
-          return (item.campaignCode.toLowerCase().includes(this.search.toLowerCase()) || 
-            item.campaignName.toLowerCase().includes(this.search.toLowerCase())  )
-
-        }
-      })
-    }
-  },
-  watch: {
-    searchCampaign: function(value){
-            console.log(value)
-    }
   },
   created () {
 
@@ -69,7 +49,6 @@ export default {
 
     if(!this.hadCampaignList) this.getAllCampaigns()
 
-    this.mutablePagination = this.pagination
   },
   methods: {
     ...mapActions('campaigns', [
@@ -85,31 +64,9 @@ export default {
     reloadData () {
       this.getAllCampaigns()
     },
-    edit(item) {
-
-    },
-    remove(item) {
-      this.campaignId = item.id
-      this.dialog = true
-    },
-    onConfirm () {
-      this.deleteCampaign(this.campaignId)
-      this.closeSnackbar(2000)
-      this.dialog = false
-    },
-    onCancel () {
-      this.campaignId = ''
-      this.dialog = false
-    },
     exitSnackbar () {
       this.$store.commit('campaigns/setSnackbar', { snackbar: false })
       this.$store.commit('campaigns/setNotice', { notice: '' })
-    },
-    nextPage (newValue) {
-      return this.$store.dispatch('campaigns/updatePage', newValue)
-    },
-    formatDate(dateData){
-        if(dateData) return formatDateData(dateData.seconds)
     },
   },
 }
@@ -123,9 +80,9 @@ export default {
           <!-- Controller Tools Panels -->
           <v-card-title>
             <span class="title">
-              Campaigns {{ pagination? "("+pagination.totalItems+")": "" }}
+              Campaigns Widget {{ campaignWidgetRemaining? "("+campaignWidgetRemaining.length+")": "" }}
               <v-text-field
-                v-model.lazy="search"
+                v-model="search"
                 append-icon="search"
                 label="Quick Search"
                 single-line
@@ -144,76 +101,26 @@ export default {
             <base-button 
               text 
               icon 
-              color="indigo"
+              color="primary"
             >
               <v-icon>
                 print
               </v-icon>
             </base-button>
           </v-card-title>
-          <v-data-table
+          <BaseTable
+            v-if="loading===false"
             :headers="headers"
-            :items="filteredItems"
-            :pagination.sync="mutablePagination"
-            sort-icon="keyboard_arrow_down"
-            class="elevation-1 pa-2"
-            hide-default-footer
-          >
-            <!-- <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>          -->
-            <template
-              slot="headerCell"
-              slot-scope="{ header }"
-            >
-              <span
-                class="subheading font-weight-light light-green--text text--darken-1"
-                v-text="header.text"
-              />
-            </template>
-            <template 
-              slot="items" 
-              slot-scope="props"
-              class="body-2" 
-            >
-              <td class="text-center">
-                <a :href="`campaignwidget/${props.item.id}`">
-                  <v-icon>widgets</v-icon>
-                </a>
-              </td>
-              <td><small>{{ props.item.campaignCode }}</small></td>
-              <td><small>{{ props.item.organizationLevel3Name }}</small></td>
-              <td><small>{{ props.item.campaignName }}</small></td>
-              <td><small>{{ props.item.keyword }}</small></td>
-              <td><small>{{ props.item.shortcode }}</small></td>
-              <!-- <td><small>{{ formatDate(props.item.campaignDateStart) }}</small></td>
-              <td><small>{{ formatDate(props.item.campaignDateEnd) }}</small></td> -->
-              <td><small>{{ props.item.campaignAvailable }}</small></td>
-              <td><small>{{ props.item.campaignState }}</small></td>
-            </template>
-          </v-data-table>
-          <v-flex
-            v-if="isNotEmpty"
-            class="text-center pt-2"
-          >
-            <v-pagination
-              v-model="mutablePagination.page" 
-              :length="mutablePagination.pages"
-              next-icon="arrow_right"
-              prev-icon="arrow_left"
-              color="light-green"
-              circle
-              @input="nextPage"
-            />
-          </v-flex> 
+            :items="items"
+            :search="search"
+            :pagination="pagination"
+            :basemodule="baseModule"
+            :action-btn="false"
+            @updated-items="campaignWidgetRemaining = $event"
+          />
         </v-card>
       </v-flex>
       <!-- Pop up Panels -->
-      <BaseDialog 
-        :dialog="dialog" 
-        :dialog-title="dialogTitle" 
-        :dialog-text="dialogText"
-        @onConfirm="onConfirm" 
-        @onCancel="onCancel"
-      />
       <v-snackbar 
         v-if="loading===false" 
         v-model="snackbar" 

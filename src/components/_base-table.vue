@@ -31,7 +31,7 @@ export default {
   },
   data () {
     return {
-      updatedPages: 0
+      currentItems: ''
     }
   },
   computed: {
@@ -56,15 +56,9 @@ export default {
     },
     pages: {
       get () {
-        if(!this.search) {
-
-          return this.pagination.pages
-        }
-
-        return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
+        return this.pagination.pages
       },
       set (value) {
-        console.log(typeof value)
         this.$store.dispatch(`${this.basemodule}/updatePages`, value)
       }
     },
@@ -89,6 +83,12 @@ export default {
     },
     checkStatus () {
       return this.headers.some(head => head.value === 'campaignState')
+    },
+    checkCreateDate () {
+      return this.headers.some(head => head.value === 'campaignCreateTime')
+    },
+    checkDate () {
+      return this.headers.some(head => head.value === 'campaignDateStart' || head.value === 'campaignDateEnd')
     },
   },
   created () {
@@ -152,6 +152,17 @@ export default {
       if (boolean === true) return 'green'
       else return 'red'
     },
+    updatedItems (event) {
+      
+      this.currentItems = event
+      
+      if(this.search) {
+
+        return this.$emit('updated-items', this.currentItems)
+      }
+
+      return this.$emit('updated-items', this.items)
+    }
   },
   
 }
@@ -168,6 +179,7 @@ export default {
       class="elevation-1 pa-2"
       multi-sort
       hide-default-footer
+      @current-items="updatedItems"
       @page-count="pages = $event"
     >
       <!-- TODO: implement paginations (in pagination Utils) and render Function NEW! -->
@@ -180,6 +192,30 @@ export default {
         >
           {{ boolIcon(item.campaignActive) }}
         </v-icon>
+      </template>
+      <template
+        v-if="checkCreateDate"
+        v-slot:item.campaignCreateTime="{ item }"
+      >
+        <span class="text-truncate overline">
+          {{ formatDateRelative(item.campaignCreateTime.seconds) }}
+        </span>
+      </template>
+      <template
+        v-if="checkDate"
+        v-slot:item.campaignDateStart="{ item }"
+      >
+        <span class="text-truncate overline">
+          {{ formatDate(item.campaignDateStart.seconds) }}
+        </span>
+      </template>
+      <template
+        v-if="checkDate"
+        v-slot:item.campaignDateEnd="{ item }"
+      >
+        <span class="text-truncate overline">
+          {{ formatDate(item.campaignDateEnd.seconds) }}
+        </span>
       </template>
       <template
         v-if="checkHeader"
@@ -247,7 +283,9 @@ export default {
         <router-link 
           :to="{ path: `campaignwidget/${item.id}` }"
         >
-          <v-icon>widgets</v-icon>
+          <v-icon color="secondary">
+            widgets
+          </v-icon>
         </router-link>
       </template>
       <template 
@@ -281,7 +319,7 @@ export default {
     >
       <v-pagination
         v-model="page" 
-        :length="pages"
+        :length.sync="pages"
         next-icon="arrow_right"
         prev-icon="arrow_left"
         color="light-green"
