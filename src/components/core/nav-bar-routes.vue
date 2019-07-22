@@ -1,7 +1,7 @@
 <script>
 import upperCase from 'lodash/upperCase'
 // Allows stubbing BaseLink in unit tests
-const VBtn = 'v-btn'
+const VBtn = 'base-button'
 
 export default {
   // Functional components are stateless, meaning they can't

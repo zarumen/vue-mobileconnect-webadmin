@@ -31,7 +31,7 @@ export default {
   },
   data () {
     return {
-
+      updatedPages: 0
     }
   },
   computed: {
@@ -64,8 +64,31 @@ export default {
         return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
       },
       set (value) {
+        console.log(typeof value)
         this.$store.dispatch(`${this.basemodule}/updatePages`, value)
       }
+    },
+    // CHECK ALL HEADER TO CUSTOMIZE!
+    checkOrganizationAuth () {
+      return this.headers.some(head => head.value === 'organizationAuth')
+    },
+    checkWidgets () {
+      return this.headers.some(head => head.text === 'Widget')
+    },
+    checkKeywords () {
+      return this.headers.some(head => head.text === 'Keyword')
+    },
+    checkHeader () {
+      return this.headers.some(head => head.value === 'campaignName')
+    },
+    checkRunnings () {
+      return this.headers.some(head => head.value === 'campaignAvailable')
+    },
+    checkActive () {
+      return this.headers.some(head => head.value === 'campaignActive')
+    },
+    checkStatus () {
+      return this.headers.some(head => head.value === 'campaignState')
     },
   },
   created () {
@@ -111,7 +134,24 @@ export default {
     },
     nextPage (newValue) {
       return this.$store.dispatch(`${this.basemodule}/updatePage`, newValue)
-    }
+    },
+    getColor (auth) {
+      if (auth === 'Level3') return 'lime'
+      else if (auth === 'Level2') return 'light-green'
+      else return 'green'
+    },
+    getColorState (state) {
+      if (state === 'production') return 'green'
+      else return 'orange'
+    },
+    boolIcon (boolean) {
+      if (boolean === true) return 'check_circle'
+      else return 'cancel'
+    },
+    boolColor (boolean) {
+      if (boolean === true) return 'green'
+      else return 'red'
+    },
   },
   
 }
@@ -120,74 +160,124 @@ export default {
 <template>
   <div>
     <v-data-table 
-      :headers="headers" 
+      :headers="headers"
       :items="items" 
-      :search="search" 
+      :search="search"
+      :page.sync="page"
       :options.sync="mutablePagination"
       class="elevation-1 pa-2"
+      multi-sort
       hide-default-footer
+      @page-count="pages = $event"
     >
       <!-- TODO: implement paginations (in pagination Utils) and render Function NEW! -->
-      <!-- <template 
-        v-slot:item="{ item }"
-        class="body-2" 
+      <template
+        v-if="checkActive"
+        v-slot:item.campaignActive="{ item }"
       >
-        <td  
-          v-for="(header, index) in headers"
-          :key="index"
+        <v-icon
+          :color="boolColor(item.campaignActive)"
         >
-          <small v-if="header.text!=='Widget'">
-            {{ renderData(item, header) }}
-          </small>
-          <small v-else>
-            <router-link 
-              :to="{ path: 'campaignwidget/'+props.item.id }"
-            >
-              <v-icon>widgets</v-icon>
-            </router-link>                    
-          </small>
-        </td>
-        <td
-          class="text-xs-right"
-        >
-          <base-button 
-            v-if="actionBtn"
-            color="secondary"
-            circle
-            icon
-            @click.native="$emit('edit', props.item)"
-          >
-            <v-icon>edit</v-icon>
-          </base-button>
-          <base-button
-            v-if="actionBtn"
-            color="error" 
-            circle
-            icon
-            @click.native="$emit('remove', props.item)"
-          >
-            <v-icon>close</v-icon>
-          </base-button>
-        </td>
+          {{ boolIcon(item.campaignActive) }}
+        </v-icon>
       </template>
-      <template slot="no-data">
-        <span>
-          <p class="pt-2 blue--text subheading">   
-            <v-icon 
-              medium 
-              class="blue--text" 
-            >
-              info
-            </v-icon>
-            Sorry, nothing to display here :(
-          </p>
+      <template
+        v-if="checkHeader"
+        v-slot:item.campaignName="{ item }"
+      >
+        <span class="text-truncate overline">
+          {{ item.campaignName }}
         </span>
-      </template> -->
+      </template>
+      <template
+        v-if="checkKeywords"
+        v-slot:item.keyword="{ item }"
+      >
+        <v-chip
+          v-for="i in item.keyword"
+          :key="i"
+          :ripple="false"
+          color="primary"
+          label
+          x-small
+          dark
+        >
+          {{ i }}
+        </v-chip>
+      </template>
+      <template
+        v-if="checkOrganizationAuth"
+        v-slot:item.organizationAuth="{ item }"
+      >
+        <v-chip 
+          :color="getColor(item.organizationAuth)"
+          small
+          dark
+        >
+          {{ item.organizationAuth }}
+        </v-chip>
+      </template>
+      <template
+        v-if="checkRunnings"
+        v-slot:item.campaignAvailable="{ item }"
+      >
+        <v-icon
+          :color="boolColor(item.campaignAvailable)"
+        >
+          {{ boolIcon(item.campaignAvailable) }}
+        </v-icon>
+      </template>
+      <template
+        v-if="checkStatus"
+        v-slot:item.campaignState="{ item }"
+      >
+        <v-chip 
+          :color="getColorState(item.campaignState)"
+          x-small
+          label
+          dark
+        >
+          {{ item.campaignState }}
+        </v-chip>
+      </template>
+      <template
+        v-if="checkWidgets"
+        v-slot:item.id="{ item }"
+      >
+        <router-link 
+          :to="{ path: `campaignwidget/${item.id}` }"
+        >
+          <v-icon>widgets</v-icon>
+        </router-link>
+      </template>
+      <template 
+        v-if="actionBtn"
+        v-slot:item.action="{ item }"
+      >
+        <base-button 
+          color="secondary"
+          circle
+          icon
+          x-small
+          @click.native="$emit('edit', item)"
+        >
+          <v-icon>edit</v-icon>
+        </base-button>
+        <base-button
+          color="error" 
+          circle
+          icon
+          x-small
+          @click.native="$emit('remove', item)"
+        >
+          <v-icon>close</v-icon>
+        </base-button>
+      </template>
     </v-data-table>
     <!-- footer page running page number -->
     <v-flex
       v-if="isNotEmpty"
-      class="text-xs-center pt-2"
+      class="text-center pt-2"
     >
       <v-pagination
         v-model="page" 
@@ -205,8 +295,7 @@ export default {
 <style lang="scss">
 
 .v-data-table-header th {
-  font-size: 1.2em;
-  font-weight: 500;
+  font-weight: 300;
   color: #8cc249 !important;
 }
 

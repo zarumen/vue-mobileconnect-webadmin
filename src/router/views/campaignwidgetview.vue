@@ -92,7 +92,7 @@ export default {
             </h1>
           </v-flex>
           <v-flex xs-12>
-            <div class="text-xs-center">
+            <div class="text-center">
               <h1 
                 :style="{color: '#'+this.$route.params.color}"
                 class="superbig"

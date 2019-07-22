@@ -94,7 +94,7 @@ export default {
               >
             </v-avatar>
             <v-card-text 
-              class="text-xs-center" 
+              class="text-center" 
             >
               <h4 class="card-title font-weight-light">
                 {{ displayName }}

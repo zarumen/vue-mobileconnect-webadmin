@@ -47,12 +47,12 @@ export default {
             >
             <div 
               id="fontTitle" 
-              class="white--text mb-1 text-xs-center" 
+              class="white--text mb-1 text-center" 
               style="font-size: 40px;"
             >
               Mobile Connect
             </div>
-            <!--               <div class="subheading mb-3 text-xs-center">by Mobile Connect</div> -->
+            <!--               <div class="subheading mb-3 text-center">by Mobile Connect</div> -->
             <base-button
               class="green mt-5"
               dark
@@ -88,10 +88,10 @@ export default {
                 <v-flex
                   xs12
                 >
-                  <h1 class="headline-normal mb-2 display-1 text-xs-center">
+                  <h1 class="headline-normal mb-2 display-1 text-center">
                     2 Ways SMS Solution
                   </h1>
-                  <div class="headline-normal text-xs-left ">
+                  <div class="headline-normal text-left ">
                     ให้คำปรึกษาและให้บริการเกี่ยวกับ “กิจกรรมการตลาดผ่าน SMS” ในรูปแบบของ 2WAYS SMS อย่างมืออาชีพ มากกว่า 800 แคมเปญต่อปี ที่เราได้ให้บริการอย่างมีประสิทธิภาพ
                     เหมาะสำหรับกิจกรรม<br><br>
                     <v-icon>check_box</v-icon> โหวต <br>
@@ -102,10 +102,10 @@ export default {
                     <v-icon>check_box</v-icon> เช็คยอดคะแนนสะสม
                   </div>
                   <p />
-                  <h2 class="headline-normal text-xs-center">
+                  <h2 class="headline-normal text-center">
                     2WAYS SMS
                   </h2>
-                  <div class="thai18 text-xs-left ">
+                  <div class="thai18 text-left ">
                     คือกิจกรรมการตลาดผ่านทางโทรศัพท์มือถือ สามารถนำมาประยุกต์ใช้ได้กับหลากหลายธุรกิจ สร้างการสื่อสารแบบ SMS Interactive กับกลุ่มเป้าหมาย ช่วยเพิ่มกลุ่มลูกค้าใหม่ รักษาฐานลูกค้าเก่า (Acquire or Retain Customer), สร้างการรับรู้ผลิตภัณฑ์ (Brand Awareness) และเพิ่มรายได้ (Generate Revenue) สร้างความสัมพันธ์ที่ดีระหว่างลูกค้ากับองค์กร
                   </div>
                 </v-flex>  
@@ -124,7 +124,7 @@ export default {
                   md4
                 >
                   <v-card class="elevation-0 transparent">
-                    <v-card-text class="text-xs-center">
+                    <v-card-text class="text-center">
                       <v-icon
                         x-large
                         class="blue--text text--lighten-2"
@@ -136,7 +136,7 @@ export default {
                       primary-title
                       class="layout justify-center"
                     >
-                      <div class="headline-normal text-xs-center">
+                      <div class="headline-normal text-center">
                         สร้างสีสันทางการตลาด
                       </div>
                     </v-card-title>
@@ -150,7 +150,7 @@ export default {
                   md4
                 >
                   <v-card class="elevation-0 transparent">
-                    <v-card-text class="text-xs-center">
+                    <v-card-text class="text-center">
                       <v-icon
                         x-large
                         class="blue--text text--lighten-2"
@@ -176,7 +176,7 @@ export default {
                   md4
                 >
                   <v-card class="elevation-0 transparent">
-                    <v-card-text class="text-xs-center">
+                    <v-card-text class="text-center">
                       <v-icon
                         x-large
                         class="blue--text text--lighten-2"
@@ -188,7 +188,7 @@ export default {
                       primary-title
                       class="layout justify-center"
                     >
-                      <div class="headline-normal text-xs-center">
+                      <div class="headline-normal text-center">
                         รักษาลูกค้าเก่า-เพิ่มลูกค้าใหม่
                       </div>
                     </v-card-title>
@@ -232,7 +232,7 @@ export default {
               sm4
               class="my-3"
             >
-              <div class="text-xs-center">
+              <div class="text-center">
                 <h2 class="headline-normal">
                   ตัวอย่างแคมเปญ 2WAYS SMS
                 </h2>
@@ -240,7 +240,7 @@ export default {
                   จากองค์กรและแบรนด์สินค้าดัง ที่เราได้รับความไว้วางใจให้บริการ
                 </span> -->
               </div>
-              <div class="thai18 mb-3 text-xs-left ">
+              <div class="thai18 mb-3 text-left ">
                 จากองค์กรและแบรนด์สินค้าดัง ที่เราได้รับความไว้วางใจให้บริการ
               </div>
             </v-flex>
@@ -426,7 +426,7 @@ export default {
             align-center
             justify-center
           >
-            <div class="headline-white mb-3 text-xs-center">
+            <div class="headline-white mb-3 text-center">
               หากสนใจและต้องการสอบถามข้อมูลเพิ่มเติม ติดต่อฝ่ายขาย
             </div>
             <em>One Stop Service : เราคือ ผู้นำด้านให้บริการ 2Ways SMS ที่ดีที่สุด</em>

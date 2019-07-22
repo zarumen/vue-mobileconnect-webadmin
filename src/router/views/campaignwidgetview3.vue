@@ -295,7 +295,7 @@ export default {
             xs-12
             style="width: 100%; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;"        
           >
-            <div class="text-xs-center">
+            <div class="text-center">
               <canvas id="widget-chart" />
             </div>
           </v-flex>

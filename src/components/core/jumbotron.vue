@@ -37,7 +37,7 @@ export default {
             <v-fade-transition mode="out-in">
               <v-flex
                 :key="$route.path"
-                :text-xs-center="isHome"
+                :text-center="isHome"
               >
                 <h1
                   class="display-2"

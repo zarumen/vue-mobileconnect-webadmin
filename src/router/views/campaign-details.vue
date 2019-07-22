@@ -172,7 +172,7 @@ export default {
                 />
                 <v-flex
                   xs6
-                  text-xs-right
+                  text-right
                   v-text="`${skill.value}%`"
                 />
                 <v-progress-linear
@@ -201,7 +201,7 @@ export default {
               >
             </v-avatar>
             <v-card-text 
-              class="text-xs-center"
+              class="text-center"
             >
               <h4 class="card-title font-weight-light">
                 {{ text.campaignCode }}

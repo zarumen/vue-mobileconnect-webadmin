@@ -352,8 +352,8 @@ export default {
             column
             style="    
 
-              height: 315px;
               width: 560px;
+              height: 315px;
               border: 1px solid black;"
           >
             <v-flex>
@@ -366,7 +366,7 @@ export default {
               </h1>
             </v-flex>
             <v-flex xs-12>
-              <div class="text-xs-center">
+              <div class="text-center">
                 <h1 
                   :style="{color: '#'+campaignWidget.fontColor}"
                   class="superbig"
@@ -411,8 +411,8 @@ export default {
             column
             style="
               
-              height: 315px;
               width: 560px;
+              height: 315px;
               border: 1px solid black;"
           >
             <v-flex>
@@ -426,9 +426,9 @@ export default {
             </v-flex>
             <v-flex 
               xs-12
-              style="width: 100%; padding-left: 20px; padding-bottom: 20px; padding-right: 20px;"        
+              style="width: 100%; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;"        
             >
-              <div class="text-xs-center">
+              <div class="text-center">
                 <canvas id="widget-chart" />
               </div>
             </v-flex>
@@ -464,8 +464,9 @@ export default {
             left 
             style="
 
+              width: 580px;
               height: 315px;
-              width: 580px;"
+            "
           >
             <v-layout column>
               <section>

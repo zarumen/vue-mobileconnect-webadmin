@@ -3,6 +3,9 @@ module.exports = {
   parserOptions: {
     sourceType: 'script',
   },
+  plugins: [
+    'vuetify'
+  ],
   env: {
     node: true
   },
@@ -24,6 +27,7 @@ module.exports = {
         allow: ['warn', 'error']
       }] :
       'off',
+    'vuetify/no-deprecated-classes': 'error'
   },
   overrides: [{
     files: ['src/**/*', 'tests/unit/**/*', 'tests/e2e/**/*'],

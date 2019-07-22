@@ -18,7 +18,7 @@ export default {
       dialogTitle: "Campaign Delete Dialog",
       dialogText: "Do you want to delete this campaign?",
       headers: [
-        { text: 'Widget', value: 'google' },
+        { text: 'Widget', value: 'id' },
         {
           text: 'Code',
           left: true,
@@ -174,7 +174,7 @@ export default {
               slot-scope="props"
               class="body-2" 
             >
-              <td class="text-xs-center">
+              <td class="text-center">
                 <a :href="`campaignwidget/${props.item.id}`">
                   <v-icon>widgets</v-icon>
                 </a>
@@ -192,7 +192,7 @@ export default {
           </v-data-table>
           <v-flex
             v-if="isNotEmpty"
-            class="text-xs-center pt-2"
+            class="text-center pt-2"
           >
             <v-pagination
               v-model="mutablePagination.page" 

@@ -17,7 +17,7 @@
         {{ icon }}
       </v-icon>
     </v-card>
-    <div class="text-xs-right">
+    <div class="text-right">
       <p
         class="category blue-grey--text font-weight-light"
         v-text="title"

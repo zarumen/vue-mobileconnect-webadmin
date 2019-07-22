@@ -27,6 +27,7 @@ export default {
       { text: 'Company',align: 'start', value: 'organizationLevel1Name' },
       { text: 'Department', value: 'organizationLevel2Name' },
       { text: 'Brand', value: 'organizationLevel3Name' },
+      { text: 'Actions', value: 'action', align: 'center', sortable: false },
     ],
     organizationId: '',
     left: true,

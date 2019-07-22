@@ -23,15 +23,16 @@ export default {
       dialogText: "Do you want to delete this user?",
       headers: [
         {
-          text: 'User Level',
+          text: 'Level',
           align: 'start',
           value: 'organizationAuth'
         },
-        { text: 'First Name', value: 'firstName' },
-        { text: 'Nick Name', value: 'nickName' },
-        { text: 'Company Name', value: 'organizationLevel1Name'},
+        { text: 'FirstName', value: 'firstName' },
+        { text: 'NickName', value: 'nickName' },
+        { text: 'Company', value: 'organizationLevel1Name'},
         { text: 'Email', value: 'email' },
         { text: 'Mobile', value: 'mobileTelNumber'},
+        { text: 'Actions', value: 'action', align: 'center', sortable: false },
       ],
       userId: '',
       left: true,
