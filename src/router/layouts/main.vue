@@ -2,6 +2,11 @@
 
 export default {
   components: { NavBar: () => import('@components/core/nav-bar') },
+  computed: {
+    checkHome () {
+      return (this.$route.name === 'home')
+    }
+  },
   created () {
     window.addEventListener('beforeunload', this.removeCachedTx)
   },
@@ -14,7 +19,16 @@ export default {
 </script>
 
 <template>
-  <v-content>
+  <v-content
+    v-if="checkHome"
+  >
+    <nav-bar />
+    <slot />
+  </v-content>
+  <v-content
+    v-else
+    class="container"
+  >
     <nav-bar />
     <slot />
   </v-content>

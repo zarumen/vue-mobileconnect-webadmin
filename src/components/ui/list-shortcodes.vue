@@ -462,15 +462,23 @@ export default {
                     &nbsp;Keywords Used:
                   </v-list-item-action-text>
                   <v-list-item-subtitle class="body-2 font-weight-thin">
-                    <v-chip
-                      v-for="k in item1.keywords" 
-                      :key="k"
-                      class="mb-2 light-green white--text caption font-weight-thin"
-                      small
-                      @click.stop="openBaseDialogDetails(k, item1.rawData[k])"
+                    <v-chip-group
+                      active-class="secondary--text"
+                      next-icon="arrow_right"
+                      prev-icon="arrow_left"
+                      show-arrows
                     >
-                      {{ k }}
-                    </v-chip>
+                      <v-chip
+                        v-for="k in item1.keywords" 
+                        :key="k"
+                        class="my-2 mx-1 caption"
+                        color="light-green lighten-4"
+                        x-small
+                        @click.stop="openBaseDialogDetails(k, item1.rawData[k])"
+                      >
+                        {{ k }}
+                      </v-chip>
+                    </v-chip-group>
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
@@ -505,25 +513,29 @@ export default {
                     </v-list-item-action-text>
                     <v-list-item-subtitle class="body-2 font-weight-thin">
                       <!-- Keyword ที่กำลัง reserved -->
-                      <v-chip
-                        v-for="i in item2.keywordsArray" 
-                        :key="i"
-                        class="mb-2 deep-purple lighten-1 white--text caption font-weight-thin"
-                        small
-                        @click.stop="clickedKeywordReserved(i, item2.shortcode)"
+                      <v-chip-group
+                        column
                       >
-                        {{ i }}
-                      </v-chip>
-                      <!-- Keywords ที่ถูกใช้ไปแล้ว (Actived) -->
-                      <v-chip
-                        v-for="i in item2.keywordsFalseArray" 
-                        :key="i"
-                        class="mb-2 grey lighten-1 white--text caption font-weight-thin"
-                        small
-                        @click.stop="onClicked(i)"
-                      >
-                        {{ i }}
-                      </v-chip>
+                        <v-chip
+                          v-for="i in item2.keywordsArray" 
+                          :key="i"
+                          class="mb-2 primary lighten-3 caption font-weight-thin"
+                          x-small
+                          @click.stop="clickedKeywordReserved(i, item2.shortcode)"
+                        >
+                          {{ i }}
+                        </v-chip>
+                        <!-- Keywords ที่ถูกใช้ไปแล้ว (Actived) -->
+                        <v-chip
+                          v-for="i in item2.keywordsFalseArray" 
+                          :key="i"
+                          class="mb-2 grey lighten-1 white--text caption font-weight-thin"
+                          x-small
+                          @click.stop="onClicked(i)"
+                        >
+                          {{ i }}
+                        </v-chip>
+                      </v-chip-group>
                     </v-list-item-subtitle>
                   </div>
                   <!-- <div v-if="item2.keywordsFalseArray.length > 0">

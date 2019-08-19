@@ -199,8 +199,8 @@ export default {
       large
       bottom
       right
-      absolute
       fixed
+      pr-4
       color="primary"
       @click.stop="addDialog = !addDialog"
     >

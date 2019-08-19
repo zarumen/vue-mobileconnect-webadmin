@@ -134,7 +134,7 @@ export default {
                     :key="index"
                     @click.stop="clickedSelectedCampaignReports(item.id)"
                   >
-                    <v-list-item-avatar>
+                    <v-list-item-action>
                       <v-tooltip
                         top
                         content-class="top"
@@ -151,12 +151,11 @@ export default {
                         </template>
                         <span>Download New File From S3</span>
                       </v-tooltip>
-                    </v-list-item-avatar>
+                    </v-list-item-action>
                     <v-list-item-content class="ma-2">
                       <div style="width: 100%">
                         <v-layout 
-                          justify-space-between 
-                          row
+                          justify-space-between
                         >
                           <v-flex 
                             align-content-center 

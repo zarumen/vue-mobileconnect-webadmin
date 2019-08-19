@@ -167,7 +167,14 @@ export const actions = {
     return id
   },
   getOrganizationsListById({ commit }, { authLevel, id }) {
-
+    switch(authLevel) {
+      case 'Level1':       
+        break
+      case 'Level2':
+        break
+      case 'Level3':
+        break
+    }
   },
   getOrganizationsList({ commit }) {
     
@@ -234,6 +241,27 @@ export const actions = {
   updatePagination({ commit }, pagiObj) {
     commit('setPage', pagiObj)
   },
+  async editOrganizationLevelCompany({ commit, state }, { organizationId, payloadFixed, picURL }) {
+
+    if(picURL !== 'undefine') {
+      // TODO: change picURL in fields organizations
+
+    } else {
+
+      let arrayIdChanged = state.items
+        .filter(org => org.organizationLevel1 === organizationId)
+        .map(ogfiltered => ogfiltered.id)
+
+      const companyRef = firestoreApp.collection('organizations')
+
+      companyRef.doc(`${organizationId}`).set({ displayName: payloadFixed }, { merge: true })
+
+      changedOrganization(companyRef, arrayIdChanged, { organizationLevel1Name: payloadFixed })
+
+      return 'OK'
+    }
+  },
+  // TODO: Edit Org Level Department & Brand
   // ===
   // DELETE Zone
   // ===
@@ -275,6 +303,9 @@ export const actions = {
 // Private helpers
 // ===
 
-// function getserverTimestamp() {
-//   return firebase.firestore.FieldValue.serverTimestamp()
-// }
+const changedOrganization = async (collection, ids, payload) => {
+
+  const changes = ids.map(id => collection.doc(id).set(payload, { merge: true }))
+  const result = await Promise.all(changes)
+  return result
+}

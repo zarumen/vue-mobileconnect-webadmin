@@ -156,9 +156,7 @@ export default {
                       >
                         <v-chip-group
                           active-class="primary--text"
-                          next-icon="arrow_right"
-                          prev-icon="arrow_left"
-                          mandatory
+                          column
                         >
                           <v-chip
                             v-for="pn in item.numberPLMN" 

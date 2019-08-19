@@ -325,9 +325,33 @@ export default {
                 prepend-icon="business"
                 label="Company Name"
                 class="purple-input"
-                persistent-hint
                 chips
-              />
+              >
+                <template v-slot:selection="data">
+                  <v-chip
+                    :key="JSON.stringify(data.item)"
+                    :input-value="data.selected"
+                    color="primary"
+                    @input="data.parent.selectItem(data.item)"
+                  >
+                    <v-avatar
+                      v-if="data.item.picURL !== 'undefine'"
+                      left
+                    >
+                      <img :src="data.item.picURL">
+                    </v-avatar>
+                    <v-avatar
+                      v-else
+                      class="white primary--text"
+                      left
+                    >
+                      {{ data.item.displayName.slice(0, 1).toUpperCase() }}
+                    </v-avatar>
+                    <!-- @input="data.parent.selectItem(data.item)" -->
+                    {{ data.item.displayName }}
+                  </v-chip>
+                </template>
+              </v-combobox>
             </v-flex>
             <v-flex
               v-if="enableLevel2 || enableLevel3"
@@ -342,13 +366,9 @@ export default {
                 item-text="displayName"
                 prepend-icon="business_center"
                 label="Department Name"
-                persistent-hint
                 chips
               >
-                <template 
-                  slot="item" 
-                  slot-scope="data"
-                >
+                <template v-slot:item="data">
                   <template v-if="typeof data.item !== 'object'">
                     <v-list-item-content v-text="data.item" />
                   </template>
@@ -358,25 +378,30 @@ export default {
                       <v-list-item-subtitle>{{ data.item.organizationLevel1Name }}</v-list-item-subtitle>
                     </v-list-item-content>
                   </template>
-                  <template 
-                    slot="selection" 
-                    slot-scope="idata"
+                </template>
+                <template v-slot:selection="data">
+                  <v-chip
+                    :key="JSON.stringify(data.item)"
+                    :input-value="data.selected"
+                    color="primary"
+                    @input="data.parent.selectItem(data.item)"
                   >
-                    <v-chip
-                      :key="JSON.stringify(idata.item)"
-                      :input-value="idata.selected"
-                      color="primary"
-                      text-color="white"
-                      close
-                      @input="idata.parent.selectItem(idata.item)"
+                    <v-avatar
+                      v-if="data.item.picURL !== 'undefine'"
+                      left
                     >
-                      <v-avatar>
-                        <img :src="idata.item.picURL">
-                      </v-avatar>
-                      <!-- @input="data.parent.selectItem(data.item)" -->
-                      {{ idata.item.displayName }}
-                    </v-chip>
-                  </template>
+                      <img :src="data.item.picURL">
+                    </v-avatar>
+                    <v-avatar
+                      v-else
+                      class="white primary--text"
+                      left
+                    >
+                      {{ data.item.displayName.slice(0, 1).toUpperCase() }}
+                    </v-avatar>
+                    <!-- @input="data.parent.selectItem(data.item)" -->
+                    {{ data.item.displayName }}
+                  </v-chip>
                 </template>
               </v-combobox>
             </v-flex>
@@ -393,17 +418,12 @@ export default {
                 item-text="displayName"
                 prepend-icon="shopping_basket"
                 label="Brand Name"
-                persistent-hint
                 chips
               >
-                <template 
-                  slot="item" 
-                  slot-scope="data"
-                >
+                <template v-slot:item="data">
                   <template v-if="data.item.picURL === 'undefine'">
                     <v-list-item-avatar 
-                      color="primary"
-                      class="green--text"
+                      color="secondary"
                     >
                       {{ data.item.displayName.slice(0, 2).toUpperCase() }}
                     </v-list-item-avatar>
@@ -421,25 +441,30 @@ export default {
                       <v-list-item-subtitle>{{ data.item.organizationLevel2Name }}</v-list-item-subtitle>
                     </v-list-item-content>
                   </template>
-                  <template
-                    slot="selection" 
-                    slot-scope="idata"
+                </template>
+                <template v-slot:selection="data">
+                  <v-chip
+                    :key="JSON.stringify(data.item)"
+                    :input-value="data.selected"
+                    color="primary"
+                    @input="data.parent.selectItem(data.item)"
                   >
-                    <v-chip
-                      :key="JSON.stringify(idata.item)"
-                      :input-value="idata.selected"
-                      color="primary"
-                      text-color="white"
-                      close
-                      @input="idata.parent.selectItem(idata.item)"
+                    <v-avatar
+                      v-if="data.item.picURL !== 'undefine'"
+                      left
                     >
-                      <v-avatar>
-                        <img :src="idata.item.picURL">
-                      </v-avatar>
-                      <!-- @input="data.parent.selectItem(data.item)" -->
-                      {{ idata.item.displayName }}
-                    </v-chip>
-                  </template>
+                      <img :src="data.item.picURL">
+                    </v-avatar>
+                    <v-avatar
+                      v-else
+                      class="white primary--text"
+                      left
+                    >
+                      {{ data.item.displayName.slice(0, 1).toUpperCase() }}
+                    </v-avatar>
+                    <!-- @input="data.parent.selectItem(data.item)" -->
+                    {{ data.item.displayName }}
+                  </v-chip>
                 </template>
               </v-combobox>
             </v-flex>

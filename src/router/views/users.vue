@@ -49,15 +49,6 @@ export default {
     ...mapGetters('organizations', [
       'hadList',
     ]),
-    quickSearch: {
-      get: () => {
-        return this.quickSearchFilter
-      },
-      set: (val) => {
-        this.quickSearchFilter = val
-        this.quickSearchFilter && this.quickSearchProducts()
-      }
-    },
   },
   created() {
     if(!this.hadList)

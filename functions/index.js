@@ -6,7 +6,7 @@ const rp = require('request-promise');
 
 const request = rp.defaults({ simple : false });
 const LINE_ACCESS_TOKEN = "zMsztWI7Jd20mx7nlDkdwPoaronXSFEf56WQRSSaF7A";
-const ONE_ONE_TOKEN = "7dZINoNtAYWQyaYmnsNCsaNzC9yGJbicmF2lzjjXITp";
+// const ONE_ONE_TOKEN = "7dZINoNtAYWQyaYmnsNCsaNzC9yGJbicmF2lzjjXITp";
 
 // admin.firestore().settings();
 
@@ -23,6 +23,8 @@ exports.aggregateOperatorInShortcodeConfig = functions.firestore
     // const txId = context.params.txId;
     const id = context.params.ShortcodeId;
     
+    // Get an object with the current document value.
+      // If the document does not exist, it has been deleted.
     const document = change.after.exists ? change.after.data() : null;
 
     // ref to the parent document

@@ -7,7 +7,7 @@ import { campaignComputed } from '@state/helpers'
 export default {
   page: {
     title: 'Widgets',
-    meta: [{ name: 'description', content: 'Campaign Widgets' }],
+    meta: [{ name: 'description', content: 'Campaigns Widget Manager' }],
   },
   components: { Layout },
   data() {

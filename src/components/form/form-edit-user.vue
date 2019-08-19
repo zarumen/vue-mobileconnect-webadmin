@@ -3,9 +3,13 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   props: {
-    addUserDialog: {
+    editUserDialog: {
       type: [String, Boolean],
       default: ''
+    },
+    editUser: {
+      type: [Object],
+      default: Object.assign({}, defaultForm)
     }
   },
   data() {
@@ -58,7 +62,7 @@ export default {
       valid: true,
       emailRules: [
         v => !!v || 'E-mail is required',
-        v => /^\w+([.-]?\w+)*@(-?\w)+([.-]?\\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+        v => /^\w+([.-]?\w+)*@\w+([.-]?\\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
       ],
       nameRules: [
         v => !!v || 'Name is required',
@@ -94,10 +98,16 @@ export default {
       return false
     },
   },
+  created () {
+
+  },
   methods: {
     ...mapActions('users', [
         'createUser'
     ]),
+    initEditUser (user) {
+      // TODO: init User by find Org Obj and fill User Info to fields
+    },
     closeDialog () {
       this.$emit('emitCloseUserDialog', false)
     },
@@ -192,7 +202,7 @@ export default {
 <template>
   <div>
     <v-dialog 
-      v-model="addUserDialog"
+      v-model="editUserDialog"
       persistent
       width="800px"
     >
@@ -203,7 +213,7 @@ export default {
       >
         <v-card>
           <v-card-title class="light-green lighten-4 py-4 title">
-            Create New User
+            Edit User
           </v-card-title>
           <v-container 
             grid-list-sm 

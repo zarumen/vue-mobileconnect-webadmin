@@ -90,6 +90,9 @@ export default {
     checkDate () {
       return this.headers.some(head => head.value === 'campaignDateStart' || head.value === 'campaignDateEnd')
     },
+    checkEmail () {
+      return this.headers.some(head => head.value === 'email')
+    },
   },
   created () {
 
@@ -148,6 +151,10 @@ export default {
       if (boolean === true) return 'check_circle'
       else return 'cancel'
     },
+    boolIconRunning (boolean) {
+      if (boolean === true) return 'play_circle_filled'
+      else return 'pause_circle_filled'
+    },
     boolColor (boolean) {
       if (boolean === true) return 'green'
       else return 'red'
@@ -182,7 +189,6 @@ export default {
       @current-items="updatedItems"
       @page-count="pages = $event"
     >
-      <!-- TODO: implement paginations (in pagination Utils) and render Function NEW! -->
       <template
         v-if="checkActive"
         v-slot:item.campaignActive="{ item }"
@@ -215,6 +221,14 @@ export default {
       >
         <span class="text-truncate overline">
           {{ formatDate(item.campaignDateEnd.seconds) }}
+        </span>
+      </template>
+      <template
+        v-if="checkEmail"
+        v-slot:item.email="{ item }"
+      >
+        <span class="text-truncate overline">
+          {{ item.email }}
         </span>
       </template>
       <template
@@ -260,7 +274,7 @@ export default {
         <v-icon
           :color="boolColor(item.campaignAvailable)"
         >
-          {{ boolIcon(item.campaignAvailable) }}
+          {{ boolIconRunning(item.campaignAvailable) }}
         </v-icon>
       </template>
       <template

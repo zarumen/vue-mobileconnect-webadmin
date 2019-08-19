@@ -87,27 +87,40 @@ export default {
               >
                 <v-flex
                   xs12
+                  pa-2
                 >
-                  <h1 class="headline-normal mb-2 display-1 text-center">
-                    2 Ways SMS Solution
-                  </h1>
-                  <div class="headline-normal text-left ">
-                    ให้คำปรึกษาและให้บริการเกี่ยวกับ “กิจกรรมการตลาดผ่าน SMS” ในรูปแบบของ 2WAYS SMS อย่างมืออาชีพ มากกว่า 800 แคมเปญต่อปี ที่เราได้ให้บริการอย่างมีประสิทธิภาพ
-                    เหมาะสำหรับกิจกรรม<br><br>
-                    <v-icon>check_box</v-icon> โหวต <br>
-                    <v-icon>check_box</v-icon> ตอบคำถาม<br>
-                    <v-icon>check_box</v-icon> ผลสำรวจ<br>
-                    <v-icon>check_box</v-icon> ชิงรางวัล<br>
-                    <v-icon>check_box</v-icon> ลงทะเบียน<br>
-                    <v-icon>check_box</v-icon> เช็คยอดคะแนนสะสม
-                  </div>
+                  <v-card 
+                    color="transparent" 
+                    flat
+                  >
+                    <v-flex class="blue--text display-1 text-center pa-5">
+                      2 Ways SMS Solution
+                    </v-flex>
+                    <v-flex class="text-left px-5">
+                      ให้คำปรึกษาและให้บริการเกี่ยวกับ “กิจกรรมการตลาดผ่าน SMS” ในรูปแบบของ 2WAYS SMS อย่างมืออาชีพ มากกว่า 800 แคมเปญต่อปี ที่เราได้ให้บริการอย่างมีประสิทธิภาพ<br>
+                      เหมาะสำหรับกิจกรรม<br><br>
+                      <v-flex class="pl-5 pb-5">
+                        <v-icon>check_box</v-icon> โหวต <br>
+                        <v-icon>check_box</v-icon> ตอบคำถาม<br>
+                        <v-icon>check_box</v-icon> ผลสำรวจ<br>
+                        <v-icon>check_box</v-icon> ชิงรางวัล<br>
+                        <v-icon>check_box</v-icon> ลงทะเบียน<br>
+                        <v-icon>check_box</v-icon> เช็คยอดคะแนนสะสม
+                      </v-flex>
+                    </v-flex>
+                  </v-card>
                   <p />
-                  <h2 class="headline-normal text-center">
-                    2WAYS SMS
-                  </h2>
-                  <div class="thai18 text-left ">
-                    คือกิจกรรมการตลาดผ่านทางโทรศัพท์มือถือ สามารถนำมาประยุกต์ใช้ได้กับหลากหลายธุรกิจ สร้างการสื่อสารแบบ SMS Interactive กับกลุ่มเป้าหมาย ช่วยเพิ่มกลุ่มลูกค้าใหม่ รักษาฐานลูกค้าเก่า (Acquire or Retain Customer), สร้างการรับรู้ผลิตภัณฑ์ (Brand Awareness) และเพิ่มรายได้ (Generate Revenue) สร้างความสัมพันธ์ที่ดีระหว่างลูกค้ากับองค์กร
-                  </div>
+                  <v-card 
+                    color="transparent" 
+                    flat
+                  >
+                    <v-flex class="blue--text display-1 text-center pa-5">
+                      2WAYS SMS
+                    </v-flex>
+                    <div class="thai18 text-left px-5 pb-5">
+                      &nbsp;&nbsp;&nbsp;&nbsp;คือกิจกรรมการตลาดผ่านทางโทรศัพท์มือถือ สามารถนำมาประยุกต์ใช้ได้กับหลากหลายธุรกิจ สร้างการสื่อสารแบบ SMS Interactive กับกลุ่มเป้าหมาย <br>ช่วยเพิ่มกลุ่มลูกค้าใหม่ รักษาฐานลูกค้าเก่า (Acquire or Retain Customer), สร้างการรับรู้ผลิตภัณฑ์ (Brand Awareness) และเพิ่มรายได้ (Generate Revenue) สร้างความสัมพันธ์ที่ดีระหว่างลูกค้ากับองค์กร
+                    </div>
+                  </v-card>
                 </v-flex>  
               </v-layout>
             </v-container>

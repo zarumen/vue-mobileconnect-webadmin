@@ -1,5 +1,6 @@
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
+
 
 export default {
   props: {
@@ -35,6 +36,11 @@ export default {
       { id: 2, state: 'Department', value: 'OrganizationLevel2' },
       { id: 3, state: 'Brand', value: 'OrganizationLevel3' },
     ],
+    select: Object.assign({}, {
+      id: 1, 
+      state: 'User Level: Company', 
+      value: 'OrganizationLevel1'
+    }),
     snackbar: false,
     timeout: 6000,
     text: 'Hello, I\'m a snackbar'
@@ -73,6 +79,19 @@ export default {
       
       return false
     },
+    // conditions of Edit Items
+    conditionEditDepartment () {
+      if (this.select.id === 2)
+        return true
+
+      return false
+    },
+    conditionEditBrand () {
+      if (this.select.id === 3)
+        return true
+
+      return false
+    }
   },
   created () {
     if(this.level === 'Level1') {
@@ -92,6 +111,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions('organizations', [
+      'editOrganizationLevelCompany'
+    ]),
     mutateList (companyListId) {
       return this.departmentList.filter(org => org.organizationLevel1 === companyListId)
     },
@@ -111,11 +133,70 @@ export default {
       }
     },
     save () {
+      // TODO: save edited Organization by:
+      // Level2 can change displayName and OrgNameLevel2
+      // Level3 can change Object by switch Department in the same Company and change DisplayName and OrgNameLevel3
+      switch(this.select.id) {
+        case 3:
+          // code block
+
+          break
+        case 2:
+          // code block
+          break
+        default:
+          // Level1 can change displayName and OrgName
+          if (this.form.company == null) {
+            this.openSnackBar('Please insert Company Name to This Form!')
+          }
+          if (typeof this.form.company === 'string') {
+            this.editOrganizationLevelCompany({
+              organizationId: `${this.orgLevelOne}`,
+              payloadFixed: `${this.form.company}`,
+              picURL: 'undefine'
+            }).then((result) => {
+              console.log(result)
+              this.closeDialog()
+            })
+            .catch((err) => console.log(err))
+          }
+
+          if (typeof this.form.company === 'object') {
+            let checkObj = this.findOrganizationObject('Level1', this.orgLevelOne)
+
+            if (checkObj.displayName === this.form.company.displayName) {
+              this.openSnackBar('You choose Company is the same!')
+              break
+            }
+
+            if (checkObj.picURL === this.form.company.picURL) {
+              this.openSnackBar('You cannot changed Picture!')
+              break
+            }
+
+            let data = `${this.form.company.displayName}`
+            
+
+            this.editOrganizationLevelCompany({
+              organizationId: `${this.orgLevelOne}`,
+              payloadFixed: `${data}`,
+              picURL: this.form.company.picURL
+            })
+
+            this.closeDialog()
+          }
+      }
 
     },
     closeDialog () {
       this.$emit('emitCloseEditDialog', false)
     },
+    openSnackBar (insertText) {
+      this.valid = !this.valid
+      this.text = ''
+      this.text = insertText
+      this.snackbar = true
+    }
   }
 }
 </script>
@@ -163,6 +244,7 @@ export default {
                   item-text="state"
                   item-value="value"
                   label="OrganizationLevel Field"
+                  disabled
                   persistent-hint
                   return-object
                   single-line
@@ -177,13 +259,50 @@ export default {
                 v-model="form.company"
                 :hint="`${form.company}`"
                 :items="companyList"
+                :disabled="conditionEditDepartment || conditionEditBrand"
                 item-text="displayName"
                 prepend-icon="business"
                 label="Company Name"
                 class="purple-input"
-                persistent-hint
                 chips
-              />
+              >
+                <template v-slot:selection="data">
+                  <template v-if="typeof data.item === 'object'">
+                    <v-chip
+                      :key="JSON.stringify(data.item)"
+                      :input-value="data.selected"
+                      color="primary"
+                      @input="data.parent.selectItem(data.item)"
+                    >
+                      <v-avatar
+                        v-if="data.item.picURL !== 'undefine'"
+                        left
+                      >
+                        <img :src="data.item.picURL">
+                      </v-avatar>
+                      <v-avatar
+                        v-else
+                        class="white primary--text"
+                        left
+                      >
+                        {{ data.item.displayName.slice(0, 1).toUpperCase() }}
+                      </v-avatar>
+                      <!-- @input="data.parent.selectItem(data.item)" -->
+                      {{ data.item.displayName }}
+                    </v-chip>
+                  </template>
+                  <template v-else>
+                    <v-chip
+                      :key="JSON.stringify(data.item)"
+                      :input-value="data.selected"
+                      color="primary"
+                      @input="data.parent.selectItem(data.item)"
+                    >
+                      {{ data.item }}
+                    </v-chip>
+                  </template>
+                </template>
+              </v-combobox>
             </v-flex>
             <v-flex
               v-if="enableLevel2 || enableLevel3"
@@ -194,43 +313,52 @@ export default {
                 v-model="form.department"
                 :hint="`${form.department}`"
                 :items="mutateDepartmentList"
+                :disabled="conditionEditBrand"
                 class="purple-input"
                 item-text="displayName"
                 prepend-icon="business_center"
                 label="Department Name"
-                persistent-hint
                 chips
               >
-                <template 
-                  slot="item" 
-                  slot-scope="data"
-                >
-                  <template v-if="typeof data.item !== 'object'">
-                    <v-list-item-content v-text="data.item" />
-                  </template>
-                  <template v-else>
-                    <v-list-item-content>
-                      <v-list-item-title>{{ data.item.displayName }}</v-list-item-title>
-                      <v-list-item-subtitle>{{ data.item.organizationLevel1Name }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </template>
-                  <template 
-                    slot="selection" 
-                    slot-scope="idata"
-                  >
+                <template v-slot:item="data">
+                  <v-list-item-content>
+                    <v-list-item-title>{{ data.item.displayName }}</v-list-item-title>
+                    <v-list-item-subtitle>{{ data.item.organizationLevel1Name }}</v-list-item-subtitle>
+                  </v-list-item-content>
+                </template>
+                <template v-slot:selection="data">
+                  <template v-if="typeof data.item === 'object'">
                     <v-chip
-                      :key="JSON.stringify(idata.item)"
-                      :input-value="idata.selected"
+                      :key="JSON.stringify(data.item)"
+                      :input-value="data.selected"
                       color="primary"
-                      text-color="white"
-                      close
-                      @input="idata.parent.selectItem(idata.item)"
+                      @input="data.parent.selectItem(data.item)"
                     >
-                      <v-avatar>
-                        <img :src="idata.item.picURL">
+                      <v-avatar
+                        v-if="data.item.picURL !== 'undefine'"
+                        left
+                      >
+                        <img :src="data.item.picURL">
+                      </v-avatar>
+                      <v-avatar
+                        v-else
+                        class="white primary--text"
+                        left
+                      >
+                        {{ data.item.displayName.slice(0, 1).toUpperCase() }}
                       </v-avatar>
                       <!-- @input="data.parent.selectItem(data.item)" -->
-                      {{ idata.item.displayName }}
+                      {{ data.item.displayName }}
+                    </v-chip>
+                  </template>
+                  <template v-else>
+                    <v-chip
+                      :key="JSON.stringify(data.item)"
+                      :input-value="data.selected"
+                      color="primary"
+                      @input="data.parent.selectItem(data.item)"
+                    >
+                      {{ data.item }}
                     </v-chip>
                   </template>
                 </template>
@@ -249,17 +377,12 @@ export default {
                 item-text="displayName"
                 prepend-icon="shopping_basket"
                 label="Brand Name"
-                persistent-hint
                 chips
               >
-                <template 
-                  slot="item" 
-                  slot-scope="data"
-                >
+                <template v-slot:item="data">
                   <template v-if="data.item.picURL === 'undefine'">
                     <v-list-item-avatar 
-                      color="primary"
-                      class="green--text"
+                      color="secondary"
                     >
                       {{ data.item.displayName.slice(0, 2).toUpperCase() }}
                     </v-list-item-avatar>
@@ -277,25 +400,30 @@ export default {
                       <v-list-item-subtitle>{{ data.item.organizationLevel2Name }}</v-list-item-subtitle>
                     </v-list-item-content>
                   </template>
-                  <template
-                    slot="selection" 
-                    slot-scope="idata"
+                </template>
+                <template v-slot:selection="data">
+                  <v-chip
+                    :key="JSON.stringify(data.item)"
+                    :input-value="data.selected"
+                    color="primary"
+                    @input="data.parent.selectItem(data.item)"
                   >
-                    <v-chip
-                      :key="JSON.stringify(idata.item)"
-                      :input-value="idata.selected"
-                      color="primary"
-                      text-color="white"
-                      close
-                      @input="idata.parent.selectItem(idata.item)"
+                    <v-avatar
+                      v-if="data.item.picURL !== 'undefine'"
+                      left
                     >
-                      <v-avatar>
-                        <img :src="idata.item.picURL">
-                      </v-avatar>
-                      <!-- @input="data.parent.selectItem(data.item)" -->
-                      {{ idata.item.displayName }}
-                    </v-chip>
-                  </template>
+                      <img :src="data.item.picURL">
+                    </v-avatar>
+                    <v-avatar
+                      v-else
+                      class="white primary--text"
+                      left
+                    >
+                      {{ data.item.displayName.slice(0, 1).toUpperCase() }}
+                    </v-avatar>
+                    <!-- @input="data.parent.selectItem(data.item)" -->
+                    {{ data.item.displayName }}
+                  </v-chip>
                 </template>
               </v-combobox>
             </v-flex>

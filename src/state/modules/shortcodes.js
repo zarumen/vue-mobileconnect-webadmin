@@ -21,7 +21,12 @@ export const state = {
   // Data Table Initial Setup Variables
   items: null,
   operators: null,
-  operatorConfig: null,
+  operatorConfig: {
+    password: '',
+    type: '',
+    url: '',
+    username: ''
+  },
   pagination: {},
   loading: false,
   mode: '',

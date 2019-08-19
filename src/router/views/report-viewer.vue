@@ -153,7 +153,6 @@ export default {
                     <v-tooltip
                       v-if="!loading"
                       top
-                      content-class="top"
                     >
                       <template v-slot:activator="{ on }">
                         <base-button
@@ -170,7 +169,6 @@ export default {
                     <v-tooltip
                       v-else
                       top
-                      content-class="top"
                     >
                       <template v-slot:activator="{ on }">
                         <base-button
@@ -186,14 +184,12 @@ export default {
                     </v-tooltip>
                   </v-list-item-action>
                   <v-list-item-content class="ma-2">
-                    <div style="width: 100%">
-                      <v-layout 
-                        justify-space-between 
-                        row
+                    <div>
+                      <v-layout
+                        justify-space-between
                       >
                         <v-flex 
-                          align-content-center 
-                          class="my-2"
+                          align-content-center
                         >
                           {{ item.campaignName }} <br>
                           <v-list-item-subtitle>Campaign Start : {{ renderDate('start', item) }}</v-list-item-subtitle>

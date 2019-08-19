@@ -2,6 +2,13 @@ import fireauthApp from '@utils/fireauth.config'
 import firestoreApp from '@utils/firestore.config'
 import assign from 'lodash/assign'
 
+const defaultCurrentUserObj = {
+  displayName: '',
+  email: '',
+  idToken: '',
+  photoURL: ''
+}
+
 export const state = {
   currentUser: getSavedState('auth.currentUser'),
   userInfo: getSavedState('auth.userInfo'),
@@ -10,7 +17,7 @@ export const state = {
 
 export const getters = {
   // Whether the user is currently logged in.
-  loggedIn: state => !!state.currentUser,
+  loggedIn: state => !!state.currentUser.idToken,
   // check Admin role
   isAdmin: state => state.isAdmin,
   // get User Email
@@ -44,13 +51,13 @@ export const actions = {
 
   // Validates the current user's token and refreshes it
   // with new data from the API.
-  async validate({ state, commit }) {
+  async validate({ state, commit, dispatch }) {
     // check localStorage have data ?
     if (!state.currentUser) return Promise.resolve(null)
 
     // check validate localStorage data valid
     if (!state.currentUser.email) {
-      commit ('SET_CURRENT_USER', null)
+      commit ('SET_CURRENT_USER', defaultCurrentUserObj)
       commit ('setUserInfo', null)
       commit ('setAdminRole', false)
 
@@ -65,12 +72,12 @@ export const actions = {
       fireauthApp.onAuthStateChanged(firebaseUser => {
         if (firebaseUser) {
           // refresh new ID Token when token expired
-          if (firebaseUser.qa !== state.currentUser.idToken) {
+          if (firebaseUser.ra !== fireauthApp.currentUser.idToken) {
             let user = {
               photoURL: firebaseUser.photoURL,
               email: firebaseUser.email,
               displayName: firebaseUser.displayName,
-              idToken: firebaseUser.qa
+              idToken: firebaseUser.ra
             }
             // refresh IdToken in currentUser
             commit ('SET_CURRENT_USER', user)
@@ -78,7 +85,9 @@ export const actions = {
           // return when use dispatch.then((email) => { ... })
           resolve(firebaseUser.email)
         } else {
-          reject(Error('Auth state changed Error!'))
+          // if session Expired clear
+          dispatch('logOut')
+          resolve(null)
         }
       })
     })
@@ -106,7 +115,7 @@ export const actions = {
         console.log(error)
         if (error.response.status === 401) {
           commit('setUserInfo', null)
-          commit('SET_CURRENT_USER', null)
+          commit('SET_CURRENT_USER', defaultCurrentUserObj)
           commit('setAdminRole', false)
         }
         return Promise.resolve(null)
@@ -147,12 +156,13 @@ export const actions = {
 
   logOut({ commit, dispatch }) {
 
-    commit('SET_CURRENT_USER', null)
+    commit('SET_CURRENT_USER', defaultCurrentUserObj)
     commit('setUserInfo', null)
     commit('setAdminRole', false)
 
     dispatch('transactions/removeLocalStorageAll', null, { root: true })
 
+    window.sessionStorage.removeItem('vuex')
     removeState('auth.currentUser')
     removeState('auth.userInfo')
     removeState('auth.admin')
