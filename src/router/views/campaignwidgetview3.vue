@@ -261,7 +261,7 @@ export default {
                                   color="blue-grey lighten-4"
                                   class="headline item"
                                 >
-                                  {{ "MRW"+label }}
+                                  {{ "KHK"+label }}
                                 </v-chip>
                               </v-flex>
                               <v-flex
