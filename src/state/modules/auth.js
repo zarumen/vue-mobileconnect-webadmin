@@ -3,10 +3,10 @@ import firestoreApp from '@utils/firestore.config'
 import assign from 'lodash/assign'
 
 const defaultCurrentUserObj = {
-  displayName: '',
-  email: '',
-  idToken: '',
-  photoURL: ''
+  displayName: null,
+  email: null,
+  idToken: null,
+  photoURL: null
 }
 
 export const state = {
@@ -17,7 +17,8 @@ export const state = {
 
 export const getters = {
   // Whether the user is currently logged in.
-  loggedIn: state => !!state.currentUser.idToken,
+  // TODO: change loggedIn checked State
+  loggedIn: state => haveIdToken(state.currentUser),
   // check Admin role
   isAdmin: state => state.isAdmin,
   // get User Email
@@ -172,6 +173,21 @@ export const actions = {
 // ===
 // Private helpers
 // ===
+
+function haveIdToken (obj) {
+
+  if(obj === null) return false
+
+    if(obj.hasOwnProperty('idToken')) {
+      if(obj.idToken !== null) {
+        return true
+      } else {
+        return false
+      }
+    }
+  
+  return false
+}
 
 function getSavedState(key) {
   return JSON.parse(window.localStorage.getItem(key))

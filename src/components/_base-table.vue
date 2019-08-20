@@ -66,11 +66,23 @@ export default {
     checkOrganizationAuth () {
       return this.headers.some(head => head.value === 'organizationAuth')
     },
+    checkOrganizationCompany () {
+      return this.headers.some(head => head.text === 'Company')
+    },
+    checkOrganizationDepartment () {
+      return this.headers.some(head => head.text === 'Department')
+    },
+    checkOrganizationBrand () {
+      return this.headers.some(head => head.text === 'Brand')
+    },
     checkWidgets () {
       return this.headers.some(head => head.text === 'Widget')
     },
     checkKeywords () {
       return this.headers.some(head => head.text === 'Keyword')
+    },
+    checkCode () {
+      return this.headers.some(head => head.value === 'campaignCode')
     },
     checkHeader () {
       return this.headers.some(head => head.value === 'campaignName')
@@ -84,6 +96,9 @@ export default {
     checkStatus () {
       return this.headers.some(head => head.value === 'campaignState')
     },
+    checkShortcode () {
+      return this.headers.some(head => head.value === 'shortcode')
+    },
     checkCreateDate () {
       return this.headers.some(head => head.value === 'campaignCreateTime')
     },
@@ -92,6 +107,15 @@ export default {
     },
     checkEmail () {
       return this.headers.some(head => head.value === 'email')
+    },
+    checkUserFirstName () {
+      return this.headers.some(head => head.value === 'firstName')
+    },
+    checkUserNickName () {
+      return this.headers.some(head => head.value === 'nickName')
+    },
+    checkUserMobile () {
+      return this.headers.some(head => head.value === 'mobileTelNumber')
     },
   },
   created () {
@@ -232,6 +256,62 @@ export default {
         </span>
       </template>
       <template
+        v-if="checkUserFirstName"
+        v-slot:item.firstName="{ item }"
+      >
+        <span class="text-truncate overline">
+          {{ item.firstName }}
+        </span>
+      </template>
+      <template
+        v-if="checkUserNickName"
+        v-slot:item.nickName="{ item }"
+      >
+        <span class="text-truncate caption">
+          {{ item.nickName }}
+        </span>
+      </template>
+      <template
+        v-if="checkUserMobile"
+        v-slot:item.mobileTelNumber="{ item }"
+      >
+        <span class="text-truncate caption primary--text">
+          {{ item.mobileTelNumber }}
+        </span>
+      </template>
+      <template
+        v-if="checkOrganizationCompany"
+        v-slot:item.organizationLevel1Name="{ item }"
+      >
+        <span class="text-truncate overline">
+          {{ item.organizationLevel1Name }}
+        </span>
+      </template>
+      <template
+        v-if="checkOrganizationDepartment"
+        v-slot:item.organizationLevel2Name="{ item }"
+      >
+        <span class="text-truncate overline">
+          {{ item.organizationLevel2Name }}
+        </span>
+      </template>
+      <template
+        v-if="checkOrganizationBrand"
+        v-slot:item.organizationLevel3Name="{ item }"
+      >
+        <span class="text-truncate overline">
+          {{ item.organizationLevel3Name }}
+        </span>
+      </template>
+      <template
+        v-if="checkCode"
+        v-slot:item.campaignCode="{ item }"
+      >
+        <span class="text-truncate overline">
+          {{ item.campaignCode }}
+        </span>
+      </template>
+      <template
         v-if="checkHeader"
         v-slot:item.campaignName="{ item }"
       >
@@ -240,20 +320,44 @@ export default {
         </span>
       </template>
       <template
+        v-if="checkShortcode"
+        v-slot:item.shortcode="{ item }"
+      >
+        <span class="text-truncate overline">
+          {{ item.shortcode }}
+        </span>
+      </template>
+      <template
         v-if="checkKeywords"
         v-slot:item.keyword="{ item }"
       >
-        <v-chip
-          v-for="i in item.keyword"
-          :key="i"
-          :ripple="false"
-          color="primary"
-          label
-          x-small
-          dark
+        <v-sheet
+          v-if="item.keyword"
+          max-width="60"
+          flat
         >
-          {{ i }}
-        </v-chip>
+          <v-slide-group>
+            <v-slide-item
+              v-for="i in item.keyword"
+              :key="JSON.stringify(i)"
+              v-slot:default="{ active, toggle }"
+            >
+              <v-chip
+                class="mx-2 primary"
+                :input-value="active"
+                active-class="primary white--text"
+                depressed
+                rounded
+                label
+                x-small
+                dark
+                @click="toggle"
+              >
+                {{ i }}
+              </v-chip>
+            </v-slide-item>
+          </v-slide-group>
+        </v-sheet>
       </template>
       <template
         v-if="checkOrganizationAuth"
@@ -264,7 +368,9 @@ export default {
           small
           dark
         >
-          {{ item.organizationAuth }}
+          <span class="text-truncate">
+            {{ item.organizationAuth }}
+          </span>
         </v-chip>
       </template>
       <template
@@ -287,7 +393,9 @@ export default {
           label
           dark
         >
-          {{ item.campaignState }}
+          <span class="text-truncate">
+            {{ item.campaignState }}
+          </span>
         </v-chip>
       </template>
       <template

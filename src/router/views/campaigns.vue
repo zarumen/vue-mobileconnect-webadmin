@@ -28,7 +28,7 @@ export default {
         { text: 'Keyword', value: 'keyword' },
         { text: 'Shortcode', value: 'shortcode' },
         { text: 'Running', value: 'campaignAvailable' },
-        { text: 'Status', value: 'campaignState' },
+        { text: 'Status', value: 'campaignState', align: 'center' },
         { text: 'Active', value: 'campaignActive' },
         { text: 'Actions', value: 'action', align: 'center', sortable: false },
       ],
