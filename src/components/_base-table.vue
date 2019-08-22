@@ -31,7 +31,9 @@ export default {
   },
   data () {
     return {
-      currentItems: ''
+      currentItems: '',
+      menuShow: false,
+      keywordArraySelected: [],
     }
   },
   computed: {
@@ -193,6 +195,14 @@ export default {
       }
 
       return this.$emit('updated-items', this.items)
+    },
+    selectedShow (array) {
+      this.keywordArraySelected = array
+      this.menuShow = true
+    },
+    closeSelectedShow () {
+      this.keywordArraySelected = []
+      this.menuShow = false
     }
   },
   
@@ -331,33 +341,21 @@ export default {
         v-if="checkKeywords"
         v-slot:item.keyword="{ item }"
       >
-        <v-sheet
+        <v-badge
           v-if="item.keyword"
-          max-width="60"
-          flat
+          color="secondary"
+          overlap
+          @click.native="selectedShow(item.keyword)"
         >
-          <v-slide-group>
-            <v-slide-item
-              v-for="i in item.keyword"
-              :key="JSON.stringify(i)"
-              v-slot:default="{ active, toggle }"
-            >
-              <v-chip
-                class="mx-2 primary"
-                :input-value="active"
-                active-class="primary white--text"
-                depressed
-                rounded
-                label
-                x-small
-                dark
-                @click="toggle"
-              >
-                {{ i }}
-              </v-chip>
-            </v-slide-item>
-          </v-slide-group>
-        </v-sheet>
+          <template v-slot:badge>
+            <span v-if="item.keyword.length > 1">{{ item.keyword.length }}</span>
+          </template>
+          <v-chip small>
+            <span class="text-truncate overline">
+              {{ item.keyword[0] }}
+            </span>
+          </v-chip>
+        </v-badge>
       </template>
       <template
         v-if="checkOrganizationAuth"
@@ -435,6 +433,40 @@ export default {
       </template>
     </v-data-table>
     <!-- footer page running page number -->
+    <v-dialog
+      v-model="menuShow"
+      persistent
+      max-width="290px"
+      transition="dialog-transition"
+    >
+      <v-card>
+        <v-card-actions>
+          <div class="flex-grow-1" />
+          <v-icon
+            @click="closeSelectedShow"
+          >
+            close
+          </v-icon>
+        </v-card-actions>
+        <v-card-text>
+          <v-chip-group
+            column
+            active-class="primary--text"
+          >
+            <v-chip 
+              v-for="i in keywordArraySelected"
+              :key="JSON.stringify(i)"
+              x-small
+              label
+            >
+              <span class="text-truncate">
+                {{ i }}
+              </span>
+            </v-chip>
+          </v-chip-group>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <v-flex
       v-if="isNotEmpty"
       class="text-center pt-2"

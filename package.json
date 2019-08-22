@@ -40,7 +40,7 @@
     "axios-observable": "^1.1.0",
     "chart.js": "2.7.x",
     "firebase": "^6.0.2",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.15",
     "nprogress": "^0.2.0",
     "register-service-worker": "^1.6.2",
     "rxjs": "^6.5.2",
@@ -54,7 +54,7 @@
     "vue-socket-io": "^0.3.2",
     "vue-socket.io": "^3.0.5",
     "vue-socket.io-extended": "^3.2.1",
-    "vuetify": "^2.0.7",
+    "vuetify": "^2.0.10",
     "vuex": "^3.0.1",
     "vuex-persistedstate": "^2.5.4"
   },
