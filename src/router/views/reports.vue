@@ -226,7 +226,9 @@ export default {
                           small
                           label
                         >
-                          {{ item.type }}
+                          <span class="text-truncate overline">
+                            {{ item.type }}
+                          </span>
                         </v-chip>
                       </v-list-item-avatar>
                       <v-list-item-content 
