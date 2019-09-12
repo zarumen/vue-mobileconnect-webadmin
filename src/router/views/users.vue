@@ -12,12 +12,14 @@ export default {
   },
   components: {
     Layout: () => import('@layouts/main'), 
-    FormAddUser: () => import('@components/form/form-add-user')
+    FormAddUser: () => import('@components/form/form-add-user'),
+    FormEditUser: () => import('@components/form/form-edit-user')
   },
   data() {
     return {
       baseModule: 'users',
       addUserDialog: '',
+      editUserDialog: '',
       dialog: '',
       dialogTitle: "User Delete Dialog",
       dialogText: "Do you want to delete this user?",
@@ -35,6 +37,7 @@ export default {
         { text: 'Actions', value: 'action', align: 'center', sortable: false },
       ],
       userId: '',
+      userSelected: null,
       left: true,
       timeout: 2000,
       // NOT USE! now
@@ -66,7 +69,8 @@ export default {
       window.print()
     },
     edit (item) {
-
+      this.userSelected = item
+      this.editUserDialog = !this.editUserDialog
     },
     remove (item) {
       this.userId = item.id
@@ -190,9 +194,16 @@ export default {
     >
       <v-icon>add</v-icon>
     </base-button>
-    <FormAddUser 
+    <FormAddUser
+      v-if="addUserDialog"
       :add-user-dialog="addUserDialog" 
       @emitCloseUserDialog="addUserDialog=arguments[0]"
+    />
+    <FormEditUser
+      v-if="editUserDialog"
+      :edit-user-dialog="editUserDialog"
+      :edit-user="userSelected"
+      @emitCloseUserDialog="editUserDialog=arguments[0]"
     />
   </Layout>
 </template>

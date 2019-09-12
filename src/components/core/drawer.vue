@@ -141,7 +141,6 @@ export default {
     app
     dark
     floating
-    permanent
     expand-on-hover
     :src="image"
     class="elevation-4"

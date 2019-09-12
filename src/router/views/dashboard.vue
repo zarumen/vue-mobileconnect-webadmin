@@ -1,4 +1,6 @@
 <script>
+import { mapState, mapGetters, mapActions } from 'vuex'
+import { formatDateTime } from '@utils/format-date'
 
 export default {
   page: {
@@ -10,8 +12,14 @@ export default {
   },
   data () {
     return {
-      today: new Date().toString(),
+      focus: '',
       test: 'test in data',
+      type: 'month',
+      start: null,
+      end: null,
+      selectedEvent: {},
+      selectedElement: null,
+      selectedOpen: false,
       headers: [
         {
           sortable: false,
@@ -42,110 +50,181 @@ export default {
           align: 'right'
         }
       ],
-      items: [
-        {
-          name: 'Dakota Rice',
-          country: 'Niger',
-          city: 'Oud-Tunrhout',
-          salary: '$35,738'
-        },
-        {
-          name: 'Minerva Hooper',
-          country: 'Curaçao',
-          city: 'Sinaai-Waas',
-          salary: '$23,738'
-        }, {
-          name: 'Sage Rodriguez',
-          country: 'Netherlands',
-          city: 'Overland Park',
-          salary: '$56,142'
-        }, {
-          name: 'Philip Chanley',
-          country: 'Korea, South',
-          city: 'Gloucester',
-          salary: '$38,735'
-        }, {
-          name: 'Doris Greene',
-          country: 'Malawi',
-          city: 'Feldkirchen in Kārnten',
-          salary: '$63,542'
-        }
-      ],
       tabs: 0,
       list: {
         0: false,
         1: false,
         2: false
       },
-      events: [
-        {
-          title: 'Vacation',
-          details: 'Going to the beach!',
-          date: '2018-12-30',
-          open: false
-        },
-        {
-          title: 'Vacation',
-          details: 'Going to the beach!',
-          date: '2018-12-31',
-          open: false
-        },
-        {
-          title: 'Vacation',
-          details: 'Going to the beach!',
-          date: '2019-01-01',
-          open: false
-        },
-        {
-          title: 'Meeting',
-          details: 'Spending time on how we do not have enough time',
-          date: '2019-01-07',
-          open: false
-        },
-        {
-          title: '30th Birthday',
-          details: 'Celebrate responsibly',
-          date: '2019-01-03',
-          open: false
-        },
-        {
-          title: 'New Year',
-          details: 'Eat chocolate until you pass out',
-          date: '2019-01-01',
-          open: false
-        },
-        {
-          title: 'Conference',
-          details: 'Mute myself the whole time and wonder why I am on this call',
-          date: '2019-01-21',
-          open: false
-        },
-        {
-          title: 'Hackathon',
-          details: 'Code like there is no tommorrow',
-          date: '2019-02-01',
-          open: false
-        }
-      ]
+      typeToLabel: {
+        month: 'Month',
+        week: 'Week',
+        day: 'Day',
+        '4day': '4 Days',
+      },
     }
   },
   computed: {
-    // convert the list of events into a map of lists keyed by date
-    eventsMap () {
-      const map = {}
-      this.events.forEach(e => (map[e.date] = map[e.date] || []).push(e))
-      return map
+    ...mapState('campaigns', {
+    // ListItem of Data Table 
+    items: state => state.items
+    }),
+    ...mapGetters('campaigns', [
+      'hadCampaignList',
+    ]),
+    campaignEvent () {
+      if(this.items) {
+        let eventsD = []
+        let dataArray = this.items
+
+        dataArray.forEach((element, index) => {
+          const {
+            campaignCode,
+            campaignName,
+            campaignDateEnd,
+            campaignDateStart,
+            campaignState
+          } = element
+
+          if(campaignDateStart && campaignDateEnd) {
+            let startdate = this.timeFormatter(campaignDateStart.seconds)
+            // let enddate = this.timeFormatter(campaignDateEnd.seconds)
+
+            let data = {
+              name: campaignCode,
+              details: `${campaignName} \n\r campaignState: "${campaignState}"`,
+              start: startdate,
+              // end: enddate,
+              color: this.randomColor()
+            }
+            eventsD.push(data)
+          } else {
+            
+            // let data = {
+            //   name: campaignCode,
+            //   details: campaignName,
+            //   color: this.randomColor()
+            // }
+            // eventsD.push(data)
+
+          }
+        })
+        return eventsD
+      }
+      return []
     },
-    date () {
-      return this.events.map(x => x.date)
-    }
+    // convert the list of events into a map of lists keyed by date
+    today () {
+      let currentDate = new Date()
+      let formattedDate = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate() + " " + currentDate.getHours() + ":" + currentDate.getMinutes()
+      return formattedDate
+    },
+    title () {
+      const { start, end } = this
+      if (!start || !end) {
+        return ''
+      }
+
+      const startMonth = this.monthFormatter(start)
+      const endMonth = this.monthFormatter(end)
+      const suffixMonth = startMonth === endMonth ? '' : endMonth
+
+      const startYear = start.year
+      const endYear = end.year
+      const suffixYear = startYear === endYear ? '' : endYear
+
+      const startDay = start.day + this.nth(start.day)
+      const endDay = end.day + this.nth(end.day)
+
+      switch (this.type) {
+        case 'month':
+          return `${startMonth} ${startYear}`
+        case 'week':
+        case '4day':
+          return `${startMonth} ${startDay} ${startYear} - ${suffixMonth} ${endDay} ${suffixYear}`
+        case 'day':
+          return `${startMonth} ${startDay} ${startYear}`
+      }
+      return ''
+    },
+    monthFormatter () {
+      return this.$refs.calendar.getFormatter({
+        timeZone: 'UTC', month: 'short',
+      })
+    },
+  },
+  created () {
+    if(!this.hadCampaignList)
+      this.getAllCampaigns()
   },
   methods: {
+    ...mapActions('campaigns', [
+      'getAllCampaigns',
+    ]),
     complete (index) {
       this.list[index] = !this.list[index]
     },
     open (event) {
       alert(event.title)
+    },
+    viewDay ({ date }) {
+      this.focus = date
+      this.type = 'week'
+    },
+    getEventColor (event) {
+      return event.color
+    },
+    randomColor () {
+      let myArray = [
+        'red', 'pink', 'purple', 
+        'deep-purple', 'indigo', 'blue', 
+        'light-blue', 'cyan', 'teal',
+        'green', 'light-green', 'lime',
+        'yellow', 'amber', 'orange',
+        'deep-orange', 'brown', 'blue-grey'
+      ]
+
+      return myArray[Math.floor(Math.random() * myArray.length)]
+    },
+    setToday () {
+      this.focus = this.today
+    },
+    prev () {
+      this.$refs.calendar.prev()
+    },
+    next () {
+      this.$refs.calendar.next()
+    },
+    showEvent ({ nativeEvent, event }) {
+      const open = () => {
+        this.selectedEvent = event
+        this.selectedElement = nativeEvent.target
+        setTimeout(() => {
+          return (this.selectedOpen = true)
+        }, 10)
+      }
+
+      if (this.selectedOpen) {
+        this.selectedOpen = false
+        setTimeout(open, 10)
+      } else {
+        open()
+      }
+
+      nativeEvent.stopPropagation()
+    },
+    updateRange ({ start, end }) {
+      // You could load events from an outside source (like database) now that we have the start and end dates on the calendar
+      this.start = start
+      this.end = end
+    },
+    nth (d) {
+      return d > 3 && d < 21
+        ? 'th'
+        : ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th'][d % 10]
+    },
+    timeFormatter (seconds) {
+      return formatDateTime(seconds)
     }
   }
 }
@@ -154,16 +233,14 @@ export default {
 <template>
   <Layout>
     <v-container
+      class="grey lighten-5"
       fill-height
-      fluid
-      grid-list-xl
     >
-      <v-layout wrap>
-        <v-flex 
-          sm6
-          xs12
-          md6
-          lg3
+      <v-row>
+        <v-col
+          cols="12"
+          sm="6"
+          md="3"
         >
           <base-stats-card
             color="green"
@@ -173,12 +250,11 @@ export default {
             sub-icon="alarm"
             sub-text="Last 24 Hours"
           />
-        </v-flex>
-        <v-flex 
-          sm6
-          xs12
-          md6
-          lg3
+        </v-col>
+        <v-col
+          cols="12"
+          sm="6"
+          md="3"
         >
           <base-stats-card
             color="orange"
@@ -188,12 +264,11 @@ export default {
             sub-icon="alarm"
             sub-text="Last 24 Hours"
           />
-        </v-flex>
-        <v-flex 
-          sm6
-          xs12
-          md6
-          lg3
+        </v-col>
+        <v-col
+          cols="12"
+          sm="6"
+          md="3"
         >
           <base-stats-card
             color="blue"
@@ -203,12 +278,11 @@ export default {
             sub-icon="alarm"
             sub-text="Last 24 Hours"
           />
-        </v-flex>
-        <v-flex 
-          sm6
-          xs12
-          md6
-          lg3
+        </v-col>
+        <v-col
+          cols="12"
+          sm="6"
+          md="3"
         >
           <base-stats-card
             color="purple"
@@ -218,8 +292,8 @@ export default {
             sub-icon="alarm"
             sub-text="Last 24 Hours"
           />
-        </v-flex>
-        <!-- <v-flex
+        </v-col>
+        <!-- <v-col
           md12
           sm12
           lg4
@@ -258,8 +332,8 @@ export default {
               </span>
             </template>
           </base-chart-card>
-        </v-flex>
-        <v-flex
+        </v-col>
+        <v-col
           md12
           sm12
           lg4
@@ -290,8 +364,8 @@ export default {
               </span>
             </template>
           </base-chart-card>
-        </v-flex>
-        <v-flex
+        </v-col>
+        <v-col
           md12
           sm12
           lg4
@@ -321,328 +395,154 @@ export default {
               </span>
             </template>
           </base-chart-card>
-        </v-flex> -->
-        <v-flex
-          md12
-          lg6
+        </v-col> -->
+        <v-col
+          cols="12"
         >
           <base-card
             color="orange"
-            title="Employee Stats"
-            text="New employees on 15th September, 2016"
+            title="Campaigns Start Date Calendar"
+            text="Check CampaignState Status"
           >
-            <v-layout>
-              <v-flex>
+            <v-row>
+              <v-col>
+                <v-sheet height="64">
+                  <v-toolbar
+                    flat
+                    color="white"
+                  >
+                    <v-btn
+                      outlined
+                      class="mr-1"
+                      small
+                      @click="setToday"
+                    >
+                      Today
+                    </v-btn>
+                    <v-btn
+                      fab
+                      text
+                      small
+                      @click="prev"
+                    >
+                      <v-icon small>
+                        mdi-chevron-left
+                      </v-icon>
+                    </v-btn>
+                    <v-btn
+                      fab
+                      text
+                      small
+                      @click="next"
+                    >
+                      <v-icon small>
+                        mdi-chevron-right
+                      </v-icon>
+                    </v-btn>
+                    <v-toolbar-title class="caption">
+                      {{ title }}
+                    </v-toolbar-title>
+                    <div class="flex-grow-1" />
+                    <v-menu
+                      bottom
+                      right
+                    >
+                      <template v-slot:activator="{ on }">
+                        <v-btn
+                          class="ml-2"
+                          small
+                          outlined
+                          v-on="on"
+                        >
+                          <span>{{ typeToLabel[type] }}</span>
+                          <v-icon right>
+                            mdi-menu-down
+                          </v-icon>
+                        </v-btn>
+                      </template>
+                      <v-list>
+                        <v-list-item @click="type = 'day'">
+                          <v-list-item-title>Day</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item @click="type = 'week'">
+                          <v-list-item-title>Week</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item @click="type = 'month'">
+                          <v-list-item-title>Month</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item @click="type = '4day'">
+                          <v-list-item-title>4 days</v-list-item-title>
+                        </v-list-item>
+                      </v-list>
+                    </v-menu>
+                  </v-toolbar>
+                </v-sheet>
                 <v-sheet height="500">
                   <v-calendar
-                    :value="today"
+                    ref="calendar"
+                    v-model="focus"
                     color="orange"
+                    :now="today"
+                    :type="type"
+                    :events="campaignEvent"
+                    :event-color="getEventColor"
+                    :event-margin-bottom="3"
+                    @click:event="showEvent"
+                    @click:more="viewDay"
+                    @click:date="viewDay"
+                    @change="updateRange"
+                  />
+                  <v-menu
+                    v-model="selectedOpen"
+                    :close-on-content-click="false"
+                    :activator="selectedElement"
+                    offset-x
                   >
-                    <template v-slot:day="{ present, past, date }">
-                      <template v-for="event in eventsMap[date]">
-                        <v-menu
-                          :key="event.title"
-                          v-model="event.open"
-                          full-width
-                          offset-x
+                    <v-card
+                      color="grey lighten-4"
+                      min-width="350px"
+                      flat
+                    >
+                      <v-toolbar
+                        :color="selectedEvent.color"
+                        dark
+                      >
+                        <v-btn icon>
+                          <v-icon>mdi-pencil</v-icon>
+                        </v-btn>
+                        <v-toolbar-title class="white--text">
+                          {{ selectedEvent.name }}
+                        </v-toolbar-title>
+                        <div class="flex-grow-1" />
+                        <v-btn icon>
+                          <v-icon>mdi-heart</v-icon>
+                        </v-btn>
+                        <v-btn icon>
+                          <v-icon>mdi-dots-vertical</v-icon>
+                        </v-btn>
+                      </v-toolbar>
+                      <v-card-text>
+                        <span>
+                          {{ selectedEvent.details }}
+                        </span>
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-btn
+                          text
+                          color="primary"
+                          @click="selectedOpen = false"
                         >
-                          <template v-slot:activator="{ on }">
-                            <base-button
-                              v-if="!event.time"
-                              color="orange darken-2"
-                              v-on="on"
-                            >
-                              {{ event.title }}
-                            </base-button>
-                          </template>
-                          <v-card
-                            color="grey lighten-4"
-                            min-width="350px"
-                            text
-                          >
-                            <v-toolbar
-                              color="primary"
-                              dark
-                            >
-                              <base-button icon>
-                                <v-icon>edit</v-icon>
-                              </base-button>
-                              <v-toolbar-title>{{ event.title }}</v-toolbar-title>
-                              <v-spacer />
-                              <base-button icon>
-                                <v-icon>favorite</v-icon>
-                              </base-button>
-                              <base-button icon>
-                                <v-icon>more_vert</v-icon>
-                              </base-button>
-                            </v-toolbar>
-                            <v-card-title primary-title>
-                              <span>{{ event.details }}</span>
-                            </v-card-title>
-                            <v-card-actions>
-                              <base-button
-                                text
-                                color="secondary"
-                              >
-                                Cancel
-                              </base-button>
-                            </v-card-actions>
-                          </v-card>
-                        </v-menu>
-                      </template>
-                    </template>
-                  </v-calendar>
+                          Cancel
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-menu>
                 </v-sheet>
-              </v-flex>
-            </v-layout>
+              </v-col>
+            </v-row>
           </base-card>
-        </v-flex>
-        <v-flex
-          md12
-          lg6
-        >
-          <base-card
-            class="card-tabs"
-            color="deep-purple darken-3"
-          >
-            <v-flex
-              slot="header"
-            >
-              <v-tabs
-                v-model="tabs"
-                color="transparent"
-                slider-color="light-green"
-              >
-                <span
-                  class="subheading font-weight-light mr-3"
-                  style="align-self: center"
-                >
-                  Shortcode:
-                </span>
-                <v-tab class="mr-3">
-                  <v-icon class="mr-2">
-                    list
-                  </v-icon>
-                  List
-                </v-tab>
-                <v-tab class="mr-3">
-                  <v-icon class="mr-2">
-                    whatshot
-                  </v-icon>
-                  Keyword
-                </v-tab>
-                <v-tab>
-                  <v-icon class="mr-2">
-                    star
-                  </v-icon>
-                  Reserved
-                </v-tab>
-              </v-tabs>
-            </v-flex>
-            <v-card-title>
-              <span class="title">
-                ShortCode Totals 
-                <v-text-field
-                  append-icon="search"
-                  label="Quick Search"
-                  class="purple-input"
-                  single-line
-                  hide-details
-                />
-              </span>
-              <v-spacer />
-              <base-button 
-                v-if="tabs === 0"
-                color="light-green darken-2"
-                rounded
-              >
-                +SHORTCODE            
-              </base-button>
-              <base-button 
-                v-if="tabs === 1"
-                color="light-green darken-2"
-                rounded
-              >
-                +KEYWORD            
-              </base-button>
-              <base-button 
-                v-if="tabs === 2"
-                color="light-green darken-2"
-                rounded
-              >
-                +KEYWORD RESERVED            
-              </base-button>
-            </v-card-title>
-
-            <v-tabs-items v-model="tabs">
-              <v-tab-item :value="0">
-                <v-list three-line>
-                  <v-list-item @click="complete(0)">
-                    <template v-slot:default="{ active, toggle }">
-                      <v-list-item-action>
-                        <v-checkbox
-                          :value="list[0]"
-                          color="green"
-                        />
-                      </v-list-item-action>
-                      <v-list-item-title>
-                        Sign contract for "What are conference organized afraid of?"
-                      </v-list-item-title>
-                    </template>
-                    <div class="d-flex">
-                      <v-tooltip
-                        top
-                        content-class="top"
-                      >
-                        <template v-slot:activator="{ on }">
-                          <base-button
-                            color="secondary"
-                            icon
-                            v-on="on"
-                          >
-                            <v-icon>create</v-icon>
-                          </base-button>
-                        </template>
-                        <span>Edit</span>
-                      </v-tooltip>
-                      <v-tooltip
-                        top
-                        content-class="top"
-                      >
-                        <template v-slot:activator="{ on }">
-                          <base-button
-                            color="danger"
-                            icon
-                            v-on="on"
-                          >
-                            <v-icon color="error">
-                              close
-                            </v-icon>
-                          </base-button>
-                        </template>
-                        <span>Close</span>
-                      </v-tooltip>
-                    </div>
-                  </v-list-item>
-                  <v-divider />
-                  <v-list-item @click="complete(1)">
-                    <v-list-item-action>
-                      <v-checkbox
-                        :value="list[1]"
-                        color="green"
-                      />
-                    </v-list-item-action>
-                    <v-list-item-title>
-                      Lines From Great Russian Literature? Or E-mails From My Boss?
-                    </v-list-item-title>
-                    <div class="d-flex">
-                      <v-tooltip
-                        top
-                        content-class="top"
-                      >
-                        <template v-slot:activator="{ on }">
-                          <base-button
-                            color="secondary"
-                            icon
-                            v-on="on"
-                          >
-                            <v-icon>create</v-icon>
-                          </base-button>
-                        </template>
-                        <span>Edit</span>
-                      </v-tooltip>
-
-                      <v-tooltip
-                        top
-                        content-class="top"
-                      >
-                        <template v-slot:activator="{ on }">
-                          <base-button
-                            color="danger"
-                            icon
-                            v-on="on"
-                          >
-                            <v-icon color="error">
-                              close
-                            </v-icon>
-                          </base-button>
-                        </template>
-                        <span>Close</span>
-                      </v-tooltip>
-                    </div>
-                  </v-list-item>
-                  <v-divider />
-                  <v-list-item @click="complete(2)">
-                    <v-list-item-action>
-                      <v-checkbox
-                        :value="list[2]"
-                        color="green"
-                      />
-                    </v-list-item-action>
-                    <v-list-item-title>
-                      Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
-                    </v-list-item-title>
-                    <div class="d-flex">
-                      <v-tooltip
-                        top
-                        content-class="top"
-                      >
-                        <template v-slot:activator="{ on }">
-                          <base-button
-                            color="secondary"
-                            icon
-                            v-on="on"
-                          >
-                            <v-icon>create</v-icon>
-                          </base-button>
-                        </template>
-                        <span>Edit</span>
-                      </v-tooltip>
-                      <v-tooltip
-                        top
-                        content-class="top"
-                      >
-                        <template v-slot:activator="{ on }">
-                          <base-button
-                            color="danger"
-                            icon
-                            v-on="on"
-                          >
-                            <v-icon color="error">
-                              close
-                            </v-icon>
-                          </base-button>
-                        </template>
-                        <span>Close</span>
-                      </v-tooltip>
-                    </div>
-                  </v-list-item>
-                </v-list>
-              </v-tab-item>
-              <v-tab-item :value="1">
-                <v-card>
-                  <v-card-title>
-                    2
-                  </v-card-title>
-                </v-card>
-                <v-card>
-                  <v-card-title>
-                    3
-                  </v-card-title>
-                </v-card>
-                <v-card>
-                  <v-card-title>
-                    4
-                  </v-card-title>
-                </v-card>
-              </v-tab-item>
-              <v-tab-item :value="2">
-                3
-              </v-tab-item>
-            </v-tabs-items>
-          </base-card>
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
     </v-container>
   </Layout>
 </template>
@@ -650,19 +550,5 @@ export default {
 <style lang="scss" module scoped>
 @import '@design';
 
-.my-event {
-  width: 100%;
-  padding: 3px;
-  margin-bottom: 1px;
-  overflow: hidden;
-  font-size: 12px;
-  color: rgb(255, 255, 255);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  cursor: pointer;
-  background-color: #1867c0;
-  border: 1px solid #1867c0;
-  border-radius: 2px;
-}
 </style>
 

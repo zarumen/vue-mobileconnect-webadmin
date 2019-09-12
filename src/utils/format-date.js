@@ -9,6 +9,12 @@ export default function formatDate(date) {
   t.setSeconds(date)
   return format(t, 'MMM Do, YYYY')
 }
+export const formatDateTime = (dateInt) => {
+  let d = new Date(1970, 0, 1, 7, 0)
+
+  d.setSeconds(dateInt)
+  return format(d, 'YYYY-MM-D HH:mm')
+}  
 /**
  * @param  {} startDateTime
  * @param  {} num

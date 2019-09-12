@@ -9,7 +9,7 @@ export default {
     },
     editUser: {
       type: [Object],
-      default: Object.assign({}, defaultForm)
+      default: Object.assign({})
     }
   },
   data() {
@@ -99,7 +99,27 @@ export default {
     },
   },
   created () {
+    this.uform = this.editUser
+    const {
+      organizationAuth,
+      organizationLevel1,
+      organizationLevel2,
+      organizationLevel3,
+    } = this.editUser
 
+
+    if(organizationAuth === 'Level1') {
+      this.select = this.levelItems[0]
+      this.company = this.companyList.find(obj => obj.id === organizationLevel1)
+
+    } else if (organizationAuth === 'Level2') {
+      this.select = this.levelItems[1]
+      this.department = this.departmentList.find(obj => obj.id === organizationLevel2)
+
+    } else if (organizationAuth === 'Level3') {
+      this.select = this.levelItems[2]
+      this.brand = this.brandList.find(obj => obj.id === organizationLevel3)
+    }
   },
   methods: {
     ...mapActions('users', [
@@ -411,6 +431,7 @@ export default {
                   prepend-icon="email"
                   label="Email"
                   type="email"
+                  disabled
                   required
                 />
               </v-flex>
