@@ -266,10 +266,10 @@ export default {
                               </v-flex>
                               <v-flex
                                 style="width:90%"
-                                class="headline item"
+                                class="headline item indigo darken-4"
                               >
                                 <span
-                                  :style="'padding:'+VoteData.data.datasets[0].percent[index]*10+'px;'+'background-color:#010166;'"
+                                  :style="'padding-right:'+VoteData.data.datasets[0].percent[index]*10+'px;'"
                                 />
                               </v-flex>
                             </v-layout>
