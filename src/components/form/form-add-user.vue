@@ -62,7 +62,7 @@ export default {
       ],
       nameRules: [
         v => !!v || 'Name is required',
-        v => (v && v.length <= 10) || 'Name must be less than 10 characters'
+        v => (v && v.length <= 20) || 'Name must be less than 20 characters'
       ], 
     }
   },
@@ -209,50 +209,52 @@ export default {
             grid-list-sm 
             class="pa-4"
           >
-            <v-layout 
-              row 
-              wrap
-            >
-              <v-flex 
-                xs11
-                align-center 
-                justify-space-between
+            <v-row>
+              <v-col
+                cols="12"
               >
-                <v-layout align-center>
-                  <v-select
-                    v-model="select"
-                    :items="levelItems"
-                    item-text="state"
-                    item-value="value"
-                    label="OrganizationLevel Field"
-                    prepend-icon="perm_contact_calendar"
-                    class="purple-input"
-                    return-object
-                    single-line
-                  />
-                  <v-spacer />
-                  <v-avatar 
-                    size="80px" 
-                    class="mr-3"
-                  >
-                    <img
-                      v-if="uform.gender === ''"
-                      src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"
+                <v-row 
+                  class="mx-0" 
+                  justify="center"
+                >
+                  <v-cols cols="8">
+                    <v-select
+                      v-model="select"
+                      :items="levelItems"
+                      item-text="state"
+                      item-value="value"
+                      label="OrganizationLevel Field"
+                      prepend-icon="perm_contact_calendar"
+                      class="purple-input"
+                      return-object
+                      single-line
+                    />
+                  </v-cols>
+                  <div class="flex-grow-1" />
+                  <v-cols class="mr-5">
+                    <v-avatar 
+                      size="80px" 
+                      class="mr-3"
                     >
-                    <img
-                      v-else-if="uform.gender === 'Male'"
-                      :src="avartar.male"
-                    >
-                    <img
-                      v-else
-                      :src="avartar.female"
-                    >
-                  </v-avatar>
-                </v-layout>
-              </v-flex>
-              <v-flex 
+                      <img
+                        v-if="gender === ''"
+                        src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"
+                      >
+                      <img
+                        v-else-if="gender === 'Male'"
+                        :src="avartar.male"
+                      >
+                      <img
+                        v-else
+                        :src="avartar.female"
+                      >
+                    </v-avatar>
+                  </v-cols>
+                </v-row>
+              </v-col>
+              <v-col 
                 v-if="enableLevel1"
-                xs8
+                cols="8"
               >
                 <v-combobox
                   :key="companyList.key"
@@ -290,10 +292,10 @@ export default {
                     </v-chip>
                   </template>
                 </v-combobox>
-              </v-flex>
-              <v-flex
+              </v-col>
+              <v-col
                 v-if="enableLevel2"
-                xs8
+                cols="8"
               >
                 <v-combobox
                   :key="departmentList.id"
@@ -341,10 +343,10 @@ export default {
                     </v-chip>
                   </template>
                 </v-combobox>
-              </v-flex>
-              <v-flex
+              </v-col>
+              <v-col
                 v-if="enableLevel3"
-                xs8
+                cols="8"
               >
                 <v-combobox
                   :key="brandList.id"
@@ -392,8 +394,8 @@ export default {
                     </v-chip>
                   </template>
                 </v-combobox>
-              </v-flex>
-              <v-flex xs8>
+              </v-col>
+              <v-col cols="8">
                 <v-text-field
                   v-model="uform.email"
                   :rules="emailRules"
@@ -403,8 +405,8 @@ export default {
                   type="email"
                   required
                 />
-              </v-flex>
-              <v-flex xs5>
+              </v-col>
+              <v-col cols="5">
                 <v-text-field
                   v-model="uform.firstName"
                   :rules="nameRules"
@@ -413,31 +415,31 @@ export default {
                   label="First Name"
                   required
                 />
-              </v-flex>
-              <v-flex xs5>
+              </v-col>
+              <v-col cols="5">
                 <v-text-field
                   v-model="uform.lastName"
                   class="purple-input"
                   label="Last Name"
                 />
-              </v-flex>
-              <v-flex xs2>
+              </v-col>
+              <v-col cols="2">
                 <v-text-field
                   v-model="uform.nickName"
                   class="purple-input"
                   mask="NNNNNNNNNN"
                   label="(Nick Name)"
                 />
-              </v-flex>
-              <v-flex xs3>
+              </v-col>
+              <v-col cols="3">
                 <v-text-field
                   v-model="uform.age"
                   class="purple-input"
                   prepend-icon="sentiment_satisfied_alt"
                   label="Age"
                 />
-              </v-flex>
-              <v-flex xs3>
+              </v-col>
+              <v-col cols="3">
                 <v-select
                   v-model="uform.gender"
                   :items="genderItems"
@@ -445,16 +447,16 @@ export default {
                   prepend-icon="wc"
                   label="Gender"
                 />
-              </v-flex>
-              <v-flex xs6>
+              </v-col>
+              <v-col cols="6">
                 <v-text-field
                   v-model="uform.jobPosition"
                   class="purple-input"
                   prepend-icon="work"
                   label="Position"
                 />
-              </v-flex>
-              <v-flex xs5>
+              </v-col>
+              <v-col cols="5">
                 <v-text-field
                   v-model="uform.mobileTelNumber"
                   class="purple-input"
@@ -462,8 +464,8 @@ export default {
                   mask="phone"
                   label="Mobile No."
                 />
-              </v-flex>
-              <v-flex xs5>
+              </v-col>
+              <v-col cols="5">
                 <v-text-field
                   v-model="uform.officeTelNumber"
                   class="purple-input"
@@ -471,16 +473,16 @@ export default {
                   mask="phone"
                   label="Office Tel."
                 />
-              </v-flex>
-              <v-flex xs12>
+              </v-col>
+              <v-col cols="12">
                 <v-textarea
                   v-model="uform.addedNote"
                   class="purple-input"
                   prepend-icon="notes"
                   label="Note:"
                 />
-              </v-flex>
-            </v-layout>
+              </v-col>
+            </v-row>
           </v-container>
           <v-card-actions>
             <!-- Button Action in below card-->

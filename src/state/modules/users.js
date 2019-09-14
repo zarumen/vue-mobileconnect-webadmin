@@ -19,13 +19,24 @@ export const state = {
   mode: '',
   snackbar: false,
   notice: '',
+  editedUser: {
+    email: '',
+    firstName: '',
+    lastName: '',
+    nickName: '',
+    age: '',
+    gender: '',
+    jobPosition: '',
+    mobileTelNumber: '',
+    officeTelNumber: '',
+    addedNote: '',
+  }
   // Search Result Variables
 }
 
 export const getters = {
-  hadUserList(state) {
-    return !!state.items
-  }
+  hadUserList: (state) => !!state.items,
+  getOneEditedUser: (state) => state.editedUser,
 }
 
 export const mutations = {
@@ -34,6 +45,12 @@ export const mutations = {
   },
   setPagination (state, pagination) {
     state.pagination = pagination
+  },
+  setElementEditedUser (state, payload) {
+    assign(state.editedUser, payload)
+  },
+  setElementUserList (state, { position, payload }) {
+    assign(state.items[position], payload)
   },
   // update Page
   setPage (state, paginationElement) {
@@ -167,6 +184,19 @@ export const actions = {
   // ===
   // UPDATE Zone
   // ===
+  updatedUserToDB({ state, dispatch }) {
+    // TODO: save edited userInfo to Firestore and updated to usersList (items)
+    dispatch('updateEditUserItems', state.editedUser)
+
+    return firestoreApp
+      .collection('users')
+      .doc(`${state.editedUser.id}`)
+      .set(state.editedUser, { merge: true })
+      .then(() => {
+        console.log(`edited ${state.editedUser.firstName} completed.`)
+      })
+      .catch(error => console.log(error))
+  },
   updatePage({ commit }, pageNumber) {
     commit('setPage', { page: pageNumber })
   },
@@ -175,6 +205,20 @@ export const actions = {
   },
   updatePagination({ commit }, pagiObj) {
     commit('setPage', pagiObj)
+  },
+  updateEditedUser({ commit }, payloadObj) {
+    commit('setElementEditedUser', payloadObj)
+  },
+  updateFirsttimeEditUserItems({ state, commit }, payload) {
+    let userObj = state.items.find(x => x.email === payload)
+    commit('setElementEditedUser', userObj)
+  },
+  updateEditUserItems({ state, commit }, userObj) {
+    let index = state.items.map(e => e.email).indexOf(userObj.email);
+    commit('setElementUserList', {
+      position: index,
+      payload: userObj
+    })
   },
   // ===
   // DELETE Zone

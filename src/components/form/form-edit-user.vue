@@ -1,5 +1,5 @@
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
   props: {
@@ -13,18 +13,6 @@ export default {
     }
   },
   data() {
-    const defaultForm = Object.freeze({
-      email: '',
-      firstName: '',
-      lastName: '',
-      nickName: '',
-      age: '',
-      gender: '',
-      jobPosition: '',
-      mobileTelNumber: '',
-      officeTelNumber: '',
-      addedNote: '',
-    })
     const defaultDropdown = Object.freeze({
       id: 1, 
       state: 'User Level: Company', 
@@ -32,7 +20,6 @@ export default {
     })
     return {
       // Default Values
-      uform: Object.assign({}, defaultForm),
       company: null,
       department: null,
       brand: null,
@@ -66,7 +53,7 @@ export default {
       ],
       nameRules: [
         v => !!v || 'Name is required',
-        v => (v && v.length <= 10) || 'Name must be less than 10 characters'
+        v => (v && v.length <= 20) || 'Name must be less than 20 characters'
       ], 
     }
   },
@@ -76,6 +63,92 @@ export default {
       departmentList: 'departmentList',
       brandList: 'brandList'
     }),
+    ...mapGetters('users', [
+      'getOneEditedUser',
+    ]),
+    // ////////////////
+    //  Form Binding Variables from Vuex
+    // ////////////////
+    email: {
+      get () {
+        return this.getOneEditedUser.email
+      },
+      set (value) {
+        this.updateEditedUser({ email: value })
+      }
+    },
+    firstName: {
+      get () {
+        return this.getOneEditedUser.firstName
+      },
+      set (value) {
+        this.updateEditedUser({ firstName: value })
+      }
+    },
+    lastName: {
+      get () {
+        return this.getOneEditedUser.lastName
+      },
+      set (value) {
+        this.updateEditedUser({ lastName: value })
+      }
+    },
+    nickName: {
+      get () {
+        return this.getOneEditedUser.nickName
+      },
+      set (value) {
+        this.updateEditedUser({ nickName: value })
+      }
+    },
+    age: {
+      get () {
+        return this.getOneEditedUser.age
+      },
+      set (value) {
+        this.updateEditedUser({ age: value })
+      }
+    },
+    gender: {
+      get () {
+        return this.getOneEditedUser.gender
+      },
+      set (value) {
+        this.updateEditedUser({ gender: value })
+      }
+    },
+    jobPosition: {
+      get () {
+        return this.getOneEditedUser.jobPosition
+      },
+      set (value) {
+        this.updateEditedUser({ jobPosition: value })
+      }
+    },
+    mobileTelNumber: {
+      get () {
+        return this.getOneEditedUser.mobileTelNumber
+      },
+      set (value) {
+        this.updateEditedUser({ mobileTelNumber: value })
+      }
+    },
+    officeTelNumber: {
+      get () {
+        return this.getOneEditedUser.officeTelNumber
+      },
+      set (value) {
+        this.updateEditedUser({ officeTelNumber: value })
+      }
+    },
+    addedNote: {
+      get () {
+        return this.getOneEditedUser.addedNote
+      },
+      set (value) {
+        this.updateEditedUser({ addedNote: value })
+      }
+    },
     // ////////////////
     //  Organization Dropdown Controller
     // ////////////////
@@ -99,14 +172,15 @@ export default {
     },
   },
   created () {
-    this.uform = this.editUser
     const {
+      email,
       organizationAuth,
       organizationLevel1,
       organizationLevel2,
       organizationLevel3,
     } = this.editUser
 
+    this.updateFirsttimeEditUserItems(email)
 
     if(organizationAuth === 'Level1') {
       this.select = this.levelItems[0]
@@ -123,7 +197,9 @@ export default {
   },
   methods: {
     ...mapActions('users', [
-        'createUser'
+      'updatedUserToDB',
+      'updateFirsttimeEditUserItems',
+      'updateEditedUser'
     ]),
     initEditUser (user) {
       // TODO: init User by find Org Obj and fill User Info to fields
@@ -131,19 +207,12 @@ export default {
     closeDialog () {
       this.$emit('emitCloseUserDialog', false)
     },
-    clearForm () {
-      this.uform = Object.assign({}, this.defaultForm)
-      this.$refs.uform.reset()
-      this.select = Object.assign({}, this.defaultDropdown)
-    },
     saveUser () {
       // Initial Value in Form by v-model attribute
-
-      let newUser = this.uform
+      let editedThisUser = {}
       let tCompany = this.company
       let tDepartment = this.department
-      let tBrand = this.brand 
-      newUser['isAdmin'] = false
+      let tBrand = this.brand
       // /////  Prepare Object Organization before add to Database  ////////
 
       // ///// Validator Check First!
@@ -164,11 +233,12 @@ export default {
       if (this.select.id === 1 && 
             tCompany !== null) {
           
-          newUser['organizationAuth'] = tCompany.organizationAuth
-          newUser['organizationLevel1'] = tCompany.organizationLevel1
-          newUser['organizationLevel1Name'] = tCompany.organizationLevel1Name
+          editedThisUser['organizationAuth'] = tCompany.organizationAuth
+          editedThisUser['organizationLevel1'] = tCompany.organizationLevel1
+          editedThisUser['organizationLevel1Name'] = tCompany.organizationLevel1Name
 
-          this.createUser(newUser)
+          this.updateEditedUser(editedThisUser)
+          this.updatedUserToDB()
           this.closeDialog()
 
       }
@@ -179,13 +249,14 @@ export default {
       if (this.select.id === 2 && 
             tDepartment !== null) {
           
-          newUser['organizationAuth'] = tDepartment.organizationAuth
-          newUser['organizationLevel1'] = tDepartment.organizationLevel1
-          newUser['organizationLevel1Name'] = tDepartment.organizationLevel1Name
-          newUser['organizationLevel2'] = tDepartment.organizationLevel2
-          newUser['organizationLevel2Name'] = tDepartment.organizationLevel2Name
+          editedThisUser['organizationAuth'] = tDepartment.organizationAuth
+          editedThisUser['organizationLevel1'] = tDepartment.organizationLevel1
+          editedThisUser['organizationLevel1Name'] = tDepartment.organizationLevel1Name
+          editedThisUser['organizationLevel2'] = tDepartment.organizationLevel2
+          editedThisUser['organizationLevel2Name'] = tDepartment.organizationLevel2Name
 
-          this.createUser(newUser)
+          this.updateEditedUser(editedThisUser)
+          this.updatedUserToDB()
           this.closeDialog()
 
       }
@@ -196,15 +267,16 @@ export default {
       if (this.select.id === 3 && 
             tBrand !== null) {
           
-          newUser['organizationAuth'] = tBrand.organizationAuth
-          newUser['organizationLevel1'] = tBrand.organizationLevel1
-          newUser['organizationLevel1Name'] = tBrand.organizationLevel1Name
-          newUser['organizationLevel2'] = tBrand.organizationLevel2
-          newUser['organizationLevel2Name'] = tBrand.organizationLevel2Name
-          newUser['organizationLevel3'] = tBrand.organizationLevel3
-          newUser['organizationLevel3Name'] = tBrand.organizationLevel3Name
+          editedThisUser['organizationAuth'] = tBrand.organizationAuth
+          editedThisUser['organizationLevel1'] = tBrand.organizationLevel1
+          editedThisUser['organizationLevel1Name'] = tBrand.organizationLevel1Name
+          editedThisUser['organizationLevel2'] = tBrand.organizationLevel2
+          editedThisUser['organizationLevel2Name'] = tBrand.organizationLevel2Name
+          editedThisUser['organizationLevel3'] = tBrand.organizationLevel3
+          editedThisUser['organizationLevel3Name'] = tBrand.organizationLevel3Name
 
-          this.createUser(newUser)
+          this.updateEditedUser(editedThisUser)
+          this.updatedUserToDB()
           this.closeDialog()
 
       }
@@ -239,50 +311,52 @@ export default {
             grid-list-sm 
             class="pa-4"
           >
-            <v-layout 
-              row 
-              wrap
-            >
-              <v-flex 
-                xs11
-                align-center 
-                justify-space-between
+            <v-row>
+              <v-col
+                cols="12"
               >
-                <v-layout align-center>
-                  <v-select
-                    v-model="select"
-                    :items="levelItems"
-                    item-text="state"
-                    item-value="value"
-                    label="OrganizationLevel Field"
-                    prepend-icon="perm_contact_calendar"
-                    class="purple-input"
-                    return-object
-                    single-line
-                  />
-                  <v-spacer />
-                  <v-avatar 
-                    size="80px" 
-                    class="mr-3"
-                  >
-                    <img
-                      v-if="uform.gender === ''"
-                      src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"
+                <v-row 
+                  class="mx-0" 
+                  justify="center"
+                >
+                  <v-col cols="8">
+                    <v-select
+                      v-model="select"
+                      :items="levelItems"
+                      item-text="state"
+                      item-value="value"
+                      label="OrganizationLevel Field"
+                      prepend-icon="perm_contact_calendar"
+                      class="purple-input"
+                      return-object
+                      single-line
+                    />
+                  </v-col>
+                  <div class="flex-grow-1" />
+                  <v-col class="mr-5">
+                    <v-avatar 
+                      size="80px" 
+                      class="mr-3"
                     >
-                    <img
-                      v-else-if="uform.gender === 'Male'"
-                      :src="avartar.male"
-                    >
-                    <img
-                      v-else
-                      :src="avartar.female"
-                    >
-                  </v-avatar>
-                </v-layout>
-              </v-flex>
-              <v-flex 
+                      <img
+                        v-if="gender === ''"
+                        src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"
+                      >
+                      <img
+                        v-else-if="gender === 'Male'"
+                        :src="avartar.male"
+                      >
+                      <img
+                        v-else
+                        :src="avartar.female"
+                      >
+                    </v-avatar>
+                  </v-col>
+                </v-row>
+              </v-col>
+              <v-col 
                 v-if="enableLevel1"
-                xs8
+                cols="8"
               >
                 <v-combobox
                   :key="companyList.key"
@@ -320,10 +394,10 @@ export default {
                     </v-chip>
                   </template>
                 </v-combobox>
-              </v-flex>
-              <v-flex
+              </v-col>
+              <v-col
                 v-if="enableLevel2"
-                xs8
+                cols="8"
               >
                 <v-combobox
                   :key="departmentList.id"
@@ -371,10 +445,10 @@ export default {
                     </v-chip>
                   </template>
                 </v-combobox>
-              </v-flex>
-              <v-flex
+              </v-col>
+              <v-col
                 v-if="enableLevel3"
-                xs8
+                cols="8"
               >
                 <v-combobox
                   :key="brandList.id"
@@ -422,10 +496,10 @@ export default {
                     </v-chip>
                   </template>
                 </v-combobox>
-              </v-flex>
-              <v-flex xs8>
+              </v-col>
+              <v-col cols="8">
                 <v-text-field
-                  v-model="uform.email"
+                  v-model="email"
                   :rules="emailRules"
                   class="purple-input"
                   prepend-icon="email"
@@ -434,95 +508,88 @@ export default {
                   disabled
                   required
                 />
-              </v-flex>
-              <v-flex xs5>
+              </v-col>
+              <v-col cols="5">
                 <v-text-field
-                  v-model="uform.firstName"
+                  v-model="firstName"
                   :rules="nameRules"
                   class="purple-input"
                   prepend-icon="person"
                   label="First Name"
                   required
                 />
-              </v-flex>
-              <v-flex xs5>
+              </v-col>
+              <v-col cols="5">
                 <v-text-field
-                  v-model="uform.lastName"
+                  v-model="lastName"
                   class="purple-input"
                   label="Last Name"
                 />
-              </v-flex>
-              <v-flex xs2>
+              </v-col>
+              <v-col cols="2">
                 <v-text-field
-                  v-model="uform.nickName"
+                  v-model="nickName"
                   class="purple-input"
                   mask="NNNNNNNNNN"
                   label="(Nick Name)"
                 />
-              </v-flex>
-              <v-flex xs3>
+              </v-col>
+              <v-col cols="3">
                 <v-text-field
-                  v-model="uform.age"
+                  v-model="age"
                   class="purple-input"
                   prepend-icon="sentiment_satisfied_alt"
                   label="Age"
                 />
-              </v-flex>
-              <v-flex xs3>
+              </v-col>
+              <v-col cols="3">
                 <v-select
-                  v-model="uform.gender"
+                  v-model="gender"
                   :items="genderItems"
                   class="purple-input"
                   prepend-icon="wc"
                   label="Gender"
                 />
-              </v-flex>
-              <v-flex xs6>
+              </v-col>
+              <v-col cols="6">
                 <v-text-field
-                  v-model="uform.jobPosition"
+                  v-model="jobPosition"
                   class="purple-input"
                   prepend-icon="work"
                   label="Position"
                 />
-              </v-flex>
-              <v-flex xs5>
+              </v-col>
+              <v-col cols="5">
                 <v-text-field
-                  v-model="uform.mobileTelNumber"
+                  v-model="mobileTelNumber"
                   class="purple-input"
                   prepend-icon="phone_iphone"
                   mask="phone"
                   label="Mobile No."
                 />
-              </v-flex>
-              <v-flex xs5>
+              </v-col>
+              <v-col cols="5">
                 <v-text-field
-                  v-model="uform.officeTelNumber"
+                  v-model="officeTelNumber"
                   class="purple-input"
                   prepend-icon="phone"
                   mask="phone"
                   label="Office Tel."
                 />
-              </v-flex>
-              <v-flex xs12>
+              </v-col>
+              <v-col cols="12">
                 <v-textarea
-                  v-model="uform.addedNote"
+                  v-model="addedNote"
                   class="purple-input"
                   prepend-icon="notes"
                   label="Note:"
                 />
-              </v-flex>
-            </v-layout>
+              </v-col>
+            </v-row>
           </v-container>
           <v-card-actions>
             <!-- Button Action in below card-->
             <v-spacer />
-            <base-button
-              text 
-              color="primary" 
-              @click="clearForm()"
-            >
-              Clear
-            </base-button>
             <base-button
               text
               color="secondary darken-2" 
