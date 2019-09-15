@@ -1,6 +1,6 @@
 <script>
 import formatDateRelative from '@utils/format-date-relative'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   page: {
@@ -30,11 +30,11 @@ export default {
     },
   },
   created () {
-    this.$store.dispatch('campaigns/getCampaignValidate', {
+    this.getCampaignValidate({
       campaignId: this.$route.params.campaignId
     })
 
-    this.$store.dispatch('transactions/socketRegister', {
+    this.socketRegister({
       campaignState: 'production',
       campaignId: this.$route.params.campaignId
     })
@@ -43,12 +43,20 @@ export default {
   },
   destroyed () {
 
-    this.$store.dispatch('transactions/socketUnRegister', {
+    this.socketUnRegister({
       campaignState: 'production',
       campaignId: this.$route.params.campaignId
     })
   },
   methods: {
+    ...mapActions('campaigns', [
+      'getCampaignValidate',
+      'updateStatusCampaign'
+    ]),
+    ...mapActions('transactions', [
+      'socketRegister',
+      'socketUnRegister'
+    ]),
     clicked () {
       this.text = this.getOneCampaign(this.$route.params.campaignId)
       this.text2 = this.getOneCampaignValidate
@@ -56,8 +64,13 @@ export default {
       return this.text
     },
     initializeData () {
-
+      // initial load socket.io data
       this.totals = this.getTransactionTotals
+    },
+    clickToProduciton () {
+      this.updateStatusCampaign({
+        campaignId: this.$route.params.campaignId
+      })
     }
   },
 }
@@ -136,7 +149,11 @@ export default {
           md8
           pa-5
         >
-          <base-card>
+          <base-card
+            color="deep-purple"
+            title="Profile"
+            text="Check CampaignState Status"
+          >
             <h2 class="info--text">
               About Campaign
             </h2>
@@ -218,14 +235,23 @@ export default {
               <p class="category text-gray font-weight-thin mb-3">
                 STATUS: {{ text.campaignState }}
               </p>
+            </v-card-text>
+            <v-card-actions>
+              <base-button
+                color="red"
+                text
+              >
+                Paused
+              </base-button>
+              <div class="flex-grow-1" />
               <base-button
                 color="primary"
-                rounded
-                class="font-weight-light"
+                text
+                @click="clickToProduciton"
               >
-                Change to Production
+                Production
               </base-button>
-            </v-card-text>
+            </v-card-actions>
           </base-card>
         </v-flex>
         <v-flex

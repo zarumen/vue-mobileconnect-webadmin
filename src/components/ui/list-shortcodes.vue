@@ -212,7 +212,7 @@ export default {
       class="card-tabs"
       color="light-green"
     >
-      <v-flex
+      <v-col
         slot="header"
       >
         <v-tabs
@@ -250,7 +250,7 @@ export default {
             Reserved
           </v-tab>
         </v-tabs>
-      </v-flex>
+      </v-col>
       <v-card-title>
         <span 
           v-if="tabs === 0" 
@@ -395,8 +395,8 @@ export default {
                   </v-list-item-subtitle>
                 </v-list-item-content>
                 <v-list-item-action>
-                  <v-flex 
-                    xs12 
+                  <v-col 
+                    cols="12" 
                     class="py-2"
                   >
                     <base-button
@@ -431,7 +431,7 @@ export default {
                     >
                       <small>TRUE</small>
                     </base-button>
-                  </v-flex>
+                  </v-col>
                 </v-list-item-action>
               </v-list-item>
               <v-divider

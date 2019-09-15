@@ -80,6 +80,7 @@ export default {
       smscount: 0,
       lastMinute: 0,
       myChart: null,
+      isMobile: false,
       timer: null
     }
   },
@@ -116,10 +117,20 @@ export default {
 
     }   
   },
+  beforeDestroy () {
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('resize', this.onResize, { passive: true })
+    }
+  },
   mounted() {
     // this.createChart('widget-chart', this.VoteData);
+    this.onResize()
+    window.addEventListener('resize', this.onResize, { passive: true })
   },
   methods: {
+    onResize () {
+      this.isMobile = window.innerWidth < 640
+    },
     socketRegister(){
       // console.log('param campaignId:'+this.campaignId)
       // this.$socket.emit('register', 'totals','test',this.$route.params.campaignId);
@@ -207,100 +218,94 @@ export default {
     fill-height
     fill-width
   >
-    <v-layout column>
-      <section>
-        <v-layout> 
-          <v-flex 
-            xs12
-          >
-            <v-card color="gray darken-2">
-              <v-card-title primary-title>
-                <v-layout column>
-                  <div
-                    class="headline"
-                    style="font-weight: bolder; color:#010166;"
+    <v-row>
+      <v-col 
+        cols="12"
+      >
+        <v-expand-transition>
+          <v-card color="gray darken-2">
+            <v-card-title primary-title>
+              <span
+                class="display-1"
+                style="font-weight: bolder; color:#010166;"
+              >
+                {{ this.$route.params.caption }}
+              </span>
+            </v-card-title>
+            <v-card-text>
+              <v-list
+                v-if="VoteData.data.labels !== 'undefined'"
+                class="pa-1 ma-1"
+              >
+                <template
+                  v-for="(label, index) in VoteData.data.labels"
+                >
+                  <v-divider
+                    v-if="index !== 0"
+                    :key="`${index}-divider`"
+                    class="line"
+                  />
+                  <v-list-item 
+                    :key="index"
+                    class="pa-2"
                   >
-                    {{ this.$route.params.caption }}
-                  </div>
-                  <!-- <span>Vote sub title</span> -->
-                  <div class="headline" />
-                  <div style="height:20px" />
-                  <v-layout
-                    v-if="VoteData.data.labels !== 'undefined'"
-                    column
-                    class="pa-1 ma-1"
-                  >
-                    <transition-group
-                      class="py-0"
-                      tag="v-list"
-                      name="slidinglist"
-                    >
-                      <template
-                        v-for="(label, index) in VoteData.data.labels"
-                        align-center
-                        justify-space-around
-                        row
-                        fill-height
-                      >
-                        <v-divider
-                          v-if="index !== 0"
-                          :key="`${index}-divider`"
-                          class="line"
-                        />
-                        <v-list-item 
-                          :key="index"
-                          class="pa-2"
+                    <div v-if="!isMobile">
+                      {{ index+1 }}
+                    </div>
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        <v-row
+                          class="columns: 2;"
+                          no-gutters
                         >
-                          <v-list-item-avatar class="hidden-xs-only">
-                            {{ index+1 }}
-                          </v-list-item-avatar>
-                          <v-list-item-content>
-                            <v-layout row>
-                              <v-flex>
-                                <v-chip
-                                  color="blue-grey lighten-4"
-                                  class="headline item"
-                                >
-                                  {{ "KHK"+label }}
-                                </v-chip>
-                              </v-flex>
-                              <v-flex
-                                style="width:90%"
-                                class="headline item indigo darken-4"
-                              >
-                                <span
-                                  :style="'padding-right:'+VoteData.data.datasets[0].percent[index]*10+'px;'"
-                                />
-                              </v-flex>
-                            </v-layout>
-                          </v-list-item-content>
-                          <v-list-item-action>
-                            <v-avatar class="indigo darken-4 white--text">
-                              {{ Math.round(VoteData.data.datasets[0].percent[index]) }}%
-                            </v-avatar>
-                          </v-list-item-action>
-                        </v-list-item>
-                      </template>
-                    </transition-group>
-                  </v-layout>
-                  <div style="height:10px" />
-                  <!-- <span>footer</span> -->
-                </v-layout>
-              </v-card-title>
-            </v-card>
-          </v-flex>
-        </v-layout>
-        <v-layout> 
-          <v-flex 
-            xs-12
-            style="width: 100%; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;"        
-          >
-            <div class="text-center">
-              <canvas id="widget-chart" />
-            </div>
-          </v-flex>
-        </v-layout>        
-      </section>
-    </v-layout>
+                          <v-col
+                            cols="3"
+                            sm="2"
+                            class="mr-0"
+                          >
+                            <v-chip
+                              color="blue-grey lighten-4"
+                              class="body-2 font-weight-light item"
+                            >
+                              {{ "KHK"+label }}
+                            </v-chip>
+                          </v-col>
+                          <v-col
+                            cols="auto"
+                            class="headline item indigo darken-4 mx-0"
+                          >
+                            <span
+                              v-if="isMobile"
+                              :style="'padding-right:'+VoteData.data.datasets[0].percent[index]/4+'rem;'"
+                            />
+                            <span
+                              v-else
+                              :style="'padding-right:'+VoteData.data.datasets[0].percent[index]/1.5+'rem;'"
+                            />
+                          </v-col>
+                        </v-row>
+                      </v-list-item-title>
+                    </v-list-item-content>
+                    <v-list-item-action class="ml-0">
+                      <v-avatar class="indigo darken-4 white--text">
+                        {{ Math.round(VoteData.data.datasets[0].percent[index]) }}%
+                      </v-avatar>
+                    </v-list-item-action>
+                  </v-list-item>
+                </template>
+              </v-list>
+            </v-card-text>
+          </v-card>
+        </v-expand-transition>
+      </v-col>
+      <v-col 
+        cols="12"
+        style="width: 100%; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;"        
+      >
+        <div class="text-center">
+          <canvas id="widget-chart" />
+        </div>
+      </v-col>
+    </v-row>
   </v-container>
 </template>

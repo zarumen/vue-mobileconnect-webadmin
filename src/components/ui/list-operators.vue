@@ -100,17 +100,16 @@ export default {
           hide-default-footer
         >
           <template v-slot:default="{ items, isExpanded, expand }">
-            <v-layout
-              row
+            <v-row
               wrap
             >
-              <v-flex
+              <v-col
                 v-for="item in items"
                 :key="item.displayName"
-                xs12
-                sm6
-                md4
-                lg3
+                cols="12"
+                sm="6"
+                md="4"
+                lg="3"
               >
                 <v-card>
                   <v-card-title 
@@ -169,8 +168,8 @@ export default {
                     </v-list-item>
                   </v-list>
                 </v-card>
-              </v-flex>
-            </v-layout>
+              </v-col>
+            </v-row>
           </template>
         </v-data-iterator>
       </v-container>

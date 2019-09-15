@@ -59,6 +59,9 @@ export const mutations = {
   setPage (state, paginationElement) {
     assign(state.pagination, paginationElement)
   },
+  setElementCampaignList (state, { position, payload }) {
+    assign(state.items[position], payload)
+  },
   // Mutate Value in Pagination
   setItems (state, items) {
     state.items = items
@@ -267,6 +270,25 @@ export const actions = {
   },
   updatePagination({ commit }, pagiObj) {
     commit('setPage', pagiObj)
+  },
+  async updateStatusCampaign({ state, commit }, { campaignId }) {
+    let index = state.items.map(e => e.id).indexOf(campaignId);
+    let status = { campaignState: 'production' }
+
+    await firestoreApp
+        .collection('campaignValidate')
+        .doc(`${campaignId}`)
+        .set(status, { merge: true })
+
+    await firestoreApp
+        .collection('campaigns')
+        .doc(`${campaignId}`)
+        .set(status, { merge: true })
+    
+    commit('setElementCampaignList', { 
+      position: index,
+      payload: status
+    })
   },
   // ===
   // DELETE Zone
