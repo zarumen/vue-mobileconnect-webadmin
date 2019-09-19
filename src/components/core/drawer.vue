@@ -86,18 +86,18 @@ export default {
       ]
       let menuUser = [
         {
-          name: 'reportViewer',
-          icon: 'assignment',
-          title: 'Reports',
-          link: '/reportViewer'
-        },
-/*         {
           name: 'campaignsViewer',
           icon: 'store',
           title: 'Campaigns',
           link: '/campaignsViewer'
         },
         {
+          name: 'reportViewer',
+          icon: 'assignment',
+          title: 'Reports',
+          link: '/reportViewer'
+        },
+/*        {
           name: 'campaignWidgetsViewer',
           icon: 'widgets',
           title: 'Widgets',

@@ -459,7 +459,10 @@ export default {
         let newParser = this.anotherParser
 
         newParser['contextType'] = this.contextType
-        newParser['contextFailed'] = this.subContextArray
+        if(this.subContextArray.length > 0) {
+          // check if contextFail has element added it to Main Context parser 
+          newParser['contextFailed'] = this.subContextArray
+        }
 
         if(this.conditionTypeValidate) {
           this.validateForm.rewardsLimit = 1
@@ -778,14 +781,10 @@ export default {
                       persistent-hint
                       chips
                     >
-                      <template 
-                        slot="item" 
-                        slot-scope="data"
-                      >
+                      <template v-slot:item="data">
                         <template v-if="data.item.picURL === 'undefine'">
                           <v-list-item-avatar 
-                            color="primary"
-                            class="green--text"
+                            class="secondary white--text"
                           >
                             {{ data.item.displayName.slice(0, 2).toUpperCase() }}
                           </v-list-item-avatar>
@@ -803,24 +802,21 @@ export default {
                             <v-list-item-subtitle>{{ data.item.organizationLevel1Name }} > {{ data.item.organizationLevel2Name }}</v-list-item-subtitle>
                           </v-list-item-content>
                         </template>
-                        <template
-                          slot="selection" 
-                          slot-scope="idata"
+                      </template>
+                      <template v-slot:selection="data">
+                        <v-chip
+                          :key="JSON.stringify(data.item)"
+                          :input-value="data.selected"
+                          color="primary"
+                          text-color="white"
+                          close
+                          @input="idata.parent.selectItem(data.item)"
                         >
-                          <v-chip
-                            :key="JSON.stringify(idata.item)"
-                            :input-value="idata.selected"
-                            color="primary"
-                            text-color="white"
-                            close
-                            @input="idata.parent.selectItem(idata.item)"
-                          >
-                            <v-avatar>
-                              <img :src="idata.item.picURL">
-                            </v-avatar>
-                            {{ idata.item.displayName }}
-                          </v-chip>
-                        </template>
+                          <v-avatar>
+                            <img :src="data.item.picURL">
+                          </v-avatar>
+                          {{ data.item.displayName }}
+                        </v-chip>
                       </template>
                     </v-combobox>
                   </v-col>  
@@ -961,19 +957,20 @@ export default {
                         :close-on-content-click="false"
                         :nudge-right="40"
                         :return-value.sync="date"
-                        lazy
                         transition="scale-transition"
                         offset-y
-                        full-width
                         min-width="290px"
                       >
-                        <v-text-field
-                          slot="activator"
-                          v-model="date"
-                          label="Date Picker"
-                          prepend-icon="event"
-                          readonly
-                        />
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            slot="activator"
+                            v-model="date"
+                            label="Date Picker"
+                            prepend-icon="event"
+                            readonly
+                            v-on="on"
+                          />
+                        </template>
                         <v-date-picker 
                           v-model="date"
                           no-title 
@@ -982,7 +979,7 @@ export default {
                           locale="th"
                           color="deep-purple"
                         >
-                          <v-spacer />
+                          <div class="flex-grow-1" />
                           <base-button
                             text
                             color="primary" 
@@ -992,7 +989,7 @@ export default {
                           </base-button>
                           <base-button 
                             color="primary"
-                            roundeded
+                            rounded
                             @click="$refs.menu.save(date)"
                           >
                             OK
@@ -1010,44 +1007,46 @@ export default {
                         :close-on-content-click="false"
                         :nudge-right="40"
                         :return-value.sync="time"
-                        lazy
                         transition="scale-transition"
                         offset-y
-                        full-width
                         min-width="290px"
                       >
-                        <v-text-field
-                          slot="activator"
-                          v-model="time"
-                          label="Time Picker"
-                          prepend-icon="access_time"
-                          readonly
-                        />
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            slot="activator"
+                            v-model="time"
+                            label="Time Picker"
+                            prepend-icon="access_time"
+                            readonly
+                            v-on="on"
+                          />
+                        </template>
                         <v-time-picker
                           v-model="time"
-                          type="month"
-                          width="320"
                           color="deep-purple"
                         />
-                        <v-spacer />
-                        <base-button
-                          text
-                          disabled
-                        />
-                        <base-button 
-                          text
-                          color="primary"
-                          @click="menu2 = false"
-                        >
-                          Cancel
-                        </base-button>
-                        <base-button 
-                          rounded
-                          color="primary" 
-                          @click="$refs.menu2.save(time)"
-                        >
-                          OK
-                        </base-button>
+                        <v-row class="grey lighten-5">
+                          <div class="flex-grow-1" />
+                          <v-col 
+                            cols="auto"
+                            class="mx-2"
+                          >
+                            <base-button 
+                              text
+                              color="primary"
+                              @click="menu2 = false"
+                            >
+                              Cancel
+                            </base-button>
+                            <base-button 
+                              rounded
+                              color="primary" 
+                              @click="$refs.menu2.save(time)"
+                            >
+                              OK
+                            </base-button>
+                          </v-col>
+                        </v-row>
                       </v-menu>
                     </v-col>
                   </v-row> 
@@ -1071,19 +1070,20 @@ export default {
                         :close-on-content-click="false"
                         :nudge-right="40"
                         :return-value.sync="date2"
-                        lazy
                         transition="scale-transition"
                         offset-y
-                        full-width
                         min-width="290px"
                       >
-                        <v-text-field
-                          slot="activator"
-                          v-model="date2"
-                          label="Date Picker"
-                          prepend-icon="event"
-                          readonly
-                        />
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            slot="activator"
+                            v-model="date2"
+                            label="Date Picker"
+                            prepend-icon="event"
+                            readonly
+                            v-on="on"
+                          />
+                        </template>
                         <v-date-picker 
                           v-model="date2"
                           no-title 
@@ -1092,9 +1092,9 @@ export default {
                           locale="th"
                           color="deep-purple"
                         >
-                          <v-spacer />
+                          <div class="flex-grow-1" />
                           <base-button
-                            rounded
+                            text
                             color="primary"
                             @click="menu3 = false"
                           >
@@ -1120,44 +1120,47 @@ export default {
                         :close-on-content-click="false"
                         :nudge-right="40"
                         :return-value.sync="time2"
-                        lazy
                         transition="scale-transition"
                         offset-y
-                        full-width
                         min-width="290px"
                       >
-                        <v-text-field
-                          slot="activator"
-                          v-model="time2"
-                          label="Time Picker"
-                          prepend-icon="access_time"
-                          readonly
-                        />
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            slot="activator"
+                            v-model="time2"
+                            label="Time Picker"
+                            prepend-icon="access_time"
+                            readonly
+                            v-on="on"
+                          />
+                        </template>
                         <v-time-picker
                           v-model="time2"
-                          type="month"
                           width="320"
                           color="deep-purple"
                         />
-                        <v-spacer />
-                        <base-button
-                          text
-                          disabled
-                        />
-                        <base-button 
-                          rounded
-                          color="primary" 
-                          @click="menu4 = false"
-                        >
-                          Cancel
-                        </base-button>
-                        <base-button 
-                          rounded
-                          color="primary"  
-                          @click="$refs.menu4.save(time2)"
-                        >
-                          OK
-                        </base-button>
+                        <v-row>
+                          <div class="flex-grow-1" />
+                          <v-col 
+                            cols="auto"
+                            class="mx-2"
+                          >
+                            <base-button 
+                              text
+                              color="primary" 
+                              @click="menu4 = false"
+                            >
+                              Cancel
+                            </base-button>
+                            <base-button 
+                              rounded
+                              color="primary"  
+                              @click="$refs.menu4.save(time2)"
+                            >
+                              OK
+                            </base-button>
+                          </v-col>
+                        </v-row>
                       </v-menu>
                     </v-col>                    
                   </v-row>
@@ -1181,19 +1184,20 @@ export default {
                         :close-on-content-click="false"
                         :nudge-right="40"
                         :return-value.sync="date3"
-                        lazy
                         transition="scale-transition"
                         offset-y
-                        full-width
                         min-width="290px"
                       >
-                        <v-text-field
-                          slot="activator"
-                          v-model="date3"
-                          label="Date Picker"
-                          prepend-icon="event"
-                          readonly
-                        />
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            slot="activator"
+                            v-model="date3"
+                            label="Date Picker"
+                            prepend-icon="event"
+                            readonly
+                            v-on="on"
+                          />
+                        </template>
                         <v-date-picker 
                           v-model="date3"
                           no-title 
@@ -1202,9 +1206,9 @@ export default {
                           locale="th"
                           color="deep-purple"
                         >
-                          <v-spacer />
+                          <div class="flex-grow-1" />
                           <base-button 
-                            rounded
+                            text
                             color="primary" 
                             @click="menu5 = false"
                           >
@@ -1230,44 +1234,46 @@ export default {
                         :close-on-content-click="false"
                         :nudge-right="40"
                         :return-value.sync="time3"
-                        lazy
                         transition="scale-transition"
                         offset-y
-                        full-width
                         min-width="290px"
                       >
-                        <v-text-field
-                          slot="activator"
-                          v-model="time3"
-                          label="Time Picker"
-                          prepend-icon="access_time"
-                          readonly
-                        />
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            slot="activator"
+                            v-model="time3"
+                            label="Time Picker"
+                            prepend-icon="access_time"
+                            readonly
+                            v-on="on"
+                          />
+                        </template>
                         <v-time-picker
                           v-model="time3"
-                          type="month"
-                          width="320"
                           color="deep-purple"
                         />
-                        <v-spacer />
-                        <base-button
-                          text
-                          disabled
-                        />
-                        <base-button 
-                          rounded
-                          color="primary"
-                          @click="menu6 = false"
-                        >
-                          Cancel
-                        </base-button>
-                        <base-button 
-                          rounded 
-                          color="primary" 
-                          @click="$refs.menu6.save(time3)"
-                        >
-                          OK
-                        </base-button>
+                        <v-row>
+                          <div class="flex-grow-1" />
+                          <v-col 
+                            cols="auto"
+                            class="mx-2"
+                          >
+                            <base-button 
+                              text
+                              color="primary"
+                              @click="menu6 = false"
+                            >
+                              Cancel
+                            </base-button>
+                            <base-button 
+                              rounded 
+                              color="primary" 
+                              @click="$refs.menu6.save(time3)"
+                            >
+                              OK
+                            </base-button>
+                          </v-col>
+                        </v-row>
                       </v-menu>
                     </v-col>
                   </v-row> 
@@ -1291,19 +1297,20 @@ export default {
                         :close-on-content-click="false"
                         :nudge-right="40"
                         :return-value.sync="date4"
-                        lazy
                         transition="scale-transition"
                         offset-y
-                        full-width
                         min-width="290px"
                       >
-                        <v-text-field
-                          slot="activator"
-                          v-model="date4"
-                          label="Date Picker"
-                          prepend-icon="event"
-                          readonly
-                        />
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            slot="activator"
+                            v-model="date4"
+                            label="Date Picker"
+                            prepend-icon="event"
+                            readonly
+                            v-on="on"
+                          />
+                        </template>
                         <v-date-picker 
                           v-model="date4"
                           no-title 
@@ -1312,9 +1319,9 @@ export default {
                           locale="th"
                           color="deep-purple"
                         >
-                          <v-spacer />
+                          <div class="flex-grow-1" />
                           <base-button 
-                            rounded
+                            text
                             color="primary"
                             @click="menu7 = false"
                           >
@@ -1340,45 +1347,46 @@ export default {
                         :close-on-content-click="false"
                         :nudge-right="40"
                         :return-value.sync="time4"
-                        lazy
                         transition="scale-transition"
                         offset-y
-                        full-width
                         min-width="290px"
                       >
-                        <v-text-field
-                          slot="activator"
-                          v-model="time4"
-                          label="Time Picker"
-                          prepend-icon="access_time"
-                          readonly
-                        />
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            slot="activator"
+                            v-model="time4"
+                            label="Time Picker"
+                            prepend-icon="access_time"
+                            readonly
+                            v-on="on"
+                          />
+                        </template>
                         <v-time-picker
                           v-model="time4"
-                          type="month"
-                          width="320"
                           color="deep-purple"
                         />
-                        <v-spacer />
-                        <base-button
-                          text
-                          disabled
-                        />
-                        <base-button 
-                          class="base-button--simple"
-                          rounded
-                          color="primary" 
-                          @click="menu8 = false"
-                        >
-                          Cancel
-                        </base-button>
-                        <base-button 
-                          rounded 
-                          color="primary"  
-                          @click="$refs.menu8.save(time4)"
-                        >
-                          OK
-                        </base-button>
+                        <v-row>
+                          <div class="flex-grow-1" />
+                          <v-col 
+                            cols="auto"
+                            class="mx-2"
+                          >
+                            <base-button 
+                              text
+                              color="primary" 
+                              @click="menu8 = false"
+                            >
+                              Cancel
+                            </base-button>
+                            <base-button 
+                              rounded 
+                              color="primary"  
+                              @click="$refs.menu8.save(time4)"
+                            >
+                              OK
+                            </base-button>
+                          </v-col>
+                        </v-row>
                       </v-menu>
                     </v-col>                    
                   </v-row>
@@ -1503,8 +1511,7 @@ export default {
                     <v-list two-line>
                       <v-list-item 
                         v-for="item in contextParser" 
-                        :key="item.key" 
-                        avatar
+                        :key="item.key"
                       >
                         <v-list-item-avatar>
                           <v-icon class="blue white--text">
@@ -1627,8 +1634,7 @@ export default {
                             <v-list two-line>
                               <v-list-item 
                                 v-for="item in subContextArray" 
-                                :key="item.key" 
-                                avatar
+                                :key="item.key"
                               >
                                 <v-list-item-avatar>
                                   <v-icon class="blue white--text">
@@ -1764,7 +1770,7 @@ export default {
                 <v-card-text>
                   <v-col 
                     cols="12"
-                    md="6"
+                    md="8"
                   > 
                     <v-col v-if="helper">
                       <v-subheader class="helpertext">
@@ -1983,8 +1989,7 @@ export default {
                       <v-list two-line>
                         <v-list-item 
                           v-for="item in rewards" 
-                          :key="item.key" 
-                          avatar
+                          :key="item.key"
                         >
                           <v-list-item-avatar>
                             <v-icon class="deep-purple white--text">

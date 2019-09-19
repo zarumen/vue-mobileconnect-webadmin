@@ -80,6 +80,12 @@ export default {
     checkWidgets () {
       return this.headers.some(head => head.text === 'Widget')
     },
+    checkUserViewer () {
+      return this.headers.some(head => head.text === 'Views')
+    },
+    checkActionsBtn () {
+      return this.headers.some(head => head.value === 'action')
+    },
     checkKeywords () {
       return this.headers.some(head => head.text === 'Keyword')
     },
@@ -396,40 +402,48 @@ export default {
           </span>
         </v-chip>
       </template>
-      <template
-        v-if="checkWidgets"
-        v-slot:item.id="{ item }"
-      >
-        <router-link 
-          :to="{ path: `campaignwidget/${item.id}` }"
-        >
-          <v-icon color="secondary">
-            widgets
-          </v-icon>
-        </router-link>
-      </template>
       <template 
-        v-if="actionBtn"
+        v-if="checkActionsBtn"
         v-slot:item.action="{ item }"
       >
-        <base-button 
-          color="secondary"
-          circle
-          icon
-          x-small
-          @click.native="$emit('edit', item)"
-        >
-          <v-icon>edit</v-icon>
-        </base-button>
-        <base-button
-          color="error" 
-          circle
-          icon
-          x-small
-          @click.native="$emit('remove', item)"
-        >
-          <v-icon>close</v-icon>
-        </base-button>
+        <div v-if="actionBtn">
+          <base-button 
+            color="secondary"
+            circle
+            icon
+            x-small
+            @click.native="$emit('edit', item)"
+          >
+            <v-icon>edit</v-icon>
+          </base-button>
+          <base-button
+            color="error" 
+            circle
+            icon
+            x-small
+            @click.native="$emit('remove', item)"
+          >
+            <v-icon>close</v-icon>
+          </base-button>
+        </div>
+        <div v-if="checkUserViewer">
+          <router-link 
+            :to="{ path: `campaignDetails/${item.id}` }"
+          >
+            <v-icon color="secondary">
+              assessment
+            </v-icon>
+          </router-link>
+        </div>
+        <div v-if="checkWidgets">
+          <router-link 
+            :to="{ path: `campaignwidget/${item.id}` }"
+          >
+            <v-icon color="secondary">
+              widgets
+            </v-icon>
+          </router-link>
+        </div>
       </template>
     </v-data-table>
     <!-- footer page running page number -->
@@ -441,6 +455,9 @@ export default {
     >
       <v-card>
         <v-card-actions>
+          <span class="subtitle-1 blue-grey--text">
+            All Keywords
+          </span>
           <div class="flex-grow-1" />
           <v-icon
             @click="closeSelectedShow"

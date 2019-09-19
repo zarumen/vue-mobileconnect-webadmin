@@ -23,7 +23,6 @@ export const getters = {
     let cId = state.campaignSelected
 
     let cacheTransactionTotals = getSavedState(`transactions.${cId}.txTotals`)
-    console.log(cacheTransactionTotals)
 
     if (state.transactionTotals === cacheTransactionTotals) {
       return state.flagTotals
@@ -117,7 +116,10 @@ export const actions = {
     commit('SOCKET_DISCONNECT')
   },
   socket_transactionRewards ({ commit }, txData) {
-    
+    console.log(`rewards: ${JSON.stringify(txData)}`)
+  },
+  socket_transactionKeyword ({ commit }, txData) {
+    console.log(`keyword: ${JSON.stringify(txData)}`)
   },
   socket_transactionTotals ({ state, commit }, txData, time = new Date()) {
     // Data จะ refresh ทุกครั้ง เมื่อ มี Data ใหม่ และ กด refresh

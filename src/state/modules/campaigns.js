@@ -1,5 +1,6 @@
 import { set } from '@state/helpers'
 import assign from 'lodash/assign'
+import axios from "@utils/aws-api.config"
 import firestoreApp from "@utils/firestore.config"
 import getServerTimestamp from '@utils/firestore-timestamp'
 
@@ -327,6 +328,7 @@ export const actions = {
 
         commit('setLoading', { loading: false })
         dispatch('getAllCampaigns')
+        dispatch('deleteCampaignResource')
         sendSuccessNotice(commit, 'Campaign Deleted!')
         closeNotice(commit, 2000)
       })
@@ -334,6 +336,13 @@ export const actions = {
         commit('setLoading', { loading: false })
         console.log("Error removing document: ", error)
       })
+  },
+  async deleteCampaignResource({ commit }, { campaignId }) {
+    // delete campaigns Register Records from Redis
+    let resTest = await axios.deleteData(`registerrecords/${campaignId}/test/totals`)
+    let resProd = await axios.deleteData(`registerrecords/${campaignId}/production/totals`)
+
+    return console.log(resTest, resProd)
   },
   // ===
   // ETC. Zone

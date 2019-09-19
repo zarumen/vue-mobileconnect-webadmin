@@ -22,7 +22,7 @@ export const getters = {
   // check Admin role
   isAdmin: state => state.isAdmin,
   // get User Email
-  // getEmail: state => state.currentUser.email,
+  getUserInfo: state => state.userInfo,
 }
 
 export const mutations = {

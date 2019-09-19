@@ -177,6 +177,17 @@ export default [
     }),
   },
   {
+    path: '/campaignsViewer',
+    name: 'campaignsViewer',
+    component: () => lazyLoadView(import('@views/campaigns-viewer')),
+    meta: {
+      authRequired: true,
+    },
+    props: (route) => ({
+      user: store.state.auth.userInfo || {}
+    }),
+  },
+  {
     path: '/campaignwidgets',
     name: 'campaignwidgets',
     component: () => lazyLoadView(import('@views/campaignwidgets')),

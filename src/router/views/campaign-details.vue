@@ -94,7 +94,7 @@ export default {
             color="green"
             icon="store"
             title="SMS Transactions"
-            :value="getTransactionTotals"
+            :value="(getTransactionTotals) ? getTransactionTotals : 0"
             sub-icon="alarm"
             :sub-text="updatedTimestampTxTotals"
           />
@@ -151,10 +151,10 @@ export default {
         >
           <base-card
             color="deep-purple"
-            title="Profile"
-            text="Check CampaignState Status"
+            title="Admin Panels"
+            text="Check Campaigns Details Statistics"
           >
-            <h2 class="info--text">
+            <h2 class="secondary--text">
               About Campaign
             </h2>
 
@@ -164,7 +164,7 @@ export default {
               porta. Lorem ipsum dolor sit amet.
             </p>
 
-            <h5 class="info--text">
+            <h5 class="secondary--text">
               Campaign Info and Validate Info
             </h5>
             <p class="mb-5">

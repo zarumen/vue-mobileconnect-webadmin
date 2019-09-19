@@ -10,6 +10,9 @@ fontAwesomeIconLibrary.add(
   // free solid
   require('@fortawesome/free-solid-svg-icons/faSync').definition,
   require('@fortawesome/free-solid-svg-icons/faSyncAlt').definition,
+  require('@fortawesome/free-solid-svg-icons/faChartArea').definition,
+  require('@fortawesome/free-solid-svg-icons/faChartBar').definition,
+  require('@fortawesome/free-solid-svg-icons/faChartPie').definition,
   // brands
   require('@fortawesome/free-solid-svg-icons/faFileExcel').definition,
   require('@fortawesome/free-solid-svg-icons/faFileCode').definition,

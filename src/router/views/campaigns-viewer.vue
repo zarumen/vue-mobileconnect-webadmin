@@ -1,68 +1,87 @@
 <script>
-import Layout from '@layouts/main'
-import { mapGetters, mapActions } from 'vuex'
-import { campaignComputed } from '@state/helpers'
-
+import { mapActions } from 'vuex'
+import { campaignComputed, campaignMethods } from '@state/helpers'
 
 export default {
   page: {
-    title: 'Widgets',
-    meta: [{ name: 'description', content: 'Campaigns Widget Manager' }],
+    title: 'Campaigns Viewer',
+    meta: [{ name: 'description', content: 'Campaigns Customers Viewer' }],
   },
-  components: { Layout },
+  components: { 
+    Layout: () => import('@layouts/main'),
+  },
+  props: {
+    user: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
       baseModule: 'campaigns',
+      addCampaignDialog: '',
       dialog: '',
       dialogTitle: "Campaign Delete Dialog",
       dialogText: "Do you want to delete this campaign?",
       headers: [
-        { text: 'Widget', value: 'action', sortable: false },
-        {
-          text: 'Code',
-          left: true,
-          value: 'campaignCode'
-        },
+        { text: 'Views', value: 'action', align: 'center', sortable: false },
+        { text: 'Header', value: 'campaignName', left: true, },
         { text: 'Brand', value: 'organizationLevel3Name' },
-        { text: 'Name', value: 'campaignName' },
-        { text: 'Keyword', value: 'keyword' },
         { text: 'Shortcode', value: 'shortcode' },
-        { text: 'Running', value: 'campaignAvailable' },
-        { text: 'Status', value: 'campaignState' },
+        { text: 'Status', value: 'campaignState', align: 'center' },
+        { text: 'Active', value: 'campaignActive' },
       ],
       campaignId: '',
+      campaignRemaining: null,
+      quickSearchFilter: '',
       left: true,
       timeout: 2000,
-      search: '',
-      campaignWidgetRemaining: null
     }
   },
   computed: {
     ...campaignComputed,
-    ...mapGetters('organizations', [
-      'hadList',
-    ]),
+    authLevel () {
+      // set Auth Level before send to Query
+      if(this.user.organizationAuth === 'Level1')
+        return this.user.organizationLevel1
+      
+      if(this.user.organizationAuth === 'Level2')
+        return this.user.organizationLevel2
+      
+      if(this.user.organizationAuth === 'Level3')
+        return this.user.organizationLevel3
+
+      return null
+    },
+  },
+  watch: {
+
   },
   created () {
 
-    if(!this.hadList) this.getOrganizationsList()
-
-    if(!this.hadCampaignList) this.getAllCampaigns()
-
+    if(!this.hadCampaignList) {
+      this.reloadData()
+    }
   },
   methods: {
     ...mapActions('campaigns', [
-      'getAllCampaigns',
-      'closeSnackBar',
-    ]),
-    ...mapActions('organizations', [
-      'getOrganizationsList'
+      'getCampaignsByOrg',
     ]),
     print() {
       window.print()
     },
     reloadData () {
-      this.getAllCampaigns()
+      this.getCampaignsByOrg({
+        auth: this.user.organizationAuth, 
+        orgId: this.authLevel
+      })
+    },
+    onConfirm () {
+      this.dialog = false
+    },
+    onCancel () {
+      this.campaignId = ''
+      this.dialog = false
     },
     exitSnackbar () {
       this.$store.commit('campaigns/setSnackbar', { snackbar: false })
@@ -80,9 +99,9 @@ export default {
           <!-- Controller Tools Panels -->
           <v-card-title>
             <span class="title">
-              Campaigns Widget {{ campaignWidgetRemaining? "("+campaignWidgetRemaining.length+")": "" }}
+              Campaigns {{ campaignRemaining? "("+campaignRemaining.length+")": "" }}
               <v-text-field
-                v-model="search"
+                v-model="quickSearchFilter"
                 append-icon="search"
                 label="Quick Search"
                 single-line
@@ -90,7 +109,7 @@ export default {
               />
             </span>
             <v-spacer />
-            <base-button 
+            <base-button
               color="primary"
               circle
               icon
@@ -108,19 +127,27 @@ export default {
               </v-icon>
             </base-button>
           </v-card-title>
+          <!-- Insert in Base-Table Component -->
           <BaseTable
             v-if="loading===false"
             :headers="headers"
             :items="items"
-            :search="search"
+            :search="quickSearchFilter"
             :pagination="pagination"
             :basemodule="baseModule"
             :action-btn="false"
-            @updated-items="campaignWidgetRemaining = $event"
+            @updated-items="campaignRemaining = $event"
           />
         </v-card>
       </v-flex>
       <!-- Pop up Panels -->
+      <BaseDialog 
+        :dialog="dialog" 
+        :dialog-title="dialogTitle" 
+        :dialog-text="dialogText"
+        @onConfirm="onConfirm" 
+        @onCancel="onCancel"
+      />
       <v-snackbar 
         v-if="loading===false" 
         v-model="snackbar" 
