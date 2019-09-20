@@ -1,6 +1,6 @@
 <script>
 import { mapActions } from 'vuex'
-import { campaignComputed, campaignMethods } from '@state/helpers'
+import { campaignComputed } from '@state/helpers'
 
 export default {
   page: {

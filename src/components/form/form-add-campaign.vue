@@ -427,8 +427,8 @@ export default {
           // TEST FILE
           this.uploadCoupons({
             id: this.campaignForm.campaignCode, 
-            state: 'test', 
-            filename: this.fileNameTestCP, 
+            state: 'test',
+            fileName: this.fileNameTestCP, 
             fileUrl: this.fileUrlTestCP
           })
 
@@ -436,7 +436,7 @@ export default {
           this.uploadCoupons({
             id: this.campaignForm.campaignCode,
             state: 'production',
-            filename: this.fileNameProCP, 
+            fileName: this.fileNameProCP, 
             fileUrl: this.fileUrlProCP
           })
         }
@@ -551,6 +551,7 @@ export default {
       this.fileUrlProCP.push(e)
     },
     uploadCoupons ({ id, state, fileName, fileUrl }) {
+      console.log(fileName)
       fileName.forEach((file, index) => {
 
         let ref = storageRef.child(`campaigns/${id}/couponsFile/${state}/${index}-${file}`)
@@ -666,7 +667,7 @@ export default {
               step="1"
             >
               {{ stepName.one }}
-              <small>v.0.8.1 patch note: Generate Coupon และ Upload Coupon ได้แล้ว, ทำ Form upload verify_code โดยแยก เป็น 2 ลิ้งค์คือ ไฟล์สำหรับ TEST และ PRODUCTION </small>
+              <small>v.0.9 patch note: Generate Coupon และ Upload Coupon ได้แล้ว, ทำ Form upload verify_code โดยแยก เป็น 2 ลิ้งค์คือ ไฟล์สำหรับ TEST และ PRODUCTION </small>
               <small>road map: ทำตัวช่วย กรอกในสิ่งที่เคยกรอกไปแล้ว (Template) ทั้งในส่วนของ Regex และ ข้อความ (Message Template) และหน้าสุดท้าย ไว้ดูสรุปข้อมูล ก่อน save</small>
             </v-stepper-step>
             <v-stepper-content step="1">

@@ -6,7 +6,7 @@ export default {
   data () {
     return {
       datacollection: {
-        labels: ['Company1', 'Company2', 'Company3', 'Company4'],
+        labels: ['KEYWORD1', 'KEYWORD2', 'KEYWORD3', 'KEYWORD4'],
         datasets: [
           {
             backgroundColor: [

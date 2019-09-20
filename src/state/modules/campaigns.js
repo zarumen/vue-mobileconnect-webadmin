@@ -317,18 +317,18 @@ export const actions = {
         // dispatch delete keywordByShortcode to tricked return to keywordReserved = true 
 
         let obj = state.items.find(item => item.id === campaignId)
-
+        
         let keyworddeleted = obj.keyword
         let shortcodedeleted = obj.shortcode
-
+        
         dispatch('shortcodes/deleteKeywordByShortcode', {
           shortcode: shortcodedeleted,
           keyword: keyworddeleted
         }, { root: true })
-
+        
         commit('setLoading', { loading: false })
         dispatch('getAllCampaigns')
-        dispatch('deleteCampaignResource')
+        dispatch('deleteCampaignResource', { campaignId: campaignId })
         sendSuccessNotice(commit, 'Campaign Deleted!')
         closeNotice(commit, 2000)
       })

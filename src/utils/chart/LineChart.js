@@ -10,7 +10,7 @@ export default {
         labels: ['June', 'July', 'August', 'September', 'October', 'November', 'December'],
         datasets: [
           {
-            label: 'Sales Volume One',
+            label: 'KEYWORD1',
             borderColor: '#41B883',
             pointBackgroundColor: 'white',
             borderWidth: 3,
@@ -19,7 +19,7 @@ export default {
             data: [40, 20, 30, 50, 90, 10, 20]
           },
           {
-            label: 'Sales Volume Two',
+            label: 'KEYWORD2',
             borderColor: '#05CBE1',
             pointBackgroundColor: 'white',
             pointBorderColor: '#05CBE1',
