@@ -12,7 +12,11 @@ export const state = {
   prefixFile: '',
   startAfter: '',
   downloadKey: '',
-  downloadUrl: ''
+  downloadUrl: '',
+  // Coupons & Verify Code zone
+  totalsVerifyCode: 0,
+  totalsCoupon: 0,
+  
 }
 
 export const getters = {

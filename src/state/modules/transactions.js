@@ -30,6 +30,7 @@ export const getters = {
       return state.transactionTotals
     }
   },
+  getTransactionKeyword: (state) => state.transactionKeyword,
   getTimestampTxTotals: (state) => {
     let cId = state.campaignSelected
 

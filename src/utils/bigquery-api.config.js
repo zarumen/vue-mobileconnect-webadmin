@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const projectId = 'mobile-connect-sms'
+const projectId = 'xxx'
 
 const baseURL = `https://bigquery.googleapis.com/bigquery/v2/projects/${projectId}/`
 

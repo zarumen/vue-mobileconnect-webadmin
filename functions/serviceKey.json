@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "mobile-connect-sms",
+  "private_key_id": "8cde82eb040a511aefab63c4f1b3ececf2040e24",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCrXr3cSOGsdmSD\nw4Nccx+ODmptFIfQm+G5fJ5sk2DPPWB7Y66ykAjDI41ymaoYqoHpboKHmTCbAxBJ\nf25mkBHS9hzlGHXfx4dmDvC2Epy/Krv2URVdrri+iRZeDVUNCzr7AUqwPiDYDgsl\nLpjGnQEPN3RW4PsNvuIoOtA1ryB2VFO1NcsIChqkoFp3twNbvF5fUuKDpe9DYLNZ\nTq4b9guXWinMEJb0tCvLkDMUjfDfXdcpNHr06/DOuMSfgUdGDKsl1FOmo7VJMWPY\ncSWj30sgbpB/lLTo4bYtWOkCeFi1QsQTkK+BPM1iOAcwuHgDgYoueOn/OTIV+Ot7\n7Jv/OvBrAgMBAAECggEATikpCUbIf0OEdsB+snTjiIQ0sEmz5EakvlgDXdweRIdm\n8QA3FsQw6ufVRNanSRbDp/c6W6RYEetky1DuxqKhLooIBcmRQZ6ct8TKrxBwI5TX\nI/I5f4AITQbzh7Qm/YsIvKELMrUzf7dwB+Zn0facHBeb3WBBwTQ1rEme201jzfPL\nJWB/xSNguZOjcR6m4EuB/vR5YFR3LLK4l7M+fqc/DLXZUDlIYEggO7jAcXmdRzAh\njda9PUV7avTN20JbLtMWyI/UPyejC/YGW8AcTbeUOoNxPu6BJ2rv+mdg27gxaGZV\nhDUiqNUtYqng1MYsb2PWHqKTX/jZ/NQS/KPl6LpKUQKBgQDSUap1/hSacf6A37xE\naqnTG50w4SVdOAivC0wwewvVjBVVPp/qWv/fzSCf8jCDngeAozZXhneBS6yMVbE9\nsGEw4BzTPBTdKdiH1NuLGvfklgLFTqN+GZobmJnsEzY+gNgl2TVicbnJc8FZ54yp\n6tAgcxTUjfJ4Kij7sj0QMMwsuQKBgQDQl2exufud8UhIZN/ldw0pvLRLh/QrS5HM\ndf1voGc6m/dUksMaF5JcLpgII8typNpIvCJ6CPxQMk8KlE3uW1FiCbWB+9IU/lJs\nvx/teXIyTioW3QwJh7SvlAGmxn/incuyZIFaoIAyHvY5GEszVy98ZgGIVHR4Jh5W\nVRt/Dp8cQwKBgCwNXPXv7SLYY6Vct5NhAAcuzoLxdaEL3o3DgQbajwUAnWtIfbhZ\nrSSUU5QM52p6DDo+dWBp0tgrII4YWNKCAil5l7AK8pfMbwUsaXu+f1PKs/Pd39LG\nzAehtAPFlmQLGrr6vvrKtU5jx4jsPgNNIqDZWfCXdsUCl6j4kV+1yN5JAoGADlKX\nGCkBEfNDV1U12ne2O6ttZdJL/b0Ooc9oO4X0EJ4s+W2qX9xGfHXmkoiCq7iOFHh2\nlZKQYKFTtBJC158Fk4m/ING9txtPZZAqDRBNuw6K7U74SJ881OGAy4bNuS3Ektc7\n2pEyvD5MAdedMkVGSXBnoojKBoX3h04IuUyzuCkCgYBymF6UhXElxSifhwxmDzcx\nYDRM9Wya5iu4Ihk3UaQAFdbKX8WIlVtJhCrgw5qwkt/Nq9ZYycKesZsW8JW9AgmB\n2mWogfKX/zvhxMUtHQtJCab28XthSOuEJFrAYMWW6lOYllziPQXXJ3qlS9pq4zuN\nVs0kav/HsNGeXW7eJ1KEIA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "sms2mkt-webadmin@mobile-connect-sms.iam.gserviceaccount.com",
+  "client_id": "110244232706306790476",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/sms2mkt-webadmin%40mobile-connect-sms.iam.gserviceaccount.com"
+}

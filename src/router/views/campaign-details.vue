@@ -1,5 +1,6 @@
 <script>
 import formatDateRelative from '@utils/format-date-relative'
+import { formatDateTime } from '@utils/format-date'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
@@ -11,11 +12,12 @@ export default {
     Layout: () => import('@layouts/main'),
     Doughnut: () => import('@utils/chart/Doughnut'),
     LineChart: () => import('@utils/chart/LineChart'),
+    VueJsonPretty: () => import('vue-json-pretty'),
   },
   data: () => ({
     text: '',
-    text2: '',
-    totals: ''
+    totals: '',
+    tabs: 0,
   }),
   computed: {
     ...mapGetters('auth', [
@@ -27,6 +29,7 @@ export default {
     ]),
     ...mapGetters('transactions', [
       'getTransactionTotals',
+      'getTransactionKeyword',
       'getTimestampTxTotals'
     ]),
     updatedTimestampTxTotals () {
@@ -37,6 +40,50 @@ export default {
     },
     campaignInfo () {
       return this.getOneCampaign(this.$route.params.campaignId)
+    },
+    campaignValidateInfo () {
+      return this.getOneCampaignValidate
+    },
+    startDate () {
+      if(this.campaignInfo) {
+        return formatDateTime(this.campaignValidateInfo.campaignDateStart.seconds)
+      }
+      return ''
+    },
+    endDate () {
+      if(this.campaignInfo) {
+        return formatDateTime(this.campaignValidateInfo.campaignDateEnd.seconds)
+      }
+      return ''
+    },
+    startTestDate () {
+      if(this.campaignInfo) {
+        return formatDateTime(this.campaignValidateInfo.campaignDateTestStart.seconds)
+      }
+      return ''
+    },
+    endTestDate () {
+      if(this.campaignInfo) {
+        return formatDateTime(this.campaignValidateInfo.campaignDateTestEnd.seconds)
+      }
+      return ''
+    },
+    classVerifyStatus () {
+      if(this.campaignInfo.campaignHasVerifyCode) {
+        return 'green--text'
+      }
+      return 'red--text'
+    },
+    txKeyword () {
+      if(!this.isEmpty(this.getTransactionKeyword)) {
+        let result = Object.values(this.getTransactionKeyword).reduce((t, n) => parseInt(t) + parseInt(n))
+
+        return result
+      }
+      return 0
+    },
+    checkRewardsHaveCoupons () {
+      return this.campaignValidateInfo.rewardsArray.some(x => x.rewardHasCoupon === true)
     }
   },
   created () {
@@ -67,12 +114,6 @@ export default {
       'socketRegister',
       'socketUnRegister'
     ]),
-    clicked () {
-      this.text = this.getOneCampaign(this.$route.params.campaignId)
-      this.text2 = this.getOneCampaignValidate
-      
-      return this.text
-    },
     initializeData () {
       // initial load socket.io data
       this.totals = this.getTransactionTotals
@@ -81,18 +122,30 @@ export default {
       this.updateStatusCampaign({
         campaignId: this.$route.params.campaignId
       })
-    }
+    },
+    onOpen () {
+      this.text = 'open'
+    },
+    isEmpty (obj) {
+      for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+      }
+      return true;
+    },
+    classStatus (status) {
+      if(status) {
+        return 'green--text'
+      }
+      return 'red--text'
+    },
   },
 }
 </script>
 
 <template>
   <Layout>
-    <v-container
-      fill-height
-      fluid
-      grid-list-xl
-    >
+    <v-container>
       <v-row>
         <v-col 
           cols="12"
@@ -117,9 +170,9 @@ export default {
             color="orange"
             icon="store"
             title="SMS Registration"
-            value="8,049"
+            :value="`${txKeyword}`"
             sub-icon="alarm"
-            sub-text="Last 24 Hours"
+            :sub-text="updatedTimestampTxTotals"
           />
         </v-col>
         <v-col 
@@ -136,75 +189,507 @@ export default {
             sub-text="Last 24 Hours"
           />
         </v-col>
-        <v-col 
+        <v-col
+          v-if="isAdmin"
           cols="12"
           sm="6"
           lg="3"
         >
           <base-stats-card
             color="purple"
-            icon="money"
-            title="Revenue"
-            value="$34,245"
-            sub-icon="alarm"
-            sub-text="Last 24 Hours"
+            icon="face"
+            sub-icon="open_in_browser"
+            sub-icon-color="secondary"
+            title="User Level State"
+            :small-value="`Administrator`"
+            :campaign-active="campaignInfo.campaignActive"
+            :campaign-state="campaignValidateInfo.campaignState"
+            :campaign-running="campaignValidateInfo.campaignAvailable"
+            :admin-panel="isAdmin"
+            @onOpen="onOpen"
           />
         </v-col>
         <v-col
+          v-else
           cols="12"
-          md8
-          pa-5
+          sm="6"
+          lg="3"
+        >
+          <base-stats-card
+            color="purple"
+            icon="face"
+            title="User Level State"
+            :small-value="`User`"
+            sub-icon="open_in_browser"
+            :sub-text="updatedTimestampTxTotals"
+          />
+        </v-col>
+        <v-col
+          v-if="text"
+          cols="12"
+        >
+          <base-card
+            class="card-tabs"
+            color="purple"
+          >
+            <v-col
+              slot="header"
+            >
+              <v-tabs
+                v-model="tabs"
+                background-color="transparent"
+                slider-color="deep-purple"
+                dark
+                next-icon="arrow_right"
+                prev-icon="arrow_left"
+                show-arrows
+              >
+                <span
+                  class="subheading font-weight-light mr-3"
+                  style="align-self: center"
+                >
+                  Admin Panels:
+                </span>
+                <v-tab class="mr-3">
+                  <v-icon class="mr-2">
+                    chrome_reader_mode
+                  </v-icon>
+                  Campaign Info
+                </v-tab>
+                <v-tab class="mr-3">
+                  <v-icon class="mr-2">
+                    settings_applications
+                  </v-icon>
+                  Validate Info
+                </v-tab>
+                <v-tab class="mr-3">
+                  <v-icon class="mr-2">
+                    star
+                  </v-icon>
+                  Verify Code
+                </v-tab>
+                <v-tab>
+                  <v-icon class="mr-2">
+                    card_giftcard
+                  </v-icon>
+                  Coupons
+                </v-tab>
+              </v-tabs>
+            </v-col>
+            <v-card-title>
+              <span 
+                v-if="tabs === 0" 
+                class="title"
+              >
+                Campaign:
+                <span class="body-2 primary--text">
+                  {{ campaignInfo.campaignCode }}
+                </span>
+                <base-button 
+                  color="secondary"
+                  circle
+                  icon
+                  small
+                >
+                  <v-icon>edit</v-icon>
+                </base-button>
+              </span>
+              <span 
+                v-if="tabs === 1" 
+                class="title"
+              >
+                Campaign Validate:
+                <span class="body-2 primary--text">
+                  {{ campaignInfo.campaignCode }}
+                </span>
+                <base-button
+                  color="secondary"
+                  circle
+                  icon
+                  small
+                >
+                  <v-icon>edit</v-icon>
+                </base-button>
+              </span>
+              <span 
+                v-if="tabs === 2" 
+                class="title"
+              >
+                Verify Code
+                <span :class="classStatus(campaignInfo.campaignHasVerifyCode)">
+                  ({{ campaignInfo.campaignHasVerifyCode }})
+                </span>
+              </span>
+              <span 
+                v-if="tabs === 3" 
+                class="title"
+              >
+                Coupons Code
+                <span :class="classStatus(checkRewardsHaveCoupons)">
+                  ({{ checkRewardsHaveCoupons }})
+                </span>
+              </span>
+              <v-spacer />
+              <span v-if="tabs === 0">
+                <base-button
+                  color="warning"
+                  text
+                >
+                  Paused
+                </base-button>
+                <base-button
+                  color="primary"
+                  text
+                  @click="clickToProduciton"
+                >
+                  Production
+                </base-button>
+              </span>
+              <span v-if="tabs === 1">
+                &nbsp;
+              </span>
+              <span v-if="tabs === 2">
+                <base-button
+                  color="secondary"
+                  text
+                >
+                  NEW
+                </base-button>
+                <base-button
+                  color="warning"
+                  text
+                >
+                  ADD
+                </base-button>
+                <base-button
+                  color="error"
+                  text
+                >
+                  DELETE
+                </base-button>
+              </span>
+              <span v-if="tabs === 3">
+                <base-button
+                  color="secondary"
+                  text
+                >
+                  NEW
+                </base-button>
+                <base-button
+                  color="warning"
+                  text
+                >
+                  ADD
+                </base-button>
+                <base-button
+                  color="error"
+                  text
+                >
+                  DELETE
+                </base-button>
+              </span>
+            </v-card-title>
+
+            <v-tabs-items v-model="tabs">
+              <v-tab-item :value="0">
+                <!-- campaign Info -->
+                <v-card-text>
+                  <v-row>
+                    <v-col 
+                      cols="12"
+                    > 
+                      <p class="body-1 indigo--text">
+                        <strong>Campaign General Information</strong>
+                      </p>
+
+                      <p>
+                        compaign Code: <strong class="green--text">
+                          {{ campaignInfo.campaignCode }}
+                        </strong>
+                      </p>
+                      <p>
+                        compaign Name: <strong class="green--text">
+                          {{ campaignInfo.campaignName }}
+                        </strong>
+                      </p>
+                      <p>
+                        compaign Description: <strong class="green--text">
+                          {{ campaignInfo.campaignDescription }}
+                        </strong>
+                      </p>
+                      <p>
+                        compaign Type: <strong class="green--text">
+                          {{ campaignInfo.campaignType }}
+                        </strong>
+                      </p>
+                      <p>
+                        compaign Owner Company: <strong class="green--text">
+                          {{ campaignInfo.organizationLevel1Name }}
+                        </strong>
+                      </p>
+                      <p>
+                        compaign Owner Department: <strong class="green--text">
+                          {{ campaignInfo.organizationLevel2Name }}
+                        </strong>
+                      </p>
+                      <p>
+                        compaign Owner Brand: <strong class="green--text">
+                          {{ campaignInfo.organizationLevel3Name }}
+                        </strong>
+                      </p>
+                      <p>
+                        compaign Keyword: <strong class="green--text">
+                          {{ campaignInfo.keyword }}
+                        </strong>
+                      </p>
+                      <p>
+                        compaign Shortcode: <strong class="green--text">
+                          {{ campaignInfo.shortcode }}
+                        </strong>
+                      </p>
+                      <!-- <p>compaign's Brand: <strong class="green- -text">{{ brand.organizationLevel3Name }}</strong></p> -->
+                      <p>
+                        compaign's Start Date: <strong class="green--text">
+                          {{ startDate }}
+                        </strong>
+                      </p>
+                      <p>
+                        compaign's End Date: <strong class="green--text">
+                          {{ endDate }}
+                        </strong>
+                      </p>
+                      <p>
+                        compaign's Test Start Date: <strong class="green--text">
+                          {{ startTestDate }}
+                        </strong>
+                      </p>
+                      <p>
+                        compaign's Test End Date: <strong class="green--text">
+                          {{ endTestDate }}
+                        </strong>
+                      </p>
+                      <!-- <p>
+                        Delimiter: <strong class="green--text">
+                          {{ campaignValidateInfo.contextDelimiter }}
+                        </strong>
+                      </p>
+                      <p>
+                        campaign Has Verifycode: <strong class="green--text">
+                          {{ switchUploadVC }}
+                        </strong>
+                      </p>
+                      <p>
+                        campaign Has Verifycode (2 Column) { MobileNumber:Verifycode }: <strong class="green--text">
+                          {{ campaignValidateInfo.campaignHasMsisdnList }}
+                        </strong>
+                      </p>
+                      <p>
+                        Verifycode TEST Filename: <strong class="green--text">
+                          {{ fileNameTestVC }}
+                        </strong>
+                      </p>
+                      <p>
+                        Verifycode PRODUCTION Filename: <strong class="green--text">
+                          {{ fileNameProVC }}
+                        </strong>
+                      </p>
+                      <p>rewards: {{ JSON.stringify(rewards, null, 2) }}</p> -->
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+              </v-tab-item>
+              <v-tab-item :value="1">
+                <v-card-text>
+                  <v-row>
+                    <v-col 
+                      cols="12"
+                    >
+                      <p class="body-2 indigo--text">
+                        Campaign Validate Status:
+                      </p>
+                      <p>
+                        Campaign Has Verify Code: <strong class="green--text">
+                          {{ campaignInfo.campaignHasVerifyCode }}
+                        </strong>
+                      </p>
+                      <p>
+                        Campaign Rewards Has Coupons: <strong class="green--text">
+                          {{ checkRewardsHaveCoupons }}
+                        </strong>
+                      </p>
+                      <p class="body-2 indigo--text">
+                        Campaign Contexts Parser:
+                      </p>
+                      <p>
+                        Context Delimiter: <strong class="green--text">
+                          "{{ campaignValidateInfo.contextDelimiter }}"
+                        </strong>
+                      </p>
+                      <p>
+                        Context Sections: <strong class="green--text">
+                          {{ (campaignValidateInfo.contextParser) ? campaignValidateInfo.contextParser.length : 0 }} Parts
+                        </strong>
+                      </p>
+                      <vue-json-pretty
+                        :data="campaignValidateInfo.contextParser"
+                        :deep="2"
+                        highlight-mouseover-node
+                        show-line
+                        show-double-quotes
+                      />
+                    </v-col>
+                    <v-col 
+                      cols="12"
+                    >
+                      <p class="body-2 indigo--text">
+                        Services Messages:
+                      </p>
+                      <p>
+                        Empty Message: <strong class="green--text">
+                          {{ campaignValidateInfo.messageCampaignTestNotRegister }}
+                        </strong>
+                      </p>
+                      <p>
+                        Pause Service Message: <strong class="green--text">
+                          {{ campaignValidateInfo.messageCampaignNotAvailable }}
+                        </strong>
+                      </p>
+                      <p>
+                        Less Content Message: <strong class="green--text">
+                          {{ campaignValidateInfo.messageBoundariesLessError }}
+                        </strong>
+                      </p>
+                      <p>
+                        Over Content Message: <strong class="green--text">
+                          {{ campaignValidateInfo.messageBoundariesOverError }}
+                        </strong>
+                      </p>
+                      <p>
+                        Before Service Active: <strong class="green--text">
+                          {{ campaignValidateInfo.messageBeforeStart }}
+                        </strong>
+                      </p>
+                      <p>
+                        After Service Active: <strong class="green--text">
+                          {{ campaignValidateInfo.messageAfterEnd }}
+                        </strong>
+                      </p>
+                      <p>
+                        Already Registered Message: <strong class="green--text">
+                          {{ campaignValidateInfo.messageRegisterFail }}
+                        </strong>
+                      </p>
+                      <p>
+                        Validate Verify Code Failed Message: <strong class="green--text">
+                          {{ campaignValidateInfo.messageValidateFail }}
+                        </strong>
+                      </p>
+                      <p>
+                        Telephone Number Checked Error Message: <strong class="green--text">
+                          {{ campaignValidateInfo.messageCheckMsisdnNotFound }}
+                        </strong>
+                      </p>
+                      <p class="body-2 indigo--text">
+                        Rewards Sessions:
+                      </p>
+                      <p>
+                        Rewards Fail Message: <strong class="green--text">
+                          {{ campaignValidateInfo.messageRewardsFailed }}
+                        </strong>
+                      </p>
+                      <p>
+                        Rewards Invalid Message: <strong class="green--text">
+                          {{ campaignValidateInfo.messageRewardsInvalid }}
+                        </strong>
+                      </p>
+                      <p>
+                        Reward Received Limit Message: <strong class="green--text">
+                          {{ campaignValidateInfo.messageRewardReceivedLimit }}
+                        </strong>
+                      </p>
+                      <p>
+                        Reward have Sequence: <strong class="green--text">
+                          {{ campaignValidateInfo.rewardsHaveSequence }}
+                        </strong>
+                      </p>
+                      <p>
+                        Reward All Limit: <strong class="green--text">
+                          {{ campaignValidateInfo.rewardsLimit }}
+                        </strong>
+                      </p>
+                      <div v-if="campaignValidateInfo.rewardsArray">
+                        <p>
+                          Reward Type: <strong class="green--text">
+                            Array
+                          </strong>
+                        </p>
+                        <p class="body-2 indigo--text">
+                          Rewards Details:
+                        </p>
+                        <vue-json-pretty
+                          :data="campaignValidateInfo.rewardsArray"
+                          highlight-mouseover-node
+                          show-line
+                          show-double-quotes
+                        />
+                      </div>
+                      <div v-if="campaignValidateInfo.rewardsObject">
+                        <p>
+                          Reward Type: <strong class="green--text">
+                            Object
+                          </strong>
+                        </p>
+                        <p class="body-2 indigo--text">
+                          Rewards Details:
+                        </p>
+                        <vue-json-pretty
+                          :data="campaignValidateInfo.rewardsObject"
+                          :deep="1"
+                          highlight-mouseover-node
+                          show-line
+                          show-double-quotes
+                        />
+                      </div>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+              </v-tab-item>
+              <v-tab-item :value="2">
+                <!-- keyword reserved -->
+              </v-tab-item>
+              <v-tab-item :value="3">
+                <!-- keyword reserved -->
+              </v-tab-item>
+            </v-tabs-items>
+          </base-card>
+        </v-col>
+        <v-col
+          cols="12"
         >
           <base-card
             color="deep-purple"
-            title="Admin Panels"
-            text="Check Campaigns Details Statistics"
+            title="Campaign Details"
+            text="Check Campaigns Details Information"
           >
-            <h2 class="font-weight-medium secondary--text">
+            <h4 class="font-weight-medium primary--text">
               Campaign: {{ campaignInfo.campaignName }}
-            </h2>
+            </h4>
 
             <p class="mb-5">
-              &nbsp;&nbsp;{{ campaignInfo.campaignDescription }}<br>
-              <span class="primary--text">&nbsp;Company Owner:</span> {{ campaignInfo.organizationLevel1Name }}<br>
-              <span class="primary--text">&nbsp;Brand Owner:</span> {{ campaignInfo.organizationLevel3Name }}<br>
+              &nbsp;&nbsp;{{ campaignInfo.campaignDescription }}<br><br>
+              <span class="primary--text">Campaign Type:</span> {{ campaignInfo.campaignType }}<br><br>
+              <span class="primary--text">Campaign Owner:</span> {{ campaignInfo.organizationLevel1Name }}<br><br>
+              <span class="primary--text">Campaign Keyword:</span> {{ campaignInfo.keyword }}<br><br>
+              <span class="primary--text">Campaign Shortcode:</span> {{ campaignInfo.shortcode }}<br>
             </p>
 
             <h5 class="font-weight-medium secondary--text">
-              Campaign Info and Validate Info
+              Time Interval
             </h5>
             <p class="mb-5">
-              Lorem ipsum dolor sit amet, consecte tur adipi scin e<br>
-              lit. Etiam vulputate augu e vel felis gravida porta.
+              <span class="primary--text">Campaign StartDate:</span> {{ startDate }}<br><br>
+              <span class="primary--text">Campaign EndDate:</span> {{ endDate }}<br><br>
             </p>
-
-            <v-alert
-              outlined
-              color="info"
-            >
-              <!-- <v-row
-                v-for="(skill, i) in skills"
-                :key="i"
-                style="color: #69A1BB;"
-                wrap
-              >
-                <v-col
-                  xs6
-                  text-uppercase
-                  v-text="skill.name"
-                />
-                <v-col
-                  xs6
-                  text-right
-                  v-text="`${skill.value}%`"
-                />
-                <v-progress-linear
-                  :value="skill.value"
-                  color="info"
-                  height="8"
-                />
-              </v-row> -->
-            </v-alert>
           </base-card>
         </v-col>
         <v-col
@@ -284,92 +769,6 @@ export default {
               </span>
             </template>
           </base-card>
-        </v-col>
-        <v-col
-          cols="12"
-          md="6"
-          lg="4"
-        >
-          <base-card
-            v-if="text"
-          >
-            <!-- <v-avatar
-              slot="offset"
-              class="mx-auto d-block"
-              size="150"
-            >
-              <img
-                src="https://cdn1.iconfinder.com/data/icons/user-pictures/100/supportfemale-512.png"
-              >
-            </v-avatar> -->
-            <v-card-text 
-              class="text-center"
-            >
-              <h4 class="card-title font-weight-light">
-                {{ text.campaignCode }}
-              </h4>
-              <p class="category text-gray font-weight-thin mb-3">
-                {{ text.campaignName }}
-              </p>
-              <p class="category text-gray font-weight-thin mb-3">
-                KEYWORD: {{ text.keyword }}
-              </p>
-              <p class="category text-gray font-weight-thin mb-3">
-                SHORTCODE: {{ text.shortcode }}
-              </p>
-              <p class="category text-gray font-weight-thin mb-3">
-                STATUS: {{ text.campaignState }}
-              </p>
-            </v-card-text>
-            <v-card-actions>
-              <base-button
-                color="red"
-                text
-              >
-                Paused
-              </base-button>
-              <div class="flex-grow-1" />
-              <base-button
-                color="primary"
-                text
-                @click="clickToProduciton"
-              >
-                Production
-              </base-button>
-            </v-card-actions>
-          </base-card>
-        </v-col>
-        <v-col
-          v-if="isAdmin"
-          md12
-          cols="12"
-          lg4
-        >
-          <p class="subheading">
-            &nbsp;Campaign "{{ $route.params.campaignId }}" Details
-          </p>
-          <base-button
-            color="success"
-            @click="clicked()"
-          >
-            Click
-          </base-button>
-        </v-col>
-        <v-col
-          v-if="text"
-          md12
-          cols="12"
-          lg4
-        >
-          <p>{{ text }}</p>
-        </v-col>
-        <v-col
-          v-if="text2"
-          md12
-          cols="12"
-          lg4
-        >
-          <p>{{ text2 }}</p>
         </v-col>
       </v-row>
     </v-container>

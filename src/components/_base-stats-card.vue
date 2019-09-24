@@ -8,7 +8,7 @@
       slot="offset"
       :class="`elevation-${elevation}`"
       :color="color"
-      class="pa-4"
+      class="px-4"
       dark
     >
       <v-icon
@@ -23,24 +23,109 @@
         v-text="title"
       />
       <h3 class="title display-1 font-weight-medium">
-        {{ value }} <small>{{ smallValue }}</small>
+        {{ value }} <small class="primary--text">{{ smallValue }}</small>
       </h3>
     </div>
 
     <template slot="actions">
-      <v-icon
-        :color="subIconColor"
-        size="20"
-        class="mr-2"
+      <v-col
+        v-if="adminPanel"
+        class="caption secondary--text"
       >
-        {{ subIcon }}
-      </v-icon>
-      <span
-        :class="subTextColor"
-        class="caption font-weight-light"
-        v-text="subText"
-      />
+        <v-icon
+          :color="subIconColor"
+          size="20"
+          class="mr-2"
+        >
+          {{ subIcon }}
+        </v-icon>
+        <span>Expand</span>
+        <v-btn
+          icon
+          x-small
+          color="secondary"
+          @click="show = !show"
+        >
+          <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+        </v-btn>
+      </v-col>
+      <v-col v-else>
+        <v-icon
+          :color="subIconColor"
+          size="20"
+          class="mr-2"
+        >
+          {{ subIcon }}
+        </v-icon>
+        <span
+          :class="subTextColor"
+          class="caption font-weight-light"
+          v-text="subText"
+        />
+      </v-col>
     </template>
+    <v-expand-transition>
+      <div v-show="show">
+        <v-card-text>
+          <v-row>
+            <v-col cols="12">
+              Campaign State:
+              <span 
+                v-if="campaignState === 'production'"
+                class="success--text"
+              >
+                PRODUCTION
+              </span>
+              <span
+                v-else
+                class="warning--text"
+              >
+                TEST
+              </span>
+            </v-col>
+            <v-col cols="12">
+              Campaign Status:
+              <span 
+                v-if="campaignRunning"
+                class="success--text"
+              >
+                RUNNING
+              </span>
+              <span
+                v-else
+                class="warning--text"
+              >
+                PAUSED
+              </span>
+            </v-col>
+            <v-col cols="12">
+              Campaign Position:
+              <span 
+                v-if="campaignActive"
+                class="success--text"
+              >
+                ACTIVE
+              </span>
+              <span
+                v-else
+                class="error--text"
+              >
+                CLOSED
+              </span>
+            </v-col>
+            <v-col cols="12">
+              <base-button
+                color="purple white--text"
+                rounded
+                @click.native="$emit('onOpen')"
+              >
+                Open Admin Panel
+              </base-button>
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </div>
+    </v-expand-transition>
   </base-card>
 </template>
 
@@ -83,8 +168,27 @@ export default {
     smallValue: {
       type: String,
       default: undefined
+    },
+    campaignState: {
+      type: String,
+      default: undefined
+    },
+    campaignActive: {
+      type: Boolean,
+      default: undefined
+    },
+    campaignRunning: {
+      type: Boolean,
+      default: undefined
+    },
+    adminPanel: {
+      type: Boolean,
+      default: false
     }
-  }
+  },
+  data: () => ({
+    show: false
+  })
 }
 </script>
 
@@ -111,7 +215,7 @@ export default {
   }
 
   .v-card__text {
-    position: absolute;
+    position: start;
     top: 0;
     right: 0;
     display: inline-block;

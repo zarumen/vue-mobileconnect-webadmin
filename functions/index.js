@@ -6,6 +6,7 @@ const rp = require('request-promise');
 
 const request = rp.defaults({ simple : false });
 const LINE_ACCESS_TOKEN = "zMsztWI7Jd20mx7nlDkdwPoaronXSFEf56WQRSSaF7A";
+const projectId = 'mobile-connect-sms';
 // const ONE_ONE_TOKEN = "7dZINoNtAYWQyaYmnsNCsaNzC9yGJbicmF2lzjjXITp";
 
 // admin.firestore().settings();
@@ -326,4 +327,78 @@ exports.deleteUserFromAuth = functions.firestore
       .catch(function(error) {
         console.log('Error deleting user:', error);
       });
+  });
+
+
+exports.exportTxFromBigquery = functions.pubsub
+  .schedule('00 11 * * *').onRun(async context => {
+
+    const { BigQuery } = require('@google-cloud/bigquery');
+
+    const sqlQuery = `
+    SELECT shortcode, campaignID, campaignName, count( shortcode ) AS Total, CAST(FORMAT_DATE("%Y%m%d000000", current_date) as INT64) as today, CAST(FORMAT_DATE("%Y%m%d000000", DATE_SUB(current_date, INTERVAL 1 DAY)) as INT64) as yesterday
+    FROM \`mobile-connect-sms.2waysms.2waysms_transaction_status\`
+    WHERE createDateTime > CAST(FORMAT_DATE("%Y%m%d000000", DATE_SUB(current_date, INTERVAL 1 DAY)) as INT64) and createDateTime < CAST(FORMAT_DATE("%Y%m%d000000", current_date) as INT64) and operator!="testweb" and campaignID != " "
+    group by shortcode, campaignID, campaignName
+    order by shortcode
+    `;
+    const bigquery = new BigQuery({
+      projectId,
+      keyFilename: './serviceKey.json'
+    });
+
+    // const jobRun = bigquery.job('bquxjob_65760a09_16d59030bf2');
+
+    // For all options, see https://cloud.google.com/bigquery/docs/reference/rest/v2/jobs/query
+    const options = {
+      query: sqlQuery,
+      // Location must match that of the dataset(s) referenced in the query.
+      location: 'US',
+      useLegacySql: false
+    };
+    let job;
+    let rows;
+
+    try {
+      const result = await new Promise((resolve, reject) => {
+        bigquery
+          .createQueryJob(options)
+          .then(results => {
+            job = results[0];
+            console.log(`Job ${job.id} started.`);
+            return job.promise();
+          })
+          .then(() =>
+            // Get the job's status
+            job.getMetadata()
+          )
+          .then(metadata => {
+            // Check the job's status for errors
+            const errors = metadata[0].status.errors;
+            if (errors && errors.length > 0) {
+              throw errors;
+            }
+          })
+          .then(() => {
+            console.log(`Job ${job.id} completed.`);
+            return job.getQueryResults();
+          })
+          .then(results => {
+            rows = results[0];
+            let array = []
+            rows.forEach(row => {
+              array.push(row)
+            });
+            resolve(rows);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+      
+      console.log(`return Promise: ${JSON.stringify(result)}`)
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
   });
