@@ -15,6 +15,7 @@ import {
 export const state = {
   // Data Table Initial Setup Variables
   campaignSelected: null,
+  campaignStateSelected: 'test',
   items: null,
   item: null,
   itemValidate: null,
@@ -45,11 +46,13 @@ export const getters = {
   },
   getOneCampaignValidate: (state) => state.itemValidate,
   getOneCampaignSelected: (state) => state.campaignSelected,
+  getCampaignStateSelected: (state) => state.campaignStateSelected,
 }
 
 export const mutations = {
   setItemValidate: set('itemValidate'),
   setCampaignSelected: set('campaignSelected'),
+  toggleState: set('campaignStateSelected'),
   setElementItemValidate (state, payload) {
     assign(state.itemValidate, payload)
   },
@@ -286,6 +289,7 @@ export const actions = {
         .doc(`${campaignId}`)
         .set(status, { merge: true })
     
+    commit('toggleState', 'production')
     commit('setElementCampaignList', { 
       position: index,
       payload: status

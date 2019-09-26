@@ -171,15 +171,15 @@ export default {
     },
     campaignState: {
       type: String,
-      default: undefined
+      default: 'test'
     },
     campaignActive: {
       type: Boolean,
-      default: undefined
+      default: true
     },
     campaignRunning: {
       type: Boolean,
-      default: undefined
+      default: true
     },
     adminPanel: {
       type: Boolean,

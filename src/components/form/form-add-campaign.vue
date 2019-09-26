@@ -248,15 +248,7 @@ export default {
       }
     }
   },
-  watch: {   
-    switchUploadVC: {
-      handler(switchUploadVC) {
-        if(this.validateForm.campaignHasMsisdnList) {
-          this.toggleSwitchUpload(this.switchUploadVC)
-        }
-      },
-      immediate: true
-    },
+  watch: {
     validateForm: {
       handler(validateForm) {
         if(this.validateForm.campaignHasMsisdnList) {
@@ -264,7 +256,8 @@ export default {
           this.toggleSwitchUpload(this.switchUploadVC)
         }
       },
-      immediate: true
+      immediate: true,
+      deep: true
     }
   },
   created () {
@@ -1454,7 +1447,7 @@ export default {
                   <v-switch
                     v-model="isSwitchUploadOn"
                     color="deep-purple"
-                    label="Has VerifyCode (1 Column)"
+                    label="Has VerifyCode"
                   />
                   <v-col v-if="helper">
                     <v-subheader class="helpertext">
@@ -1464,7 +1457,7 @@ export default {
                   <v-switch
                     v-model="validateForm.campaignHasMsisdnList"
                     color="deep-purple"
-                    label="Has VerifyCode (2 Column)"
+                    label="VerifyCode Has Mobile Number"
                   />
                   <v-col>
                     <v-col v-if="helper">

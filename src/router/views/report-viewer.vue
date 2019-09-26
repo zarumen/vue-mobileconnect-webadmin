@@ -138,7 +138,7 @@ export default {
               icon
               @click.native="reloadData()"
             >
-              <BaseIcon name="syncAlt" />            
+              <base-icon name="syncAlt" />            
             </base-button>
           </v-card-title>
           <v-card-text>

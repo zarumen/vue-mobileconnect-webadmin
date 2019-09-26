@@ -122,7 +122,7 @@ export default {
                 icon
                 @click.native="reloadData()"
               >
-                <BaseIcon name="syncAlt" />            
+                <base-icon name="syncAlt" />            
               </base-button>
             </v-card-title>
             <v-card-text>
@@ -197,7 +197,7 @@ export default {
                 icon
                 @click.native="clickedSelectedCampaignReports(campaignSelected)"
               >
-                <BaseIcon name="syncAlt" />            
+                <base-icon name="syncAlt" />            
               </base-button>
             </v-card-title>
             <v-card-text>
@@ -251,7 +251,7 @@ export default {
                               v-on="on"
                               @click.stop="downloadExportFile(index, item.fileName)"
                             >
-                              <BaseIcon name="fileExcel" /> 
+                              <base-icon name="fileExcel" /> 
                             </base-button>
                           </template>
                           <span>Download Recent File</span>

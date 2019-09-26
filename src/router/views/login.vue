@@ -106,7 +106,7 @@ export default {
                 type="submit"
                 rounded
               >
-                <BaseIcon
+                <base-icon
                   v-if="tryingToLogIn"
                   name="sync"
                   spin

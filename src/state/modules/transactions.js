@@ -1,4 +1,6 @@
+import { set } from '@state/helpers'
 import $socket from '@/plugins/socket-instance'
+import axios from "@utils/aws-api.config"
 
 export const state = {
   isConnected: false,
@@ -16,6 +18,9 @@ export const state = {
   transactionRewards: null,
   transactionTotals: null,
   transactionKeyword: null,
+  // Coupons & Verify Code zone
+  totalsVerifyCode: '',
+  totalsCoupon: '',
 }
 
 export const getters = {
@@ -31,6 +36,8 @@ export const getters = {
     }
   },
   getTransactionKeyword: (state) => state.transactionKeyword,
+  getTotalsVerifyCode: (state) => state.totalsVerifyCode,
+  getTotalsCoupon: (state) => state.totalsCoupon,
   getTimestampTxTotals: (state) => {
     let cId = state.campaignSelected
 
@@ -46,6 +53,7 @@ export const getters = {
 }
 
 export const mutations = {
+  setTotalsVerifyCode: set('totalsVerifyCode'),
   SOCKET_CONNECT (state) {
     state.isConnected = true
   },
@@ -78,6 +86,38 @@ export const mutations = {
 }
 
 export const actions = {
+  // verify code zone
+  putVerifyCodeToRedis({ dispatch }, {campaignId, state, data}) {
+
+    let file = {
+      "filepath": `${data}`
+    }
+
+    axios.putData(`verifycode/${campaignId}/${state}`, file)
+    .then(response => {
+      console.log(response)
+      dispatch('getVerifyCodeFromRedis', {
+        campaignId: campaignId,
+        campaignState: state
+      })
+    })
+  },
+  getVerifyCodeFromRedis({ commit }, { campaignId, campaignState }) {
+
+    axios.getData(`verifycode/${campaignId}/${campaignState}/totals`)
+    .then(response => {
+      console.log(response)
+      commit('setTotalsVerifyCode', response.data.output.totals)
+    })
+  },
+  delVerifyCodeFromRedis({ commit }, { campaignId, campaignState }) {
+
+    axios.deleteData(`verifycode/${campaignId}/${campaignState}/totals`)
+    .then(response => {
+      console.log(response)
+      commit('setTotalsVerifyCode', 0)
+    })
+  },
   // REGISTER SOCKET IO
   socketRegister ({ state, commit }, { campaignState, campaignId }) {
     

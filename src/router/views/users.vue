@@ -124,7 +124,7 @@ export default {
                 icon
                 @click.native="reloadData()"
               >
-                <BaseIcon name="syncAlt" />            
+                <base-icon name="syncAlt" />            
               </base-button>
               <base-button 
                 color="primary"

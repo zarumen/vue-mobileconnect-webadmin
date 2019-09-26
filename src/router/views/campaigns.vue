@@ -66,6 +66,7 @@ export default {
     },
     edit(item) {
       this.$store.commit('campaigns/setCampaignSelected', item.id)
+      this.$store.commit('campaigns/toggleState', item.campaignState)
       this.$router.push({ name: 'campaignDetails', params: { campaignId: item.id } })
     },
     remove(item) {
@@ -112,7 +113,7 @@ export default {
               icon
               @click.native="reloadData()"
             >
-              <BaseIcon name="syncAlt" />            
+              <base-icon name="syncAlt" />            
             </base-button>
             <base-button 
               text 

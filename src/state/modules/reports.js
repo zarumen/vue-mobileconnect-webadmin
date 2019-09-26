@@ -13,10 +13,6 @@ export const state = {
   startAfter: '',
   downloadKey: '',
   downloadUrl: '',
-  // Coupons & Verify Code zone
-  totalsVerifyCode: 0,
-  totalsCoupon: 0,
-  
 }
 
 export const getters = {

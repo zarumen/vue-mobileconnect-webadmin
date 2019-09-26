@@ -18,6 +18,16 @@ export default {
     text: '',
     totals: '',
     tabs: 0,
+    state: 'test',
+    // verify code treeview variables
+    vcFileSelected: [],
+    isLoading1: false,
+    open: [],
+    types: [],
+    vcFiles: [],
+    vcFileUploadName: '',
+    vcFileUploadUrl: '',
+    // coupons treeview variables
   }),
   computed: {
     ...mapGetters('auth', [
@@ -26,11 +36,13 @@ export default {
     ...mapGetters('campaigns', [
       'getOneCampaign',
       'getOneCampaignValidate',
+      'getCampaignStateSelected',
     ]),
     ...mapGetters('transactions', [
       'getTransactionTotals',
       'getTransactionKeyword',
-      'getTimestampTxTotals'
+      'getTimestampTxTotals',
+      'getTotalsVerifyCode',
     ]),
     updatedTimestampTxTotals () {
 
@@ -68,12 +80,6 @@ export default {
       }
       return ''
     },
-    classVerifyStatus () {
-      if(this.campaignInfo.campaignHasVerifyCode) {
-        return 'green--text'
-      }
-      return 'red--text'
-    },
     txKeyword () {
       if(!this.isEmpty(this.getTransactionKeyword)) {
         let result = Object.values(this.getTransactionKeyword).reduce((t, n) => parseInt(t) + parseInt(n))
@@ -82,26 +88,51 @@ export default {
       }
       return 0
     },
+    // verify Code computed
+    verifyCodeItems () {
+      const children = this.types.map(type => ({
+        id: type,
+        name: this.makeTitle(type),
+        children: this.getChildren(type),
+      }))
+
+      return [{
+        id: 1,
+        name: 'Root Folder',
+        children,
+      }]
+    },
+    shouldShowTree () {
+      return this.vcFiles.length > 0 && !this.isLoading1
+    },
+    classVerifyStatus () {
+      if(this.campaignInfo.campaignHasVerifyCode) {
+        return 'green--text'
+      }
+      return 'red--text'
+    },
     checkRewardsHaveCoupons () {
       return this.campaignValidateInfo.rewardsArray.some(x => x.rewardHasCoupon === true)
-    }
+    },
   },
-  created () {
-    this.getCampaignValidate({
-      campaignId: this.$route.params.campaignId
-    })
+  watch: {
+    vcFiles (val) {
+      this.types = val.reduce((acc, cur) => {
+        const type = cur.type
 
-    this.socketRegister({
-      campaignState: 'production',
-      campaignId: this.$route.params.campaignId
-    })
+        if (!acc.includes(type)) acc.push(type)
 
+        return acc
+      }, []).sort()
+    },
+  },
+  mounted () {
     this.initializeData()
   },
   destroyed () {
 
     this.socketUnRegister({
-      campaignState: 'production',
+      campaignState: this.state,
       campaignId: this.$route.params.campaignId
     })
   },
@@ -112,15 +143,87 @@ export default {
     ]),
     ...mapActions('transactions', [
       'socketRegister',
-      'socketUnRegister'
+      'socketUnRegister',
+      'getVerifyCodeFromRedis',
+      'putVerifyCodeToRedis',
+      'delVerifyCodeFromRedis'
+    ]),
+    ...mapActions('storage', [
+      'fetchCoupons',
+      'fetchVerifyCode',
+      'uploadFile',
     ]),
     initializeData () {
       // initial load socket.io data
       this.totals = this.getTransactionTotals
+      this.state = this.getCampaignStateSelected
+
+      this.getCampaignValidate({
+        campaignId: this.$route.params.campaignId
+      })
+
+      this.reloadVerifyCodeTotals()
+
+      this.socketRegister({
+        campaignState: this.state,
+        campaignId: this.$route.params.campaignId
+      })
+    },
+    reloadVerifyCodeTotals () {
+
+      this.getVerifyCodeFromRedis({
+        campaignState: this.state,
+        campaignId: this.$route.params.campaignId
+      })
+    },
+    deleteVerifyCodeTotals () {
+
+      this.delVerifyCodeFromRedis({
+        campaignState: this.state,
+        campaignId: this.$route.params.campaignId
+      })
     },
     clickToProduciton () {
       this.updateStatusCampaign({
         campaignId: this.$route.params.campaignId
+      })
+    },
+    loadCouponTree () {
+      this.fetchCoupons({
+        campaignId: this.$route.params.campaignId
+      })
+      .then(res => {
+        console.log(res)
+      })
+    },
+    loadVerifyCodeTree () {
+      if (this.vcFiles.length) return
+
+      this.fetchVerifyCode({
+        campaignId: this.$route.params.campaignId
+      })
+      .then(res => {
+        console.log(res)
+        this.vcFiles = res
+      })
+    },
+    makeTitle (name) {
+      return `${name.charAt(0).toUpperCase()}${name.slice(1)}`
+    },
+    getChildren (type) {
+      const files = []
+
+      for (const file of this.vcFiles) {
+        if (file.type !== type) continue
+
+        files.push({
+          ...file,
+          name: this.makeTitle(file.name),
+        })
+      }
+
+      return files.sort((a, b) => {
+        return a.name > b.name ? 1 : -1
       })
     },
     onOpen () {
@@ -139,6 +242,31 @@ export default {
       }
       return 'red--text'
     },
+    upload () {
+      let text = ''
+      this.vcFileSelected.forEach(item => {
+        text = item.id
+      })
+      let path = `campaigns/${this.$route.params.campaignId}/verifyCodeFile/${text}/${this.vcFileUploadName}`
+
+      this.uploadFile({
+        fileUrl: this.vcFileUploadUrl,
+        path: path
+      })
+    },
+    putVerifyCode () {
+      let path = ''
+      this.vcFileSelected.forEach(item => {
+        path = item.fullPath
+      })
+
+      this.putVerifyCodeToRedis({
+        campaignId: this.$route.params.campaignId,
+        state: this.state,
+        data: path
+      })
+    },
+    
   },
 }
 </script>
@@ -203,7 +331,7 @@ export default {
             title="User Level State"
             :small-value="`Administrator`"
             :campaign-active="campaignInfo.campaignActive"
-            :campaign-state="campaignValidateInfo.campaignState"
+            :campaign-state="state"
             :campaign-running="campaignValidateInfo.campaignAvailable"
             :admin-panel="isAdmin"
             @onOpen="onOpen"
@@ -315,7 +443,7 @@ export default {
                 v-if="tabs === 2" 
                 class="title"
               >
-                Verify Code
+                Campaign Has Verify Code
                 <span :class="classStatus(campaignInfo.campaignHasVerifyCode)">
                   ({{ campaignInfo.campaignHasVerifyCode }})
                 </span>
@@ -324,7 +452,7 @@ export default {
                 v-if="tabs === 3" 
                 class="title"
               >
-                Coupons Code
+                Campaign Has Coupons Code
                 <span :class="classStatus(checkRewardsHaveCoupons)">
                   ({{ checkRewardsHaveCoupons }})
                 </span>
@@ -352,26 +480,23 @@ export default {
                 <base-button
                   color="secondary"
                   text
+                  @click.stop="putVerifyCode"
                 >
-                  NEW
-                </base-button>
-                <base-button
-                  color="warning"
-                  text
-                >
-                  ADD
+                  Add
                 </base-button>
                 <base-button
                   color="error"
                   text
+                  @click.stop="deleteVerifyCodeTotals"
                 >
-                  DELETE
+                  Clear
                 </base-button>
               </span>
               <span v-if="tabs === 3">
                 <base-button
                   color="secondary"
                   text
+                  @click.stop="loadCouponTree"
                 >
                   NEW
                 </base-button>
@@ -655,7 +780,127 @@ export default {
                 </v-card-text>
               </v-tab-item>
               <v-tab-item :value="2">
-                <!-- keyword reserved -->
+                <!-- Verify Code config panel -->
+                <v-card class="elevation-0">
+                  <v-toolbar
+                    flat
+                  >
+                    <v-toolbar-title>Verify Code Database</v-toolbar-title>
+                    <base-icon
+                      class="px-2"
+                      :source="`custom`" 
+                      name="mdi-ticket" 
+                    />
+                    <v-toolbar-title>
+                      {{ getTotalsVerifyCode }}
+                    </v-toolbar-title>
+                    <div class="flex-grow-1" />
+                    <v-toolbar-items>
+                      <base-button
+                        color="primary"
+                        icon
+                        click.native="reloadVerifyCodeTotals"
+                      >
+                        <base-icon name="syncAlt" />            
+                      </base-button>
+                    </v-toolbar-items>
+                  </v-toolbar>
+                  <v-row>
+                    <v-col>
+                      <v-card-text>
+                        <v-treeview
+                          v-model="vcFileSelected"
+                          :load-children="loadVerifyCodeTree"
+                          :open.sync="open"
+                          :items="verifyCodeItems"
+                          selected-color="primary"
+                          selection-type="independent"
+                          open-on-click
+                          selectable
+                          return-object
+                          expand-icon="mdi-chevron-down"
+                        >
+                          <template v-slot:prepend="{ item, open }">
+                            <v-icon v-if="!item.fullPath">
+                              {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
+                            </v-icon>
+                            <v-icon v-else>
+                              mdi-file-excel-box
+                            </v-icon>
+                          </template>
+                        </v-treeview>
+                      </v-card-text>
+                    </v-col>
+                    <v-divider vertical />
+                    <v-col
+                      cols="12"
+                      md="6"
+                    >
+                      <v-card-text>
+                        <div
+                          v-if="vcFileSelected.length === 0"
+                          key="title"
+                          class="title font-weight-light grey--text pa-4 text-center"
+                        >
+                          Select your files to Action
+                        </div>
+
+                        <v-scroll-x-transition
+                          group
+                          hide-on-leave
+                        >
+                          <v-chip
+                            v-for="(selection, i) in vcFileSelected"
+                            :key="i"
+                            color="grey"
+                            dark
+                            small
+                            class="ma-1"
+                          >
+                            <v-icon
+                              left
+                              small
+                            >
+                              mdi-file-excel-box
+                            </v-icon>
+                            {{ selection.name }}
+                          </v-chip>
+                        </v-scroll-x-transition>
+                      </v-card-text>
+                    </v-col>
+                  </v-row>
+                  <v-divider />
+                  <BaseUploadfield
+                    :accept="`.csv`"
+                    :label="`VerifyCode Upload`"
+                    @input="vcFileUploadName=arguments[0]"
+                    @formData="vcFileUploadUrl=arguments[0]"
+                  />
+                  <v-card-actions>
+                    <v-btn
+                      text
+                      color="error darken-1"
+                      @click="tree = []"
+                    >
+                      Delete
+                      <v-icon right>
+                        mdi-content-save
+                      </v-icon>
+                    </v-btn>
+
+                    <div class="flex-grow-1" />
+                    <v-btn
+                      text
+                      color="green darken-1"
+                      @click="upload"
+                    >
+                      Upload
+                      <v-icon right>
+                        mdi-content-save
+                      </v-icon>
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
               </v-tab-item>
               <v-tab-item :value="3">
                 <!-- keyword reserved -->
