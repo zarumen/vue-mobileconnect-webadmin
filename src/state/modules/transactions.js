@@ -1,6 +1,15 @@
 import { set } from '@state/helpers'
 import $socket from '@/plugins/socket-instance'
 import axios from "@utils/aws-api.config"
+import assign from 'lodash/assign'
+
+import {
+  sendSuccessNotice,
+  sendErrorNotice,
+  closeNotice,
+  commitPagination,
+  getDefaultPagination,
+} from '@utils/pagination-util'
 
 export const state = {
   isConnected: false,
@@ -21,6 +30,13 @@ export const state = {
   // Coupons & Verify Code zone
   totalsVerifyCode: '',
   totalsCoupon: '',
+  // table & snackbar variables
+  items: null,
+  pagination: getDefaultPagination(),
+  loading: false,
+  mode: '',
+  snackbar: false,
+  notice: '',
 }
 
 export const getters = {
@@ -54,6 +70,23 @@ export const getters = {
 
 export const mutations = {
   setTotalsVerifyCode: set('totalsVerifyCode'),
+  setItems: set('items'),
+  setPagination: set('pagination'),
+  setPage (state, paginationElement) {
+    assign(state.pagination, paginationElement)
+  },
+  setLoading(state, { loading }) {
+    state.loading = loading
+  },
+  setNotice (state, { notice }) {
+    state.notice = notice
+  },
+  setSnackbar (state, { snackbar }) {
+    state.snackbar = snackbar
+  },
+  setMode (state, { mode }) {
+    state.mode = mode
+  },
   SOCKET_CONNECT (state) {
     state.isConnected = true
   },
@@ -86,37 +119,86 @@ export const mutations = {
 }
 
 export const actions = {
-  // verify code zone
-  putVerifyCodeToRedis({ dispatch }, {campaignId, state, data}) {
+  getLastestTransactions ({ commit }, { campaignState, campaignId }) {
+    
 
+    return axios.getData(`transaction/${campaignId}/${campaignState}/latest`)
+      .then(response => {
+
+        let msg = `Load ${response.data.input.stage} Transactions From Database Success!`
+        commitPagination(commit, response.data.output.data)
+        sendSuccessNotice(commit, msg)
+        closeNotice(commit, 3000)
+        commit('setLoading', { loading: false })
+      })
+      .catch(error => {
+        console.log(error)
+        commit('setLoading', { loading: false })
+        sendErrorNotice(commit, `Load Failed!`)
+        closeNotice(commit, 3000)
+      })
+  },
+  // verify code zone
+  putVerifyCodeToRedis({ commit, dispatch }, {campaignId, state, data}) {
+
+    commit('setLoading', { loading: true })
     let file = {
       "filepath": `${data}`
     }
 
-    axios.putData(`verifycode/${campaignId}/${state}`, file)
-    .then(response => {
-      console.log(response)
-      dispatch('getVerifyCodeFromRedis', {
-        campaignId: campaignId,
-        campaignState: state
+    return axios.putData(`verifycode/${campaignId}/${state}`, file)
+      .then(response => {
+
+        let msg = `Put ${response.data.output.totals} codes to ${state} Database`
+        sendSuccessNotice(commit, msg)
+        closeNotice(commit, 3000)
+        commit('setLoading', { loading: false })
+
+        dispatch('getVerifyCodeFromRedis', {
+          campaignId: campaignId,
+          campaignState: state
+        })
       })
-    })
+      .catch(error => {
+        console.log(error)
+        commit('setLoading', { loading: false })
+        sendErrorNotice(commit, `Put code to Database Failed!`)
+        closeNotice(commit, 3000)
+      })
   },
   getVerifyCodeFromRedis({ commit }, { campaignId, campaignState }) {
 
-    axios.getData(`verifycode/${campaignId}/${campaignState}/totals`)
-    .then(response => {
-      console.log(response)
-      commit('setTotalsVerifyCode', response.data.output.totals)
-    })
+    commit('setLoading', { loading: true })
+
+    return axios.getData(`verifycode/${campaignId}/${campaignState}/totals`)
+      .then(response => {
+
+        commit('setTotalsVerifyCode', response.data.output.totals)
+      })
+      .catch(error => {
+        console.log(error)
+        commit('setLoading', { loading: false })
+        sendErrorNotice(commit, `Load Code Failed! Please check Connection`)
+        closeNotice(commit, 3000)
+      })
   },
   delVerifyCodeFromRedis({ commit }, { campaignId, campaignState }) {
 
-    axios.deleteData(`verifycode/${campaignId}/${campaignState}/totals`)
-    .then(response => {
-      console.log(response)
-      commit('setTotalsVerifyCode', 0)
-    })
+    commit('setLoading', { loading: true })
+    return axios.deleteData(`verifycode/${campaignId}/${campaignState}/totals`)
+      .then(response => {
+
+        commit('setTotalsVerifyCode', 0)
+        sendSuccessNotice(commit, `${response.data.output.message}`)
+        closeNotice(commit, 3000)
+        commit('setLoading', { loading: false })
+      })
+      .catch(error => {
+        console.log(error)
+        commit('setLoading', { loading: false })
+        sendErrorNotice(commit, `Put code to Database Failed!`)
+        closeNotice(commit, 3000)
+      })
   },
   // REGISTER SOCKET IO
   socketRegister ({ state, commit }, { campaignState, campaignId }) {
@@ -211,8 +293,19 @@ export const actions = {
         campaignId: value
       })
     })
-  }
-  
+  },
+  updatePage({ commit }, pageNumber) {
+    commit('setPage', { page: pageNumber })
+  },
+  updatePages({ commit }, pagesNumber) {
+    commit('setPage', { pages: pagesNumber })
+  },
+  updatePagination({ commit }, pagiObj) {
+    commit('setPage', pagiObj)
+  },
+  closeSnackBar ({ commit }, timeout ) {
+    closeNotice(commit, timeout)
+  },
 }
 
 function getSavedState(key) {

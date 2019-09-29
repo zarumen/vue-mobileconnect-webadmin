@@ -84,8 +84,8 @@ export default {
       this.dialog = false
     },
     exitSnackbar () {
-      this.$store.commit('campaigns/setSnackbar', { snackbar: false })
-      this.$store.commit('campaigns/setNotice', { notice: '' })
+      this.$store.commit(`${this.baseModule}/setSnackbar`, { snackbar: false })
+      this.$store.commit(`${this.baseModule}/setNotice`, { notice: '' })
     },
   },
 }

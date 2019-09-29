@@ -125,6 +125,15 @@ export default {
     checkUserMobile () {
       return this.headers.some(head => head.value === 'mobileTelNumber')
     },
+    checkReplyMsg () {
+      return this.headers.some(head => head.value === 'replyMessage')
+    },
+    checkStepMsg () {
+      return this.headers.some(head => head.value === 'stepName')
+    },
+    checkStatusMsg () {
+      return this.headers.some(head => head.value === 'messageStatus')
+    },
   },
   created () {
 
@@ -178,6 +187,10 @@ export default {
     getColorState (state) {
       if (state === 'production') return 'green'
       else return 'orange'
+    },
+    getColorStatus (state) {
+      if (state === 'success') return 'green'
+      else return 'red'
     },
     boolIcon (boolean) {
       if (boolean === true) return 'check_circle'
@@ -336,6 +349,22 @@ export default {
         </span>
       </template>
       <template
+        v-if="checkReplyMsg"
+        v-slot:item.replyMessage="{ item }"
+      >
+        <span class="text-truncate overline">
+          {{ item.replyMessage }}
+        </span>
+      </template>
+      <template
+        v-if="checkStepMsg"
+        v-slot:item.stepName="{ item }"
+      >
+        <span class="text-truncate overline">
+          {{ item.stepName }}
+        </span>
+      </template>
+      <template
         v-if="checkShortcode"
         v-slot:item.shortcode="{ item }"
       >
@@ -399,6 +428,21 @@ export default {
         >
           <span class="text-truncate">
             {{ item.campaignState }}
+          </span>
+        </v-chip>
+      </template>
+      <template
+        v-if="checkStatusMsg"
+        v-slot:item.messageStatus="{ item }"
+      >
+        <v-chip 
+          :color="getColorStatus(item.messageStatus)"
+          x-small
+          label
+          dark
+        >
+          <span class="text-truncate">
+            {{ item.messageStatus }}
           </span>
         </v-chip>
       </template>

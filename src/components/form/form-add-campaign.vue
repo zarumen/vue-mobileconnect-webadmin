@@ -104,6 +104,7 @@ export default {
       ],
       validateType: null,
       conditionTypeValidate: false,
+      contextParserUndefined: false,
       contextParser: [],
       parserValid: true,
       // parser array
@@ -375,7 +376,11 @@ export default {
         // --------------------- campaignValidation Object ----------------------------------------
         
         // set Context Parsers
-        campaignValidationNew['contextParser'] = this.contextParser
+        if(!this.contextParserUndefined) {
+          campaignValidationNew['contextParser'] = this.contextParser
+        } else {
+          delete campaignValidationNew['contextDelimiter']
+        }
         // set Reward Array or Object
         if(this.checkObjectReward) {
           campaignValidationNew['rewardsObject'] = arrayToObject(this.rewards, "rewardId")
@@ -1415,6 +1420,16 @@ export default {
               >
                 <v-card-text>
                   <v-subheader>Campaign Validate Details</v-subheader>
+                  <v-col v-if="helper">
+                    <v-subheader class="helpertext">
+                      {{ helperText.contextParserUndefined }}
+                    </v-subheader>
+                  </v-col> 
+                  <v-switch
+                    v-model="contextParserUndefined"
+                    color="error"
+                    label="Campaign Has Not Context Parser"
+                  />
                   <v-col v-if="helper">
                     <v-subheader class="helpertext">
                       {{ helperText.contextDelimiter }}

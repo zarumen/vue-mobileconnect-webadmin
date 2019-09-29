@@ -70,6 +70,8 @@ export default {
     },
     filteredKeywordList () {
 
+      if(!this.keywordList) return
+
       let reg = /^([A-Z]|[a-z])\w+/
       if(reg.test(this.quickSearchFilterKW)) {
 

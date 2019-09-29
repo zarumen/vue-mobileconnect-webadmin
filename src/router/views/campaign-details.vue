@@ -1,7 +1,7 @@
 <script>
 import formatDateRelative from '@utils/format-date-relative'
 import { formatDateTime } from '@utils/format-date'
-import { mapGetters, mapActions } from 'vuex'
+import { campaignDetailsComputed, campaignDetailsMethods } from '@state/helpers'
 
 export default {
   page: {
@@ -15,10 +15,20 @@ export default {
     VueJsonPretty: () => import('vue-json-pretty'),
   },
   data: () => ({
+    baseModule: 'transactions',
+    headers: [
+      { text: 'Msg', value: 'message' },
+      { text: 'Stage', value: 'messageStatus' },
+      { text: 'ReplyMsg', value: 'replyMessage', left: true, },
+      { text: 'TimeCode', value: 'groupID', align: 'center' },
+      { text: 'StepMsg', value: 'stepName' },
+      { text: 'StateMsg', value: 'campaignState' },
+    ],
     text: '',
     totals: '',
     tabs: 0,
     state: 'test',
+    timeout: 2000,
     // verify code treeview variables
     vcFileSelected: [],
     isLoading1: false,
@@ -30,20 +40,7 @@ export default {
     // coupons treeview variables
   }),
   computed: {
-    ...mapGetters('auth', [
-      'isAdmin',
-    ]),
-    ...mapGetters('campaigns', [
-      'getOneCampaign',
-      'getOneCampaignValidate',
-      'getCampaignStateSelected',
-    ]),
-    ...mapGetters('transactions', [
-      'getTransactionTotals',
-      'getTransactionKeyword',
-      'getTimestampTxTotals',
-      'getTotalsVerifyCode',
-    ]),
+    ...campaignDetailsComputed,
     updatedTimestampTxTotals () {
 
       let date = (Date.parse(this.getTimestampTxTotals))/1000
@@ -57,25 +54,25 @@ export default {
       return this.getOneCampaignValidate
     },
     startDate () {
-      if(this.campaignInfo) {
+      if(this.campaignValidateInfo) {
         return formatDateTime(this.campaignValidateInfo.campaignDateStart.seconds)
       }
       return ''
     },
     endDate () {
-      if(this.campaignInfo) {
+      if(this.campaignValidateInfo) {
         return formatDateTime(this.campaignValidateInfo.campaignDateEnd.seconds)
       }
       return ''
     },
     startTestDate () {
-      if(this.campaignInfo) {
+      if(this.campaignValidateInfo) {
         return formatDateTime(this.campaignValidateInfo.campaignDateTestStart.seconds)
       }
       return ''
     },
     endTestDate () {
-      if(this.campaignInfo) {
+      if(this.campaignValidateInfo) {
         return formatDateTime(this.campaignValidateInfo.campaignDateTestEnd.seconds)
       }
       return ''
@@ -137,22 +134,7 @@ export default {
     })
   },
   methods: {
-    ...mapActions('campaigns', [
-      'getCampaignValidate',
-      'updateStatusCampaign'
-    ]),
-    ...mapActions('transactions', [
-      'socketRegister',
-      'socketUnRegister',
-      'getVerifyCodeFromRedis',
-      'putVerifyCodeToRedis',
-      'delVerifyCodeFromRedis'
-    ]),
-    ...mapActions('storage', [
-      'fetchCoupons',
-      'fetchVerifyCode',
-      'uploadFile',
-    ]),
+    ...campaignDetailsMethods,
     initializeData () {
       // initial load socket.io data
       this.totals = this.getTransactionTotals
@@ -188,6 +170,7 @@ export default {
         campaignId: this.$route.params.campaignId
       })
     },
+    // ------------------------------------- LOAD ZONE -------------------------------------
     loadCouponTree () {
       this.fetchCoupons({
         campaignId: this.$route.params.campaignId
@@ -203,9 +186,19 @@ export default {
         campaignId: this.$route.params.campaignId
       })
       .then(res => {
-        console.log(res)
         this.vcFiles = res
       })
+    },
+    loadTransaction () {
+      // load 20 lastest transactions from dynamoDB
+      this.getLastestTransactions({
+        campaignState: this.state,
+        campaignId: this.$route.params.campaignId
+      })
+    },
+    exitSnackbar () {
+      this.$store.commit(`${this.baseModule}/setSnackbar`, { snackbar: false })
+      this.$store.commit(`${this.baseModule}/setNotice`, { notice: '' })
     },
     makeTitle (name) {
       return `${name.charAt(0).toUpperCase()}${name.slice(1)}`
@@ -242,6 +235,12 @@ export default {
       }
       return 'red--text'
     },
+    classColorSelected () {
+      if(this.vcFileSelected[0].hasOwnProperty('fullPath')) {
+        return 'green'
+      }
+      return 'grey'
+    },
     upload () {
       let text = ''
       this.vcFileSelected.forEach(item => {
@@ -251,10 +250,24 @@ export default {
 
       this.uploadFile({
         fileUrl: this.vcFileUploadUrl,
-        path: path
+        path: path,
+      })
+    },
+    deleteFile () {
+      if(this.vcFileSelected.length === 0) return
+
+      let text = ''
+      this.vcFileSelected.forEach(item => {
+        text = item.fullPath
+      })
+
+      this.deleteUploadFile({
+        path: text
       })
     },
     putVerifyCode () {
+      if(this.vcFileSelected.length === 0) return
+
       let path = ''
       this.vcFileSelected.forEach(item => {
         path = item.fullPath
@@ -332,7 +345,7 @@ export default {
             :small-value="`Administrator`"
             :campaign-active="campaignInfo.campaignActive"
             :campaign-state="state"
-            :campaign-running="campaignValidateInfo.campaignAvailable"
+            :campaign-running="campaignInfo.campaignAvailable"
             :admin-panel="isAdmin"
             @onOpen="onOpen"
           />
@@ -402,6 +415,12 @@ export default {
                   </v-icon>
                   Coupons
                 </v-tab>
+                <v-tab>
+                  <v-icon class="mr-2">
+                    textsms
+                  </v-icon>
+                  Transactions
+                </v-tab>
               </v-tabs>
             </v-col>
             <v-card-title>
@@ -457,6 +476,12 @@ export default {
                   ({{ checkRewardsHaveCoupons }})
                 </span>
               </span>
+              <span 
+                v-if="tabs === 4" 
+                class="title"
+              >
+                Campaign Transactions
+              </span>
               <v-spacer />
               <span v-if="tabs === 0">
                 <base-button
@@ -511,6 +536,16 @@ export default {
                   text
                 >
                   DELETE
+                </base-button>
+              </span>
+              <span v-if="tabs === 4">
+                <base-button
+                  color="primary"
+                  circle
+                  icon
+                  @click.native="loadTransaction()"
+                >
+                  <base-icon name="syncAlt" />            
                 </base-button>
               </span>
             </v-card-title>
@@ -635,6 +670,11 @@ export default {
                       <p>
                         Campaign Has Verify Code: <strong class="green--text">
                           {{ campaignInfo.campaignHasVerifyCode }}
+                        </strong>
+                      </p>
+                      <p>
+                        campaign Has verify by MsisdnList:  <strong class="green--text">
+                          {{ campaignValidateInfo.campaignHasMsisdnList }}
                         </strong>
                       </p>
                       <p>
@@ -811,7 +851,7 @@ export default {
                         <v-treeview
                           v-model="vcFileSelected"
                           :load-children="loadVerifyCodeTree"
-                          :open.sync="open"
+                          :open="open"
                           :items="verifyCodeItems"
                           selected-color="primary"
                           selection-type="independent"
@@ -852,7 +892,7 @@ export default {
                           <v-chip
                             v-for="(selection, i) in vcFileSelected"
                             :key="i"
-                            color="grey"
+                            :color="classColorSelected()"
                             dark
                             small
                             class="ma-1"
@@ -880,7 +920,7 @@ export default {
                     <v-btn
                       text
                       color="error darken-1"
-                      @click="tree = []"
+                      @click="deleteFile"
                     >
                       Delete
                       <v-icon right>
@@ -904,6 +944,51 @@ export default {
               </v-tab-item>
               <v-tab-item :value="3">
                 <!-- keyword reserved -->
+              </v-tab-item>
+              <v-tab-item :value="4">
+                <!-- keyword reserved -->
+                <v-card>
+                  <!-- Controller Tools Panels -->
+                  <!-- <v-card-title>
+                    <span class="title">
+                      Campaigns {{ campaignRemaining? "("+campaignRemaining.length+")": "" }}
+                      <v-text-field
+                        v-model="quickSearchFilter"
+                        append-icon="search"
+                        label="Quick Search"
+                        single-line
+                        hide-details
+                      />
+                    </span>
+                    <v-spacer />
+                    <base-button
+                      color="primary"
+                      circle
+                      icon
+                      @click.native="reloadData()"
+                    >
+                      <base-icon name="syncAlt" />            
+                    </base-button>
+                    <base-button 
+                      text 
+                      icon 
+                      color="primary"
+                    >
+                      <v-icon>
+                        print
+                      </v-icon>
+                    </base-button>
+                  </v-card-title> -->
+                  <!-- Insert in Base-Table Component -->
+                  <BaseTable
+                    v-if="loading===false"
+                    :headers="headers"
+                    :items="items"
+                    :pagination="pagination"
+                    :basemodule="baseModule"
+                    :action-btn="false"
+                  />
+                </v-card>
               </v-tab-item>
             </v-tabs-items>
           </base-card>
@@ -1016,6 +1101,22 @@ export default {
           </base-card>
         </v-col>
       </v-row>
+      <v-snackbar 
+        v-if="loading===false"
+        v-model="snackbar" 
+        :left="true" 
+        :timeout="timeout" 
+        :color="mode"
+      >
+        {{ notice }}
+        <base-button 
+          dark 
+          text 
+          @click.native="exitSnackbar"
+        >
+          Close
+        </base-button>
+      </v-snackbar>
     </v-container>
   </Layout>
 </template>

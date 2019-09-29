@@ -16,14 +16,38 @@ export const mutations = {
 }
 
 export const actions = {
-  uploadFile ({ commit }, { fileUrl, path }) {
+  uploadFile ({ dispatch }, { fileUrl, path }) {
 
     let ref = storageRef.child(`${path}`)
 
     return ref.putString(fileUrl, 'data_url')
       .then(snapshot => {
         console.log('Uploaded a data_url string!', snapshot)
-    })
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  },
+  deleteUploadFile ({ dispatch }, { path }) {
+
+    let ref = storageRef.child(`${path}`)
+
+    return ref.delete()
+      .then(() => {
+        console.log('Delete a file!')
+        // if(path.includes('verifyCodeFile')) {
+        //   dispatch('fetchVerifyCode', {
+        //     campaignId: id
+        //   })
+        // } else {
+        //   dispatch('fetchCoupons', {
+        //     campaignId: id
+        //   })
+        // }
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   },
   async fetchCoupons ({ commit }, { campaignId }) {
     
@@ -39,20 +63,22 @@ export const actions = {
     }
 
     const a = []
-    firstPage.items.forEach((itemRef) => {
+    firstPage.items.forEach((itemRef, index) => {
       // All the items under listRef.
       console.log('item =>', itemRef)
       let result = {
+        id: `test${index}`,
         type: 'test',
         name: itemRef.name,
         fullPath: itemRef.fullPath
       }
       a.push(result)
     })
-    addFirstPage.items.forEach((itemRef) => {
+    addFirstPage.items.forEach((itemRef, index) => {
       // All the items under listRef.
       console.log('item =>', itemRef)
       let result = {
+        id: `production${index}`,
         type: 'production',
         name: itemRef.name,
         fullPath: itemRef.fullPath
@@ -61,21 +87,6 @@ export const actions = {
     })
 
     return Promise.resolve(a)
-
-    // await couponRef.listAll().then((res) => {
-    //     res.prefixes.forEach((folderRef) => {
-    //       console.log('folder =>', folderRef)
-    //     })
-    //     res.items.forEach((itemRef) => {
-    //       // All the items under listRef.
-    //       console.log('item =>', itemRef)
-    //     })
-    //     return res
-    //   }).catch((error) => {
-    //     // Uh-oh, an error occurred!
-    //     console.log(error)
-    //     return error
-    //   })
   },
   async fetchVerifyCode ({ commit }, { campaignId }) {
 
@@ -91,20 +102,22 @@ export const actions = {
     }
 
     const arr = []
-    test.items.forEach((itemRef) => {
+    test.items.forEach((itemRef, index) => {
       // All the items under listRef.
       console.log('item =>', itemRef)
       let result = {
+        id: `test${index}`,
         type: 'test',
         name: itemRef.name,
         fullPath: itemRef.fullPath
       }
       arr.push(result)
     })
-    production.items.forEach((itemRef) => {
+    production.items.forEach((itemRef, index) => {
       // All the items under listRef.
       console.log('item =>', itemRef)
       let result = {
+        id: `production${index}`,
         type: 'production',
         name: itemRef.name,
         fullPath: itemRef.fullPath

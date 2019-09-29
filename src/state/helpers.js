@@ -95,6 +95,57 @@ export const campaignMethods = {
   ]),
 }
 
+export const campaignDetailsComputed = {
+  ...mapState('transactions', {
+    // ListItem of Data Table 
+    items: state => state.items,
+    // // Set Up Data Table Pagination & 
+    pagination: state => state.pagination,
+    page: state => state.pagination.page,
+    // Loading (Looking || Hiding) &
+    loading: state => state.loading,
+    // Snackbar Status and UI Set Up
+    mode: state => state.mode,
+    snackbar: state => state.snackbar,
+    notice: state => state.notice
+  }),
+  ...mapGetters('auth', [
+    'isAdmin',
+  ]),
+  ...mapGetters('campaigns', [
+    'getOneCampaign',
+    'getOneCampaignValidate',
+    'getCampaignStateSelected',
+  ]),
+  ...mapGetters('transactions', [
+    'getTransactionTotals',
+    'getTransactionKeyword',
+    'getTimestampTxTotals',
+    'getTotalsVerifyCode',
+  ]),
+}
+
+export const campaignDetailsMethods = {
+  ...mapActions('campaigns', [
+    'getCampaignValidate',
+    'updateStatusCampaign'
+  ]),
+  ...mapActions('transactions', [
+    'socketRegister',
+    'socketUnRegister',
+    'getVerifyCodeFromRedis',
+    'getLastestTransactions',
+    'putVerifyCodeToRedis',
+    'delVerifyCodeFromRedis'
+  ]),
+  ...mapActions('storage', [
+    'fetchCoupons',
+    'fetchVerifyCode',
+    'uploadFile',
+    'deleteUploadFile'
+  ]),
+}
+
 export const reportComputed = {
   ...mapState('reports', {
     jobList: state => state.jobList,

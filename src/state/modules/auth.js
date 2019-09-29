@@ -73,16 +73,6 @@ export const actions = {
       fireauthApp.onAuthStateChanged(firebaseUser => {
         if (firebaseUser) {
           // refresh new ID Token when token expired
-          if (firebaseUser.ra !== fireauthApp.currentUser.idToken) {
-            let user = {
-              photoURL: firebaseUser.photoURL,
-              email: firebaseUser.email,
-              displayName: firebaseUser.displayName,
-              idToken: firebaseUser.ra
-            }
-            // refresh IdToken in currentUser
-            commit ('SET_CURRENT_USER', user)
-          }
           // return when use dispatch.then((email) => { ... })
           resolve(firebaseUser.email)
         } else {
@@ -138,7 +128,7 @@ export const actions = {
         photoURL: loginUser.user.photoURL,
         email: loginUser.user.email,
         displayName: loginUser.user.displayName,
-        idToken: loginUser.user.qa
+        idToken: loginUser.user.refreshToken
       }
 
     } catch (error) {console.log(error)}
@@ -188,6 +178,18 @@ function haveIdToken (obj) {
   
   return false
 }
+
+// function getJWT () {
+//   return new Promise((resolve, reject) => {
+//     fireauthApp.currentUser.getIdToken(/* forceRefresh */ true)
+//       .then(function(idToken) {
+//         // Send token to your backend via HTTPS
+//         return resolve(idToken)
+//       }).catch(function(error) {
+//         return reject(error)
+//       })
+//   })
+// }
 
 function getSavedState(key) {
   return JSON.parse(window.localStorage.getItem(key))
