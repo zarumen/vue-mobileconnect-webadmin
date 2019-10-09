@@ -125,6 +125,9 @@ export default {
     checkUserMobile () {
       return this.headers.some(head => head.value === 'mobileTelNumber')
     },
+    checkSendMobile () {
+      return this.headers.some(head => head.value === 'msisdn')
+    },
     checkReplyMsg () {
       return this.headers.some(head => head.value === 'replyMessage')
     },
@@ -306,6 +309,14 @@ export default {
       >
         <span class="text-truncate caption primary--text">
           {{ item.mobileTelNumber }}
+        </span>
+      </template>
+      <template
+        v-if="checkSendMobile"
+        v-slot:item.msisdn="{ item }"
+      >
+        <span class="text-truncate caption primary--text">
+          {{ item.msisdn }}
         </span>
       </template>
       <template

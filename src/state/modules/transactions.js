@@ -70,6 +70,7 @@ export const getters = {
 
 export const mutations = {
   setTotalsVerifyCode: set('totalsVerifyCode'),
+  setTotalsCoupon: set('totalsCoupon'),
   setItems: set('items'),
   setPagination: set('pagination'),
   setPage (state, paginationElement) {
@@ -135,6 +136,71 @@ export const actions = {
         console.log(error)
         commit('setLoading', { loading: false })
         sendErrorNotice(commit, `Load Failed!`)
+        closeNotice(commit, 3000)
+      })
+  },
+  // coupon code zone
+  putCouponsToRedis({ commit, dispatch}, {campaignId, state, data, rewardId }) {
+
+    commit('setLoading', { loading: true })
+    let file = {
+      "filepath": `${data}`
+    }
+
+    return axios.putData(`coupons/${campaignId}/${state}/${rewardId}`, file)
+      .then(response => {
+
+        let msg = `Put ${response.data.output.totals} codes to ${state} Database`
+        sendSuccessNotice(commit, msg)
+        closeNotice(commit, 3000)
+        commit('setLoading', { loading: false })
+
+        dispatch('getCouponsFromRedis', {
+          campaignId: campaignId,
+          campaignState: state,
+          rewardId: rewardId
+        })
+      })
+      .catch(error => {
+        console.log(error)
+        commit('setLoading', { loading: false })
+        sendErrorNotice(commit, `Put code to Database Failed!`)
+        closeNotice(commit, 3000)
+      })
+
+  },
+  getCouponsFromRedis({ commit }, { campaignId, campaignState, rewardId }) {
+
+    commit('setLoading', { loading: true })
+
+    return axios.getData(`coupons/${campaignId}/${campaignState}/${rewardId}/totals`)
+      .then(response => {
+        commit('setTotalsCoupon', response.data.data)
+      })
+      .catch(error => {
+        console.log(error)
+        commit('setLoading', { loading: false })
+        sendErrorNotice(commit, `Load Code Failed! Please check Connection`)
+        closeNotice(commit, 3000)
+      })
+
+  },
+  delCouponsFromRedis({ commit }, { campaignId, campaignState, rewardId }) {
+
+    commit('setLoading', { loading: true })
+
+    return axios.deleteData(`coupons/${campaignId}/${campaignState}/${rewardId}/totals`)
+      .then(response => {
+
+        commit('setTotalsCoupon', 0)
+        sendSuccessNotice(commit, `${response.data.data}`)
+        closeNotice(commit, 3000)
+        commit('setLoading', { loading: false })
+      })
+      .catch(error => {
+        console.log(error)
+        commit('setLoading', { loading: false })
+        sendErrorNotice(commit, `Put code to Database Failed!`)
         closeNotice(commit, 3000)
       })
   },

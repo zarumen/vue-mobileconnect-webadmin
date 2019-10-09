@@ -17,9 +17,10 @@ export default {
   data: () => ({
     baseModule: 'transactions',
     headers: [
+      { text: 'Msisdn', value: 'msisdn' },
       { text: 'Msg', value: 'message' },
-      { text: 'Stage', value: 'messageStatus' },
       { text: 'ReplyMsg', value: 'replyMessage', left: true, },
+      { text: 'Stage', value: 'messageStatus' },
       { text: 'TimeCode', value: 'groupID', align: 'center' },
       { text: 'StepMsg', value: 'stepName' },
       { text: 'StateMsg', value: 'campaignState' },
@@ -32,12 +33,19 @@ export default {
     // verify code treeview variables
     vcFileSelected: [],
     isLoading1: false,
-    open: [],
-    types: [],
+    open1: [],
+    vcTypes: [],
     vcFiles: [],
     vcFileUploadName: '',
     vcFileUploadUrl: '',
     // coupons treeview variables
+    cpFileSelected: [],
+    isLoading2: false,
+    open2: [],
+    cpTypes: [],
+    cpFiles: [],
+    cpFileUploadName: '',
+    cpFileUploadUrl: '',
   }),
   computed: {
     ...campaignDetailsComputed,
@@ -47,12 +55,14 @@ export default {
 
       return formatDateRelative(date)
     },
+    // Campaigns CampaignsValidate Info
     campaignInfo () {
       return this.getOneCampaign(this.$route.params.campaignId)
     },
     campaignValidateInfo () {
       return this.getOneCampaignValidate
     },
+    // Date Time Format Computed
     startDate () {
       if(this.campaignValidateInfo) {
         return formatDateTime(this.campaignValidateInfo.campaignDateStart.seconds)
@@ -77,6 +87,7 @@ export default {
       }
       return ''
     },
+    // Check Text Keywords
     txKeyword () {
       if(!this.isEmpty(this.getTransactionKeyword)) {
         let result = Object.values(this.getTransactionKeyword).reduce((t, n) => parseInt(t) + parseInt(n))
@@ -87,10 +98,10 @@ export default {
     },
     // verify Code computed
     verifyCodeItems () {
-      const children = this.types.map(type => ({
+      const children = this.vcTypes.map(type => ({
         id: type,
         name: this.makeTitle(type),
-        children: this.getChildren(type),
+        children: this.getChildren(type, this.vcFiles),
       }))
 
       return [{
@@ -108,13 +119,43 @@ export default {
       }
       return 'red--text'
     },
+    // Coupons computed
     checkRewardsHaveCoupons () {
-      return this.campaignValidateInfo.rewardsArray.some(x => x.rewardHasCoupon === true)
+      if(this.campaignValidateInfo.rewardsArray) {
+        // check ว่า campaign นี้มี coupons รึเปล่า
+        return this.campaignValidateInfo.rewardsArray.some(x => x.rewardHasCoupon === true)
+      }
+      return false
+    },
+    couponCodeItems () {
+      const children = this.cpTypes.map(type => ({
+        id: type,
+        name: this.makeTitle(type),
+        children: this.getChildren(type, this.cpFiles),
+      }))
+
+      return [{
+        id: 1,
+        name: 'Root Folder',
+        children,
+      }]
+    },
+    shouldShowCpTree () {
+      return this.cpFiles.length > 0 && !this.isLoading2
     },
   },
   watch: {
     vcFiles (val) {
-      this.types = val.reduce((acc, cur) => {
+      this.vcTypes = val.reduce((acc, cur) => {
+        const type = cur.type
+
+        if (!acc.includes(type)) acc.push(type)
+
+        return acc
+      }, []).sort()
+    },
+    cpFiles (val) {
+      this.cpTypes = val.reduce((acc, cur) => {
         const type = cur.type
 
         if (!acc.includes(type)) acc.push(type)
@@ -145,6 +186,7 @@ export default {
       })
 
       this.reloadVerifyCodeTotals()
+      this.reloadCouponsTotals()
 
       this.socketRegister({
         campaignState: this.state,
@@ -165,6 +207,22 @@ export default {
         campaignId: this.$route.params.campaignId
       })
     },
+    reloadCouponsTotals () {
+
+      this.getCouponsFromRedis({
+        campaignState: this.state,
+        campaignId: this.$route.params.campaignId,
+        rewardId: 0
+      })
+    },
+    deleteCouponsTotals () {
+
+      this.delCouponsFromRedis({
+        campaignState: this.state,
+        campaignId: this.$route.params.campaignId,
+        rewardId: 0
+      })
+    },
     clickToProduciton () {
       this.updateStatusCampaign({
         campaignId: this.$route.params.campaignId
@@ -172,11 +230,13 @@ export default {
     },
     // ------------------------------------- LOAD ZONE -------------------------------------
     loadCouponTree () {
+      if (this.cpFiles.length) return
+
       this.fetchCoupons({
         campaignId: this.$route.params.campaignId
       })
       .then(res => {
-        console.log(res)
+        this.cpFiles = res
       })
     },
     loadVerifyCodeTree () {
@@ -203,10 +263,10 @@ export default {
     makeTitle (name) {
       return `${name.charAt(0).toUpperCase()}${name.slice(1)}`
     },
-    getChildren (type) {
+    getChildren (type, allFiles) {
       const files = []
 
-      for (const file of this.vcFiles) {
+      for (const file of allFiles) {
         if (file.type !== type) continue
 
         files.push({
@@ -235,12 +295,13 @@ export default {
       }
       return 'red--text'
     },
-    classColorSelected () {
-      if(this.vcFileSelected[0].hasOwnProperty('fullPath')) {
+    classColorSelected (arr) {
+      if(arr[0].hasOwnProperty('fullPath')) {
         return 'green'
       }
-      return 'grey'
+      return 'indigo'
     },
+    // upload files verifycode
     upload () {
       let text = ''
       this.vcFileSelected.forEach(item => {
@@ -279,7 +340,21 @@ export default {
         data: path
       })
     },
-    
+    putCoupons () {
+      if(this.cpFileSelected.length === 0) return
+
+      let path = ''
+      this.cpFileSelected.forEach(item => {
+        path = item.fullPath
+      })
+
+      this.putCouponsToRedis({
+        campaignId: this.$route.params.campaignId,
+        state: this.state,
+        data: path,
+        rewardId: 0
+      })
+    },
   },
 }
 </script>
@@ -519,23 +594,18 @@ export default {
               </span>
               <span v-if="tabs === 3">
                 <base-button
-                  color="secondary"
-                  text
-                  @click.stop="loadCouponTree"
-                >
-                  NEW
-                </base-button>
-                <base-button
                   color="warning"
                   text
+                  @click.stop="putCoupons"
                 >
                   ADD
                 </base-button>
                 <base-button
                   color="error"
                   text
+                  @click.stop="deleteCouponsTotals"
                 >
-                  DELETE
+                  Clear All
                 </base-button>
               </span>
               <span v-if="tabs === 4">
@@ -825,14 +895,146 @@ export default {
                   <v-toolbar
                     flat
                   >
-                    <v-toolbar-title>Verify Code Database</v-toolbar-title>
+                    <v-toolbar-title>Verify Code in Database</v-toolbar-title>
                     <base-icon
                       class="px-2"
                       :source="`custom`" 
                       name="mdi-ticket" 
                     />
                     <v-toolbar-title>
-                      {{ getTotalsVerifyCode }}
+                      ({{ getTotalsVerifyCode }})
+                    </v-toolbar-title>
+                    <div class="flex-grow-1" />
+                    <v-toolbar-items>
+                      <base-button
+                        color="primary"
+                        icon
+                        click.native="reloadVerifyCodeTotals"
+                      >
+                        <base-icon name="syncAlt" />            
+                      </base-button>
+                    </v-toolbar-items>
+                  </v-toolbar>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                    >
+                      <v-card-text>
+                        <v-treeview
+                          v-model="vcFileSelected"
+                          :load-children="loadVerifyCodeTree"
+                          :open="open1"
+                          :items="verifyCodeItems"
+                          selected-color="primary"
+                          selection-type="independent"
+                          open-on-click
+                          selectable
+                          return-object
+                          expand-icon="mdi-chevron-down"
+                        >
+                          <template v-slot:prepend="{ item, open }">
+                            <v-icon v-if="!item.fullPath">
+                              {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
+                            </v-icon>
+                            <v-icon v-else>
+                              mdi-file-excel-box
+                            </v-icon>
+                          </template>
+                        </v-treeview>
+                      </v-card-text>
+                    </v-col>
+                    <v-divider vertical />
+                    <v-col
+                      cols="12"
+                    >
+                      <v-card-text>
+                        <div
+                          v-if="vcFileSelected.length === 0"
+                          key="title"
+                          class="title font-weight-light grey--text pa-4 text-center"
+                        >
+                          Select your files to Action
+                        </div>
+
+                        <v-scroll-x-transition
+                          group
+                          hide-on-leave
+                        >
+                          <v-chip
+                            v-for="(selection, i) in vcFileSelected"
+                            :key="i"
+                            :color="classColorSelected(vcFileSelected)"
+                            dark
+                            class="ma-1"
+                          >
+                            <v-icon
+                              left
+                            >
+                              mdi-file-excel-box
+                            </v-icon>
+                            {{ selection.name }}
+                          </v-chip>
+                        </v-scroll-x-transition>
+                      </v-card-text>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-toolbar
+                      flat
+                    >
+                      <v-subheader>Additional VerifyCode Upload File</v-subheader>
+                    </v-toolbar>
+                    <v-col cols="12">
+                      <v-card-text>
+                        <BaseUploadfield
+                          :accept="`.csv`"
+                          :label="`VerifyCode Upload`"
+                          @input="vcFileUploadName=arguments[0]"
+                          @formData="vcFileUploadUrl=arguments[0]"
+                        />
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-btn
+                          text
+                          color="error darken-1"
+                          @click="deleteFile"
+                        >
+                          Delete
+                          <v-icon right>
+                            mdi-content-save
+                          </v-icon>
+                        </v-btn>
+
+                        <div class="flex-grow-1" />
+                        <v-btn
+                          text
+                          color="green darken-1"
+                          @click="upload"
+                        >
+                          Upload
+                          <v-icon right>
+                            mdi-content-save
+                          </v-icon>
+                        </v-btn>
+                      </v-card-actions>
+                    </v-col>
+                  </v-row>
+                </v-card>
+              </v-tab-item>
+              <v-tab-item :value="3">
+                <!-- Coupons Panels -->
+                <v-card class="elevation-0">
+                  <v-toolbar
+                    flat
+                  >
+                    <v-toolbar-title>Coupons in Database</v-toolbar-title>
+                    <base-icon
+                      class="px-2"
+                      :source="`custom`" 
+                      name="mdi-ticket" 
+                    />
+                    <v-toolbar-title>
+                      ({{ getTotalsCoupon }})
                     </v-toolbar-title>
                     <div class="flex-grow-1" />
                     <v-toolbar-items>
@@ -849,10 +1051,10 @@ export default {
                     <v-col>
                       <v-card-text>
                         <v-treeview
-                          v-model="vcFileSelected"
-                          :load-children="loadVerifyCodeTree"
-                          :open="open"
-                          :items="verifyCodeItems"
+                          v-model="cpFileSelected"
+                          :load-children="loadCouponTree"
+                          :open="open2"
+                          :items="couponCodeItems"
                           selected-color="primary"
                           selection-type="independent"
                           open-on-click
@@ -878,7 +1080,7 @@ export default {
                     >
                       <v-card-text>
                         <div
-                          v-if="vcFileSelected.length === 0"
+                          v-if="cpFileSelected.length === 0"
                           key="title"
                           class="title font-weight-light grey--text pa-4 text-center"
                         >
@@ -890,16 +1092,14 @@ export default {
                           hide-on-leave
                         >
                           <v-chip
-                            v-for="(selection, i) in vcFileSelected"
+                            v-for="(selection, i) in cpFileSelected"
                             :key="i"
-                            :color="classColorSelected()"
+                            :color="classColorSelected(cpFileSelected)"
                             dark
-                            small
                             class="ma-1"
                           >
                             <v-icon
                               left
-                              small
                             >
                               mdi-file-excel-box
                             </v-icon>
@@ -909,76 +1109,52 @@ export default {
                       </v-card-text>
                     </v-col>
                   </v-row>
-                  <v-divider />
-                  <BaseUploadfield
-                    :accept="`.csv`"
-                    :label="`VerifyCode Upload`"
-                    @input="vcFileUploadName=arguments[0]"
-                    @formData="vcFileUploadUrl=arguments[0]"
-                  />
-                  <v-card-actions>
-                    <v-btn
-                      text
-                      color="error darken-1"
-                      @click="deleteFile"
+                  <v-row>
+                    <v-toolbar
+                      flat
                     >
-                      Delete
-                      <v-icon right>
-                        mdi-content-save
-                      </v-icon>
-                    </v-btn>
+                      <v-subheader>Additional Coupons Upload File</v-subheader>
+                    </v-toolbar>
+                    <v-col cols="12">
+                      <v-card-text>
+                        <BaseUploadfield
+                          :accept="`.csv`"
+                          :label="`Coupons Upload`"
+                          @input="cpFileUploadName=arguments[0]"
+                          @formData="cpFileUploadUrl=arguments[0]"
+                        />
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-btn
+                          text
+                          color="error darken-1"
+                          @click="deleteFile"
+                        >
+                          Delete
+                          <v-icon right>
+                            mdi-content-save
+                          </v-icon>
+                        </v-btn>
 
-                    <div class="flex-grow-1" />
-                    <v-btn
-                      text
-                      color="green darken-1"
-                      @click="upload"
-                    >
-                      Upload
-                      <v-icon right>
-                        mdi-content-save
-                      </v-icon>
-                    </v-btn>
-                  </v-card-actions>
+                        <div class="flex-grow-1" />
+                        <v-btn
+                          text
+                          color="green darken-1"
+                          @click="upload"
+                        >
+                          Upload
+                          <v-icon right>
+                            mdi-content-save
+                          </v-icon>
+                        </v-btn>
+                      </v-card-actions>
+                    </v-col>
+                  </v-row>
                 </v-card>
-              </v-tab-item>
-              <v-tab-item :value="3">
-                <!-- keyword reserved -->
               </v-tab-item>
               <v-tab-item :value="4">
                 <!-- keyword reserved -->
                 <v-card>
-                  <!-- Controller Tools Panels -->
-                  <!-- <v-card-title>
-                    <span class="title">
-                      Campaigns {{ campaignRemaining? "("+campaignRemaining.length+")": "" }}
-                      <v-text-field
-                        v-model="quickSearchFilter"
-                        append-icon="search"
-                        label="Quick Search"
-                        single-line
-                        hide-details
-                      />
-                    </span>
-                    <v-spacer />
-                    <base-button
-                      color="primary"
-                      circle
-                      icon
-                      @click.native="reloadData()"
-                    >
-                      <base-icon name="syncAlt" />            
-                    </base-button>
-                    <base-button 
-                      text 
-                      icon 
-                      color="primary"
-                    >
-                      <v-icon>
-                        print
-                      </v-icon>
-                    </base-button>
-                  </v-card-title> -->
                   <!-- Insert in Base-Table Component -->
                   <BaseTable
                     v-if="loading===false"

@@ -72,7 +72,8 @@ export default {
         'vote',
         'text&win',
         'api',
-        'reward'
+        'reward',
+        'microsite',
       ],
       rewardConditionTypeList: [
         'all',
@@ -95,6 +96,11 @@ export default {
       locale: 'TH',
       helper: false,
       helperText: {},
+      searchVal: '',
+      micrositeField: [],
+      micrositeFieldEx: [
+        'fullname', 'gender', 'email', 'birthdate', 'address',
+      ],
       // context parser variable
       validateTypeList: [
         {value: 'regx', condition: false},
@@ -375,6 +381,10 @@ export default {
 
         // --------------------- campaignValidation Object ----------------------------------------
         
+        // check microsite fields
+        if(campaignNew.campaignType === 'microsite') {
+          campaignValidationNew['micrositeFields'] = this.micrositeField
+        }
         // set Context Parsers
         if(!this.contextParserUndefined) {
           campaignValidationNew['contextParser'] = this.contextParser
@@ -699,7 +709,7 @@ export default {
                   </v-col>
                   <v-col 
                     cols="12"
-                    md8
+                    md="8"
                   > 
                     <v-text-field 
                       v-model="campaignForm.campaignName"
@@ -714,7 +724,7 @@ export default {
                   </v-col>
                   <v-col 
                     cols="12"
-                    md8
+                    md="8"
                   >
                     <v-textarea
                       v-model="campaignForm.campaignDescription"
@@ -726,13 +736,66 @@ export default {
                     <v-subheader class="helpertext">
                       {{ helperText.campaignType }}
                     </v-subheader>
-                  </v-col>                
-                  <v-select 
-                    v-model="campaignType"
-                    :items="cTypeList"
-                    label="Campaign Type"
-                    prepend-icon="assignment"
-                  />
+                  </v-col>
+                  <v-col 
+                    cols="12"
+                    md="8"
+                  >                
+                    <v-select 
+                      v-model="campaignType"
+                      :items="cTypeList"
+                      label="Campaign Type"
+                      prepend-icon="assignment"
+                    />
+                  </v-col>
+                  <v-col v-if="helper">
+                    <v-subheader class="helpertext">
+                      {{ helperText.campaignType }}
+                    </v-subheader>
+                  </v-col>
+                  <v-col 
+                    v-if="campaignType === 'api'"
+                    cols="12"
+                    md="8"
+                  >
+                    <v-text-field 
+                      v-model="validateForm.apiURL"
+                      prepend-icon="settings_applications"
+                      label="Api Url"
+                    />
+                    <v-text-field 
+                      v-model="validateForm.apiReport"
+                      prepend-icon="receipt"
+                      label="Api Report"
+                    />
+                  </v-col>
+                  <v-col 
+                    v-if="campaignType === 'microsite'"
+                    cols="12"
+                  >
+                    <v-combobox
+                      v-model="micrositeField"
+                      :items="micrositeFieldEx"
+                      :search-input.sync="searchVal"
+                      hide-selected
+                      hint="Add Multiple Values"
+                      label="Microsite Fields"
+                      prepend-icon="assignment"
+                      multiple
+                      persistent-hint
+                      small-chips
+                    >
+                      <template v-slot:no-data>
+                        <v-list-item>
+                          <v-list-item-content>
+                            <v-list-item-title>
+                              No results matching "<strong>{{ searchVal }}</strong>". Press <kbd>enter</kbd> to create a new one
+                            </v-list-item-title>
+                          </v-list-item-content>
+                        </v-list-item>
+                      </template>
+                    </v-combobox>
+                  </v-col>
                 </v-card-text>
               </v-card>
               <base-button 

@@ -122,6 +122,7 @@ export const campaignDetailsComputed = {
     'getTransactionKeyword',
     'getTimestampTxTotals',
     'getTotalsVerifyCode',
+    'getTotalsCoupon'
   ]),
 }
 
@@ -133,10 +134,13 @@ export const campaignDetailsMethods = {
   ...mapActions('transactions', [
     'socketRegister',
     'socketUnRegister',
-    'getVerifyCodeFromRedis',
     'getLastestTransactions',
+    'getVerifyCodeFromRedis',
     'putVerifyCodeToRedis',
-    'delVerifyCodeFromRedis'
+    'delVerifyCodeFromRedis',
+    'getCouponsFromRedis',
+    'putCouponsToRedis',
+    'delCouponsFromRedis'
   ]),
   ...mapActions('storage', [
     'fetchCoupons',
