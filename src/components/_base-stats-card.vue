@@ -32,20 +32,13 @@
         v-if="adminPanel"
         class="caption secondary--text"
       >
-        <v-icon
-          :color="subIconColor"
-          size="20"
-          class="mr-2"
-        >
-          {{ subIcon }}
-        </v-icon>
-        <span>Expand</span>
         <v-btn
           icon
           x-small
           color="secondary"
           @click="show = !show"
         >
+          &nbsp;&nbsp;&nbsp;&nbsp;Expand
           <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
         </v-btn>
       </v-col>

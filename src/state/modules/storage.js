@@ -18,36 +18,39 @@ export const mutations = {
 export const actions = {
   uploadFile ({ dispatch }, { fileUrl, path }) {
 
+    let pathSplitArr = path.split('/')
+
     let ref = storageRef.child(`${path}`)
 
-    return ref.putString(fileUrl, 'data_url')
-      .then(snapshot => {
-        console.log('Uploaded a data_url string!', snapshot)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    return new Promise((resolve, reject) => { 
+      ref.putString(fileUrl, 'data_url')
+        .then(snapshot => {
+          console.log('Uploaded a data_url string!')
+          resolve(`${pathSplitArr[2]}`)
+        })
+        .catch((error) => {
+          console.log(error)
+          reject(new Error(error))
+        })
+    })
   },
   deleteUploadFile ({ dispatch }, { path }) {
 
+    let pathSplitArr = path.split('/')
+
     let ref = storageRef.child(`${path}`)
 
-    return ref.delete()
-      .then(() => {
-        console.log('Delete a file!')
-        // if(path.includes('verifyCodeFile')) {
-        //   dispatch('fetchVerifyCode', {
-        //     campaignId: id
-        //   })
-        // } else {
-        //   dispatch('fetchCoupons', {
-        //     campaignId: id
-        //   })
-        // }
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    return new Promise((resolve, reject) => {
+      ref.delete()
+        .then(() => {
+          console.log('Delete a data_url string!')
+          resolve(`${pathSplitArr[2]}`)
+        })
+        .catch((error) => {
+          console.log(error)
+          reject(new Error(error))
+        })
+    })
   },
   async fetchCoupons ({ commit }, { campaignId }) {
     
@@ -65,7 +68,6 @@ export const actions = {
     const a = []
     firstPage.items.forEach((itemRef, index) => {
       // All the items under listRef.
-      console.log('item =>', itemRef)
       let result = {
         id: `test${index}`,
         type: 'test',
@@ -76,7 +78,6 @@ export const actions = {
     })
     addFirstPage.items.forEach((itemRef, index) => {
       // All the items under listRef.
-      console.log('item =>', itemRef)
       let result = {
         id: `production${index}`,
         type: 'production',
@@ -104,7 +105,6 @@ export const actions = {
     const arr = []
     test.items.forEach((itemRef, index) => {
       // All the items under listRef.
-      console.log('item =>', itemRef)
       let result = {
         id: `test${index}`,
         type: 'test',
@@ -115,7 +115,6 @@ export const actions = {
     })
     production.items.forEach((itemRef, index) => {
       // All the items under listRef.
-      console.log('item =>', itemRef)
       let result = {
         id: `production${index}`,
         type: 'production',

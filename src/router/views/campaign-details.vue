@@ -230,7 +230,7 @@ export default {
     },
     // ------------------------------------- LOAD ZONE -------------------------------------
     loadCouponTree () {
-      if (this.cpFiles.length) return
+      // if (this.cpFiles.length) return
 
       this.fetchCoupons({
         campaignId: this.$route.params.campaignId
@@ -240,7 +240,7 @@ export default {
       })
     },
     loadVerifyCodeTree () {
-      if (this.vcFiles.length) return
+      // if (this.vcFiles.length) return
 
       this.fetchVerifyCode({
         campaignId: this.$route.params.campaignId
@@ -301,30 +301,44 @@ export default {
       }
       return 'indigo'
     },
-    // upload files verifycode
-    upload () {
+    // upload files verifycode &  campaigncode
+    upload (type, fileSelected, fileUploadName, fileUploadUrl) {
+      if(fileSelected.length === 0)  return
+      
       let text = ''
-      this.vcFileSelected.forEach(item => {
+      let path = ''
+      fileSelected.forEach(item => {
         text = item.id
       })
-      let path = `campaigns/${this.$route.params.campaignId}/verifyCodeFile/${text}/${this.vcFileUploadName}`
+      if(type ==='verifycode') {
+        path = `campaigns/${this.$route.params.campaignId}/verifyCodeFile/${text}/${fileUploadName}`
+      } else {
+        path = `campaigns/${this.$route.params.campaignId}/couponsFile/${text}/${fileUploadName}`
+      }
 
       this.uploadFile({
-        fileUrl: this.vcFileUploadUrl,
+        fileUrl: fileUploadUrl,
         path: path,
       })
+      .then(x => (x === 'verifyCodeFile') ?
+          this.loadVerifyCodeTree()
+          : this.loadCouponTree())
     },
-    deleteFile () {
-      if(this.vcFileSelected.length === 0) return
+    // delete upload verifycode file & coupons file
+    deleteFile (fileSelected) {
+      if(fileSelected.length === 0) return
 
       let text = ''
-      this.vcFileSelected.forEach(item => {
+      fileSelected.forEach(item => {
         text = item.fullPath
       })
 
       this.deleteUploadFile({
         path: text
       })
+      .then(x => (x === 'verifyCodeFile') ?
+          this.loadVerifyCodeTree()
+          : this.loadCouponTree())
     },
     putVerifyCode () {
       if(this.vcFileSelected.length === 0) return
@@ -399,8 +413,8 @@ export default {
           <base-stats-card
             color="blue"
             icon="store"
-            title="Rewards Remaining"
-            value="945"
+            title="Campaign Type"
+            :value="`${campaignInfo.campaignType}`"
             sub-icon="alarm"
             sub-text="Last 24 Hours"
           />
@@ -997,7 +1011,7 @@ export default {
                         <v-btn
                           text
                           color="error darken-1"
-                          @click="deleteFile"
+                          @click="deleteFile(vcFileSelected)"
                         >
                           Delete
                           <v-icon right>
@@ -1009,7 +1023,7 @@ export default {
                         <v-btn
                           text
                           color="green darken-1"
-                          @click="upload"
+                          @click="upload('verifycode', vcFileSelected, vcFileUploadName, vcFileUploadUrl)"
                         >
                           Upload
                           <v-icon right>
@@ -1128,7 +1142,7 @@ export default {
                         <v-btn
                           text
                           color="error darken-1"
-                          @click="deleteFile"
+                          @click="deleteFile(cpFileSelected)"
                         >
                           Delete
                           <v-icon right>
@@ -1140,7 +1154,7 @@ export default {
                         <v-btn
                           text
                           color="green darken-1"
-                          @click="upload"
+                          @click="upload('coupons', cpFileSelected, cpFileUploadName, cpFileUploadUrl)"
                         >
                           Upload
                           <v-icon right>
@@ -1199,6 +1213,7 @@ export default {
           </base-card>
         </v-col>
         <v-col
+          v-show="false"
           cols="12"
           md="6"
           lg="4"
@@ -1238,6 +1253,7 @@ export default {
           </base-card>
         </v-col>
         <v-col
+          v-show="false"
           cols="12"
           md="6"
           lg="4"

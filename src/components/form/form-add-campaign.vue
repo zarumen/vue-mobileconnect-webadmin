@@ -243,10 +243,8 @@ export default {
     isSwitchUploadOn: {
       get () {
 
-        if(this.validateForm.campaignHasMsisdnList) {
-          
+        if(this.validateForm.campaignHasMsisdnList)
           return this.validateForm.campaignHasMsisdnList
-        }
 
         return this.switchUploadVC
       },
@@ -369,7 +367,7 @@ export default {
         campaignNew['brandPicUrl'] = this.brand.picURL
 
         // set Check Campaign Verify Code
-        if(this.switchUploadVC) {          
+        if(this.isSwitchUploadOn) {          
           campaignNew['campaignHasVerifyCode'] = true
         } else {
           campaignNew['campaignHasVerifyCode'] = false
@@ -675,8 +673,7 @@ export default {
               step="1"
             >
               {{ stepName.one }}
-              <small>v.0.9 patch note: Generate Coupon และ Upload Coupon ได้แล้ว, ทำ Form upload verify_code โดยแยก เป็น 2 ลิ้งค์คือ ไฟล์สำหรับ TEST และ PRODUCTION </small>
-              <small>road map: ทำตัวช่วย กรอกในสิ่งที่เคยกรอกไปแล้ว (Template) ทั้งในส่วนของ Regex และ ข้อความ (Message Template) และหน้าสุดท้าย ไว้ดูสรุปข้อมูล ก่อน save</small>
+              <small>v.1.0 patch note: สร้าง campaign ประเภท microsite และ api ได้แต่ยังต้องใส่รายละเอียดอื่นๆ ไปก่อน เดี๋ยวค่อยไปลบใน database ทีหลัง</small>
             </v-stepper-step>
             <v-stepper-content step="1">
               <v-card
@@ -2376,16 +2373,16 @@ export default {
                       </p>
                       <p>
                         Delimiter: <strong class="green--text">
-                          {{ validateForm.contextDelimiter }}
+                          "{{ validateForm.contextDelimiter }}"
                         </strong>
                       </p>
                       <p>
                         campaign Has Verifycode: <strong class="green--text">
-                          {{ switchUploadVC }}
+                          {{ isSwitchUploadOn }}
                         </strong>
                       </p>
                       <p>
-                        campaign Has Verifycode (2 Column) { MobileNumber:Verifycode }: <strong class="green--text">
+                        campaign Has Verifycode { MobileNumber:MemberCode } or { MobileNumber }: <strong class="green--text">
                           {{ validateForm.campaignHasMsisdnList }}
                         </strong>
                       </p>
