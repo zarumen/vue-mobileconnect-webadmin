@@ -29,7 +29,7 @@ export default {
       messageBoundariesOverError: '',
       messageAfterEnd: '',
       messageBeforeStart: '',
-      rewardsLimit: '',
+      rewardsLimit: 0,
     })
     const defaultpForm = Object.freeze({
       contextExclude: '',
