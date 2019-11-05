@@ -1,6 +1,6 @@
 import { set } from '@state/helpers'
 import firestoreApp from "@utils/firestore.config"
-import firebase from '@firebase/app'
+import { fireStoreFieldValue } from "@utils/firestore-timestamp"
 import assign from 'lodash/assign'
 
 import {
@@ -556,7 +556,9 @@ export const actions = {
       updateObj = {
         [`keywords.${keyword}`]: true
       }
-    } else {
+    } else if (typeof keyword === 'undefined') {
+      // passed away
+    }  else {
       keyword.forEach(key => {
         updateObj[`keywords.${key}`] = true
       })
@@ -637,11 +639,13 @@ export const actions = {
 
     if (typeof keyword === 'string') {
       updateObj = {
-        [`${keyword}`]: firebase.firestore.FieldValue.delete()
+        [`${keyword}`]: fireStoreFieldValue.delete()
       }
+    } else if (typeof keyword === 'undefined') {
+      // passed away
     } else {
       keyword.forEach(key => {
-        updateObj[`${key}`] = firebase.firestore.FieldValue.delete()
+        updateObj[`${key}`] = fireStoreFieldValue.delete()
       })
     }
 
@@ -674,7 +678,7 @@ export const actions = {
 
     return keywordRef
       .update({
-          [`keywords.${keyword}`]: firebase.firestore.FieldValue.delete()
+          [`keywords.${keyword}`]: fireStoreFieldValue.delete()
       })
       .then(() => {
 

@@ -10,3 +10,5 @@ const getserverTimestamp = () => {
 }
 
 export default getserverTimestamp
+
+export const fireStoreFieldValue = firebase.firestore.FieldValue

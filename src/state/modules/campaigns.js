@@ -308,13 +308,13 @@ export const actions = {
       .collection('campaigns')
       .doc(`${campaignId}`)
 
-    batch.delete(campaignRef)
+    batch.set(campaignRef, { campaignActive: false }, { merge: true });
 
     let campaignValidateRef = firestoreApp
       .collection('campaignValidate')
       .doc(`${campaignId}`)
 
-    batch.delete(campaignValidateRef)
+    batch.set(campaignValidateRef, { campaignActive: false }, { merge: true });
 
     return batch.commit()
       .then(() => {
