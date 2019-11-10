@@ -1,15 +1,24 @@
 const functions = require('firebase-functions');
 const admin = require("firebase-admin");
+const { BigQuery } = require('@google-cloud/bigquery');
 admin.initializeApp();
 
 const rp = require('request-promise');
 
 const request = rp.defaults({ simple : false });
-const LINE_ACCESS_TOKEN = "zMsztWI7Jd20mx7nlDkdwPoaronXSFEf56WQRSSaF7A";
-const projectId = 'mobile-connect-sms';
-// const ONE_ONE_TOKEN = "7dZINoNtAYWQyaYmnsNCsaNzC9yGJbicmF2lzjjXITp";
+const LINE_ACCESS_TOKEN = functions.config().line.grouptoken;
+const projectId = functions.config().mobileconnect.id;
 
-// admin.firestore().settings();
+// const conf = require('./key.json');
+
+// if(Object.keys(functions.config().service_account).length) {
+//   conf = functions.config().service_account
+// }
+
+const bigquery = new BigQuery({
+  projectId,
+  keyFilename: functions.config().service_account
+});
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -169,71 +178,6 @@ exports.aggregationInExportJobs = functions.firestore
       .catch(err => console.log(err));
   });
 
-exports.LineNotify = functions.runWith({ memory: '2GB' }).pubsub
-  .schedule('00 5 * * *').onRun(async context =>{
-
-  // Consistent timestamp
-  const now = admin.firestore.Timestamp.now();
-
-  const queryTestState = admin
-    .firestore()
-    .collection("campaignValidate")
-    .where("campaignState", "==", "test")
-    .where("campaignDateTestEnd", ">", now)
-
-  const queryProductionState = admin
-    .firestore()
-    .collection("campaignValidate")
-    .where("campaignDateStart", ">", now)
-
-  const tasks = await queryTestState.get();
-  const tasks2 = await queryProductionState.get();
-
-  // Jobs to execute concurrently. 
-  const jobsTest = [];
-  const jobsProduction = [];
-
-  tasks.forEach(snapshot => {
-    let item;
-
-    item = `${snapshot.id} => ${snapshot.data().campaignState} \r\n`;
-    
-    jobsTest.push(item);
-    
-  });
-
-  tasks2.forEach(snapshot => {
-
-    let item;
-    
-    item = `${snapshot.id} => ${snapshot.data().campaignState} \r\n`;
-    
-    jobsProduction.push(item);
-    
-  });
-
-  let testCamp = jobsTest.reduce((x, y) => x + y);
-  let proCamp = jobsProduction.reduce((x, y) => x + y);
-
-  const finalMessage = `TEST CAMPAIGNS:\r\n${testCamp}\r\nPRODUCTION CAMPAIGNS:\r\n${proCamp}`;
-
-  request ({
-      uri: "https://notify-api.line.me/api/notify",
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/x-www- form-urlencoded', 
-        'Authorization':  `Bearer ${LINE_ACCESS_TOKEN}`
-      },
-      form: {
-        'message': finalMessage
-      }
-    }).then((response) => {
-      console.log('User HAS% d repos', response.length);
-      console.log('response:', response);
-      return response.status;
-    }).catch (err => console.log(err));
-  });
-
 exports.everyFiveMinuteJob = functions.pubsub
   .schedule('00 5 * * *').onRun(async context => {
 
@@ -293,7 +237,12 @@ exports.everyFiveMinuteJob = functions.pubsub
   let nowDate = nowText.slice(0,15);
 
   let testCamp = jobsTest.reduce((x, y) => x + y);
-  let proCamp = jobsProduction.reduce((x, y) => x + y);
+  
+  let proCamp = ''
+  if(jobsProduction.length > 0) {
+    // check next production campaign > 0
+    proCamp = jobsProduction.reduce((x, y) => x + y);
+  }
 
   const finalMessage = `${nowDate}\r\nWARNING!!!! \r\nTEST CAMPAIGNS (${jobsTest.length}):\r\n${testCamp}\r\nPRODUCTION FUTURE CAMPAIGNS (${jobsProduction.length}):\r\n${proCamp}`;
 
@@ -330,10 +279,9 @@ exports.deleteUserFromAuth = functions.firestore
   });
 
 
-exports.exportTxFromBigquery = functions.pubsub
+exports.exportTxFromBigquery = functions.runWith({ memory: '1GB' }).pubsub
   .schedule('00 11 * * *').onRun(async context => {
 
-    const { BigQuery } = require('@google-cloud/bigquery');
 
     const sqlQuery = `
     SELECT shortcode, campaignID, campaignName, count( shortcode ) AS Total, CAST(FORMAT_DATE("%Y%m%d000000", current_date) as INT64) as today, CAST(FORMAT_DATE("%Y%m%d000000", DATE_SUB(current_date, INTERVAL 1 DAY)) as INT64) as yesterday
@@ -342,10 +290,6 @@ exports.exportTxFromBigquery = functions.pubsub
     group by shortcode, campaignID, campaignName
     order by shortcode
     `;
-    const bigquery = new BigQuery({
-      projectId,
-      keyFilename: './serviceKey.json'
-    });
 
     // const jobRun = bigquery.job('bquxjob_65760a09_16d59030bf2');
 
