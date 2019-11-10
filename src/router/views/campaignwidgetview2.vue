@@ -37,17 +37,6 @@ let ChartData = {
 }
 
 export default {
-  page() {
-      return {
-        title: 'Campaign Widget',
-        meta: [
-          {
-            name: 'description',
-            content: `The user profile for .`,
-          },
-        ],
-      }
-  }, 
   data() {
     return {
       headerText: 'aaaa',

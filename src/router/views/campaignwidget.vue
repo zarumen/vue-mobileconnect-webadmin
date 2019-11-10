@@ -88,7 +88,7 @@ export default {
         meta: [
           {
             name: 'description',
-            content: `The user profile for .`,
+            content: `List All Campaign Menu Widget`,
           },
         ],
       }

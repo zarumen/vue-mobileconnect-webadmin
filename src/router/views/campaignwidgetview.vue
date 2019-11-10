@@ -5,11 +5,11 @@ import formatCurrency from '@utils/format-number'
 export default {
   page() {
       return {
-        title: 'Campaign Widget',
+        title: 'Campaign Widget Details',
         meta: [
           {
             name: 'description',
-            content: `The user profile for .`,
+            content: `Campaign Widgets Details`,
           },
         ],
       }
