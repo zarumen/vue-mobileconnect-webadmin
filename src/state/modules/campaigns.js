@@ -2,6 +2,7 @@ import { set } from '@state/helpers'
 import assign from 'lodash/assign'
 import axios from "@utils/aws-api.config"
 import firestoreApp from "@utils/firestore.config"
+import { firebasePref } from '@utils/firebase-pref.config'
 import getServerTimestamp from '@utils/firestore-timestamp'
 
 import {
@@ -162,6 +163,9 @@ export const actions = {
   // READ Zone
   // ===
   getAllCampaigns({ commit }) {
+
+    let trace = firebasePref.trace('allCampaignQuery')
+    trace.start()
     
     commit('setLoading', { loading: true })
     
@@ -184,10 +188,14 @@ export const actions = {
         commit('setLoading', { loading: false })
         sendSuccessNotice(commit, 'Load Campaigns Finished!')
         closeNotice(commit, 2000)
+        trace.incrementMetric('allCampaignSize', campaignList.length)
+        trace.stop()
         return campaignList
       })
       .catch(error => {
         console.log(error)
+        trace.putAttribute('errorLoadAllCampaign', 'error')
+        trace.stop()
         commit('setLoading', { loading: false })
         sendErrorNotice(commit, 'Load Failed!')
         closeNotice(commit, 2000)
@@ -197,6 +205,8 @@ export const actions = {
   getCampaignsByOrg({ commit }, { auth, orgId } = {}) {
 
     console.log(auth, orgId)
+    let trace = firebasePref.trace('getCampaignByOrgQuery')
+    trace.start()
 
     if(!orgId) return Promise.resolve(null)
 
@@ -226,6 +236,8 @@ export const actions = {
         commit('setLoading', { loading: false })
         sendSuccessNotice(commit, 'Load Campaigns Finished!')
         closeNotice(commit, 2000)
+        trace.incrementMetric('campaignSize', campaignList.length)
+        trace.stop()
         return campaignList
       })
       .catch(error => {
@@ -233,6 +245,8 @@ export const actions = {
         commit('setLoading', { loading: false })
         sendErrorNotice(commit, 'Load Failed!')
         closeNotice(commit, 2000)
+        trace.putAttribute('errorLoadCampaign', 'error')
+        trace.stop()
         return error
       })
   },
@@ -266,6 +280,16 @@ export const actions = {
   // ===
   // UPDATE Zone
   // ===
+  async calibratedCampaignTx ({ state }, { campaignState }) {
+    
+    const campaignId = state.campaignSelected
+
+    let totalsTx = await axios.putData(`transaction/${campaignId}/${campaignState}/totals`)
+    let successTx = await axios.putData(`transaction/${campaignId}/${campaignState}/success`)
+    let rewardsTx = await axios.putData(`transaction/${campaignId}/${campaignState}/rewards`)
+
+    return Promise.all([totalsTx, successTx, rewardsTx])
+  },
   updatePage({ commit }, pageNumber) {
     commit('setPage', { page: pageNumber })
   },

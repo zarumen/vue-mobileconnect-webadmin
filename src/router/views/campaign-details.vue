@@ -88,6 +88,9 @@ export default {
       return ''
     },
     // Check Text Keywords
+    txSuccess () {
+      return this.getTransactionSuccess
+    },
     txKeyword () {
       if(!this.isEmpty(this.getTransactionKeyword)) {
         let result = Object.values(this.getTransactionKeyword).reduce((t, n) => parseInt(t) + parseInt(n))
@@ -282,6 +285,20 @@ export default {
     onOpen () {
       this.text = 'open'
     },
+    onCalibrated () {
+      // calibrated all transactions
+      this.calibratedCampaignTx({
+        campaignState: this.state,
+      })
+      .then(response => {
+        let msg = `Calibrated ${response.length} Transactions From Database Success!`
+        console.log(msg)
+        window.location.reload()
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    },
     isEmpty (obj) {
       for(var key in obj) {
         if(obj.hasOwnProperty(key))
@@ -400,7 +417,7 @@ export default {
             color="orange"
             icon="store"
             title="SMS Registration"
-            :value="`${txKeyword}`"
+            :value="`${txSuccess}`"
             sub-icon="alarm"
             :sub-text="updatedTimestampTxTotals"
           />
@@ -436,6 +453,7 @@ export default {
             :campaign-state="state"
             :campaign-running="campaignInfo.campaignAvailable"
             :admin-panel="isAdmin"
+            @onCalibrated="onCalibrated"
             @onOpen="onOpen"
           />
         </v-col>
@@ -629,7 +647,7 @@ export default {
                   icon
                   @click.native="loadTransaction()"
                 >
-                  <base-icon name="syncAlt" />            
+                  RELOAD           
                 </base-button>
               </span>
             </v-card-title>
@@ -1167,11 +1185,10 @@ export default {
                 </v-card>
               </v-tab-item>
               <v-tab-item :value="4">
-                <!-- keyword reserved -->
+                <!-- Campaign Transactions Table -->
                 <v-card>
                   <!-- Insert in Base-Table Component -->
                   <BaseTable
-                    v-if="loading===false"
                     :headers="headers"
                     :items="items"
                     :pagination="pagination"

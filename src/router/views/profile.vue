@@ -1,6 +1,6 @@
 <script>
 import fireauth from '@utils/fireauth.config'
-// import { mapActions, mapMutations } from 'vuex'
+import { authComputed } from '@state/helpers'
 
 export default {
   page() {
@@ -29,6 +29,7 @@ export default {
     }
   },
   computed: {
+    ...authComputed,
     profileName: {
       get () {
         return `${this.user.firstName}`
@@ -39,11 +40,17 @@ export default {
     },
     displayName () {
       return `${this.user.firstName} ${this.user.lastName}`
+    },
+    avatar () {
+      // return avartar picture
+      return this.getAvartar
     }
   },
-  created () {
-    // console.log(fireauth.currentUser)
-  },
+  // async created () {
+  //   const a = await getJwtToken
+
+  //   console.log(a)
+  // },
   methods: {
     updatedDisplayName (name) {
       let user = fireauth.currentUser
@@ -89,9 +96,9 @@ export default {
               class="mx-auto d-block"
               size="150"
             >
-              <img
-                src="https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png"
-              >
+              <v-img
+                :src="avatar"
+              />
             </v-avatar>
             <v-card-text 
               class="text-center" 

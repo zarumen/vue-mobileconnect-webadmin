@@ -92,6 +92,7 @@ export default {
         v => this.checkDuplicatedKeyword(v) || 'Keyword ซ้ำกับที่มีอยู่แล้ว'
       ],
       campaignType: null,
+      campaignLongMessage: false,
       // helper variable
       locale: 'TH',
       helper: false,
@@ -371,6 +372,13 @@ export default {
           campaignNew['campaignHasVerifyCode'] = true
         } else {
           campaignNew['campaignHasVerifyCode'] = false
+        }
+
+        // check campaign has UNICODE Features (default: false)
+        if(this.campaignLongMessage) {
+          campaignNew['campaignLongMessage'] = true
+        } else {
+          campaignNew['campaignLongMessage'] = false
         }
 
         // set Date in here
@@ -673,7 +681,7 @@ export default {
               step="1"
             >
               {{ stepName.one }}
-              <small>v.1.0 patch note: สร้าง campaign ประเภท microsite และ api ได้แต่ยังต้องใส่รายละเอียดอื่นๆ ไปก่อน เดี๋ยวค่อยไปลบใน database ทีหลัง</small>
+              <small>v.1.01 patch note: (เพิ่ม Long Message Features) สร้าง campaign ประเภท microsite และ api ได้แต่ยังต้องใส่รายละเอียดอื่นๆ ไปก่อน เดี๋ยวค่อยไปลบใน database ทีหลัง</small>
             </v-stepper-step>
             <v-stepper-content step="1">
               <v-card
@@ -823,6 +831,21 @@ export default {
                 class="mb-5"
               >
                 <v-card-text>
+                  <v-col 
+                    cols="12"
+                  >
+                    <v-subheader><small>Campaign Features Check:</small></v-subheader>
+                    <v-col v-if="helper">
+                      <v-subheader class="helpertext">
+                        {{ helperText.campaignLongMessage }}
+                      </v-subheader>
+                    </v-col> 
+                    <v-switch
+                      v-model="campaignLongMessage"
+                      color="primary"
+                      label="Use Campaign Long Message"
+                    />
+                  </v-col>
                   <v-col 
                     cols="8"
                     sm="6" 

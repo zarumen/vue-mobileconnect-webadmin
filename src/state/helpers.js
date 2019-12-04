@@ -4,7 +4,7 @@ export const authComputed = {
   ...mapState('auth', {
     currentUser: state => state.currentUser,
   }),
-  ...mapGetters('auth', ['loggedIn', 'isAdmin']),
+  ...mapGetters('auth', ['loggedIn', 'isAdmin', 'getAvartar']),
 }
 
 export const authMethods = mapActions('auth', ['logIn', 'logOut'])
@@ -120,6 +120,7 @@ export const campaignDetailsComputed = {
   ...mapGetters('transactions', [
     'getTransactionTotals',
     'getTransactionKeyword',
+    'getTransactionSuccess',
     'getTimestampTxTotals',
     'getTotalsVerifyCode',
     'getTotalsCoupon'
@@ -129,7 +130,8 @@ export const campaignDetailsComputed = {
 export const campaignDetailsMethods = {
   ...mapActions('campaigns', [
     'getCampaignValidate',
-    'updateStatusCampaign'
+    'updateStatusCampaign',
+    'calibratedCampaignTx'
   ]),
   ...mapActions('transactions', [
     'socketRegister',

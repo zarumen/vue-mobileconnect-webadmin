@@ -105,7 +105,10 @@ export default {
       }
 
       return val
-    }
+    },
+    renderState (item) {
+      
+    },
   },
 }
 </script>
@@ -113,7 +116,7 @@ export default {
 <template>
   <Layout>
     <v-container fluid>
-      <v-flex xs12>
+      <v-col xs12>
         <base-card
           color="light-green"
           title="List All Campaign"
@@ -138,7 +141,8 @@ export default {
               icon
               @click.native="reloadData()"
             >
-              <base-icon name="syncAlt" />            
+              reload
+              <!-- <base-icon name="syncAlt" />           -->
             </base-button>
           </v-card-title>
           <v-card-text>
@@ -149,7 +153,7 @@ export default {
                 <v-list-item 
                   :key="index"
                 >
-                  <v-list-item-action>
+                  <v-list-item-action class="pt-3">
                     <v-tooltip
                       v-if="!loading"
                       top
@@ -183,19 +187,25 @@ export default {
                       <span>Downloading...</span>
                     </v-tooltip>
                   </v-list-item-action>
-                  <v-list-item-content class="ma-2">
+                  <v-list-item-content>
                     <div>
-                      <v-layout
+                      <v-row
                         justify-space-between
                       >
-                        <v-flex 
+                        <v-col
                           align-content-center
                         >
-                          {{ item.campaignName }} <br>
-                          <v-list-item-subtitle>Campaign Start : {{ renderDate('start', item) }}</v-list-item-subtitle>
-                          <v-list-item-subtitle>Campaign End : {{ renderDate('end', item) }}</v-list-item-subtitle>
-                        </v-flex>
-                      </v-layout>
+                          <v-list-item-title>{{ item.campaignName }}</v-list-item-title>
+                          <v-list-item-subtitle>
+                            Campaign Start : 
+                            <span class="green--text">{{ renderDate('start', item) }}</span>
+                          </v-list-item-subtitle>
+                          <v-list-item-subtitle>
+                            Campaign End : 
+                            <span class="primary--text">{{ renderDate('end', item) }}</span>
+                          </v-list-item-subtitle>
+                        </v-col>
+                      </v-row>
                     </div>
                   </v-list-item-content>
                 </v-list-item>
@@ -207,7 +217,7 @@ export default {
             </v-list>
           </v-card-text>
         </base-card>
-      </v-flex>
+      </v-col>
       <v-snackbar 
         v-if="loading===false" 
         v-model="snackbar" 

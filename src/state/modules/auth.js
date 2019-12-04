@@ -1,18 +1,25 @@
 import fireauthApp from '@utils/fireauth.config'
 import firestoreApp from '@utils/firestore.config'
+import { firebasePref } from '@utils/firebase-pref.config'
 import assign from 'lodash/assign'
 
 const defaultCurrentUserObj = {
   displayName: null,
   email: null,
   idToken: null,
-  photoURL: null
+  photoURL: null,
 }
 
 export const state = {
   currentUser: getSavedState('auth.currentUser'),
   userInfo: getSavedState('auth.userInfo'),
-  isAdmin: getSavedState('auth.admin')
+  isAdmin: getSavedState('auth.admin'),
+  avartar: {
+    male: 'https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png',
+    female: 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
+    admin: 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/supportfemale-512.png',
+    anonymous: 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png'
+  }
 }
 
 export const getters = {
@@ -23,6 +30,22 @@ export const getters = {
   isAdmin: state => state.isAdmin,
   // get User Email
   getUserInfo: state => state.userInfo,
+  getAvartar: (state) => {
+    if(state.isAdmin) {
+      return state.avartar.admin
+    } else {
+      if(state.userInfo){
+
+        if (state.userInfo.gender === 'Male') {
+          return state.avartar.male
+        } else if (state.userInfo.gender === 'Female') {
+          return state.avartar.female
+        } else {
+          return state.avartar.anonymous
+        }
+      }
+    }
+  },
 }
 
 export const mutations = {
@@ -117,12 +140,18 @@ export const actions = {
     // check loggedIn has true ?
     if (getters.loggedIn) return dispatch('validate')
 
+    let trace = firebasePref.trace('userLogin')
+    trace.start()
+
     let loginUser = null
     let user = {}
 
     try {
 
       loginUser = await fireauthApp.signInWithEmailAndPassword(username, password)
+
+      trace.putAttribute('verified', `${loginUser.user.email}`)
+      trace.stop()
 
       user = {
         photoURL: loginUser.user.photoURL,
@@ -131,7 +160,11 @@ export const actions = {
         idToken: loginUser.user.refreshToken
       }
 
-    } catch (error) {console.log(error)}
+    } catch (error) {
+      console.log(error)
+      trace.putAttribute('errorCode', `${error.code}`)
+      trace.stop()
+    }
 
     if(loginUser) {
       commit('SET_CURRENT_USER', user)

@@ -115,9 +115,9 @@ export default {
               icon
               @click.native="reloadData()"
             >
-              <base-icon name="syncAlt" />            
+              reload      
             </base-button>
-            <base-button 
+            <!-- <base-button 
               text 
               icon 
               color="primary"
@@ -125,7 +125,7 @@ export default {
               <v-icon>
                 print
               </v-icon>
-            </base-button>
+            </base-button> -->
           </v-card-title>
           <!-- Insert in Base-Table Component -->
           <BaseTable

@@ -500,6 +500,9 @@ export default {
           </router-link>
         </div>
       </template>
+      <template v-slot:no-data>
+        <span class="primary--text">NO DATA PLEASE CLICK RELOAD!</span>
+      </template>
     </v-data-table>
     <!-- footer page running page number -->
     <v-dialog

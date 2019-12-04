@@ -9,7 +9,6 @@ export default {
       color: 'secondary white--text',
       logo: '@assets/images/mc-logo.png',
       image: 'https://firebasestorage.googleapis.com/v0/b/mobile-connect-sms-webadmin/o/img%2Fmoblie-slider1.jpg?alt=media&token=565426b8-16de-4179-8532-2f7c6b7bcd98',
-      avatar: 'https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png'
     }
   },
   computed: {
@@ -22,6 +21,10 @@ export default {
         this.setDrawer(val)
       }
     },
+    avatar () {
+      // return avartar picture
+      return this.getAvartar
+    }
   },
   methods: {
     ...mapMutations('app', ['setDrawer', 'toggleDrawer']),
@@ -41,6 +44,12 @@ export default {
           title: 'Dashboard',
           link: '/dashboard'
         },
+        // {
+        //   name: 'search',
+        //   icon: 'search',
+        //   title: 'Search Admin',
+        //   link: '/search'
+        // },
         {
           name: 'organizations',
           icon: 'business',

@@ -19,6 +19,8 @@ export const state = {
   textKeyword: 'keyword',
   textRewards: 'rewards',
   textTotals: 'totals',
+  textSuccess: 'success',
+  textRewardPercent: 'rewardspercentage',
   timestampTxTotals: null,
   // Flags Item save to LocalStorage
   flagTotals: 0,
@@ -27,6 +29,8 @@ export const state = {
   transactionRewards: null,
   transactionTotals: null,
   transactionKeyword: null,
+  transactionSuccess: null,
+  rewardsPercentage: null,
   // Coupons & Verify Code zone
   totalsVerifyCode: '',
   totalsCoupon: '',
@@ -40,6 +44,7 @@ export const state = {
 }
 
 export const getters = {
+  hadItems: (state) => !!state.items,
   getTransactionTotals: (state) => {
     let cId = state.campaignSelected
 
@@ -51,6 +56,7 @@ export const getters = {
       return state.transactionTotals
     }
   },
+  getTransactionSuccess: (state) => state.transactionSuccess,
   getTransactionKeyword: (state) => state.transactionKeyword,
   getTotalsVerifyCode: (state) => state.totalsVerifyCode,
   getTotalsCoupon: (state) => state.totalsCoupon,
@@ -103,6 +109,12 @@ export const mutations = {
   SOCKET_TRANSACTIONKEYWORD (state, payload) {
     state.transactionKeyword = payload
   },
+  SOCKET_TRANSACTIONSUCCESS (state, payload) {
+    state.transactionSuccess = payload
+  },
+  SOCKET_REWARDPERCENTAGE (state, payload) {
+    state.rewardsPercentage = payload
+  },
   setTimestampTxTotals (state, payload) {
     state.timestampTxTotals = payload
   },
@@ -138,6 +150,33 @@ export const actions = {
         sendErrorNotice(commit, `Load Failed!`)
         closeNotice(commit, 3000)
       })
+  },
+  getSearchMsisdn ({ commit }, { admin, msisdn, jwtToken, campaignId }) {
+
+    let queryString = `?JWTToken=${jwtToken}`
+
+    if(!admin) {
+      queryString += `&campaignid=${campaignId}`
+    }
+
+    console.log(queryString)
+
+    return axios.getData(`transaction/msisdn/${msisdn}/${queryString}`)
+      .then(response => {
+
+        let msg = `Load ${response.data.input.msisdn} Transactions From Database Success!`
+        commitPagination(commit, response.data.output.data)
+        sendSuccessNotice(commit, msg)
+        closeNotice(commit, 3000)
+        commit('setLoading', { loading: false })
+      })
+      .catch(error => {
+        console.log(error)
+        commit('setLoading', { loading: false })
+        sendErrorNotice(commit, `Load Failed!`)
+        closeNotice(commit, 3000)
+      })
+
   },
   // coupon code zone
   putCouponsToRedis({ commit, dispatch}, {campaignId, state, data, rewardId }) {
@@ -274,30 +313,38 @@ export const actions = {
     
     
     if(campaignState === 'test') {
-      $socket.emit('register', 'totals', state.stateTest, campaignId);
-      $socket.emit('register', 'keyword', state.stateTest, campaignId);
-      $socket.emit('register', 'rewards', state.stateTest, campaignId);
+      $socket.emit('register', state.textTotals, state.stateTest, campaignId);
+      $socket.emit('register', state.textKeyword, state.stateTest, campaignId);
+      $socket.emit('register', state.textRewards, state.stateTest, campaignId);
+      $socket.emit('register', state.textSuccess, state.stateTest, campaignId);
+      $socket.emit('register', state.textRewardPercent, state.stateTest, campaignId);
     }
     
     if(campaignState === 'production') {
-      $socket.emit('register', 'totals', state.stateProduction, campaignId);
-      $socket.emit('register', 'keyword', state.stateProduction, campaignId);
-      $socket.emit('register', 'rewards', state.stateProduction, campaignId);
+      $socket.emit('register', state.textTotals, state.stateProduction, campaignId);
+      $socket.emit('register', state.textKeyword, state.stateProduction, campaignId);
+      $socket.emit('register', state.textRewards, state.stateProduction, campaignId);
+      $socket.emit('register', state.textSuccess, state.stateProduction, campaignId);
+      $socket.emit('register', state.textRewardPercent, state.stateProduction, campaignId);
     }
   },
   // DE-REGISTER SOCKET IO
   socketUnRegister ({ state, commit }, { campaignState, campaignId }) {
 
     if(campaignState === 'test') {
-      $socket.emit('deregister', 'totals', state.stateTest, campaignId);
-      $socket.emit('deregister', 'keyword', state.stateTest, campaignId);
-      $socket.emit('deregister', 'rewards', state.stateTest, campaignId);
+      $socket.emit('deregister', state.textTotals, state.stateTest, campaignId);
+      $socket.emit('deregister', state.textKeyword, state.stateTest, campaignId);
+      $socket.emit('deregister', state.textRewards, state.stateTest, campaignId);
+      $socket.emit('deregister', state.textSuccess, state.stateTest, campaignId);
+      $socket.emit('deregister', state.textRewardPercent, state.stateTest, campaignId);
     }
     
     if(campaignState === 'production') {
-      $socket.emit('deregister', 'totals', state.stateProduction, campaignId);
-      $socket.emit('deregister', 'keyword', state.stateProduction, campaignId);
-      $socket.emit('deregister', 'rewards', state.stateProduction, campaignId);
+      $socket.emit('deregister', state.textTotals, state.stateProduction, campaignId);
+      $socket.emit('deregister', state.textKeyword, state.stateProduction, campaignId);
+      $socket.emit('deregister', state.textRewards, state.stateProduction, campaignId);
+      $socket.emit('deregister', state.textSuccess, state.stateProduction, campaignId);
+      $socket.emit('deregister', state.textRewardPercent, state.stateProduction, campaignId);
     }
     removeState(`transactions.${state.campaignSelected}.txTotals`)
     removeState(`transactions.${state.campaignSelected}.timestampTxTotals`)
@@ -333,6 +380,10 @@ export const actions = {
       commit('setTimestampTxTotals', time)
     }
 
+  },
+  resetTable ({ commit }) {
+    commit('setItems', [])
+    commit('setPagination', getDefaultPagination())
   },
   async removeLocalStorageAll ({ dispatch }, data) {
     let removeArr = []

@@ -108,6 +108,15 @@
             </v-col>
             <v-col cols="12">
               <base-button
+                color="success white--text"
+                rounded
+                @click.native="$emit('onCalibrated')"
+              >
+                calibrated Transactions
+              </base-button>
+            </v-col>
+            <v-col cols="12">
+              <base-button
                 color="purple white--text"
                 rounded
                 @click.native="$emit('onOpen')"

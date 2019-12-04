@@ -118,6 +118,23 @@ export default [
     },  
   },
   {
+    path: '/search',
+    name: 'search',
+    component: () => lazyLoadView(import('@views/search')),
+    meta: {
+      authRequired: true,
+      beforeResolve: (routeTo, routeFrom, next) => {
+        if (store.getters['transactions/hadItems']) {
+          store
+            .dispatch('transactions/resetTable')
+          next()
+        } else {
+          next()
+        }
+      }
+    },  
+  },
+  {
     path: '/users',
     name: 'users',
     component: () => lazyLoadView(import('@views/users')),
@@ -139,6 +156,15 @@ export default [
     component: () => lazyLoadView(import('@views/campaign-details')),
     meta: {
       authRequired: true,
+      beforeResolve: (routeTo, routeFrom, next) => {
+        if (store.getters['transactions/hadItems']) {
+          store
+            .dispatch('transactions/resetTable')
+          next()
+        } else {
+          next()
+        }
+      }
     },
   },
   {
