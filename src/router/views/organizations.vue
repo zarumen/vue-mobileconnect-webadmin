@@ -4,11 +4,11 @@ import { orgMethods, orgComputed } from '@state/helpers'
 export default {
   page: {
     title: 'Organizations',
-    meta: [{ name: 'description', content: 'Organizations' }],
+    meta: [{ name: 'description', content: 'Organizations' }]
   },
-  components: { 
-    Layout: () => import('@layouts/main'), 
-    FormAddOrganization: () => import('@components/form/form-add-organization'), 
+  components: {
+    Layout: () => import('@layouts/main'),
+    FormAddOrganization: () => import('@components/form/form-add-organization'),
     FormEditOrganization: () => import('@components/form/form-edit-organization')
   },
   data: () => ({
@@ -16,24 +16,24 @@ export default {
     addDialog: '',
     editOrgDialog: '',
     dialog: '',
-    dialogTitle: "Organization Delete Dialog",
-    dialogText: "Do you want to delete this organization?",
+    dialogTitle: 'Organization Delete Dialog',
+    dialogText: 'Do you want to delete this organization?',
     headers: [
       {
         text: 'Level',
         align: 'start',
         value: 'organizationAuth'
       },
-      { text: 'Company',align: 'start', value: 'organizationLevel1Name' },
+      { text: 'Company', align: 'start', value: 'organizationLevel1Name' },
       { text: 'Department', value: 'organizationLevel2Name' },
       { text: 'Brand', value: 'organizationLevel3Name' },
-      { text: 'Actions', value: 'action', align: 'center', sortable: false },
+      { text: 'Actions', value: 'action', align: 'center', sortable: false }
     ],
     organizationId: '',
     left: true,
     // NOT USE! now
     rightDrawer: false,
-    query: "",
+    query: '',
     timeout: 2000,
     quickSearchFilter: '',
     orgRemaining: null,
@@ -41,19 +41,19 @@ export default {
     selectedLevelOrg: '',
     selectedOrgLevel1: '',
     selectedOrgLevel2: '',
-    selectedOrgLevel3: '',
+    selectedOrgLevel3: ''
   }),
   computed: {
-    ...orgComputed,
+    ...orgComputed
   },
   watch: {
-    
+
   },
   created () {
     // initial Data Table from OrganizationList query from firestore
     if (!this.hadList) {
       this.reloadData()
-    }      
+    }
   },
   methods: {
     ...orgMethods,
@@ -62,19 +62,19 @@ export default {
     },
     edit (item) {
       this.selectedLevelOrg = item.organizationAuth
-      
+
       switch (this.selectedLevelOrg) {
         case 'Level1':
-            this.selectedOrgLevel1 = item.organizationLevel1
+          this.selectedOrgLevel1 = item.organizationLevel1
           break
         case 'Level2':
-            this.selectedOrgLevel1 = item.organizationLevel1
-            this.selectedOrgLevel2 = item.organizationLevel2
+          this.selectedOrgLevel1 = item.organizationLevel1
+          this.selectedOrgLevel2 = item.organizationLevel2
           break
         case 'Level3':
-            this.selectedOrgLevel1 = item.organizationLevel1
-            this.selectedOrgLevel2 = item.organizationLevel2
-            this.selectedOrgLevel3 = item.organizationLevel3
+          this.selectedOrgLevel1 = item.organizationLevel1
+          this.selectedOrgLevel2 = item.organizationLevel2
+          this.selectedOrgLevel3 = item.organizationLevel3
           break
       }
 
@@ -100,8 +100,8 @@ export default {
     },
     reloadData () {
       this.getOrganizationsList()
-    },
-  },
+    }
+  }
 }
 </script>
 
@@ -135,7 +135,7 @@ export default {
               >
                 <v-icon>
                   refresh
-                </v-icon>      
+                </v-icon>
               </base-button>
               <base-button
                 color="primary"
@@ -169,24 +169,24 @@ export default {
         </base-helper-offset>
       </v-flex>
       <!-- Pop up Panels -->
-      <BaseDialog 
-        :dialog="dialog" 
-        :dialog-title="dialogTitle" 
+      <BaseDialog
+        :dialog="dialog"
+        :dialog-title="dialogTitle"
         :dialog-text="dialogText"
-        @onConfirm="onConfirm" 
+        @onConfirm="onConfirm"
         @onCancel="onCancel"
       />
-      <v-snackbar 
-        v-if="loading===false" 
-        v-model="snackbar" 
-        :left="true" 
-        :timeout="timeout" 
+      <v-snackbar
+        v-if="loading===false"
+        v-model="snackbar"
+        :left="true"
+        :timeout="timeout"
         :color="mode"
       >
         {{ notice }}
-        <base-button 
-          dark 
-          text 
+        <base-button
+          dark
+          text
           @click.native="exitSnackbar"
         >
           Close
@@ -208,7 +208,7 @@ export default {
     </base-button>
     <form-add-organization
       v-if="addDialog"
-      :add-dialog="addDialog" 
+      :add-dialog="addDialog"
       @emitCloseDialog="addDialog=arguments[0]"
     />
     <form-edit-organization
@@ -217,7 +217,7 @@ export default {
       :org-level-one="selectedOrgLevel1"
       :org-level-two="selectedOrgLevel2"
       :org-level-three="selectedOrgLevel3"
-      :edit-org-dialog="editOrgDialog" 
+      :edit-org-dialog="editOrgDialog"
       @emitCloseEditDialog="editOrgDialog=arguments[0]"
     />
   </Layout>
@@ -226,4 +226,3 @@ export default {
 <style lang="scss" module>
 @import '@design';
 </style>
-

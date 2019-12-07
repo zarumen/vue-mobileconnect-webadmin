@@ -15,23 +15,23 @@ fontAwesomeIconLibrary.add(
   require('@fortawesome/free-solid-svg-icons/faChartPie').definition,
   // brands
   require('@fortawesome/free-solid-svg-icons/faFileExcel').definition,
-  require('@fortawesome/free-solid-svg-icons/faFileCode').definition,
+  require('@fortawesome/free-solid-svg-icons/faFileCode').definition
 )
 
 export default {
   components: {
-    FontAwesomeIcon,
+    FontAwesomeIcon
   },
   inheritAttrs: false,
   props: {
     source: {
       type: String,
-      default: 'font-awesome',
+      default: 'font-awesome'
     },
     name: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
   data () {
     return {
@@ -45,8 +45,8 @@ export default {
     // Gets a CSS module class, e.g. iconCustomLogo
     customIconClass () {
       return this.$style[camelCase('mdi-' + this.name)]
-    },
-  },
+    }
+  }
 }
 </script>
 

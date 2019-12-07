@@ -6,12 +6,12 @@ import { campaignComputed, reportComputed, reportMethods } from '@state/helpers'
 export default {
   page: {
     title: 'Reports Manager',
-    meta: [{ name: 'description', content: 'Campaigns Reports Managemnet' }],
+    meta: [{ name: 'description', content: 'Campaigns Reports Managemnet' }]
   },
   components: {
     Layout: () => import('@layouts/main')
   },
-  data() {
+  data () {
     return {
       baseModule: 'reports',
       left: true,
@@ -24,8 +24,7 @@ export default {
     ...campaignComputed,
     ...reportComputed,
     filteredItems () {
-
-      if(this.search) {
+      if (this.search) {
         return this.items.filter(item => item.campaignName.toLowerCase().includes(this.search.toLowerCase()) ||
         item.campaignCode.toLowerCase().includes(this.search.toLowerCase()))
       } else {
@@ -38,8 +37,7 @@ export default {
   },
   created () {
     // query by auth user specific
-    if(!this.hadCampaignList)
-      this.getAllCampaigns()
+    if (!this.hadCampaignList) { this.getAllCampaigns() }
   },
   methods: {
     ...reportMethods,
@@ -53,7 +51,6 @@ export default {
       return console.log(i)
     },
     createExportJob (id, code) {
-      
       this.createS3DownloadFileJob({
         campaignId: id,
         fileName: code
@@ -66,7 +63,6 @@ export default {
       return true
     },
     downloadExportFile (id, file) {
-
       this.getFileDownloadFromS3({
         campaignId: this.getCampaignSelected,
         fileName: file
@@ -75,7 +71,6 @@ export default {
       return id
     },
     clickedSelectedCampaignReports (id) {
-
       this.getCampaignExportJobsListener({
         campaignId: id
       })
@@ -86,7 +81,7 @@ export default {
 
 <template>
   <Layout>
-    <v-container 
+    <v-container
       fluid
       fill-height
       grid-list-xl
@@ -122,7 +117,7 @@ export default {
                 icon
                 @click.native="reloadData()"
               >
-                <base-icon name="syncAlt" />            
+                <base-icon name="syncAlt" />
               </base-button>
             </v-card-title>
             <v-card-text>
@@ -130,7 +125,7 @@ export default {
                 <template
                   v-for="(item,index) in filteredItems"
                 >
-                  <v-list-item 
+                  <v-list-item
                     :key="index"
                     @click.stop="clickedSelectedCampaignReports(item.id)"
                   >
@@ -140,7 +135,7 @@ export default {
                         content-class="top"
                       >
                         <template v-slot:activator="{ on }">
-                          <base-button 
+                          <base-button
                             color="secondary"
                             icon
                             v-on="on"
@@ -154,11 +149,11 @@ export default {
                     </v-list-item-action>
                     <v-list-item-content class="ma-2">
                       <div style="width: 100%">
-                        <v-layout 
+                        <v-layout
                           justify-space-between
                         >
-                          <v-flex 
-                            align-content-center 
+                          <v-flex
+                            align-content-center
                             class="my-2"
                           >
                             {{ item.campaignName }} <br>
@@ -168,8 +163,8 @@ export default {
                       </div>
                     </v-list-item-content>
                   </v-list-item>
-                  <v-divider 
-                    v-if="index + 1 < items.length" 
+                  <v-divider
+                    v-if="index + 1 < items.length"
                     :key="`divider-${index}`"
                   />
                 </template>
@@ -191,13 +186,13 @@ export default {
                 Campaign: {{ campaignSelected }}
               </span>
               <v-spacer />
-              <base-button 
+              <base-button
                 color="primary"
                 circle
                 icon
                 @click.native="clickedSelectedCampaignReports(campaignSelected)"
               >
-                <base-icon name="syncAlt" />            
+                <base-icon name="syncAlt" />
               </base-button>
             </v-card-title>
             <v-card-text>
@@ -216,7 +211,7 @@ export default {
                   <template
                     v-for="(item,index) in jobList"
                   >
-                    <v-list-item 
+                    <v-list-item
                       :key="index"
                       @click="clicked"
                     >
@@ -231,7 +226,7 @@ export default {
                           </span>
                         </v-chip>
                       </v-list-item-avatar>
-                      <v-list-item-content 
+                      <v-list-item-content
                         class="ma-2"
                       >
                         <v-list-item-title>
@@ -245,13 +240,13 @@ export default {
                           content-class="top"
                         >
                           <template v-slot:activator="{ on }">
-                            <base-button 
+                            <base-button
                               color="primary"
                               icon
                               v-on="on"
                               @click.stop="downloadExportFile(index, item.fileName)"
                             >
-                              <base-icon name="fileExcel" /> 
+                              <base-icon name="fileExcel" />
                             </base-button>
                           </template>
                           <span>Download Recent File</span>
@@ -273,8 +268,8 @@ export default {
                         </v-tooltip>
                       </v-list-item-action>
                     </v-list-item>
-                    <v-divider 
-                      v-if="index + 1 < items.length" 
+                    <v-divider
+                      v-if="index + 1 < items.length"
                       :key="`divider-${index}`"
                     />
                   </template>
@@ -283,17 +278,17 @@ export default {
             </v-card-text>
           </base-card>
         </v-flex>
-        <v-snackbar 
-          v-if="loading===false" 
-          v-model="snackbar" 
-          :left="true" 
-          :timeout="timeout" 
+        <v-snackbar
+          v-if="loading===false"
+          v-model="snackbar"
+          :left="true"
+          :timeout="timeout"
           :color="mode"
         >
           {{ notice }}
-          <base-button 
-            dark 
-            text 
+          <base-button
+            dark
+            text
             @click.native="exitSnackbar"
           >
             Close
@@ -307,4 +302,3 @@ export default {
 <style lang="scss" module>
 @import '@design';
 </style>
-

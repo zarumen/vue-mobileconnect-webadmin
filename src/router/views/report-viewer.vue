@@ -7,18 +7,18 @@ import formatDate from '@utils/format-date'
 export default {
   page: {
     title: 'Reports',
-    meta: [{ name: 'description', content: 'Campaigns Report Viewer' }],
+    meta: [{ name: 'description', content: 'Campaigns Report Viewer' }]
   },
-  components: { 
+  components: {
     Layout: () => import('@layouts/main')
   },
   props: {
     user: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
-  data() {
+  data () {
     return {
       baseModule: 'reportViewer',
       left: true,
@@ -30,20 +30,16 @@ export default {
     ...campaignComputed,
     authLevel () {
       // set Auth Level before send to Query
-      if(this.user.organizationAuth === 'Level1')
-        return this.user.organizationLevel1
-      
-      if(this.user.organizationAuth === 'Level2')
-        return this.user.organizationLevel2
-      
-      if(this.user.organizationAuth === 'Level3')
-        return this.user.organizationLevel3
+      if (this.user.organizationAuth === 'Level1') { return this.user.organizationLevel1 }
+
+      if (this.user.organizationAuth === 'Level2') { return this.user.organizationLevel2 }
+
+      if (this.user.organizationAuth === 'Level3') { return this.user.organizationLevel3 }
 
       return null
     },
     filteredItems () {
-
-      if(this.search) {
+      if (this.search) {
         return this.items.filter(item => item.campaignName.toLowerCase().includes(this.search.toLowerCase()) ||
         item.campaignCode.toLowerCase().includes(this.search.toLowerCase()))
       } else {
@@ -56,18 +52,18 @@ export default {
   },
   created () {
     // query by auth user specific
-    if(!this.hadCampaignList) {
+    if (!this.hadCampaignList) {
       this.reloadData()
     }
   },
   methods: {
     ...mapActions('campaigns', [
-      'getCampaignsByOrg',
+      'getCampaignsByOrg'
     ]),
     ...mapActions('reports', [
-      'createS3DownloadFileJob',
+      'createS3DownloadFileJob'
     ]),
-    print() {
+    print () {
       window.print()
     },
     exitSnackbar () {
@@ -76,13 +72,13 @@ export default {
     },
     reloadData () {
       this.getCampaignsByOrg({
-        auth: this.user.organizationAuth, 
+        auth: this.user.organizationAuth,
         orgId: this.authLevel
       })
     },
     createExportJob (id, code) {
       this.$store.commit('campaigns/setLoading', { loading: true })
-      
+
       this.createS3DownloadFileJob({
         campaignId: id,
         fileName: code
@@ -107,9 +103,9 @@ export default {
       return val
     },
     renderState (item) {
-      
-    },
-  },
+
+    }
+  }
 }
 </script>
 
@@ -150,7 +146,7 @@ export default {
               <template
                 v-for="(item,index) in filteredItems"
               >
-                <v-list-item 
+                <v-list-item
                   :key="index"
                 >
                   <v-list-item-action class="pt-3">
@@ -197,11 +193,11 @@ export default {
                         >
                           <v-list-item-title>{{ item.campaignName }}</v-list-item-title>
                           <v-list-item-subtitle>
-                            Campaign Start : 
+                            Campaign Start :
                             <span class="green--text">{{ renderDate('start', item) }}</span>
                           </v-list-item-subtitle>
                           <v-list-item-subtitle>
-                            Campaign End : 
+                            Campaign End :
                             <span class="primary--text">{{ renderDate('end', item) }}</span>
                           </v-list-item-subtitle>
                         </v-col>
@@ -209,8 +205,8 @@ export default {
                     </div>
                   </v-list-item-content>
                 </v-list-item>
-                <v-divider 
-                  v-if="index + 1 < items.length" 
+                <v-divider
+                  v-if="index + 1 < items.length"
                   :key="`divider-${index}`"
                 />
               </template>
@@ -218,17 +214,17 @@ export default {
           </v-card-text>
         </base-card>
       </v-col>
-      <v-snackbar 
-        v-if="loading===false" 
-        v-model="snackbar" 
-        :left="true" 
-        :timeout="timeout" 
+      <v-snackbar
+        v-if="loading===false"
+        v-model="snackbar"
+        :left="true"
+        :timeout="timeout"
         :color="mode"
       >
         {{ notice }}
-        <base-button 
-          dark 
-          text 
+        <base-button
+          dark
+          text
           @click.native="exitSnackbar"
         >
           Close
@@ -242,4 +238,3 @@ export default {
 @import '@design';
 
 </style>
-

@@ -8,7 +8,7 @@ export default {
     isHome () {
       return this.$route.path === '/'
     }
-    },
+  },
   mounted () {
     setTimeout(() => {
       this.isBooted = true
@@ -41,13 +41,15 @@ export default {
               >
                 <h1
                   class="display-2"
-                  v-html="title"
-                />
+                >
+                  {{ title }}
+                </h1>
                 <div
                   v-if="subTitle"
                   class="subheading"
-                  v-html="subTitle"
-                />
+                >
+                  {{ subTitle }}
+                </div>
                 <base-button
                   v-if="isHome"
                   color="primary px-4 mt-5"

@@ -1,5 +1,5 @@
 import fireauthApp from '@utils/fireauth.config'
-import firestoreApp from "@utils/firestore.config"
+import firestoreApp from '@utils/firestore.config'
 import assign from 'lodash/assign'
 
 import {
@@ -7,7 +7,7 @@ import {
   sendErrorNotice,
   closeNotice,
   commitPagination,
-  getDefaultPagination,
+  getDefaultPagination
 } from '@utils/pagination-util'
 
 export const state = {
@@ -29,18 +29,18 @@ export const state = {
     jobPosition: '',
     mobileTelNumber: '',
     officeTelNumber: '',
-    addedNote: '',
+    addedNote: ''
   }
   // Search Result Variables
 }
 
 export const getters = {
   hadUserList: (state) => !!state.items,
-  getOneEditedUser: (state) => state.editedUser,
+  getOneEditedUser: (state) => state.editedUser
 }
 
 export const mutations = {
-  CACHE_USER(state, newUser) {
+  CACHE_USER (state, newUser) {
     state.cached.push(newUser)
   },
   setPagination (state, pagination) {
@@ -57,7 +57,7 @@ export const mutations = {
     assign(state.pagination, paginationElement)
   },
   // Mutate Value in Pagination
-  setLoading(state, { loading }) {
+  setLoading (state, { loading }) {
     state.loading = loading
   },
   setNotice (state, { notice }) {
@@ -78,18 +78,17 @@ export const actions = {
   // ===
   // CREAT Zone
   // ===
-  async createUser( { commit, dispatch }, newUser) {
-
+  async createUser ({ commit, dispatch }, newUser) {
     commit('setLoading', { loading: true })
     console.log(`Create User ${newUser.firstName}`)
 
     let user = null
-    let password = generatePass()
+    const password = generatePass()
 
     try {
       user = await fireauthApp
         .createUserWithEmailAndPassword(
-          newUser.email, 
+          newUser.email,
           password
         )
 
@@ -99,29 +98,23 @@ export const actions = {
         .collection('users')
         .doc(user.user.uid)
         .set(newUser)
-
     } catch (error) { console.log(error) }
 
-
     if (user) {
-
       sendSuccessNotice(commit, 'New User has been added.')
       closeNotice(commit, 3000)
       commit('setLoading', { loading: false })
       dispatch('getAllUsers')
-
     } else {
-
       commit('setLoading', { loading: false })
       sendErrorNotice(commit, 'Create User failed! Please try again later. ')
       closeNotice(commit, 3000)
-
     }
   },
   // ===
   // READ Zone
   // ===
-  fetchUser({ commit, state, rootState }, { username }) {
+  fetchUser ({ commit, state, rootState }, { username }) {
     // 1. Check if we already have the user as a current user.
     const { currentUser } = rootState.auth
     if (currentUser && currentUser.email === username) {
@@ -143,27 +136,25 @@ export const actions = {
         var updatedUser = {}
         querySnapshot.forEach(doc => {
           updatedUser = doc.data()
-          updatedUser['id'] = doc.id
+          updatedUser.id = doc.id
         })
         commit('setUserInfo', updatedUser)
         return updatedUser
-      })      
+      })
   },
-  getAllUsers({ commit }) {
-
+  getAllUsers ({ commit }) {
     commit('setLoading', { loading: true })
-    
+
     return firestoreApp
       .collection('users')
       .get()
       .then(querySnapshot => {
-
-        let userList = []
+        const userList = []
 
         querySnapshot.forEach(doc => {
           let data = {}
           data = doc.data()
-          data['id'] = doc.id
+          data.id = doc.id
           userList.push(data)
         })
 
@@ -184,7 +175,7 @@ export const actions = {
   // ===
   // UPDATE Zone
   // ===
-  updatedUserToDB({ state, dispatch }) {
+  updatedUserToDB ({ state, dispatch }) {
     // TODO: save edited userInfo to Firestore and updated to usersList (items)
     dispatch('updateEditUserItems', state.editedUser)
 
@@ -197,24 +188,24 @@ export const actions = {
       })
       .catch(error => console.log(error))
   },
-  updatePage({ commit }, pageNumber) {
+  updatePage ({ commit }, pageNumber) {
     commit('setPage', { page: pageNumber })
   },
-  updatePages({ commit }, pagesNumber) {
+  updatePages ({ commit }, pagesNumber) {
     commit('setPage', { pages: pagesNumber })
   },
-  updatePagination({ commit }, pagiObj) {
+  updatePagination ({ commit }, pagiObj) {
     commit('setPage', pagiObj)
   },
-  updateEditedUser({ commit }, payloadObj) {
+  updateEditedUser ({ commit }, payloadObj) {
     commit('setElementEditedUser', payloadObj)
   },
-  updateFirsttimeEditUserItems({ state, commit }, payload) {
-    let userObj = state.items.find(x => x.email === payload)
+  updateFirsttimeEditUserItems ({ state, commit }, payload) {
+    const userObj = state.items.find(x => x.email === payload)
     commit('setElementEditedUser', userObj)
   },
-  updateEditUserItems({ state, commit }, userObj) {
-    let index = state.items.map(e => e.email).indexOf(userObj.email);
+  updateEditUserItems ({ state, commit }, userObj) {
+    const index = state.items.map(e => e.email).indexOf(userObj.email)
     commit('setElementUserList', {
       position: index,
       payload: userObj
@@ -223,8 +214,7 @@ export const actions = {
   // ===
   // DELETE Zone
   // ===
-  deleteUser({ commit, dispatch }, userId) {
-
+  deleteUser ({ commit, dispatch }, userId) {
     commit('setLoading', { loading: true })
 
     return firestoreApp
@@ -239,21 +229,21 @@ export const actions = {
       })
       .catch(error => {
         commit('setLoading', { loading: false })
-        console.log("Error removing document: ", error)
+        console.log('Error removing document: ', error)
       })
   },
   // ===
   // ETC. Zone
   // ===
-  closeSnackBar ({ commit }, timeout ) {
+  closeSnackBar ({ commit }, timeout) {
     closeNotice(commit, timeout)
-  },
+  }
 }
 
 // ===
 // Private helpers
 // ===
-function generatePass() {
+function generatePass () {
   var chars = '0123456789abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ'
   var pass = ''
 
@@ -261,5 +251,5 @@ function generatePass() {
     pass += chars[Math.floor(Math.random() * chars.length)]
   }
 
-  return pass;
+  return pass
 }

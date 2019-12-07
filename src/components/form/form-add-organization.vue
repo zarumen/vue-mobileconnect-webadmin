@@ -22,7 +22,7 @@ export default {
       levelItems: [
         { id: 1, state: 'Company', value: 'OrganizationLevel1' },
         { id: 2, state: 'Department', value: 'OrganizationLevel2' },
-        { id: 3, state: 'Brand', value: 'OrganizationLevel3' },
+        { id: 3, state: 'Brand', value: 'OrganizationLevel3' }
       ],
       snackbar: false,
       timeout: 6000,
@@ -36,7 +36,7 @@ export default {
       brandList: 'brandList'
     }),
     mutateDepartmentList () {
-      if(this.form.company) {
+      if (this.form.company) {
         return this.mutateList(this.form.company.id)
       } else {
         return []
@@ -45,49 +45,45 @@ export default {
     // ////////////////
     //  Organization Dropdown Controller
     // ////////////////
-    enableLevel1() {
-      if (!!this.select.value && this.select.id === 1) 
-        return true
-      
+    enableLevel1 () {
+      if (!!this.select.value && this.select.id === 1) { return true }
+
       return false
     },
-    enableLevel2() {
-      if (!!this.select.value && this.select.id === 2) 
-        return true
-      
+    enableLevel2 () {
+      if (!!this.select.value && this.select.id === 2) { return true }
+
       return false
     },
-    enableLevel3() {
-      if (!!this.select.value && this.select.id === 3) 
-        return true
-      
+    enableLevel3 () {
+      if (!!this.select.value && this.select.id === 3) { return true }
+
       return false
-    },
+    }
   },
   watch: {
-    
+
   },
   methods: {
     ...mapActions('organizations', [
-        'addCompanyToOrganization', 
-        'addDepartmentToOrganization',
-        'addBrandToOrganization',
+      'addCompanyToOrganization',
+      'addDepartmentToOrganization',
+      'addBrandToOrganization'
     ]),
     closeDialog () {
       this.$emit('emitCloseDialog', false)
     },
     save () {
       // Destructuring Initial Value in Form by v-model attribute
-      const { 
-        company: tCompany, 
-        department: tDepartment, 
-        brand: tBrand 
+      const {
+        company: tCompany,
+        department: tDepartment,
+        brand: tBrand
       } = this.form
 
       // /////  Prepare Object Organization before add to Database  ///////
 
       switch (this.select.id) {
-
         // /////////////////////
         // Company: Organization >> Level1
         // /////////////////////
@@ -103,70 +99,64 @@ export default {
           }
           if (typeof tCompany === 'string') {
             // Prepare Object organization
-            let org = {
+            const org = {
               displayName: tCompany,
               organizationLevel1Name: tCompany,
               organizationAuth: 'Level1',
               organizationDisable: false,
-              picURL: 'undefine',
+              picURL: 'undefine'
             }
-            
+
             // add Object org to Action add Company in Vuex
             this.addCompanyToOrganization(org)
             this.closeDialog()
           }
-          break;
+          break
 
         // /////////////////////
         // Department: Organization >> Level2
         // /////////////////////
         case 2:
 
-        if (tDepartment === null) {
+          if (tDepartment === null) {
           // empty field in Department Name
-          this.openSnackBar('Please insert "Department Name".')
-        }
-        if (tDepartment !== null && typeof tCompany === 'string') {
+            this.openSnackBar('Please insert "Department Name".')
+          }
+          if (tDepartment !== null && typeof tCompany === 'string') {
           // handle error check if Company is String (use old Company only)
-          this.openSnackBar('Please select "Company Name" from Dropdown List!')
-        }
+            this.openSnackBar('Please select "Company Name" from Dropdown List!')
+          }
 
-        if (tDepartment !== null && typeof tCompany === 'object') {
-
-          if(tCompany.organizationLevel1 === tDepartment.organizationLevel1) {
+          if (tDepartment !== null && typeof tCompany === 'object') {
+            if (tCompany.organizationLevel1 === tDepartment.organizationLevel1) {
             // check if already item in database.
-            this.openSnackBar("Cannot Create Item already exists!")
-            break;
+              this.openSnackBar('Cannot Create Item already exists!')
+              break
+            }
+
+            // Prepare Object organization
+            const org = {
+              organizationLevel1: tCompany.organizationLevel1,
+              organizationLevel1Name: tCompany.organizationLevel1Name,
+              organizationAuth: 'Level2',
+              organizationDisable: false,
+              picURL: 'undefine'
+            }
+
+            // check department is old item but not the same company
+            if (tDepartment instanceof Object) {
+              org.displayName = tDepartment.displayName
+              org.organizationLevel2Name = tDepartment.organizationLevel2Name
+            } else {
+              org.displayName = tDepartment
+              org.organizationLevel2Name = tDepartment
+            }
+
+            // add Object org to Action add Department in Vuex
+            this.addDepartmentToOrganization(org)
+            this.closeDialog()
           }
-
-          // Prepare Object organization
-          let org = {
-            organizationLevel1: tCompany.organizationLevel1,
-            organizationLevel1Name: tCompany.organizationLevel1Name,
-            organizationAuth: 'Level2',
-            organizationDisable: false,
-            picURL: 'undefine',
-          }
-
-          // check department is old item but not the same company
-          if (tDepartment instanceof Object) {
-            
-            org['displayName'] = tDepartment.displayName
-            org['organizationLevel2Name'] = tDepartment.organizationLevel2Name
-
-          } else {
-
-            org['displayName'] = tDepartment
-            org['organizationLevel2Name'] = tDepartment
-
-          }
-
-          // add Object org to Action add Department in Vuex
-          this.addDepartmentToOrganization(org)
-          this.closeDialog()
-
-        }
-          break;
+          break
 
         // /////////////////////
         // Brand: Organization >> Level3
@@ -187,70 +177,57 @@ export default {
             this.openSnackBar('Please check "Brand Name" is not Correct.')
           }
           if (typeof tCompany === 'object' && tBrand !== null) {
-            
             if (tDepartment === null) {
               // HANDLE IF DEPARTMENT IS NULL
-              let org = {
-                  organizationLevel1: tCompany.organizationLevel1,
-                  organizationLevel1Name: tCompany.organizationLevel1Name,
-                  organizationAuth: 'Level3',
-                  organizationDisable: false,
-                  picURL: 'undefine',
-                }
+              const org = {
+                organizationLevel1: tCompany.organizationLevel1,
+                organizationLevel1Name: tCompany.organizationLevel1Name,
+                organizationAuth: 'Level3',
+                organizationDisable: false,
+                picURL: 'undefine'
+              }
               if (typeof tBrand === 'object') {
-                
-                org['displayName'] = tBrand.displayName
-                org['organizationLevel3Name'] = tBrand.organizationLevel3Name
-
+                org.displayName = tBrand.displayName
+                org.organizationLevel3Name = tBrand.organizationLevel3Name
               } else {
-
-                org['displayName'] = tBrand
-                org['organizationLevel3Name'] = tBrand
-
+                org.displayName = tBrand
+                org.organizationLevel3Name = tBrand
               }
               // add Object org to Action add Brand in Vuex
               this.addBrandToOrganization(org)
               this.closeDialog()
-
-            } else if (tCompany.organizationLevel1 !== tDepartment.organizationLevel1 || 
+            } else if (tCompany.organizationLevel1 !== tDepartment.organizationLevel1 ||
                   tBrand.organizationLevel2 === tDepartment.organizationLevel2 ||
                     tBrand.organizationLevel1 === tCompany.organizationLevel1) {
               // HANDLE IF USE COMPANY AND DEPARTMENT AND BRAND MISMATCH
               this.openSnackBar('COMPANY AND DEPARTMENT AND BRAND MISMATCH')
-              break;
-
+              break
             } else {
               // Prepare Object organization
-              let org = {
-                  organizationLevel1: tCompany.organizationLevel1,
-                  organizationLevel1Name: tCompany.organizationLevel1Name,
-                  organizationLevel2: tDepartment.organizationLevel2,
-                  organizationLevel2Name: tDepartment.organizationLevel2Name,
-                  organizationAuth: 'Level3',
-                  organizationDisable: false,
-                  picURL: 'undefine',
-                }
+              const org = {
+                organizationLevel1: tCompany.organizationLevel1,
+                organizationLevel1Name: tCompany.organizationLevel1Name,
+                organizationLevel2: tDepartment.organizationLevel2,
+                organizationLevel2Name: tDepartment.organizationLevel2Name,
+                organizationAuth: 'Level3',
+                organizationDisable: false,
+                picURL: 'undefine'
+              }
 
               if (typeof tBrand === 'object') {
-                
-                org['displayName'] = tBrand.displayName
-                org['organizationLevel3Name'] = tBrand.organizationLevel3Name
-
+                org.displayName = tBrand.displayName
+                org.organizationLevel3Name = tBrand.organizationLevel3Name
               } else {
-
-                org['displayName'] = tBrand
-                org['organizationLevel3Name'] = tBrand
-
+                org.displayName = tBrand
+                org.organizationLevel3Name = tBrand
               }
               // add Object org to Action add Brand in Vuex
               this.addBrandToOrganization(org)
               this.closeDialog()
             }
           }
-          break;
-
+          break
       }
-
     },
     mutateList (companyListId) {
       return this.departmentList.filter(org => org.organizationLevel1 === companyListId)
@@ -266,8 +243,8 @@ export default {
 
 <template>
   <div>
-    <v-dialog 
-      v-model="addDialog" 
+    <v-dialog
+      v-model="addDialog"
       persistent
       width="600px"
     >
@@ -275,22 +252,21 @@ export default {
         <v-card-title class="light-green lighten-4 py-4 title">
           Create New Organization
         </v-card-title>
-        <v-container 
-          grid-list-sm 
+        <v-container
+          grid-list-sm
           class="pa-4"
         >
-          <v-layout 
-            row 
+          <v-row
             wrap
           >
-            <v-flex 
-              xs8 
-              align-center 
+            <v-col
+              cols="12"
+              align-center
               justify-space-between
             >
-              <v-layout align-center>
-                <v-avatar 
-                  size="80px" 
+              <v-row align-center>
+                <v-avatar
+                  size="80px"
                   class="mr-3"
                 >
                   <img
@@ -311,10 +287,10 @@ export default {
                   return-object
                   single-line
                 />
-              </v-layout>
-            </v-flex>
-            <v-flex
-              xs12
+              </v-row>
+            </v-col>
+            <v-col
+              cols="12"
             >
               <v-combobox
                 :key="JSON.stringify(companyList.id)"
@@ -352,10 +328,10 @@ export default {
                   </v-chip>
                 </template>
               </v-combobox>
-            </v-flex>
-            <v-flex
+            </v-col>
+            <v-col
               v-if="enableLevel2 || enableLevel3"
-              xs12
+              cols="12"
             >
               <v-combobox
                 :key="mutateDepartmentList.id"
@@ -418,10 +394,10 @@ export default {
                   </template>
                 </template>
               </v-combobox>
-            </v-flex>
-            <v-flex
+            </v-col>
+            <v-col
               v-if="enableLevel3"
-              xs12
+              cols="12"
             >
               <v-combobox
                 :key="brandList.key"
@@ -436,7 +412,7 @@ export default {
               >
                 <template v-slot:item="data">
                   <template v-if="data.item.picURL === 'undefine'">
-                    <v-list-item-avatar 
+                    <v-list-item-avatar
                       color="secondary"
                     >
                       {{ data.item.displayName.slice(0, 2).toUpperCase() }}
@@ -494,20 +470,20 @@ export default {
                   </template>
                 </template>
               </v-combobox>
-            </v-flex>
-          </v-layout>
+            </v-col>
+          </v-row>
         </v-container>
         <v-card-actions>
           <v-spacer />
-          <base-button 
-            text 
+          <base-button
+            text
             color="primary"
           >
             Clear
           </base-button>
-          <base-button 
-            text 
-            color="secondary darken-2"  
+          <base-button
+            text
+            color="secondary darken-2"
             @click="closeDialog()"
           >
             Cancel
@@ -528,7 +504,7 @@ export default {
       :bottom="true"
       vertical="vertical"
       color="error"
-    > 
+    >
       {{ text }}
       <base-button
         dark

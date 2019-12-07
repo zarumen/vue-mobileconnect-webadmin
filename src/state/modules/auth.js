@@ -7,7 +7,7 @@ const defaultCurrentUserObj = {
   displayName: null,
   email: null,
   idToken: null,
-  photoURL: null,
+  photoURL: null
 }
 
 export const state = {
@@ -31,11 +31,10 @@ export const getters = {
   // get User Email
   getUserInfo: state => state.userInfo,
   getAvartar: (state) => {
-    if(state.isAdmin) {
+    if (state.isAdmin) {
       return state.avartar.admin
     } else {
-      if(state.userInfo){
-
+      if (state.userInfo) {
         if (state.userInfo.gender === 'Male') {
           return state.avartar.male
         } else if (state.userInfo.gender === 'Female') {
@@ -45,22 +44,22 @@ export const getters = {
         }
       }
     }
-  },
+  }
 }
 
 export const mutations = {
-  SET_CURRENT_USER(state, newValue) {
+  SET_CURRENT_USER (state, newValue) {
     state.currentUser = newValue
     saveState('auth.currentUser', newValue)
   },
   setDisplayNameUpdated (state, payload) {
     assign(state.currentUser, payload)
   },
-  setUserInfo(state, newValue) {
+  setUserInfo (state, newValue) {
     state.userInfo = newValue
     saveState('auth.userInfo', newValue)
   },
-  setAdminRole(state, newValue) {
+  setAdminRole (state, newValue) {
     state.isAdmin = newValue
     saveState('auth.admin', newValue)
   }
@@ -69,21 +68,21 @@ export const mutations = {
 export const actions = {
   // This is automatically run in `src/state/store.js` when the app
   // starts, along with any other actions named `init` in other modules.
-  init({ dispatch }) {
+  init ({ dispatch }) {
     dispatch('validate')
   },
 
   // Validates the current user's token and refreshes it
   // with new data from the API.
-  async validate({ state, commit, dispatch }) {
+  async validate ({ state, commit, dispatch }) {
     // check localStorage have data ?
     if (!state.currentUser) return Promise.resolve(null)
 
     // check validate localStorage data valid
     if (!state.currentUser.email) {
-      commit ('SET_CURRENT_USER', defaultCurrentUserObj)
-      commit ('setUserInfo', null)
-      commit ('setAdminRole', false)
+      commit('SET_CURRENT_USER', defaultCurrentUserObj)
+      commit('setUserInfo', null)
+      commit('setAdminRole', false)
 
       removeState('auth.currentUser')
       removeState('auth.userInfo')
@@ -105,11 +104,9 @@ export const actions = {
         }
       })
     })
-    
-
   },
 
-  async fetchUserInfo({ commit }, user) {
+  async fetchUserInfo ({ commit }, user) {
     firestoreApp
       .collection('users')
       .where('email', '==', user.email)
@@ -118,9 +115,9 @@ export const actions = {
         let updatedUser = {}
         querySnapshot.forEach(doc => {
           updatedUser = doc.data()
-          updatedUser['id'] = doc.id
+          updatedUser.id = doc.id
         })
-        let userIsAdmin = updatedUser.isAdmin
+        const userIsAdmin = updatedUser.isAdmin
         commit('setAdminRole', userIsAdmin)
         commit('setUserInfo', updatedUser)
         return Promise.resolve(updatedUser)
@@ -136,18 +133,17 @@ export const actions = {
       })
   },
 
-  async logIn({ commit, dispatch, getters }, { username, password } = {}) {
+  async logIn ({ commit, dispatch, getters }, { username, password } = {}) {
     // check loggedIn has true ?
     if (getters.loggedIn) return dispatch('validate')
 
-    let trace = firebasePref.trace('userLogin')
+    const trace = firebasePref.trace('userLogin')
     trace.start()
 
     let loginUser = null
     let user = {}
 
     try {
-
       loginUser = await fireauthApp.signInWithEmailAndPassword(username, password)
 
       trace.putAttribute('verified', `${loginUser.user.email}`)
@@ -159,27 +155,25 @@ export const actions = {
         displayName: loginUser.user.displayName,
         idToken: loginUser.user.refreshToken
       }
-
     } catch (error) {
       console.log(error)
       trace.putAttribute('errorCode', `${error.code}`)
       trace.stop()
     }
 
-    if(loginUser) {
+    if (loginUser) {
       commit('SET_CURRENT_USER', user)
       dispatch('fetchUserInfo', user)
 
       console.log('set user and fetch userinfo!')
       return Promise.resolve(user)
     } else {
-      console.log(`can't login to firebase!`)
+      console.log('can\'t login to firebase!')
       return Promise.resolve(null)
     }
   },
 
-  logOut({ commit, dispatch }) {
-
+  logOut ({ commit, dispatch }) {
     commit('SET_CURRENT_USER', defaultCurrentUserObj)
     commit('setUserInfo', null)
     commit('setAdminRole', false)
@@ -190,7 +184,7 @@ export const actions = {
     removeState('auth.currentUser')
     removeState('auth.userInfo')
     removeState('auth.admin')
-  },
+  }
 }
 
 // ===
@@ -198,17 +192,16 @@ export const actions = {
 // ===
 
 function haveIdToken (obj) {
+  if (obj === null) return false
 
-  if(obj === null) return false
-
-    if(obj.hasOwnProperty('idToken')) {
-      if(obj.idToken !== null) {
-        return true
-      } else {
-        return false
-      }
+  if (Object.prototype.hasOwnProperty.call(obj, 'idToken')) {
+    if (obj.idToken !== null) {
+      return true
+    } else {
+      return false
     }
-  
+  }
+
   return false
 }
 
@@ -224,14 +217,14 @@ function haveIdToken (obj) {
 //   })
 // }
 
-function getSavedState(key) {
+function getSavedState (key) {
   return JSON.parse(window.localStorage.getItem(key))
 }
 
-function saveState(key, state) {
+function saveState (key, state) {
   window.localStorage.setItem(key, JSON.stringify(state))
 }
 
-function removeState(key) {
+function removeState (key) {
   window.localStorage.removeItem(key)
 }

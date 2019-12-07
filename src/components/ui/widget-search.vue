@@ -3,7 +3,7 @@ import SearchAdmin from '@components/ui/widget-search-admin'
 import SearchUser from '@components/ui/widget-search-user'
 
 export default {
-  components: { 
+  components: {
     SearchAdmin,
     SearchUser
   },
@@ -12,7 +12,7 @@ export default {
       type: Boolean,
       default: false,
       required: true
-    },
+    }
   },
   computed: {
     searchMode () {
@@ -25,4 +25,3 @@ export default {
 <template>
   <component :is="searchMode" />
 </template>
-

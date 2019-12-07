@@ -2,7 +2,7 @@ export default {
   dark: false,
   themes: {
     light: {
-      primary: '#7f49c2',  // $deep-purple
+      primary: '#7f49c2', // $deep-purple
       secondary: '#8cc249', // $yellow-green
       accent: '#0B466E',
       error: '#D50000',

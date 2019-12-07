@@ -10,17 +10,17 @@ export default {
       default: ''
     }
   },
-  data ()  {
+  data () {
     // form default object
     const defaultscForm = Object.freeze({
-      shortcode: '',
+      shortcode: ''
     })
     return {
       scform: Object.assign({}, defaultscForm),
       addOperatorConfig: '',
       activator: null,
       attach: null,
-      colors: ['green', 'purple', 'indigo', 'cyan', 'teal', 'red','light-green', 'deep-purple', 'blue', 'pink', 'lime'],
+      colors: ['green', 'purple', 'indigo', 'cyan', 'teal', 'red', 'light-green', 'deep-purple', 'blue', 'pink', 'lime'],
       editing: null,
       index: -1,
       items: [
@@ -40,7 +40,7 @@ export default {
       x: 0,
       search: null,
       y: 0,
-      snackbar:false,
+      snackbar: false,
       timeout: 6000,
       textError: 'Error!',
       select: { id: 1, value: '1 Operator' },
@@ -48,7 +48,7 @@ export default {
         { id: 1, value: '1 Operator' },
         { id: 2, value: '2 Operators' },
         { id: 3, value: '3 Operators' },
-        { id: 4, value: '4 Operators' },
+        { id: 4, value: '4 Operators' }
       ],
       // /////////////////////
       // Form Validator
@@ -61,7 +61,7 @@ export default {
       secondRules: [
         v => !!v || 'Name is required',
         v => (v && v.length <= 10) || 'Name must be less than 10 characters'
-      ],
+      ]
     }
   },
   computed: {
@@ -71,14 +71,13 @@ export default {
       keywordReservedList: 'keywordReservedList'
     }),
     ...mapGetters('organizations', [
-      'hadList',
+      'hadList'
     ]),
     shortcodeArray () {
-      let shortcodes = this.shortcodeList
+      const shortcodes = this.shortcodeList
       return shortcodes.map(sc => sc.shortcode)
     },
     arraySenderName () {
-
       return this.model.map(md => md.text)
     }
   },
@@ -100,19 +99,17 @@ export default {
 
         return v
       })
-    },
+    }
   },
   created () {
-    
-    if(!this.hadList)
-      this.getOrganizationsList()
+    if (!this.hadList) { this.getOrganizationsList() }
   },
   methods: {
     ...mapActions('organizations', [
       'getOrganizationsList'
     ]),
     ...mapActions('shortcodes', [
-        'createShortcode'
+      'createShortcode'
     ]),
     edit (index, item) {
       if (!this.editing) {
@@ -144,7 +141,6 @@ export default {
       this.select = Object.assign({}, this.defaultDropdown)
     },
     saveShortcode () {
-
       const shortcodeNew = this.scform
       const shortcodeInfoNew = {
         sendername: this.arraySenderName,
@@ -157,7 +153,7 @@ export default {
         info: shortcodeInfoNew
       })
 
-      this.closeDialog ()
+      this.closeDialog()
     },
     openSnackBar (insertText) {
       this.valid = !this.valid
@@ -171,12 +167,12 @@ export default {
 
 <template>
   <div>
-    <v-dialog 
+    <v-dialog
       v-model="addShortcodeDialog"
       persistent
       width="800px"
     >
-      <v-form 
+      <v-form
         ref="scform"
         v-model="valid"
         lazy-validation
@@ -186,15 +182,14 @@ export default {
             Create New Shortcode
           </v-card-title>
           <v-card-text>
-            <v-container 
-              grid-list-sm 
+            <v-container
+              grid-list-sm
               class="pa-4"
             >
-              <v-layout 
-                row
+              <v-row
                 wrap
               >
-                <v-flex xs8>
+                <v-col cols="8">
                   <v-text-field
                     v-model="scform.shortcode"
                     :hint="`${scform.shortcode}`"
@@ -204,9 +199,9 @@ export default {
                     persistent-hint
                     solo
                   />
-                </v-flex>
-                <!-- <v-flex 
-                  xs8 
+                </v-col>
+                <!-- <v-col
+                  xs8
                   align-center
                 >
                   <p>Please Select Number of Operators:</p>
@@ -222,8 +217,8 @@ export default {
                     single-line
                     solo
                   />
-                </v-flex> -->
-                <v-flex xs12>
+                </v-col> -->
+                <v-col cols="12">
                   <p>Please Enter Your SenderName (Allow entering multiple values):</p>
                   <v-combobox
                     v-model="model"
@@ -312,8 +307,8 @@ export default {
                       </v-list-item-action>
                     </template>
                   </v-combobox>
-                </v-flex>
-                <!-- <v-flex
+                </v-col>
+                <!-- <v-col
                   xs12
                 >
                   <v-list two-line>
@@ -333,10 +328,10 @@ export default {
                       </v-list-item-content>
                     </v-list-item>
                   </v-list>
-                </v-flex>
+                </v-col>
                 <p />
-                <base-button 
-                  color="primary" 
+                <base-button
+                  color="primary"
                   rounded
                   @click.native="addOperatorConfig = !addOperatorConfig"
                 >
@@ -345,7 +340,7 @@ export default {
                   </v-icon>
                   Add Parser
                 </base-button> -->
-              </v-layout>
+              </v-row>
             </v-container>
           </v-card-text>
           <v-card-actions>
@@ -353,14 +348,14 @@ export default {
             <v-spacer />
             <base-button
               text
-              color="primary" 
+              color="primary"
               @click="clearForm()"
             >
               Clear
             </base-button>
             <base-button
-              text 
-              color="secondary darken-2" 
+              text
+              color="secondary darken-2"
               @click="closeDialog()"
             >
               CANCEL
@@ -378,7 +373,7 @@ export default {
       </v-form>
     </v-dialog>
     <form-add-operator-config
-      :add-operator-config="addOperatorConfig" 
+      :add-operator-config="addOperatorConfig"
       @emitCloseOpConfigDialog="addOperatorConfig=arguments[0]"
     />
     <v-snackbar
@@ -387,7 +382,7 @@ export default {
       :bottom="true"
       vertical="vertical"
       color="error"
-    > 
+    >
       {{ textError }}
       <base-button
         dark

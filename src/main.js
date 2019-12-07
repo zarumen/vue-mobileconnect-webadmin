@@ -13,14 +13,12 @@ Vue.config.productionTip = process.env.NODE_ENV === 'production'
 
 new Vue({
   sockets: {
-    connect() {
+    connect () {
       console.log('socket connected')
     }
   },
   vuetify,
   router,
   store,
-  render: h => h(App),
+  render: h => h(App)
 }).$mount('#app')
-
-

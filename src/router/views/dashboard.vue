@@ -5,10 +5,10 @@ import { formatDateTime } from '@utils/format-date'
 export default {
   page: {
     title: 'Dashboard',
-    meta: [{ name: 'description', content: 'Dashboard' }],
+    meta: [{ name: 'description', content: 'Dashboard' }]
   },
-  components: { 
-    Layout: () => import('@layouts/main'),
+  components: {
+    Layout: () => import('@layouts/main')
   },
   data () {
     return {
@@ -60,22 +60,22 @@ export default {
         month: 'Month',
         week: 'Week',
         day: 'Day',
-        '4day': '4 Days',
-      },
+        '4day': '4 Days'
+      }
     }
   },
   computed: {
     ...mapState('campaigns', {
-    // ListItem of Data Table 
-    items: state => state.items
+    // ListItem of Data Table
+      items: state => state.items
     }),
     ...mapGetters('campaigns', [
-      'hadCampaignList',
+      'hadCampaignList'
     ]),
     campaignEvent () {
-      if(this.items) {
-        let eventsD = []
-        let dataArray = this.items
+      if (this.items) {
+        const eventsD = []
+        const dataArray = this.items
 
         dataArray.forEach((element, index) => {
           const {
@@ -86,11 +86,11 @@ export default {
             campaignState
           } = element
 
-          if(campaignDateStart && campaignDateEnd) {
-            let startdate = this.timeFormatter(campaignDateStart.seconds)
+          if (campaignDateStart && campaignDateEnd) {
+            const startdate = this.timeFormatter(campaignDateStart.seconds)
             // let enddate = this.timeFormatter(campaignDateEnd.seconds)
 
-            let data = {
+            const data = {
               name: campaignCode,
               details: `${campaignName} \n\r campaignState: "${campaignState}"`,
               start: startdate,
@@ -99,7 +99,7 @@ export default {
             }
             eventsD.push(data)
           } else {
-            
+
             // let data = {
             //   name: campaignCode,
             //   details: campaignName,
@@ -115,8 +115,8 @@ export default {
     },
     // convert the list of events into a map of lists keyed by date
     today () {
-      let currentDate = new Date()
-      let formattedDate = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate() + " " + currentDate.getHours() + ":" + currentDate.getMinutes()
+      const currentDate = new Date()
+      const formattedDate = currentDate.getFullYear() + '-' + (currentDate.getMonth() + 1) + '-' + currentDate.getDate() + ' ' + currentDate.getHours() + ':' + currentDate.getMinutes()
       return formattedDate
     },
     title () {
@@ -149,17 +149,16 @@ export default {
     },
     monthFormatter () {
       return this.$refs.calendar.getFormatter({
-        timeZone: 'UTC', month: 'short',
+        timeZone: 'UTC', month: 'short'
       })
-    },
+    }
   },
   created () {
-    if(!this.hadCampaignList)
-      this.getAllCampaigns()
+    if (!this.hadCampaignList) { this.getAllCampaigns() }
   },
   methods: {
     ...mapActions('campaigns', [
-      'getAllCampaigns',
+      'getAllCampaigns'
     ]),
     complete (index) {
       this.list[index] = !this.list[index]
@@ -175,9 +174,9 @@ export default {
       return event.color
     },
     randomColor () {
-      let myArray = [
-        'red', 'pink', 'purple', 
-        'deep-purple', 'indigo', 'blue', 
+      const myArray = [
+        'red', 'pink', 'purple',
+        'deep-purple', 'indigo', 'blue',
         'light-blue', 'cyan', 'teal',
         'green', 'light-green', 'lime',
         'yellow', 'amber', 'orange',
@@ -551,4 +550,3 @@ export default {
 @import '@design';
 
 </style>
-

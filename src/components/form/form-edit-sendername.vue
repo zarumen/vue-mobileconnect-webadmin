@@ -16,11 +16,11 @@ export default {
   },
   data () {
     return {
-      colors: ['green', 'purple', 'indigo', 'cyan', 'teal', 'red','light-green', 'deep-purple', 'blue', 'pink', 'lime'],
+      colors: ['green', 'purple', 'indigo', 'cyan', 'teal', 'red', 'light-green', 'deep-purple', 'blue', 'pink', 'lime'],
       editing: null,
       index: -1,
       items: [
-        { header: 'Select a SenderName or create one' },
+        { header: 'Select a SenderName or create one' }
       ],
       nonce: 1,
       menu: false,
@@ -34,7 +34,7 @@ export default {
       valid: true,
       zRules: [
         v => !!v || 'This Field is required'
-      ],
+      ]
     }
   },
   computed: {
@@ -42,7 +42,6 @@ export default {
       'getShortcodesList'
     ]),
     arraySenderName () {
-
       return this.model.map(md => md.text)
     }
   },
@@ -64,12 +63,11 @@ export default {
 
         return v
       })
-    },
+    }
   },
   created () {
-    if(this.shortcodeItem) {
-      
-      let sendnameArray = this.shortcodeItem.sendername
+    if (this.shortcodeItem) {
+      const sendnameArray = this.shortcodeItem.sendername
 
       sendnameArray.forEach(v => {
         if (typeof v === 'string') {
@@ -90,7 +88,7 @@ export default {
   },
   methods: {
     ...mapActions('shortcodes', [
-      'editSenderName',
+      'editSenderName'
     ]),
     ...mapMutations('shortcodes', [
       'setSendernameInShortcodesList'
@@ -117,11 +115,10 @@ export default {
         .indexOf(query.toString().toLowerCase()) > -1
     },
     mutateShortcodeList (sc, sendNameNew) {
-
-      let scList = this.getShortcodesList
-      let deletedShortcodeListObj = scList.find(rc => rc.shortcode === sc)
+      const scList = this.getShortcodesList
+      const deletedShortcodeListObj = scList.find(rc => rc.shortcode === sc)
       // get position of mutate shortcodesList Object
-      let i = this.getShortcodesList.indexOf(deletedShortcodeListObj)
+      const i = this.getShortcodesList.indexOf(deletedShortcodeListObj)
       // update sendername with new sendername
       this.setSendernameInShortcodesList({
         position: i,
@@ -136,15 +133,15 @@ export default {
     },
     saveEditSendername () {
       // save data
-      let arr = this.arraySenderName
+      const arr = this.arraySenderName
 
       this.editSenderName({
         shortcode: this.shortcodeItem.shortcode,
         senderArray: arr
       })
-      .then(() => {
-        this.mutateShortcodeList(this.shortcodeItem.shortcode, arr)
-      })
+        .then(() => {
+          this.mutateShortcodeList(this.shortcodeItem.shortcode, arr)
+        })
 
       this.closeDialog()
     }
@@ -154,12 +151,12 @@ export default {
 
 <template>
   <div>
-    <v-dialog 
+    <v-dialog
       v-model="editSenderNameDialog"
       persistent
       width="800px"
     >
-      <v-form 
+      <v-form
         ref="sendernameForm"
         v-model="valid"
         lazy-validation
@@ -168,16 +165,15 @@ export default {
           <v-card-title class="light-green lighten-4 py-4 title">
             Edit Sendername : {{ shortcodeItem.shortcode }}
           </v-card-title>
-          <v-container 
-            grid-list-sm 
+          <v-container
+            grid-list-sm
             class="pa-4"
           >
-            <v-layout
-              row
+            <v-row
               wrap
             >
-              <v-flex
-                xs12
+              <v-col
+                cols="12"
               >
                 <p>Please Enter Your Sender Name (Allow entering multiple values):</p>
                 <v-combobox
@@ -266,22 +262,22 @@ export default {
                     </v-list-item-action>
                   </template>
                 </v-combobox>
-              </v-flex>
-            </v-layout>
+              </v-col>
+            </v-row>
           </v-container>
           <v-card-actions>
             <!-- Button Action in below card-->
             <v-spacer />
             <base-button
               text
-              color="primary" 
+              color="primary"
               @click="clearForm()"
             >
               Clear
             </base-button>
             <base-button
-              text 
-              color="secondary darken-2" 
+              text
+              color="secondary darken-2"
               @click="closeDialog()"
             >
               CANCEL

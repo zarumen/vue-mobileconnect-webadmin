@@ -3,16 +3,16 @@ export default {
   props: {
     dialogText: {
       type: String,
-      default: '',
+      default: ''
     },
     dialogTitle: {
       type: String,
-      default: '',
+      default: ''
     },
     dialog: {
       type: [String, Boolean],
-      default: '',
-    },
+      default: ''
+    }
   },
   data () {
     return {
@@ -39,14 +39,14 @@ export default {
       this.value = ''
       this.$emit('onCancel')
     }
-  },
+  }
 }
 </script>
 
 <template>
-  <v-dialog 
-    v-model="dialog" 
-    persistent 
+  <v-dialog
+    v-model="dialog"
+    persistent
     max-width="360"
   >
     <v-card>
@@ -88,7 +88,7 @@ export default {
           <v-spacer />
           <base-button
             color="red"
-            text 
+            text
             @click.native="onCancel"
           >
             Cancel

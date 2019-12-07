@@ -9,10 +9,10 @@ export default {
   data () {
     return {
       validateTypeList: [
-        {value: 'regex', condition: false},
-        {value: 'coupon', condition: true},
+        { value: 'regex', condition: false },
+        { value: 'coupon', condition: true }
       ],
-      validateType: true,
+      validateType: true
     }
   }
 }
@@ -29,14 +29,14 @@ export default {
         <v-subheader>Add Context Parser</v-subheader>
         <v-card-text>
           <v-text-field
-            solo-inverted 
+            solo-inverted
             label="Remove Character"
           />
-          <v-text-field 
+          <v-text-field
             prepend-icon="message"
             label="Invalid Format Message"
           />
-          <v-select 
+          <v-select
             v-model="validateType"
             :items="validateTypeList"
             :hint="`${validateType}`"
@@ -46,21 +46,21 @@ export default {
             prepend-icon="assignment"
             persistent-hint
           />
-          <v-text-field 
+          <v-text-field
             :disabled="validateType"
-            solo-inverted 
+            solo-inverted
             label="Condition (Regular Expression)"
           />
-        </v-card-text> 
+        </v-card-text>
         <v-card-actions>
-          <v-spacer/>
-          <base-button 
-            color="blue" 
+          <v-spacer />
+          <base-button
+            color="blue"
             class="white--text"
           >
             Save
           </base-button>
-          <base-button 
+          <base-button
             text
           >
             Cancel

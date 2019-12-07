@@ -4,7 +4,7 @@ import { mapMutations } from 'vuex'
 
 export default {
   components: { NavBarRoutes: () => import('./nav-bar-routes') },
-  data() {
+  data () {
     return {
       isScrolling: false,
       loggedInNavRoutes: [
@@ -17,28 +17,28 @@ export default {
           name: 'logout',
           title: 'Logout',
           color: 'primary'
-        },
+        }
       ],
       loggedOutNavRoutes: [
         {
           name: 'login',
           title: 'Login',
           color: 'primary'
-        },
-      ],
+        }
+      ]
     }
   },
   computed: {
     ...authComputed,
     loggedInRoute () {
-      return (this.$route.name ==='home') ? this.loggedInNavRoutes.map(route => {
-          route.color = 'white'
+      return (this.$route.name === 'home') ? this.loggedInNavRoutes.map(route => {
+        route.color = 'white'
         return route
       }) : this.loggedInNavRoutes
     },
     loggedOutRoute () {
-      return (this.$route.name ==='home') ? this.loggedOutNavRoutes.map(route => {
-          route.color = 'white'
+      return (this.$route.name === 'home') ? this.loggedOutNavRoutes.map(route => {
+        route.color = 'white'
         return route
       }) : this.loggedOutNavRoutes
     }
@@ -49,13 +49,10 @@ export default {
       this.setDrawer(!this.$store.state.app.drawer)
     },
     onScroll () {
-      if(this.$route.name ==='home') {
-        
+      if (this.$route.name === 'home') {
         this.isScrolling = (window.pageYOffset ||
           document.documentElement.scrollTop || 0) > 100
-
       } else {
-
         this.isScrolling = (window.pageYOffset ||
           document.documentElement.scrollTop || 0) > 50
       }

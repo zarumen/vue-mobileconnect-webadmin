@@ -5,9 +5,9 @@ const appConfig = require('@/app.config')
 export default {
   page: {
     title: 'Log in',
-    meta: [{ name: 'description', content: `Log in to ${appConfig.title}` }],
+    meta: [{ name: 'description', content: `Log in to ${appConfig.title}` }]
   },
-  components: { 
+  components: {
     Layout: () => import('@layouts/main')
   },
   data: () => ({
@@ -15,19 +15,19 @@ export default {
     ePass: true,
     password: '',
     authError: null,
-    tryingToLogIn: false,
+    tryingToLogIn: false
   }),
   methods: {
     ...authMethods,
     // Try to log the user in with the username
     // and password they provided.
-    tryToLogIn() {
+    tryToLogIn () {
       this.tryingToLogIn = true
       // Reset the authError if it existed.
       this.authError = null
       return this.logIn({
         username: this.username,
-        password: this.password,
+        password: this.password
       })
         .then(user => {
           this.tryingToLogIn = false
@@ -40,45 +40,44 @@ export default {
           this.tryingToLogIn = false
           this.authError = error
         })
-    },
-  },
+    }
+  }
 }
 </script>
 
 <template>
   <Layout>
-    <v-layout
+    <v-row
       align-center
       justify-center
     >
-      <v-flex
-        xs8
-        sm6
-        md4
+      <v-col
+        cols="8"
+        sm="6"
+        md="4"
       >
         <base-card
-          color="deep-purple lighten-1" 
+          color="deep-purple lighten-1"
           class="elevation-12"
         >
-          <v-layout
+          <v-row
             slot="header"
-            row
             wrap
           >
-            <v-flex>
-              <v-img 
-                class="mx-2" 
-                :src="require('@assets/images/logo.png')" 
+            <v-col>
+              <v-img
+                class="mx-2"
+                :src="require('@assets/images/logo.png')"
               />
-            </v-flex>
-            <v-flex
+            </v-col>
+            <v-col
               class="title"
             >
               <h4 class="font-weight-medium white--text">
                 Mobile Connect Web Admin
               </h4>
-            </v-flex>
-          </v-layout>
+            </v-col>
+          </v-row>
           <v-card-text>
             <v-form
               :class="$style.form"
@@ -121,8 +120,8 @@ export default {
             </v-form>
           </v-card-text>
         </base-card>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </Layout>
 </template>
 

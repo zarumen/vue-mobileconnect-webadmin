@@ -1,28 +1,28 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { 
-  userMethods, 
+import {
+  userMethods,
   userComputed
 } from '@state/helpers'
 
 export default {
   page: {
     title: 'Users',
-    meta: [{ name: 'description', content: 'Users' }],
+    meta: [{ name: 'description', content: 'Users' }]
   },
   components: {
-    Layout: () => import('@layouts/main'), 
+    Layout: () => import('@layouts/main'),
     FormAddUser: () => import('@components/form/form-add-user'),
     FormEditUser: () => import('@components/form/form-edit-user')
   },
-  data() {
+  data () {
     return {
       baseModule: 'users',
       addUserDialog: '',
       editUserDialog: '',
       dialog: '',
-      dialogTitle: "User Delete Dialog",
-      dialogText: "Do you want to delete this user?",
+      dialogTitle: 'User Delete Dialog',
+      dialogText: 'Do you want to delete this user?',
       headers: [
         {
           text: 'Level',
@@ -31,10 +31,10 @@ export default {
         },
         { text: 'FirstName', value: 'firstName' },
         { text: 'NickName', value: 'nickName' },
-        { text: 'Company', value: 'organizationLevel1Name'},
+        { text: 'Company', value: 'organizationLevel1Name' },
         { text: 'Email', value: 'email' },
-        { text: 'Mobile', value: 'mobileTelNumber'},
-        { text: 'Actions', value: 'action', align: 'center', sortable: false },
+        { text: 'Mobile', value: 'mobileTelNumber' },
+        { text: 'Actions', value: 'action', align: 'center', sortable: false }
       ],
       userId: '',
       userSelected: null,
@@ -42,7 +42,7 @@ export default {
       timeout: 2000,
       // NOT USE! now
       rightDrawer: false,
-      query: "",
+      query: '',
       userRemaining: null,
       quickSearchFilter: ''
     }
@@ -50,22 +50,20 @@ export default {
   computed: {
     ...userComputed,
     ...mapGetters('organizations', [
-      'hadList',
-    ]),
+      'hadList'
+    ])
   },
-  created() {
-    if(!this.hadList)
-      this.getOrganizationsList()
-      
-    if(!this.hadUserList)
-      this.getAllUsers()
+  created () {
+    if (!this.hadList) { this.getOrganizationsList() }
+
+    if (!this.hadUserList) { this.getAllUsers() }
   },
   methods: {
     ...userMethods,
     ...mapActions('organizations', [
       'getOrganizationsList'
     ]),
-    print() {
+    print () {
       window.print()
     },
     edit (item) {
@@ -77,7 +75,6 @@ export default {
       this.dialog = true
     },
     onConfirm () {
-      
       this.$store.dispatch('users/deleteUser', this.userId)
       this.$store.dispatch('users/closeSnackBar', 2000)
       this.dialog = false
@@ -92,7 +89,7 @@ export default {
     },
     reloadData () {
       this.getAllUsers()
-    },
+    }
   }
 }
 </script>
@@ -118,15 +115,15 @@ export default {
                 />
               </span>
               <v-spacer />
-              <base-button 
+              <base-button
                 color="primary"
                 circle
                 icon
                 @click.native="reloadData()"
               >
-                <base-icon name="syncAlt" />            
+                <base-icon name="syncAlt" />
               </base-button>
-              <base-button 
+              <base-button
                 color="primary"
                 circle
                 icon
@@ -158,24 +155,24 @@ export default {
         </base-helper-offset>
       </v-flex>
       <!-- Pop up Panels -->
-      <BaseDialog 
-        :dialog="dialog" 
-        :dialog-title="dialogTitle" 
+      <BaseDialog
+        :dialog="dialog"
+        :dialog-title="dialogTitle"
         :dialog-text="dialogText"
-        @onConfirm="onConfirm" 
+        @onConfirm="onConfirm"
         @onCancel="onCancel"
       />
-      <v-snackbar 
-        v-if="loading===false" 
-        v-model="snackbar" 
-        :left="true" 
-        :timeout="timeout" 
+      <v-snackbar
+        v-if="loading===false"
+        v-model="snackbar"
+        :left="true"
+        :timeout="timeout"
         :color="mode"
       >
         {{ notice }}
-        <base-button 
-          dark 
-          text 
+        <base-button
+          dark
+          text
           @click.native="exitSnackbar"
         >
           Close
@@ -196,7 +193,7 @@ export default {
     </base-button>
     <FormAddUser
       v-if="addUserDialog"
-      :add-user-dialog="addUserDialog" 
+      :add-user-dialog="addUserDialog"
       @emitCloseUserDialog="addUserDialog=arguments[0]"
     />
     <FormEditUser
@@ -211,4 +208,3 @@ export default {
 <style lang="scss" module>
 @import '@design';
 </style>
-

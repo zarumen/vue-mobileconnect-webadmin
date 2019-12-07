@@ -12,29 +12,29 @@ export function getDefaultPagination () {
 
 export function sendSuccessNotice (commit, notice) {
   commit('setNotice', {
-    notice,
+    notice
   })
 
   commit('setSnackbar', {
-    snackbar: true,
+    snackbar: true
   })
 
   commit('setMode', {
-    mode: 'green',
+    mode: 'green'
   })
 }
 
 export function sendErrorNotice (commit, notice) {
   commit('setNotice', {
-    notice,
+    notice
   })
-    
+
   commit('setSnackbar', {
-    snackbar: true,
+    snackbar: true
   })
 
   commit('setMode', {
-    mode: 'red',
+    mode: 'red'
   })
 }
 
@@ -66,7 +66,7 @@ export function closeNotice (commit, timeout) {
     })
     commit('setMode', {
       mode: ''
-    })   
+    })
   }, timeout)
 }
 
@@ -80,5 +80,5 @@ export function commitPagination (commit, items) {
   const pages = Math.ceil(totalItems / DEFAULT_ROW_PER_PAGE)
 
   commit('setItems', items)
-  commit('setPagination', { totalItems, pages, page: 1, itemsPerPage: DEFAULT_ROW_PER_PAGE})
+  commit('setPagination', { totalItems, pages, page: 1, itemsPerPage: DEFAULT_ROW_PER_PAGE })
 }

@@ -3,25 +3,25 @@ export default {
   props: {
     type: {
       type: String,
-      default: 'text',
+      default: 'text'
     },
     name: {
       type: String,
-      default: '',
+      default: ''
     },
     value: {
       type: [String, Number],
-      default: '',
-    },
+      default: ''
+    }
   },
   computed: {
-    listeners() {
+    listeners () {
       return {
         ...this.$listeners,
-        VTextField: event => this.$emit('input', event.target.value),
+        VTextField: event => this.$emit('input', event.target.value)
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

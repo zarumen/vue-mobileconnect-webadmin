@@ -1,2 +1,11 @@
 /dist/
 /tests/unit/coverage/
+/tests/mock-api/
+# all file config
+/src/app.config.js
+aliases.config.js
+babel.config.js
+jest.config.js
+lint-staged.config.js
+stylelint.config.js
+vue.config.js

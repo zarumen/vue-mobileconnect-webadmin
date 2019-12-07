@@ -13,13 +13,13 @@ export default {
       default: ''
     }
   },
-  data() {
+  data () {
     const defaultcForm = Object.freeze({
       campaignCode: '',
       campaignName: '',
       campaignDescription: '',
       keyword: '',
-      shortcode: '',
+      shortcode: ''
     })
     const defaultvForm = Object.freeze({
       contextDelimiter: '',
@@ -29,7 +29,7 @@ export default {
       messageBoundariesOverError: '',
       messageAfterEnd: '',
       messageBeforeStart: '',
-      rewardsLimit: 0,
+      rewardsLimit: 0
     })
     const defaultpForm = Object.freeze({
       contextExclude: '',
@@ -73,7 +73,7 @@ export default {
         'text&win',
         'api',
         'reward',
-        'microsite',
+        'microsite'
       ],
       rewardConditionTypeList: [
         'all',
@@ -100,14 +100,14 @@ export default {
       searchVal: '',
       micrositeField: [],
       micrositeFieldEx: [
-        'fullname', 'gender', 'email', 'birthdate', 'address',
+        'fullname', 'gender', 'email', 'birthdate', 'address'
       ],
       // context parser variable
       validateTypeList: [
-        {value: 'regx', condition: false},
-        {value: 'validate', condition: true},
-        {value: 'register', condition: false},
-        {value: 'reward', condition: false},
+        { value: 'regx', condition: false },
+        { value: 'validate', condition: true },
+        { value: 'register', condition: false },
+        { value: 'reward', condition: false }
       ],
       validateType: null,
       conditionTypeValidate: false,
@@ -125,7 +125,7 @@ export default {
       anotherReward: Object.assign({}, defaultrForm),
       // ---------**-------------------------------------
       // Check all value
-      // ---------**------------------------------------- 
+      // ---------**-------------------------------------
       date: null, // start date
       date2: null, // end date
       date3: null, // start test date
@@ -170,7 +170,7 @@ export default {
       couponProductionGen: false,
       couponDigits: 0,
       couponTotals: 0,
-      couponResult: [],
+      couponResult: []
     }
   },
   computed: {
@@ -183,17 +183,16 @@ export default {
       keywordReservedList: 'keywordReservedList'
     }),
     ...mapGetters('campaigns', [
-      'getAllCampaignsId',
+      'getAllCampaignsId'
     ]),
     checkObjectReward () {
-
       return (this.campaignType === 'reward')
     },
     keywordInKeywordList () {
-      let sCheck = this.campaignForm.shortcode
+      const sCheck = this.campaignForm.shortcode
 
-      if(sCheck) {
-        let kws = this.keywordList.find(sc => sc.shortcode === sCheck)
+      if (sCheck) {
+        const kws = this.keywordList.find(sc => sc.shortcode === sCheck)
 
         return kws.keywords
       }
@@ -201,28 +200,24 @@ export default {
       return []
     },
     regexDisable () {
-      if(this.validateType)
-        return this.validateType.condition
+      if (this.validateType) { return this.validateType.condition }
 
       return true
     },
     contextType () {
-      if(this.validateType)
-        return this.validateType.value
+      if (this.validateType) { return this.validateType.value }
 
       return null
     },
     mutateKeywordList () {
-      
-      let scCheck = this.campaignForm.shortcode
+      const scCheck = this.campaignForm.shortcode
 
-      if(scCheck) {
+      if (scCheck) {
+        const checkedInReservedList = this.keywordReservedList.some(sc => sc.shortcode === scCheck)
 
-        let checkedInReservedList = this.keywordReservedList.some(sc => sc.shortcode === scCheck)
-        
-        if(checkedInReservedList) {
+        if (checkedInReservedList) {
           console.log('have keyword Reserved!')
-          let kw = this.mutatekwReservedList(scCheck)
+          const kw = this.mutatekwReservedList(scCheck)
 
           return kw.keywordsArray
         }
@@ -233,9 +228,8 @@ export default {
       return []
     },
     mutateShortcodeList () {
-      if(this.campaignForm.shortcode) {
-
-        let scArray = this.mutatescList(this.campaignForm.shortcode)
+      if (this.campaignForm.shortcode) {
+        const scArray = this.mutatescList(this.campaignForm.shortcode)
 
         return scArray.sendername
       }
@@ -243,9 +237,7 @@ export default {
     },
     isSwitchUploadOn: {
       get () {
-
-        if(this.validateForm.campaignHasMsisdnList)
-          return this.validateForm.campaignHasMsisdnList
+        if (this.validateForm.campaignHasMsisdnList) { return this.validateForm.campaignHasMsisdnList }
 
         return this.switchUploadVC
       },
@@ -256,8 +248,8 @@ export default {
   },
   watch: {
     validateForm: {
-      handler(validateForm) {
-        if(this.validateForm.campaignHasMsisdnList) {
+      handler (validateForm) {
+        if (this.validateForm.campaignHasMsisdnList) {
           this.switchUploadVC = !this.switchUploadVC
           this.toggleSwitchUpload(this.switchUploadVC)
         }
@@ -269,29 +261,27 @@ export default {
   created () {
     this.mapHelper()
   },
-  methods:{
+  methods: {
     ...mapActions('campaigns', [
       'createCampaign'
     ]),
     toggleSwitchUpload (val) {
-      if(this.validateForm.campaignHasMsisdnList) {
+      if (this.validateForm.campaignHasMsisdnList) {
         return this.validateForm.campaignHasMsisdnList
       }
 
       return val
     },
     checkDuplicatedKeyword (keywordArr) {
-
-      if(keywordArr) {
-
-        if(!this.keywordInKeywordList) return true
+      if (keywordArr) {
+        if (!this.keywordInKeywordList) return true
         // ถ้ามี keyword เข้ามาให้ เช็คว่า มี keyword ที่ใช้อยู่รึิเปล่า
-        let checkArr = keywordArr.map(element => {
+        const checkArr = keywordArr.map(element => {
           // return เป็น Boolean Array ของ keywords [true, false, true]
           return this.keywordInKeywordList.includes(element)
         })
         // ถ้ามี แม้แต่ 1 ตัวที่เป็น true ให้โชว์ error ว่า มี keyword ซ้ำ
-        if(checkArr.includes(true)) {
+        if (checkArr.includes(true)) {
           // show Error
           return false
         }
@@ -302,20 +292,18 @@ export default {
       return true
     },
     checkDuplicatedcampaignId (id) {
-
-      if(id) {
-
-        let arr = []
+      if (id) {
+        const arr = []
         arr.push(id)
 
-        if(!this.getAllCampaignsId) return true
+        if (!this.getAllCampaignsId) return true
         // ถ้ามี keyword เข้ามาให้ เช็คว่า มี keyword ที่ใช้อยู่รึิเปล่า
-        let checkArr = arr.map(element => {
+        const checkArr = arr.map(element => {
           // return เป็น Boolean Array ของ keywords [true, false, true]
           return this.getAllCampaignsId.includes(element)
         })
         // ถ้ามี แม้แต่ 1 ตัวที่เป็น true ให้โชว์ error ว่า มี keyword ซ้ำ
-        if(checkArr.includes(true)) {
+        if (checkArr.includes(true)) {
           // show Error
           return false
         }
@@ -325,124 +313,123 @@ export default {
       // doesn't show Error
       return true
     },
-    mutatekwList(sc) {
+    mutatekwList (sc) {
       return this.keywordList.find(keyword => keyword.shortcode === sc)
     },
-    mutatekwReservedList(sc) {
+    mutatekwReservedList (sc) {
       return this.keywordReservedList.find(keyword => keyword.shortcode === sc)
     },
-    mutatescList(sc) {
+    mutatescList (sc) {
       return this.shortcodeList.find(scList => scList.shortcode === sc)
     },
-    closeDialog() {
+    closeDialog () {
       this.$emit('emitCloseCampaignDialog', false)
     },
-    saveCampaign() {
+    saveCampaign () {
       // check forms in v-form validation
       this.$refs.campaignForm.validate()
       // prepare campaign Object and campaignValidation Object
 
       const campaignNew = this.campaignForm
-      const startDate = this.date + "T" + this.time
-      const endDate = this.date2 + "T" + this.time2
-      const startTestDate = this.date3 + "T" + this.time3
-      const endTestDate = this.date4 + "T" + this.time4
+      const startDate = this.date + 'T' + this.time
+      const endDate = this.date2 + 'T' + this.time2
+      const startTestDate = this.date3 + 'T' + this.time3
+      const endTestDate = this.date4 + 'T' + this.time4
       const campaignValidationNew = this.validateForm
 
-      if(this.brand !== null) {
-
+      if (this.brand !== null) {
         // --------------------- campaign Object ----------------------------------------
         // Campaign Status
-        campaignNew['campaignAvailable'] = true // check campaign paused or unpaused
-        campaignNew['campaignActive'] = true // check campaign delete or not deleted
-        campaignNew['campaignState'] = this.cState // check campaign status {test, production, close} 
-        campaignNew['campaignType'] = this.campaignType // added campaign type
+        campaignNew.campaignAvailable = true // check campaign paused or unpaused
+        campaignNew.campaignActive = true // check campaign delete or not deleted
+        campaignNew.campaignState = this.cState // check campaign status {test, production, close}
+        campaignNew.campaignType = this.campaignType // added campaign type
 
-        campaignNew['organizationAuth'] = this.brand.organizationAuth
-        campaignNew['organizationLevel1'] = this.brand.organizationLevel1
-        campaignNew['organizationLevel1Name'] = this.brand.organizationLevel1Name
-        campaignNew['organizationLevel2'] = this.brand.organizationLevel2
-        campaignNew['organizationLevel2Name'] = this.brand.organizationLevel2Name
-        campaignNew['organizationLevel3'] = this.brand.organizationLevel3
-        campaignNew['organizationLevel3Name'] = this.brand.organizationLevel3Name
-        campaignNew['brandPicUrl'] = this.brand.picURL
+        campaignNew.organizationAuth = this.brand.organizationAuth
+        campaignNew.organizationLevel1 = this.brand.organizationLevel1
+        campaignNew.organizationLevel1Name = this.brand.organizationLevel1Name
+        campaignNew.organizationLevel2 = this.brand.organizationLevel2
+        campaignNew.organizationLevel2Name = this.brand.organizationLevel2Name
+        campaignNew.organizationLevel3 = this.brand.organizationLevel3
+        campaignNew.organizationLevel3Name = this.brand.organizationLevel3Name
+        campaignNew.brandPicUrl = this.brand.picURL
 
         // set Check Campaign Verify Code
-        if(this.isSwitchUploadOn) {          
-          campaignNew['campaignHasVerifyCode'] = true
+        if (this.isSwitchUploadOn) {
+          campaignNew.campaignHasVerifyCode = true
         } else {
-          campaignNew['campaignHasVerifyCode'] = false
+          campaignNew.campaignHasVerifyCode = false
         }
 
         // check campaign has UNICODE Features (default: false)
-        if(this.campaignLongMessage) {
-          campaignNew['campaignLongMessage'] = true
+        if (this.campaignLongMessage) {
+          campaignNew.campaignLongMessage = true
         } else {
-          campaignNew['campaignLongMessage'] = false
+          campaignNew.campaignLongMessage = false
         }
 
         // set Date in here
-        campaignNew['campaignDateStart'] = new Date(startDate)
-        campaignNew['campaignDateEnd'] = new Date(endDate)
+        campaignNew.campaignDateStart = new Date(startDate)
+        campaignNew.campaignDateEnd = new Date(endDate)
 
         // --------------------- campaignValidation Object ----------------------------------------
-        
+
         // check microsite fields
-        if(campaignNew.campaignType === 'microsite') {
-          campaignValidationNew['micrositeFields'] = this.micrositeField
+        if (campaignNew.campaignType === 'microsite') {
+          campaignValidationNew.micrositeFields = this.micrositeField
         }
         // set Context Parsers
-        if(!this.contextParserUndefined) {
-          campaignValidationNew['contextParser'] = this.contextParser
+        if (!this.contextParserUndefined) {
+          campaignValidationNew.contextParser = this.contextParser
         } else {
-          delete campaignValidationNew['contextDelimiter']
+          delete campaignValidationNew.contextDelimiter
         }
         // set Reward Array or Object
-        if(this.checkObjectReward) {
-          campaignValidationNew['rewardsObject'] = arrayToObject(this.rewards, "rewardId")
+        if (this.checkObjectReward) {
+          campaignValidationNew.rewardsObject = arrayToObject(this.rewards, 'rewardId')
         } else {
-          campaignValidationNew['rewardsArray'] = this.rewards
+          campaignValidationNew.rewardsArray = this.rewards
         }
 
-        campaignValidationNew['rewardsHaveSequence'] = this.switch2
-        campaignValidationNew['campaignAvailable'] = true
-        campaignValidationNew['campaignState'] = this.cState
-        campaignValidationNew['campaignSenderName'] = this.campaignForm.campaignSenderName
+        campaignValidationNew.rewardsHaveSequence = this.switch2
+        campaignValidationNew.campaignAvailable = true
+        campaignValidationNew.campaignState = this.cState
+        campaignValidationNew.campaignSenderName = this.campaignForm.campaignSenderName
 
         // set Campaign Timing
-        campaignValidationNew['campaignDateStart'] = new Date(startDate)
-        campaignValidationNew['campaignDateEnd'] = new Date(endDate)
-        campaignValidationNew['campaignDateTestStart'] = new Date(startTestDate)
-        campaignValidationNew['campaignDateTestEnd'] = new Date(endTestDate)
+        campaignValidationNew.campaignDateStart = new Date(startDate)
+        campaignValidationNew.campaignDateEnd = new Date(endDate)
+        campaignValidationNew.campaignDateTestStart = new Date(startTestDate)
+        campaignValidationNew.campaignDateTestEnd = new Date(endTestDate)
 
-        if(this.switchUploadVC) {
+        if (this.switchUploadVC) {
           // upload Verify_Code here
 
           // TEST FILE
           this.uploadVerifyCode({
-            id: this.campaignForm.campaignCode, 
-            state: 'test', 
-            filename: this.fileNameTestVC, 
+            id: this.campaignForm.campaignCode,
+            state: 'test',
+            filename: this.fileNameTestVC,
             fileUrl: this.fileUrlTestVC
           })
 
           // PRODUCTION FILE
           this.uploadVerifyCode({
-            id: this.campaignForm.campaignCode, 
-            state: 'production', 
-            filename: this.fileNameProVC, 
+            id: this.campaignForm.campaignCode,
+            state: 'production',
+            filename: this.fileNameProVC,
             fileUrl: this.fileUrlProVC
           })
         }
 
-        if(this.switch1) {
+        if (this.switch1) {
           // upload Coupons here
 
           // TEST FILE
           this.uploadCoupons({
-            id: this.campaignForm.campaignCode, 
+            id: this.campaignForm.campaignCode,
             state: 'test',
-            fileName: this.fileNameTestCP, 
+            fileName: this.fileNameTestCP,
             fileUrl: this.fileUrlTestCP
           })
 
@@ -450,7 +437,7 @@ export default {
           this.uploadCoupons({
             id: this.campaignForm.campaignCode,
             state: 'production',
-            fileName: this.fileNameProCP, 
+            fileName: this.fileNameProCP,
             fileUrl: this.fileUrlProCP
           })
         }
@@ -460,27 +447,26 @@ export default {
           validationObject: campaignValidationNew
         })
         this.closeDialog()
-      }     
+      }
     },
-    mapHelper() {
+    mapHelper () {
       if (this.locale === 'TH') {
         this.helperText = helperTH
       }
     },
-    addContextParser() {
+    addContextParser () {
       if (this.$refs.anotherParser.validate()) {
+        const newParser = this.anotherParser
 
-        let newParser = this.anotherParser
-
-        newParser['contextType'] = this.contextType
-        if(this.subContextArray.length > 0) {
-          // check if contextFail has element added it to Main Context parser 
-          newParser['contextFailed'] = this.subContextArray
+        newParser.contextType = this.contextType
+        if (this.subContextArray.length > 0) {
+          // check if contextFail has element added it to Main Context parser
+          newParser.contextFailed = this.subContextArray
         }
 
-        if(this.conditionTypeValidate) {
+        if (this.conditionTypeValidate) {
           this.validateForm.rewardsLimit = 1
-        }  
+        }
 
         this.contextParser.push(newParser)
 
@@ -489,67 +475,61 @@ export default {
         this.cardOpen = false
       }
     },
-    clearContextParser() {
+    clearContextParser () {
       this.$refs.anotherParser.reset()
       this.cardOpen = false
     },
-    deleteContextParser(validateFailMsg) {
-
+    deleteContextParser (validateFailMsg) {
       this.contextParser = this.contextParser.filter(parser => {
         return parser.messageContextFailed !== validateFailMsg
       })
     },
     // Specific contextFailed inside Context Parser
-    addSubContextArray() {
+    addSubContextArray () {
       if (this.$refs.contextFailed.validate()) {
-
-        let newSpecific = this.contextFailed
+        const newSpecific = this.contextFailed
 
         this.subContextArray.push(newSpecific)
         this.contextFailed = Object.assign({}, this.defaultspForm)
         this.subcardOpen = false
       }
     },
-    clearSubContextArray() {
+    clearSubContextArray () {
       this.$refs.contextFailed.reset()
       this.subcardOpen = false
     },
-    deleteSubContextArray(validateFailMsg) {
-
+    deleteSubContextArray (validateFailMsg) {
       this.subContextArray = this.subContextArray.filter(parser => {
         return parser.messageContextFailed !== validateFailMsg
       })
     },
-    addReward() {
-      if(this.$refs.anotherReward.validate()) {
+    addReward () {
+      if (this.$refs.anotherReward.validate()) {
+        const newReward = this.anotherReward
 
-        let newReward = this.anotherReward
-
-        newReward['rewardHasCoupon'] = this.switch1
+        newReward.rewardHasCoupon = this.switch1
 
         this.rewards.push(newReward)
         this.anotherReward = Object.assign({}, this.defaultrForm)
         this.cardOpen = false
       }
     },
-    clearReward() {
+    clearReward () {
       this.$refs.anotherReward.reset()
     },
-    deleteReward(name) {
+    deleteReward (name) {
       this.rewards = this.rewards.filter(reward => {
         return reward.rewardName !== name
       })
     },
     // VERIFY CODE ZONE
     uploadVerifyCode ({ id, state, filename, fileUrl }) {
-
-      let ref = storageRef.child(`campaigns/${id}/verifyCodeFile/${state}/${filename}`)
+      const ref = storageRef.child(`campaigns/${id}/verifyCodeFile/${state}/${filename}`)
 
       ref.putString(fileUrl, 'data_url')
         .then((snapshot) => {
-        console.log('Uploaded a data_url string!')
-      })
-
+          console.log('Uploaded a data_url string!')
+        })
     },
     // ADD COUPONS METHODS
     updatedTestArrayName (e) {
@@ -567,37 +547,33 @@ export default {
     uploadCoupons ({ id, state, fileName, fileUrl }) {
       console.log(fileName)
       fileName.forEach((file, index) => {
-
-        let ref = storageRef.child(`campaigns/${id}/couponsFile/${state}/${index}-${file}`)
+        const ref = storageRef.child(`campaigns/${id}/couponsFile/${state}/${index}-${file}`)
 
         ref.putString(fileUrl[index], 'data_url')
           .then((snapshot) => {
-          console.log('Uploaded a data_url string!')
-        })
-
+            console.log('Uploaded a data_url string!')
+          })
       })
     },
     clickedGen () {
-      for(let i = 0; i < this.couponTotals; i++){
+      for (let i = 0; i < this.couponTotals; i++) {
         this.couponResult.push(this.generateId(this.couponDigits))
       }
 
       let csvContent = 'data:text/csv;charset=utf-8,'
 
       this.couponResult.forEach((rowArray) => {
-          csvContent += rowArray + "\r\n";
+        csvContent += rowArray + '\r\n'
       })
 
-      let encodedUri = encodeURI(csvContent)
+      const encodedUri = encodeURI(csvContent)
 
-      if(this.couponTestGen) {
-        
+      if (this.couponTestGen) {
         this.fileNameTestCP.push(`coupons_${this.couponTotals}_generated.csv`)
         this.fileUrlTestCP.push(encodedUri)
       }
 
-      if(this.couponProductionGen) {
-        
+      if (this.couponProductionGen) {
         this.fileNameProCP.push(`coupons_${this.couponTotals}_generated.csv`)
         this.fileUrlProCP.push(encodedUri)
       }
@@ -611,11 +587,11 @@ export default {
     },
     // generateId :: Integer -> String
     generateId (len) {
-      let arr = new Uint8Array((len || 40) / 2)
+      const arr = new Uint8Array((len || 40) / 2)
       window.crypto.getRandomValues(arr)
       return Array.from(arr, this.dec2hex).join('')
     }
-  },
+  }
 }
 </script>
 
@@ -623,10 +599,10 @@ export default {
   <v-row
     justify-center
   >
-    <v-dialog 
-      v-model="addCampaignDialog" 
-      fullscreen 
-      hide-overlay 
+    <v-dialog
+      v-model="addCampaignDialog"
+      fullscreen
+      hide-overlay
       transition="dialog-bottom-transition"
     >
       <v-card>
@@ -636,12 +612,12 @@ export default {
           lazy-validation
         >
           <v-toolbar
-            dark 
+            dark
             color="deep-purple"
           >
-            <base-button 
-              icon 
-              dark 
+            <base-button
+              icon
+              dark
               @click.native="closeDialog()"
             >
               <v-icon>
@@ -660,9 +636,9 @@ export default {
               >
                 Helper: TH
               </base-button>
-              <base-button 
-                dark 
-                text 
+              <base-button
+                dark
+                text
                 @click.native="saveCampaign()"
               >
                 Save
@@ -670,7 +646,7 @@ export default {
             </v-toolbar-items>
           </v-toolbar>
           <!-- Content is here -->
-          <v-stepper 
+          <v-stepper
             v-model="step"
             light
             vertical
@@ -685,7 +661,7 @@ export default {
             </v-stepper-step>
             <v-stepper-content step="1">
               <v-card
-                color="grey lighten-4" 
+                color="grey lighten-4"
                 class="mb-5"
               >
                 <v-card-text>
@@ -694,11 +670,11 @@ export default {
                       {{ helperText.campaignCode }}
                     </v-subheader>
                   </v-col>
-                  <v-col 
+                  <v-col
                     cols="12"
                     md="4"
-                  > 
-                    <v-text-field 
+                  >
+                    <v-text-field
                       v-model="campaignForm.campaignCode"
                       prepend-icon="fiber_new"
                       :rules="campaignCodeRule"
@@ -712,22 +688,22 @@ export default {
                       {{ helperText.campaignName }}
                     </v-subheader>
                   </v-col>
-                  <v-col 
+                  <v-col
                     cols="12"
                     md="8"
-                  > 
-                    <v-text-field 
+                  >
+                    <v-text-field
                       v-model="campaignForm.campaignName"
                       prepend-icon="shop"
                       label="Campaign Name"
                     />
-                  </v-col> 
+                  </v-col>
                   <v-col v-if="helper">
                     <v-subheader class="helpertext">
                       {{ helperText.campaignDescription }}
                     </v-subheader>
                   </v-col>
-                  <v-col 
+                  <v-col
                     cols="12"
                     md="8"
                   >
@@ -742,11 +718,11 @@ export default {
                       {{ helperText.campaignType }}
                     </v-subheader>
                   </v-col>
-                  <v-col 
+                  <v-col
                     cols="12"
                     md="8"
-                  >                
-                    <v-select 
+                  >
+                    <v-select
                       v-model="campaignType"
                       :items="cTypeList"
                       label="Campaign Type"
@@ -758,23 +734,23 @@ export default {
                       {{ helperText.campaignType }}
                     </v-subheader>
                   </v-col>
-                  <v-col 
+                  <v-col
                     v-if="campaignType === 'api'"
                     cols="12"
                     md="8"
                   >
-                    <v-text-field 
+                    <v-text-field
                       v-model="validateForm.apiURL"
                       prepend-icon="settings_applications"
                       label="Api Url"
                     />
-                    <v-text-field 
+                    <v-text-field
                       v-model="validateForm.apiReport"
                       prepend-icon="receipt"
                       label="Api Report"
                     />
                   </v-col>
-                  <v-col 
+                  <v-col
                     v-if="campaignType === 'microsite'"
                     cols="12"
                   >
@@ -803,14 +779,14 @@ export default {
                   </v-col>
                 </v-card-text>
               </v-card>
-              <base-button 
+              <base-button
                 color="primary"
                 rounded
                 @click.native="step = 2"
               >
                 Continue
               </base-button>
-              <base-button 
+              <base-button
                 color="primary"
                 text
                 @click.native="closeDialog()"
@@ -826,12 +802,12 @@ export default {
               {{ stepName.two }}
             </v-stepper-step>
             <v-stepper-content step="2">
-              <v-card 
-                color="grey lighten-4" 
+              <v-card
+                color="grey lighten-4"
                 class="mb-5"
               >
                 <v-card-text>
-                  <v-col 
+                  <v-col
                     cols="12"
                   >
                     <v-subheader><small>Campaign Features Check:</small></v-subheader>
@@ -839,16 +815,16 @@ export default {
                       <v-subheader class="helpertext">
                         {{ helperText.campaignLongMessage }}
                       </v-subheader>
-                    </v-col> 
+                    </v-col>
                     <v-switch
                       v-model="campaignLongMessage"
                       color="primary"
                       label="Use Campaign Long Message"
                     />
                   </v-col>
-                  <v-col 
+                  <v-col
                     cols="8"
-                    sm="6" 
+                    sm="6"
                     md="3"
                   >
                     <v-subheader><small>Campaign Owner Details:</small></v-subheader>
@@ -865,7 +841,7 @@ export default {
                     >
                       <template v-slot:item="data">
                         <template v-if="data.item.picURL === 'undefine'">
-                          <v-list-item-avatar 
+                          <v-list-item-avatar
                             class="secondary white--text"
                           >
                             {{ data.item.displayName.slice(0, 2).toUpperCase() }}
@@ -901,12 +877,12 @@ export default {
                         </v-chip>
                       </template>
                     </v-combobox>
-                  </v-col>  
-                  <v-col 
+                  </v-col>
+                  <v-col
                     cols="8"
-                    sm="6" 
+                    sm="6"
                     md="3"
-                  > 
+                  >
                     <v-subheader><small>Please Enter Your Shortcode:</small></v-subheader>
                     <v-autocomplete
                       :key="shortcodeList.id"
@@ -921,7 +897,7 @@ export default {
                       chips
                       solo
                     >
-                      <template 
+                      <template
                         slot="item"
                         slot-scope="data"
                       >
@@ -933,7 +909,7 @@ export default {
                             <v-list-item-title>{{ data.item.shortcode }}</v-list-item-title>
                           </v-list-item-content>
                         </template>
-                        <template 
+                        <template
                           slot="selection"
                           slot-scope="idata"
                         >
@@ -957,10 +933,10 @@ export default {
                   </v-col>
                   <v-col
                     cols="8"
-                    sm="6" 
+                    sm="6"
                     md="3"
-                  > 
-                    <v-select 
+                  >
+                    <v-select
                       v-model="campaignForm.campaignSenderName"
                       :items="mutateShortcodeList"
                       item-text="value"
@@ -974,9 +950,9 @@ export default {
                     <v-subheader class="helpertext">
                       {{ helperText.keyword }}
                     </v-subheader>
-                  </v-col> 
+                  </v-col>
                   <v-col>
-                    <v-select 
+                    <v-select
                       v-model="campaignForm.keyword"
                       :items="mutateKeywordList"
                       :rules="checkKeywordRules"
@@ -1002,20 +978,20 @@ export default {
                     <v-subheader class="helpertext">
                       {{ helperText.campaignActive }}
                     </v-subheader>
-                  </v-col> 
-                  <v-radio-group 
+                  </v-col>
+                  <v-radio-group
                     v-model="cState"
                     prepend-icon="slideshow"
                     row
                   >
                     <v-radio
-                      color="deep-purple" 
-                      label="Test" 
-                      value="test" 
+                      color="deep-purple"
+                      label="Test"
+                      value="test"
                     />
-                    <v-radio 
-                      color="light-green" 
-                      label="Production" 
+                    <v-radio
+                      color="light-green"
+                      label="Production"
                       value="production"
                     />
                   </v-radio-group>
@@ -1029,8 +1005,8 @@ export default {
                     </v-subheader>
                   </v-col>
                   <v-row>
-                    <v-col 
-                      cols="4" 
+                    <v-col
+                      cols="4"
                       md="4"
                     >
                       <v-menu
@@ -1053,9 +1029,9 @@ export default {
                             v-on="on"
                           />
                         </template>
-                        <v-date-picker 
+                        <v-date-picker
                           v-model="date"
-                          no-title 
+                          no-title
                           scrollable
                           dark
                           locale="th"
@@ -1064,12 +1040,12 @@ export default {
                           <div class="flex-grow-1" />
                           <base-button
                             text
-                            color="primary" 
+                            color="primary"
                             @click="menu = false"
                           >
                             Cancel
                           </base-button>
-                          <base-button 
+                          <base-button
                             color="primary"
                             rounded
                             @click="$refs.menu.save(date)"
@@ -1079,8 +1055,8 @@ export default {
                         </v-date-picker>
                       </v-menu>
                     </v-col>
-                    <v-col 
-                      cols="4" 
+                    <v-col
+                      cols="4"
                       md="4"
                     >
                       <v-menu
@@ -1109,20 +1085,20 @@ export default {
                         />
                         <v-row class="grey lighten-5">
                           <div class="flex-grow-1" />
-                          <v-col 
+                          <v-col
                             cols="auto"
                             class="mx-2"
                           >
-                            <base-button 
+                            <base-button
                               text
                               color="primary"
                               @click="menu2 = false"
                             >
                               Cancel
                             </base-button>
-                            <base-button 
+                            <base-button
                               rounded
-                              color="primary" 
+                              color="primary"
                               @click="$refs.menu2.save(time)"
                             >
                               OK
@@ -1131,7 +1107,7 @@ export default {
                         </v-row>
                       </v-menu>
                     </v-col>
-                  </v-row> 
+                  </v-row>
                   <!-- END DATE PICKER -->
                   <v-col>
                     <v-subheader>End Date :</v-subheader>
@@ -1142,8 +1118,8 @@ export default {
                     </v-subheader>
                   </v-col>
                   <v-row>
-                    <v-col 
-                      cols="4" 
+                    <v-col
+                      cols="4"
                       md="4"
                     >
                       <v-menu
@@ -1166,9 +1142,9 @@ export default {
                             v-on="on"
                           />
                         </template>
-                        <v-date-picker 
+                        <v-date-picker
                           v-model="date2"
-                          no-title 
+                          no-title
                           scrollable
                           dark
                           locale="th"
@@ -1182,9 +1158,9 @@ export default {
                           >
                             Cancel
                           </base-button>
-                          <base-button 
+                          <base-button
                             rounded
-                            color="primary" 
+                            color="primary"
                             @click="$refs.menu3.save(date2)"
                           >
                             OK
@@ -1192,8 +1168,8 @@ export default {
                         </v-date-picker>
                       </v-menu>
                     </v-col>
-                    <v-col 
-                      cols="4" 
+                    <v-col
+                      cols="4"
                       md="4"
                     >
                       <v-menu
@@ -1223,20 +1199,20 @@ export default {
                         />
                         <v-row>
                           <div class="flex-grow-1" />
-                          <v-col 
+                          <v-col
                             cols="auto"
                             class="mx-2"
                           >
-                            <base-button 
+                            <base-button
                               text
-                              color="primary" 
+                              color="primary"
                               @click="menu4 = false"
                             >
                               Cancel
                             </base-button>
-                            <base-button 
+                            <base-button
                               rounded
-                              color="primary"  
+                              color="primary"
                               @click="$refs.menu4.save(time2)"
                             >
                               OK
@@ -1244,7 +1220,7 @@ export default {
                           </v-col>
                         </v-row>
                       </v-menu>
-                    </v-col>                    
+                    </v-col>
                   </v-row>
                   <!-- START TEST DATE PICKER -->
                   <v-col>
@@ -1256,8 +1232,8 @@ export default {
                     </v-subheader>
                   </v-col>
                   <v-row>
-                    <v-col 
-                      cols="4" 
+                    <v-col
+                      cols="4"
                       md="4"
                     >
                       <v-menu
@@ -1280,23 +1256,23 @@ export default {
                             v-on="on"
                           />
                         </template>
-                        <v-date-picker 
+                        <v-date-picker
                           v-model="date3"
-                          no-title 
+                          no-title
                           scrollable
                           dark
                           locale="th"
                           color="deep-purple"
                         >
                           <div class="flex-grow-1" />
-                          <base-button 
+                          <base-button
                             text
-                            color="primary" 
+                            color="primary"
                             @click="menu5 = false"
                           >
                             Cancel
                           </base-button>
-                          <base-button 
+                          <base-button
                             color="primary"
                             rounded
                             @click="$refs.menu5.save(date3)"
@@ -1306,8 +1282,8 @@ export default {
                         </v-date-picker>
                       </v-menu>
                     </v-col>
-                    <v-col 
-                      cols="4" 
+                    <v-col
+                      cols="4"
                       md="4"
                     >
                       <v-menu
@@ -1336,20 +1312,20 @@ export default {
                         />
                         <v-row>
                           <div class="flex-grow-1" />
-                          <v-col 
+                          <v-col
                             cols="auto"
                             class="mx-2"
                           >
-                            <base-button 
+                            <base-button
                               text
                               color="primary"
                               @click="menu6 = false"
                             >
                               Cancel
                             </base-button>
-                            <base-button 
-                              rounded 
-                              color="primary" 
+                            <base-button
+                              rounded
+                              color="primary"
                               @click="$refs.menu6.save(time3)"
                             >
                               OK
@@ -1358,7 +1334,7 @@ export default {
                         </v-row>
                       </v-menu>
                     </v-col>
-                  </v-row> 
+                  </v-row>
                   <!-- END TEST DATE PICKER -->
                   <v-col>
                     <v-subheader>End Test Date :</v-subheader>
@@ -1367,10 +1343,10 @@ export default {
                     <v-subheader class="helpertext">
                       {{ helperText.campaignDateTestEnd }}
                     </v-subheader>
-                  </v-col> 
+                  </v-col>
                   <v-row>
-                    <v-col 
-                      cols="4" 
+                    <v-col
+                      cols="4"
                       md="4"
                     >
                       <v-menu
@@ -1393,25 +1369,25 @@ export default {
                             v-on="on"
                           />
                         </template>
-                        <v-date-picker 
+                        <v-date-picker
                           v-model="date4"
-                          no-title 
+                          no-title
                           scrollable
                           dark
                           locale="th"
                           color="deep-purple"
                         >
                           <div class="flex-grow-1" />
-                          <base-button 
+                          <base-button
                             text
                             color="primary"
                             @click="menu7 = false"
                           >
                             Cancel
                           </base-button>
-                          <base-button 
+                          <base-button
                             rounded
-                            color="primary" 
+                            color="primary"
                             @click="$refs.menu7.save(date4)"
                           >
                             OK
@@ -1419,8 +1395,8 @@ export default {
                         </v-date-picker>
                       </v-menu>
                     </v-col>
-                    <v-col 
-                      cols="4" 
+                    <v-col
+                      cols="4"
                       md="4"
                     >
                       <v-menu
@@ -1449,20 +1425,20 @@ export default {
                         />
                         <v-row>
                           <div class="flex-grow-1" />
-                          <v-col 
+                          <v-col
                             cols="auto"
                             class="mx-2"
                           >
-                            <base-button 
+                            <base-button
                               text
-                              color="primary" 
+                              color="primary"
                               @click="menu8 = false"
                             >
                               Cancel
                             </base-button>
-                            <base-button 
-                              rounded 
-                              color="primary"  
+                            <base-button
+                              rounded
+                              color="primary"
                               @click="$refs.menu8.save(time4)"
                             >
                               OK
@@ -1470,7 +1446,7 @@ export default {
                           </v-col>
                         </v-row>
                       </v-menu>
-                    </v-col>                    
+                    </v-col>
                   </v-row>
                 </v-card-text>
               </v-card>
@@ -1481,7 +1457,7 @@ export default {
               >
                 Continue
               </base-button>
-              <base-button 
+              <base-button
                 color="primary"
                 text
                 @click.native="step = 1"
@@ -1490,15 +1466,15 @@ export default {
               </base-button>
             </v-stepper-content>
             <v-stepper-step
-              :complete="step > 3" 
+              :complete="step > 3"
               editable
               step="3"
             >
               {{ stepName.three }}
             </v-stepper-step>
             <v-stepper-content step="3">
-              <v-card 
-                color="grey lighten-4" 
+              <v-card
+                color="grey lighten-4"
                 class="mb-5"
               >
                 <v-card-text>
@@ -1507,7 +1483,7 @@ export default {
                     <v-subheader class="helpertext">
                       {{ helperText.contextParserUndefined }}
                     </v-subheader>
-                  </v-col> 
+                  </v-col>
                   <v-switch
                     v-model="contextParserUndefined"
                     color="error"
@@ -1517,16 +1493,16 @@ export default {
                     <v-subheader class="helpertext">
                       {{ helperText.contextDelimiter }}
                     </v-subheader>
-                  </v-col> 
-                  <v-col 
+                  </v-col>
+                  <v-col
                     cols="8"
-                    sm="6" 
+                    sm="6"
                     md="3"
-                  > 
-                    <v-text-field 
+                  >
+                    <v-text-field
                       v-model="validateForm.contextDelimiter"
                       prepend-icon="priority_high"
-                      solo-inverted 
+                      solo-inverted
                       label="Delimiter"
                     />
                   </v-col>
@@ -1541,7 +1517,7 @@ export default {
                     <v-subheader class="helpertext">
                       {{ helperText.campaignHasVerifyCode }}
                     </v-subheader>
-                  </v-col> 
+                  </v-col>
                   <v-switch
                     v-model="isSwitchUploadOn"
                     color="deep-purple"
@@ -1551,7 +1527,7 @@ export default {
                     <v-subheader class="helpertext">
                       {{ helperText.campaignHasMsisdnList }}
                     </v-subheader>
-                  </v-col> 
+                  </v-col>
                   <v-switch
                     v-model="validateForm.campaignHasMsisdnList"
                     color="deep-purple"
@@ -1562,7 +1538,7 @@ export default {
                       <v-subheader class="helpertext">
                         {{ helperText.verifyCodeTestUpload }}
                       </v-subheader>
-                    </v-col> 
+                    </v-col>
                     <BaseUploadfield
                       :accept="fileTypeVC"
                       :disabled="!switchUploadVC"
@@ -1574,7 +1550,7 @@ export default {
                       <v-subheader class="helpertext">
                         {{ helperText.verifyCodeProductionUpload }}
                       </v-subheader>
-                    </v-col> 
+                    </v-col>
                     <BaseUploadfield
                       :accept="fileTypeVC"
                       :disabled="!switchUploadVC"
@@ -1599,10 +1575,10 @@ export default {
                   <v-col
                     cols="12"
                     md="6"
-                  > 
+                  >
                     <v-list two-line>
-                      <v-list-item 
-                        v-for="item in contextParser" 
+                      <v-list-item
+                        v-for="item in contextParser"
                         :key="item.key"
                       >
                         <v-list-item-avatar>
@@ -1613,7 +1589,7 @@ export default {
                         <v-list-item-content>
                           <v-list-item-title>msg: "{{ item.messageContextFailed }}"</v-list-item-title>
                           <v-list-item-subtitle>
-                            type: {{ item.contextType }} 
+                            type: {{ item.contextType }}
                             <span class="blue--text">
                               {{ item.contextForm }}
                             </span>
@@ -1634,8 +1610,8 @@ export default {
                     </v-list>
                   </v-col>
                   <p />
-                  <base-button 
-                    color="primary" 
+                  <base-button
+                    color="primary"
                     rounded
                     @click.native="cardOpen = !cardOpen"
                   >
@@ -1645,12 +1621,12 @@ export default {
                     Add Parser
                   </base-button>
                   <p />
-                  <v-col 
+                  <v-col
                     cols="12"
                     md="6"
                   >
                     <v-card v-if="cardOpen">
-                      <v-form 
+                      <v-form
                         ref="anotherParser"
                         v-model="parserValid"
                         lazy-validation
@@ -1661,12 +1637,12 @@ export default {
                             <v-subheader class="helpertext">
                               {{ helperText.exclude }}
                             </v-subheader>
-                          </v-col>            
+                          </v-col>
                           <v-text-field
                             v-model="anotherParser.contextExclude"
                             :rules="[v => !!v || 'Item is required']"
                             prepend-icon="priority_high"
-                            solo-inverted 
+                            solo-inverted
                             label="Remove Character"
                             required
                           />
@@ -1674,8 +1650,8 @@ export default {
                             <v-subheader class="helpertext">
                               {{ helperText.messageContextFailed }}
                             </v-subheader>
-                          </v-col> 
-                          <v-text-field 
+                          </v-col>
+                          <v-text-field
                             v-model="anotherParser.messageContextFailed"
                             :rules="[v => !!v || 'Item is required']"
                             :counter="70"
@@ -1687,8 +1663,8 @@ export default {
                             <v-subheader class="helpertext">
                               {{ helperText.validateType }}
                             </v-subheader>
-                          </v-col> 
-                          <v-select 
+                          </v-col>
+                          <v-select
                             v-model="validateType"
                             :items="validateTypeList"
                             item-text="value"
@@ -1701,15 +1677,15 @@ export default {
                               {{ helperText.validateForm }}
                             </v-subheader>
                           </v-col>
-                          <v-text-field 
+                          <v-text-field
                             v-model="anotherParser.contextForm"
                             :disabled="regexDisable"
                             prepend-icon="priority_high"
-                            solo-inverted 
+                            solo-inverted
                             label="Condition (Regular Expression)"
                           />
-                          <base-button 
-                            color="primary" 
+                          <base-button
+                            color="primary"
                             rounded
                             @click.native="subcardOpen = !subcardOpen"
                           >
@@ -1722,10 +1698,10 @@ export default {
                           <v-col
                             cols="12"
                             md="6"
-                          > 
+                          >
                             <v-list two-line>
-                              <v-list-item 
-                                v-for="item in subContextArray" 
+                              <v-list-item
+                                v-for="item in subContextArray"
                                 :key="item.key"
                               >
                                 <v-list-item-avatar>
@@ -1736,7 +1712,7 @@ export default {
                                 <v-list-item-content>
                                   <v-list-item-title>msg: {{ item.messageContextFailed }}</v-list-item-title>
                                   <v-list-item-subtitle>
-                                    regx: 
+                                    regx:
                                     <span class="blue--text">
                                       {{ item.contextSubForm }}
                                     </span>
@@ -1756,19 +1732,19 @@ export default {
                               </v-list-item>
                             </v-list>
                           </v-col>
-                          <v-col 
+                          <v-col
                             cols="12"
                             md="9"
                           >
                             <v-card v-if="subcardOpen">
-                              <v-form 
+                              <v-form
                                 ref="contextFailed"
                                 v-model="parserValid"
                                 lazy-validation
                               >
                                 <v-card-text>
                                   <v-subheader>Add Specific Conditions</v-subheader>
-                                  <v-text-field 
+                                  <v-text-field
                                     v-model="contextFailed.messageContextFailed"
                                     :rules="[v => !!v || 'Item is required']"
                                     :counter="70"
@@ -1776,10 +1752,10 @@ export default {
                                     label="Invalid Format Message Specific"
                                     required
                                   />
-                                  <v-text-field 
+                                  <v-text-field
                                     v-model="contextFailed.contextSubForm"
                                     prepend-icon="priority_high"
-                                    solo-inverted 
+                                    solo-inverted
                                     label="Specific Condition (Regex)"
                                   />
                                   <v-col v-if="helper">
@@ -1790,7 +1766,7 @@ export default {
                                 </v-card-text>
                                 <v-card-actions>
                                   <v-spacer />
-                                  <base-button 
+                                  <base-button
                                     color="primary"
                                     text
                                     @click.native="clearSubContextArray()"
@@ -1807,18 +1783,18 @@ export default {
                                 </v-card-actions>
                               </v-form>
                             </v-card>
-                          </v-col>                
+                          </v-col>
                         </v-card-text>
                         <v-card-actions>
                           <v-spacer />
-                          <base-button 
+                          <base-button
                             color="primary"
                             text
                             @click.native="clearContextParser()"
                           >
                             Cancel
                           </base-button>
-                          <base-button 
+                          <base-button
                             :disabled="!parserValid"
                             color="primary"
                             rounded
@@ -1832,8 +1808,8 @@ export default {
                   </v-col>
                 </v-card-text>
               </v-card>
-              <base-button 
-                color="primary" 
+              <base-button
+                color="primary"
                 rounded
                 @click.native="step = 4"
               >
@@ -1855,21 +1831,21 @@ export default {
               {{ stepName.four }}
             </v-stepper-step>
             <v-stepper-content step="4">
-              <v-card 
-                color="grey lighten-4" 
+              <v-card
+                color="grey lighten-4"
                 class="mb-5"
               >
                 <v-card-text>
-                  <v-col 
+                  <v-col
                     cols="12"
                     md="8"
-                  > 
+                  >
                     <v-col v-if="helper">
                       <v-subheader class="helpertext">
                         {{ helperText.messageCampaignTestNotRegister }}
                       </v-subheader>
-                    </v-col> 
-                    <v-text-field 
+                    </v-col>
+                    <v-text-field
                       v-model="validateForm.messageCampaignTestNotRegister"
                       :counter="70"
                       prepend-icon="chat"
@@ -1880,7 +1856,7 @@ export default {
                         {{ helperText.messageCampaignNotAvailable }}
                       </v-subheader>
                     </v-col>
-                    <v-text-field 
+                    <v-text-field
                       v-model="validateForm.messageCampaignNotAvailable"
                       :counter="70"
                       prepend-icon="chat"
@@ -1890,8 +1866,8 @@ export default {
                       <v-subheader class="helpertext">
                         {{ helperText.messageBoundariesLessError }}
                       </v-subheader>
-                    </v-col> 
-                    <v-text-field 
+                    </v-col>
+                    <v-text-field
                       v-model="validateForm.messageBoundariesLessError"
                       :rules="[v => !!v || 'Item is required']"
                       :counter="70"
@@ -1903,8 +1879,8 @@ export default {
                       <v-subheader class="helpertext">
                         {{ helperText.messageBoundariesOverError }}
                       </v-subheader>
-                    </v-col> 
-                    <v-text-field 
+                    </v-col>
+                    <v-text-field
                       v-model="validateForm.messageBoundariesOverError"
                       :rules="[v => !!v || 'Item is required']"
                       :counter="70"
@@ -1917,7 +1893,7 @@ export default {
                         {{ helperText.messageBeforeStart }}
                       </v-subheader>
                     </v-col>
-                    <v-text-field 
+                    <v-text-field
                       v-model="validateForm.messageBeforeStart"
                       :rules="[v => !!v || 'Item is required']"
                       :counter="70"
@@ -1930,7 +1906,7 @@ export default {
                         {{ helperText.messageAfterEnd }}
                       </v-subheader>
                     </v-col>
-                    <v-text-field 
+                    <v-text-field
                       v-model="validateForm.messageAfterEnd"
                       :rules="[v => !!v || 'Item is required']"
                       :counter="70"
@@ -1943,7 +1919,7 @@ export default {
                         {{ helperText.messageRegisterFail }}
                       </v-subheader>
                     </v-col>
-                    <v-text-field 
+                    <v-text-field
                       v-model="validateForm.messageRegisterFail"
                       :counter="70"
                       prepend-icon="chat"
@@ -1954,7 +1930,7 @@ export default {
                         {{ helperText.messageValidateFail }}
                       </v-subheader>
                     </v-col>
-                    <v-text-field 
+                    <v-text-field
                       v-model="validateForm.messageValidateFail"
                       :counter="70"
                       prepend-icon="chat"
@@ -1964,8 +1940,8 @@ export default {
                       <v-subheader class="helpertext">
                         {{ helperText.messageCheckMsisdnNotFound }}
                       </v-subheader>
-                    </v-col> 
-                    <v-text-field 
+                    </v-col>
+                    <v-text-field
                       v-model="validateForm.messageCheckMsisdnNotFound"
                       :counter="70"
                       prepend-icon="chat"
@@ -1974,14 +1950,14 @@ export default {
                   </v-col>
                 </v-card-text>
               </v-card>
-              <base-button 
-                color="primary" 
+              <base-button
+                color="primary"
                 rounded
                 @click.native="step = 5"
               >
                 Continue
               </base-button>
-              <base-button 
+              <base-button
                 color="primary"
                 text
                 @click.native="step = 3"
@@ -1997,23 +1973,23 @@ export default {
               {{ stepName.five }}
             </v-stepper-step>
             <v-stepper-content
-              step="5" 
+              step="5"
             >
-              <v-card 
-                color="grey lighten-4" 
+              <v-card
+                color="grey lighten-4"
                 class="mb-5"
               >
                 <v-card-text>
                   <v-row>
-                    <v-col 
+                    <v-col
                       cols="12"
-                    > 
+                    >
                       <v-subheader>Rewards Validation:</v-subheader>
                       <v-col v-if="helper">
                         <v-subheader class="helpertext">
                           {{ helperText.rewardHasSequence }}
                         </v-subheader>
-                      </v-col> 
+                      </v-col>
                       <v-switch
                         v-model="switch2"
                         color="deep-purple"
@@ -2023,7 +1999,7 @@ export default {
                         <v-subheader class="helpertext">
                           {{ helperText.rewardHasObject }}
                         </v-subheader>
-                      </v-col> 
+                      </v-col>
                       <v-switch
                         v-model="checkObjectReward"
                         color="deep-purple"
@@ -2033,8 +2009,8 @@ export default {
                         <v-subheader class="helpertext">
                           {{ helperText.limitReward }}
                         </v-subheader>
-                      </v-col> 
-                      <v-text-field 
+                      </v-col>
+                      <v-text-field
                         v-model.number="validateForm.rewardsLimit"
                         prepend-icon="phonelink_off"
                         label="Limit Rewards"
@@ -2044,8 +2020,8 @@ export default {
                         <v-subheader class="helpertext">
                           {{ helperText.messageRewardsFailed }}
                         </v-subheader>
-                      </v-col> 
-                      <v-text-field 
+                      </v-col>
+                      <v-text-field
                         v-model="validateForm.messageRewardsFailed"
                         :counter="70"
                         prepend-icon="chat_bubble"
@@ -2056,7 +2032,7 @@ export default {
                           {{ helperText.messageRewardsInvalid }}
                         </v-subheader>
                       </v-col>
-                      <v-text-field 
+                      <v-text-field
                         v-model="validateForm.messageRewardsInvalid"
                         :counter="70"
                         prepend-icon="chat_bubble"
@@ -2067,7 +2043,7 @@ export default {
                           {{ helperText.messageRewardReceivedLimit }}
                         </v-subheader>
                       </v-col>
-                      <v-text-field 
+                      <v-text-field
                         v-model="validateForm.messageRewardReceivedLimit"
                         :counter="70"
                         prepend-icon="chat_bubble"
@@ -2076,11 +2052,11 @@ export default {
                     </v-col>
                     <v-col
                       cols="12"
-                    > 
+                    >
                       <v-subheader>Rewards List:</v-subheader>
                       <v-list two-line>
-                        <v-list-item 
-                          v-for="item in rewards" 
+                        <v-list-item
+                          v-for="item in rewards"
                           :key="item.key"
                         >
                           <v-list-item-avatar>
@@ -2110,7 +2086,7 @@ export default {
                       cols="12"
                       md="6"
                     >
-                      <base-button 
+                      <base-button
                         color="primary"
                         rounded
                         @click.native="cardOpen = !cardOpen"
@@ -2157,8 +2133,8 @@ export default {
                               rounded
                               @click.native="loader = 'loading1'"
                             >
-                              <v-icon 
-                                left 
+                              <v-icon
+                                left
                                 dark
                               >
                                 cloud_upload
@@ -2173,7 +2149,7 @@ export default {
                                 <v-subheader class="helpertext">
                                   {{ helperText.couponsTestUpload }}
                                 </v-subheader>
-                              </v-col> 
+                              </v-col>
                               <BaseUploadfield
                                 :accept="fileTypeCP"
                                 :disabled="!switch1"
@@ -2185,7 +2161,7 @@ export default {
                                 <v-subheader class="helpertext">
                                   {{ helperText.couponsProductionUpload }}
                                 </v-subheader>
-                              </v-col> 
+                              </v-col>
                               <BaseUploadfield
                                 :accept="fileTypeCP"
                                 :disabled="!switch1"
@@ -2208,7 +2184,7 @@ export default {
                               <v-subheader class="helpertext">
                                 {{ helperText.name }}
                               </v-subheader>
-                            </v-col> 
+                            </v-col>
                             <v-text-field
                               v-model="anotherReward.rewardName"
                               :rules="[v => !!v || 'Item is required']"
@@ -2220,8 +2196,8 @@ export default {
                               <v-subheader class="helpertext">
                                 {{ helperText.rewardTotal }}
                               </v-subheader>
-                            </v-col> 
-                            <v-text-field 
+                            </v-col>
+                            <v-text-field
                               v-model.number="anotherReward.rewardTotal"
                               :rules="[v => v >= 0 || 'User Number']"
                               prepend-icon="filter_9"
@@ -2233,7 +2209,7 @@ export default {
                               <v-subheader class="helpertext">
                                 {{ helperText.rewardCondition }}
                               </v-subheader>
-                            </v-col> 
+                            </v-col>
                             <v-select
                               v-model="anotherReward.rewardCondition"
                               :items="rewardConditionTypeList"
@@ -2247,7 +2223,7 @@ export default {
                                 {{ helperText.rewardvalidateForm }}
                               </v-subheader>
                             </v-col>
-                            <v-text-field 
+                            <v-text-field
                               v-model="anotherReward.rewardConditionForm"
                               :disabled="anotherReward.rewardCondition === 'all'"
                               prepend-icon="phonelink_lock"
@@ -2259,7 +2235,7 @@ export default {
                                 {{ helperText.messageRewardSuccess }}
                               </v-subheader>
                             </v-col>
-                            <v-text-field 
+                            <v-text-field
                               v-model="anotherReward.messageRewardSuccess"
                               :rules="[v => !!v || 'Item is required']"
                               :counter="70"
@@ -2277,7 +2253,7 @@ export default {
                             >
                               Cancel
                             </base-button>
-                            <base-button 
+                            <base-button
                               :disabled="!rewardValid"
                               rounded
                               color="primary"
@@ -2309,23 +2285,23 @@ export default {
             </v-stepper-content>
             <v-stepper-step
               :complete="step > 6"
-              step="6" 
+              step="6"
               editable
             >
               {{ stepName.six }}
             </v-stepper-step>
             <v-stepper-content
-              step="6" 
+              step="6"
             >
-              <v-card 
-                color="grey lighten-4" 
+              <v-card
+                color="grey lighten-4"
                 class="mb-5"
               >
                 <v-card-text>
                   <v-row>
-                    <v-col 
+                    <v-col
                       cols="12"
-                    > 
+                    >
                       <p class="indigo--text">
                         <strong>Step 6: Summary Page</strong>
                       </p>
@@ -2512,7 +2488,7 @@ export default {
               >
                 Continue
               </base-button>
-              <base-button 
+              <base-button
                 color="primary"
                 text
                 @click.native="step = 5"

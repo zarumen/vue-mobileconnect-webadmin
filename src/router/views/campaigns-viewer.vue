@@ -5,74 +5,70 @@ import { campaignComputed } from '@state/helpers'
 export default {
   page: {
     title: 'Campaigns Viewer',
-    meta: [{ name: 'description', content: 'Campaigns Customers Viewer' }],
+    meta: [{ name: 'description', content: 'Campaigns Customers Viewer' }]
   },
-  components: { 
-    Layout: () => import('@layouts/main'),
+  components: {
+    Layout: () => import('@layouts/main')
   },
   props: {
     user: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
-  data() {
+  data () {
     return {
       baseModule: 'campaigns',
       addCampaignDialog: '',
       dialog: '',
-      dialogTitle: "Campaign Delete Dialog",
-      dialogText: "Do you want to delete this campaign?",
+      dialogTitle: 'Campaign Delete Dialog',
+      dialogText: 'Do you want to delete this campaign?',
       headers: [
         { text: 'Views', value: 'action', align: 'center', sortable: false },
-        { text: 'Header', value: 'campaignName', left: true, },
+        { text: 'Header', value: 'campaignName', left: true },
         { text: 'Brand', value: 'organizationLevel3Name' },
         { text: 'Shortcode', value: 'shortcode' },
         { text: 'Status', value: 'campaignState', align: 'center' },
-        { text: 'Active', value: 'campaignActive' },
+        { text: 'Active', value: 'campaignActive' }
       ],
       campaignId: '',
       campaignRemaining: null,
       quickSearchFilter: '',
       left: true,
-      timeout: 2000,
+      timeout: 2000
     }
   },
   computed: {
     ...campaignComputed,
     authLevel () {
       // set Auth Level before send to Query
-      if(this.user.organizationAuth === 'Level1')
-        return this.user.organizationLevel1
-      
-      if(this.user.organizationAuth === 'Level2')
-        return this.user.organizationLevel2
-      
-      if(this.user.organizationAuth === 'Level3')
-        return this.user.organizationLevel3
+      if (this.user.organizationAuth === 'Level1') { return this.user.organizationLevel1 }
+
+      if (this.user.organizationAuth === 'Level2') { return this.user.organizationLevel2 }
+
+      if (this.user.organizationAuth === 'Level3') { return this.user.organizationLevel3 }
 
       return null
-    },
+    }
   },
   watch: {
 
   },
   created () {
-
-    if(!this.hadCampaignList) {
+    if (!this.hadCampaignList) {
       this.reloadData()
     }
   },
   methods: {
     ...mapActions('campaigns', [
-      'getCampaignsByOrg',
+      'getCampaignsByOrg'
     ]),
-    print() {
+    print () {
       window.print()
     },
     reloadData () {
       this.getCampaignsByOrg({
-        auth: this.user.organizationAuth, 
+        auth: this.user.organizationAuth,
         orgId: this.authLevel
       })
     },
@@ -86,8 +82,8 @@ export default {
     exitSnackbar () {
       this.$store.commit(`${this.baseModule}/setSnackbar`, { snackbar: false })
       this.$store.commit(`${this.baseModule}/setNotice`, { notice: '' })
-    },
-  },
+    }
+  }
 }
 </script>
 
@@ -115,11 +111,11 @@ export default {
               icon
               @click.native="reloadData()"
             >
-              reload      
+              reload
             </base-button>
-            <!-- <base-button 
-              text 
-              icon 
+            <!-- <base-button
+              text
+              icon
               color="primary"
             >
               <v-icon>
@@ -141,24 +137,24 @@ export default {
         </v-card>
       </v-flex>
       <!-- Pop up Panels -->
-      <BaseDialog 
-        :dialog="dialog" 
-        :dialog-title="dialogTitle" 
+      <BaseDialog
+        :dialog="dialog"
+        :dialog-title="dialogTitle"
         :dialog-text="dialogText"
-        @onConfirm="onConfirm" 
+        @onConfirm="onConfirm"
         @onCancel="onCancel"
       />
-      <v-snackbar 
-        v-if="loading===false" 
-        v-model="snackbar" 
-        :left="true" 
-        :timeout="timeout" 
+      <v-snackbar
+        v-if="loading===false"
+        v-model="snackbar"
+        :left="true"
+        :timeout="timeout"
         :color="mode"
       >
         {{ notice }}
-        <base-button 
-          dark 
-          text 
+        <base-button
+          dark
+          text
           @click.native="exitSnackbar"
         >
           Close
@@ -171,4 +167,3 @@ export default {
 <style lang="scss" module>
 @import '@design';
 </style>
-

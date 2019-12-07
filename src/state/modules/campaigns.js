@@ -1,7 +1,7 @@
 import { set } from '@state/helpers'
 import assign from 'lodash/assign'
-import axios from "@utils/aws-api.config"
-import firestoreApp from "@utils/firestore.config"
+import axios from '@utils/aws-api.config'
+import firestoreApp from '@utils/firestore.config'
 import { firebasePref } from '@utils/firebase-pref.config'
 import getServerTimestamp from '@utils/firestore-timestamp'
 
@@ -10,7 +10,7 @@ import {
   sendErrorNotice,
   closeNotice,
   commitPagination,
-  getDefaultPagination,
+  getDefaultPagination
 } from '@utils/pagination-util'
 
 export const state = {
@@ -24,30 +24,26 @@ export const state = {
   loading: false,
   mode: '',
   snackbar: false,
-  notice: '',  
+  notice: ''
 }
 
 export const getters = {
   hadCampaignList (state) {
-    return !!state.items
+    return !!state.items // (state.items !=== null || undefined) ? true : false
   },
   getAllCampaignsId (state) {
-
-    if(state.items)
-      return state.items.map(item => item.id)
+    if (state.items) { return state.items.map(item => item.id) }
 
     return []
   },
   getOneCampaign: (state) => (id) => {
-
-    if(state.items)
-      return state.items.find(item => item.id === id)
+    if (state.items) { return state.items.find(item => item.id === id) }
 
     return []
   },
   getOneCampaignValidate: (state) => state.itemValidate,
   getOneCampaignSelected: (state) => state.campaignSelected,
-  getCampaignStateSelected: (state) => state.campaignStateSelected,
+  getCampaignStateSelected: (state) => state.campaignStateSelected
 }
 
 export const mutations = {
@@ -82,45 +78,42 @@ export const mutations = {
   },
   setMode (state, { mode }) {
     state.mode = mode
-  },
+  }
 }
 
 export const actions = {
   // ===
   // CREATE Zone
   // ===
-  async createCampaign({ commit, dispatch }, { campaignObject, validationObject } = {}) {
-
+  async createCampaign ({ commit, dispatch }, { campaignObject, validationObject } = {}) {
     commit('setLoading', { loading: true })
 
-    campaignObject['campaignCreateTime'] = getServerTimestamp()
-    
-    let keyword = campaignObject.keyword
-    let shortcode = campaignObject.shortcode
+    campaignObject.campaignCreateTime = getServerTimestamp()
+
+    const keyword = campaignObject.keyword
+    const shortcode = campaignObject.shortcode
     let createError = false
 
     try {
-
       await firestoreApp
         .collection('campaigns')
         .doc(`${campaignObject.campaignCode}`)
         .set(campaignObject)
-      
+
       await firestoreApp
         .collection('campaignValidate')
         .doc(`${campaignObject.campaignCode}`)
         .set(validationObject)
-        
-      
-      let data = {}
-      let updatedKey = {}
-      
+
+      const data = {}
+      const updatedKey = {}
+
       // วน loop keywords ทั้งหมด ลงในที่ที่จะ update ทั้ง KeywordByShortcode และ KeywordReserved
       keyword.forEach(key => {
         data[key] = `${campaignObject.campaignCode}`
         updatedKey[`keywords.${key}`] = false
       })
-      
+
       await firestoreApp
         .collection('campaignKeywordByShortcode')
         .doc(shortcode)
@@ -130,15 +123,12 @@ export const actions = {
         .collection('campaignKeywordReserved')
         .doc(`${shortcode}`)
         .update(updatedKey)
-
-
-    } catch (error) { 
-        createError = true
-        console.log(error)
+    } catch (error) {
+      createError = true
+      console.log(error)
     }
 
     if (!createError) {
-
       // switch Shortcode Reserved to Shortcode Active
       dispatch('shortcodes/mutateKeywordReservedListByCreateCampaign', {
         shortcode: shortcode,
@@ -149,38 +139,32 @@ export const actions = {
       closeNotice(commit, 3000)
       commit('setLoading', { loading: false })
       dispatch('getAllCampaigns')
-
     } else {
-
       commit('setLoading', { loading: false })
       sendErrorNotice(commit, 'Create Campaign failed! Please try again later. ')
       closeNotice(commit, 3000)
-
     }
-
   },
   // ===
   // READ Zone
   // ===
-  getAllCampaigns({ commit }) {
-
-    let trace = firebasePref.trace('allCampaignQuery')
+  getAllCampaigns ({ commit }) {
+    const trace = firebasePref.trace('allCampaignQuery')
     trace.start()
-    
+
     commit('setLoading', { loading: true })
-    
+
     return firestoreApp
       .collection('campaigns')
       .orderBy('campaignCreateTime', 'desc')
       .get()
       .then(querySnapshot => {
-
-        let campaignList = []
+        const campaignList = []
 
         querySnapshot.forEach(doc => {
           let data = {}
           data = doc.data()
-          data['id'] = doc.id
+          data.id = doc.id
           campaignList.push(data)
         })
 
@@ -202,34 +186,32 @@ export const actions = {
         return error
       })
   },
-  getCampaignsByOrg({ commit }, { auth, orgId } = {}) {
-
+  getCampaignsByOrg ({ commit }, { auth, orgId } = {}) {
     console.log(auth, orgId)
-    let trace = firebasePref.trace('getCampaignByOrgQuery')
+    const trace = firebasePref.trace('getCampaignByOrgQuery')
     trace.start()
 
-    if(!orgId) return Promise.resolve(null)
+    if (!orgId) return Promise.resolve(null)
 
-    let authQuery = `organization${auth}`
+    const authQuery = `organization${auth}`
 
     console.log(authQuery)
-    
+
     commit('setLoading', { loading: true })
     commit('setItems', null)
-    
+
     return firestoreApp
       .collection('campaigns')
-      .where(authQuery, "==", orgId)
+      .where(authQuery, '==', orgId)
       .orderBy('campaignDateStart', 'desc')
       .get()
       .then(querySnapshot => {
-
-        let campaignList = []
+        const campaignList = []
 
         querySnapshot.forEach(doc => {
-            let data = doc.data()
-            data['id'] = doc.id
-            campaignList.push(data)
+          const data = doc.data()
+          data.id = doc.id
+          campaignList.push(data)
         })
 
         commitPagination(commit, campaignList)
@@ -251,70 +233,66 @@ export const actions = {
       })
   },
   getCampaignValidate ({ commit }, { campaignId }) {
-
     return firestoreApp
-    .collection('campaignValidate')
-    .doc(campaignId)
-    .get()
-    .then(doc => {
-      if (doc.exists) {
+      .collection('campaignValidate')
+      .doc(campaignId)
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          const data = doc.data()
 
-        let data = doc.data()
-        
-        commit('setItemValidate', data)
-
-      } else {
+          commit('setItemValidate', data)
+        } else {
         // doc.data() will be undefined in this case
-        console.log("No such document!")
-        commit('setItemValidate', null)
-      }
-    })
-    .catch(error => {
-      console.log(error)
-      commit('setLoading', { loading: false })
-      sendErrorNotice(commit, 'Load Failed!')
-      closeNotice(commit, 2000)
-      return error
-    })
+          console.log('No such document!')
+          commit('setItemValidate', null)
+        }
+      })
+      .catch(error => {
+        console.log(error)
+        commit('setLoading', { loading: false })
+        sendErrorNotice(commit, 'Load Failed!')
+        closeNotice(commit, 2000)
+        return error
+      })
   },
   // ===
   // UPDATE Zone
   // ===
   async calibratedCampaignTx ({ state }, { campaignState }) {
-    
     const campaignId = state.campaignSelected
 
-    let totalsTx = await axios.putData(`transaction/${campaignId}/${campaignState}/totals`)
-    let successTx = await axios.putData(`transaction/${campaignId}/${campaignState}/success`)
-    let rewardsTx = await axios.putData(`transaction/${campaignId}/${campaignState}/rewards`)
+    const totalsTx = await axios.putData(`transaction/${campaignId}/${campaignState}/totals`)
+    const successTx = await axios.putData(`transaction/${campaignId}/${campaignState}/success`)
+    const rewardsTx = await axios.putData(`transaction/${campaignId}/${campaignState}/rewards`)
 
     return Promise.all([totalsTx, successTx, rewardsTx])
   },
-  updatePage({ commit }, pageNumber) {
+  updatePage ({ commit }, pageNumber) {
     commit('setPage', { page: pageNumber })
   },
-  updatePages({ commit }, pagesNumber) {
+  updatePages ({ commit }, pagesNumber) {
     commit('setPage', { pages: pagesNumber })
   },
-  updatePagination({ commit }, pagiObj) {
+  updatePagination ({ commit }, pagiObj) {
     commit('setPage', pagiObj)
   },
-  async updateStatusCampaign({ state, commit }, { campaignId }) {
-    let index = state.items.map(e => e.id).indexOf(campaignId);
-    let status = { campaignState: 'production' }
+  async updateStatusCampaign ({ state, commit }, { campaignId }) {
+    const index = state.items.map(e => e.id).indexOf(campaignId)
+    const status = { campaignState: 'production' }
 
     await firestoreApp
-        .collection('campaignValidate')
-        .doc(`${campaignId}`)
-        .set(status, { merge: true })
+      .collection('campaignValidate')
+      .doc(`${campaignId}`)
+      .set(status, { merge: true })
 
     await firestoreApp
-        .collection('campaigns')
-        .doc(`${campaignId}`)
-        .set(status, { merge: true })
-    
+      .collection('campaigns')
+      .doc(`${campaignId}`)
+      .set(status, { merge: true })
+
     commit('toggleState', 'production')
-    commit('setElementCampaignList', { 
+    commit('setElementCampaignList', {
       position: index,
       payload: status
     })
@@ -322,38 +300,37 @@ export const actions = {
   // ===
   // DELETE Zone
   // ===
-  async deleteCampaign({ state, commit, dispatch }, campaignId) {
-    
+  async deleteCampaign ({ state, commit, dispatch }, campaignId) {
     commit('setLoading', { loading: true })
 
-    let batch = firestoreApp.batch()
+    const batch = firestoreApp.batch()
 
-    let campaignRef = firestoreApp
+    const campaignRef = firestoreApp
       .collection('campaigns')
       .doc(`${campaignId}`)
 
-    batch.set(campaignRef, { campaignActive: false }, { merge: true });
+    batch.set(campaignRef, { campaignActive: false }, { merge: true })
 
-    let campaignValidateRef = firestoreApp
+    const campaignValidateRef = firestoreApp
       .collection('campaignValidate')
       .doc(`${campaignId}`)
 
-    batch.set(campaignValidateRef, { campaignActive: false }, { merge: true });
+    batch.set(campaignValidateRef, { campaignActive: false }, { merge: true })
 
     return batch.commit()
       .then(() => {
-        // dispatch delete keywordByShortcode to tricked return to keywordReserved = true 
+        // dispatch delete keywordByShortcode to tricked return to keywordReserved = true
 
-        let obj = state.items.find(item => item.id === campaignId)
-        
-        let keyworddeleted = obj.keyword
-        let shortcodedeleted = obj.shortcode
-        
+        const obj = state.items.find(item => item.id === campaignId)
+
+        const keyworddeleted = obj.keyword
+        const shortcodedeleted = obj.shortcode
+
         dispatch('shortcodes/deleteKeywordByShortcode', {
           shortcode: shortcodedeleted,
           keyword: keyworddeleted
         }, { root: true })
-        
+
         commit('setLoading', { loading: false })
         dispatch('getAllCampaigns')
         dispatch('deleteCampaignResource', { campaignId: campaignId })
@@ -362,20 +339,20 @@ export const actions = {
       })
       .catch(error => {
         commit('setLoading', { loading: false })
-        console.log("Error removing document: ", error)
+        console.log('Error removing document: ', error)
       })
   },
-  async deleteCampaignResource({ commit }, { campaignId }) {
+  async deleteCampaignResource ({ commit }, { campaignId }) {
     // delete campaigns Register Records from Redis
-    let resTest = await axios.deleteData(`registerrecords/${campaignId}/test/totals`)
-    let resProd = await axios.deleteData(`registerrecords/${campaignId}/production/totals`)
+    const resTest = await axios.deleteData(`registerrecords/${campaignId}/test/totals`)
+    const resProd = await axios.deleteData(`registerrecords/${campaignId}/production/totals`)
 
     return console.log(resTest, resProd)
   },
   // ===
   // ETC. Zone
   // ===
-  closeSnackBar ({ commit }, timeout ) {
+  closeSnackBar ({ commit }, timeout) {
     closeNotice(commit, timeout)
   },
   clearItem ({ commit }) {
@@ -386,19 +363,17 @@ export const actions = {
   }
 }
 
-export function getExportJobsByCampaign(campaignId) {
-  
+export function getExportJobsByCampaign (campaignId) {
   return firestoreApp
     .collection('exportJobs').doc(campaignId).collection('jobs')
     .get()
     .then(querySnapshot => {
-
-      let exportJobs = []
+      const exportJobs = []
 
       querySnapshot.forEach(doc => {
         let data = {}
         data = doc.data()
-        data['id'] = doc.id
+        data.id = doc.id
         exportJobs.push(data)
       })
       return exportJobs
@@ -408,4 +383,3 @@ export function getExportJobsByCampaign(campaignId) {
       return error
     })
 }
-

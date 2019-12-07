@@ -7,30 +7,28 @@ export default {
     expand: false,
     left: true,
     timeout: 2000,
-    showed: true,
+    showed: true
   }),
   computed: {
     ...operatorComputed,
     page: {
-      set(page) {
+      set (page) {
         this.$store.commit('shortcodes/setPage', { page })
       },
-      get() {
+      get () {
         return this.pagination.page
       }
     },
     isNotEmpty () {
       // check data is not empty
-      if(this.items !== undefined)
-        return (this.items && this.items.length > 0);
+      if (this.items !== undefined) { return (this.items && this.items.length > 0) }
 
       return null
-    },
+    }
   },
-  created() {
-    if(!this.hadOperatorsList)
-      this.getAllOperators()
-    
+  created () {
+    if (!this.hadOperatorsList) { this.getAllOperators() }
+
     this.mutablePagination = this.pagination
   },
   methods: {
@@ -44,7 +42,7 @@ export default {
     exitSnackbar () {
       this.$store.commit('shortcodes/setSnackbar', { snackbar: false })
       this.$store.commit('shortcodes/setNotice', { notice: '' })
-    },
+    }
   }
 }
 </script>
@@ -73,9 +71,9 @@ export default {
           rounded
           circle
         >
-          NEW OPERATOR            
+          NEW OPERATOR
         </base-button>
-        <base-button 
+        <base-button
           color="primary"
           circle
           icon
@@ -89,7 +87,7 @@ export default {
       <!-- Insert in Base-Table Component -->
       <v-container
         v-if="isNotEmpty"
-        fluid 
+        fluid
         grid-list-md
       >
         <v-data-iterator
@@ -112,8 +110,8 @@ export default {
                 lg="3"
               >
                 <v-card>
-                  <v-card-title 
-                    class="headline align-text-center" 
+                  <v-card-title
+                    class="headline align-text-center"
                     avatar
                   >
                     {{ toTitleCase(item.operator) }}
@@ -128,7 +126,7 @@ export default {
                   <v-divider />
                   <v-list
                     v-if="isExpanded(item)"
-                    dense 
+                    dense
                   >
                     <v-list-item>
                       <v-list-item-content>Company:</v-list-item-content>
@@ -150,7 +148,7 @@ export default {
                     </v-list-item>
                     <v-list-item>
                       <v-list-item-content>PLMN Number:</v-list-item-content>
-                      <v-list-item-content 
+                      <v-list-item-content
                         class="align-end"
                       >
                         <v-chip-group
@@ -158,8 +156,8 @@ export default {
                           column
                         >
                           <v-chip
-                            v-for="pn in item.numberPLMN" 
-                            :key="pn.key" 
+                            v-for="pn in item.numberPLMN"
+                            :key="pn.key"
                             x-small
                             v-text="pn"
                           />
@@ -175,17 +173,17 @@ export default {
       </v-container>
     </base-card>
     <!-- Pop up Panels -->
-    <v-snackbar 
-      v-if="loading===false" 
-      v-model="snackbar" 
-      :left="true" 
-      :timeout="timeout" 
+    <v-snackbar
+      v-if="loading===false"
+      v-model="snackbar"
+      :left="true"
+      :timeout="timeout"
       :color="mode"
     >
       {{ notice }}
-      <base-button 
-        dark 
-        text 
+      <base-button
+        dark
+        text
         @click.native="exitSnackbar"
       >
         Close

@@ -7,7 +7,7 @@ import {
   sendErrorNotice,
   closeNotice,
   commitPagination,
-  getDefaultPagination,
+  getDefaultPagination
 } from '@utils/pagination-util'
 
 export const state = {
@@ -24,35 +24,35 @@ export const state = {
   brandList: [],
   // Search Result Variables
   organization: {},
-  organizationsList: [],
+  organizationsList: []
 }
 
 export const getters = {
-  hadList(state) {
+  hadList (state) {
     return !!state.items
   },
-  getCompanyList(state) {
+  getCompanyList (state) {
     return state.companyList
   },
-  getDepartmentList(state) {
+  getDepartmentList (state) {
     return state.departmentList
   },
-  getBrandList(state) {
+  getBrandList (state) {
     return state.brandList
   }
 }
 
 export const mutations = {
-  setOrganizationsList(state, newValue) {
+  setOrganizationsList (state, newValue) {
     state.organizationsList = newValue
   },
-  setCompanyList(state, newValue) {
+  setCompanyList (state, newValue) {
     state.companyList = newValue
   },
-  setDepartmentList(state, newValue) {
+  setDepartmentList (state, newValue) {
     state.departmentList = newValue
   },
-  setBrandList(state, newValue) {
+  setBrandList (state, newValue) {
     state.brandList = newValue
   },
   setPagination (state, pagination) {
@@ -63,7 +63,7 @@ export const mutations = {
     assign(state.pagination, paginationElement)
   },
   // Mutate Value in Pagination
-  setLoading(state, { loading }) {
+  setLoading (state, { loading }) {
     state.loading = loading
   },
   setNotice (state, { notice }) {
@@ -84,8 +84,7 @@ export const actions = {
   // ===
   // CREAT Zone
   // ===
-  addCompanyToOrganization({ commit, dispatch }, organization) {
-
+  addCompanyToOrganization ({ commit, dispatch }, organization) {
     console.log('Company action!')
 
     return firestoreApp
@@ -97,7 +96,7 @@ export const actions = {
           organizationLevel1: docRef.id
         })
 
-        console.log("Document written with ID: ", docRef.id);
+        console.log('Document written with ID: ', docRef.id)
         dispatch('getOrganizationsList')
         sendSuccessNotice(commit, 'New Company has been added.')
         closeNotice(commit, 1500)
@@ -109,8 +108,7 @@ export const actions = {
         return error
       })
   },
-  addDepartmentToOrganization({ commit, dispatch }, organization) {
-
+  addDepartmentToOrganization ({ commit, dispatch }, organization) {
     console.log('Department Action')
 
     return firestoreApp
@@ -122,7 +120,7 @@ export const actions = {
           organizationLevel2: docRef.id
         })
 
-        console.log("Document written with ID: ", docRef.id);
+        console.log('Document written with ID: ', docRef.id)
         dispatch('getOrganizationsList')
         sendSuccessNotice(commit, 'New Department has been added.')
         closeNotice(commit, 1500)
@@ -134,10 +132,9 @@ export const actions = {
         return error
       })
   },
-  addBrandToOrganization({ commit, dispatch }, organization) {
-
+  addBrandToOrganization ({ commit, dispatch }, organization) {
     console.log('Brand Action')
-    
+
     return firestoreApp
       .collection('organizations')
       .add(organization)
@@ -147,7 +144,7 @@ export const actions = {
           organizationLevel3: docRef.id
         })
 
-        console.log("Document written with ID: ", docRef.id);
+        console.log('Document written with ID: ', docRef.id)
         dispatch('getOrganizationsList')
         sendSuccessNotice(commit, 'New Brand has been added.')
         closeNotice(commit, 1500)
@@ -162,13 +159,13 @@ export const actions = {
   // ===
   // READ Zone
   // ===
-  getOrganizationById({ commit }, { id }) {
+  getOrganizationById ({ commit }, { id }) {
     console.log(id)
     return id
   },
-  getOrganizationsListById({ commit }, { authLevel, id }) {
-    switch(authLevel) {
-      case 'Level1':       
+  getOrganizationsListById ({ commit }, { authLevel, id }) {
+    switch (authLevel) {
+      case 'Level1':
         break
       case 'Level2':
         break
@@ -176,10 +173,8 @@ export const actions = {
         break
     }
   },
-  getOrganizationsList({ commit }) {
-    
+  getOrganizationsList ({ commit }) {
     if (this.hadList) return Promise.resolve(null)
-
 
     commit('setLoading', { loading: true })
 
@@ -188,67 +183,65 @@ export const actions = {
       .orderBy('lastUpdated', 'desc')
       .get()
       .then(querySnapshot => {
-          let orgList = []
-          querySnapshot.forEach(res => {
-            let data = {}
-            data = res.data()
-            data['id'] = res.id
-            orgList.push(data)
-          })
+        const orgList = []
+        querySnapshot.forEach(res => {
+          let data = {}
+          data = res.data()
+          data.id = res.id
+          orgList.push(data)
+        })
 
-          // Split Array Organization => Company, Deparment, Brand
-          const orgLevel1List = orgList
-            .filter(org => 
-              org.organizationAuth === 'Level1'
+        // Split Array Organization => Company, Deparment, Brand
+        const orgLevel1List = orgList
+          .filter(org =>
+            org.organizationAuth === 'Level1'
           )
 
-          const orgLevel2List = orgList
-            .filter(org => 
-              org.organizationAuth === 'Level2'
+        const orgLevel2List = orgList
+          .filter(org =>
+            org.organizationAuth === 'Level2'
           )
 
-          const orgLevel3List = orgList
-            .filter(org => 
-              org.organizationAuth === 'Level3'
+        const orgLevel3List = orgList
+          .filter(org =>
+            org.organizationAuth === 'Level3'
           )
 
-          // set All state
-          commit('setCompanyList', orgLevel1List)
-          commit('setDepartmentList', orgLevel2List)
-          commit('setBrandList', orgLevel3List)
+        // set All state
+        commit('setCompanyList', orgLevel1List)
+        commit('setDepartmentList', orgLevel2List)
+        commit('setBrandList', orgLevel3List)
 
-          commitPagination(commit, orgList)
-          commit('setLoading', { loading: false })
-          sendSuccessNotice(commit, 'Organization Refresh!')
-          closeNotice(commit, 1500)
-          return orgList
+        commitPagination(commit, orgList)
+        commit('setLoading', { loading: false })
+        sendSuccessNotice(commit, 'Organization Refresh!')
+        closeNotice(commit, 1500)
+        return orgList
       })
       .catch(error => {
-          commit('setLoading', { loading: false })
-          console.log(error)
-          return error
+        commit('setLoading', { loading: false })
+        console.log(error)
+        return error
       })
   },
   // ===
   // UPDATED Zone
   // ===
-  updatePage({ commit }, pageNumber) {
+  updatePage ({ commit }, pageNumber) {
     commit('setPage', { page: pageNumber })
   },
-  updatePages({ commit }, pagesNumber) {
+  updatePages ({ commit }, pagesNumber) {
     commit('setPage', { pages: pagesNumber })
   },
-  updatePagination({ commit }, pagiObj) {
+  updatePagination ({ commit }, pagiObj) {
     commit('setPage', pagiObj)
   },
-  async editOrganizationLevelCompany({ commit, state }, { organizationId, payloadFixed, picURL }) {
-
-    if(picURL !== 'undefine') {
+  async editOrganizationLevelCompany ({ commit, state }, { organizationId, payloadFixed, picURL }) {
+    if (picURL !== 'undefine') {
       // TODO: change picURL in fields organizations
 
     } else {
-
-      let arrayIdChanged = state.items
+      const arrayIdChanged = state.items
         .filter(org => org.organizationLevel1 === organizationId)
         .map(ogfiltered => ogfiltered.id)
 
@@ -265,8 +258,7 @@ export const actions = {
   // ===
   // DELETE Zone
   // ===
-  deleteOrganization({ commit, dispatch }, organizationId) {
-
+  deleteOrganization ({ commit, dispatch }, organizationId) {
     commit('setLoading', { loading: true })
 
     return firestoreApp
@@ -280,20 +272,20 @@ export const actions = {
       })
       .catch(error => {
         commit('setLoading', { loading: false })
-        console.log("Error removing document: ", error)
+        console.log('Error removing document: ', error)
       })
   },
   // ===
   // ETC. Zone
   // ===
-  closeSnackBar ({ commit }, timeout ) {
-    closeNotice(commit, timeout);
+  closeSnackBar ({ commit }, timeout) {
+    closeNotice(commit, timeout)
   },
   openSnackBar ({ commit }, { mode, text, timeout }) {
-    if(mode === 'success') {
+    if (mode === 'success') {
       sendSuccessNotice(commit, text)
       closeNotice(commit, timeout)
-    } else if(mode === 'error') {
+    } else if (mode === 'error') {
       sendErrorNotice(commit, text)
       closeNotice(commit, timeout)
     }
@@ -304,7 +296,6 @@ export const actions = {
 // ===
 
 const changedOrganization = async (collection, ids, payload) => {
-
   const changes = ids.map(id => collection.doc(id).set(payload, { merge: true }))
   const result = await Promise.all(changes)
   return result

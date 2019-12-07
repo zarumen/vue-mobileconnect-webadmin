@@ -3,12 +3,12 @@ import { authComputed } from '@state/helpers'
 import { mapMutations } from 'vuex'
 
 export default {
-  data() {
+  data () {
     return {
       responsive: false,
       color: 'secondary white--text',
       logo: '@assets/images/mc-logo.png',
-      image: 'https://firebasestorage.googleapis.com/v0/b/mobile-connect-sms-webadmin/o/img%2Fmoblie-slider1.jpg?alt=media&token=565426b8-16de-4179-8532-2f7c6b7bcd98',
+      image: 'https://firebasestorage.googleapis.com/v0/b/mobile-connect-sms-webadmin/o/img%2Fmoblie-slider1.jpg?alt=media&token=565426b8-16de-4179-8532-2f7c6b7bcd98'
     }
   },
   computed: {
@@ -37,19 +37,19 @@ export default {
     },
     selectedMenuItem (value) {
       // init menu Items by use 'auth/isAdmin' role
-      let menuAdmin = [
+      const menuAdmin = [
         {
           name: 'dashboard',
           icon: 'dashboard',
           title: 'Dashboard',
           link: '/dashboard'
         },
-        // {
-        //   name: 'search',
-        //   icon: 'search',
-        //   title: 'Search Admin',
-        //   link: '/search'
-        // },
+        {
+          name: 'search',
+          icon: 'search',
+          title: 'Search Admin',
+          link: '/search'
+        },
         {
           name: 'organizations',
           icon: 'business',
@@ -91,9 +91,9 @@ export default {
           icon: 'widgets',
           title: 'Widgets Manager',
           link: '/campaignwidgets'
-        },
+        }
       ]
-      let menuUser = [
+      const menuUser = [
         {
           name: 'campaignsViewer',
           icon: 'store',
@@ -105,21 +105,21 @@ export default {
           icon: 'assignment',
           title: 'Reports',
           link: '/reportViewer'
-        },
-/*        {
+        }
+        /*        {
           name: 'campaignWidgetsViewer',
           icon: 'widgets',
           title: 'Widgets',
         }, */
       ]
-      let menuDefault = [
+      const menuDefault = [
         {
           name: 'profile',
           icon: 'face',
           title: 'Profile',
           link: '/profile'
         },
-/*         {
+        /*         {
           name: 'settings',
           icon: 'settings',
           title: 'Settings',
@@ -129,9 +129,9 @@ export default {
           icon: 'exit_to_app',
           title: 'Logout',
           link: '/logout'
-        },
+        }
       ]
-      if(value === 1 && this.isAdmin === true) {
+      if (value === 1 && this.isAdmin === true) {
         return menuAdmin
       } else if (value === 2) {
         return menuUser
@@ -212,7 +212,7 @@ export default {
                 {{ item.title }}
               </v-list-item-title>
             </v-list-item-content>
-          </v-list-item> 
+          </v-list-item>
         </v-list-group>
         <v-list-group
           value="true"
@@ -243,7 +243,7 @@ export default {
                 {{ item.title }}
               </v-list-item-title>
             </v-list-item-content>
-          </v-list-item> 
+          </v-list-item>
         </v-list-group>
         <v-list-group
           value="true"
@@ -281,4 +281,3 @@ export default {
     </v-layout>
   </v-navigation-drawer>
 </template>
-

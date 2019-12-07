@@ -5,7 +5,12 @@ const { reactiveProp } = mixins
 export default {
   extends: HorizontalBar,
   mixins: [reactiveProp],
-  props: ['options'],
+  props: {
+    options: {
+      type: String,
+      default: ''
+    }
+  },
   mounted () {
     // this.chartData is created in the mixin.
     // If you want to pass options please create a local options object
@@ -15,5 +20,7 @@ export default {
 </script>
 
 <template>
-  
+  <div>
+    chart
+  </div>
 </template>

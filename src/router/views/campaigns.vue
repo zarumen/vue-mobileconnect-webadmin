@@ -4,19 +4,19 @@ import { campaignComputed, campaignMethods } from '@state/helpers'
 export default {
   page: {
     title: 'Campaigns',
-    meta: [{ name: 'description', content: 'Campaigns' }],
+    meta: [{ name: 'description', content: 'Campaigns' }]
   },
-  components: { 
-    Layout: () => import('@layouts/main'), 
+  components: {
+    Layout: () => import('@layouts/main'),
     FormAddCampaign: () => import('@components/form/form-add-campaign')
   },
-  data() {
+  data () {
     return {
       baseModule: 'campaigns',
       addCampaignDialog: '',
       dialog: '',
-      dialogTitle: "Campaign Delete Dialog",
-      dialogText: "Do you want to delete this campaign?",
+      dialogTitle: 'Campaign Delete Dialog',
+      dialogText: 'Do you want to delete this campaign?',
       headers: [
         {
           text: 'Code',
@@ -30,46 +30,42 @@ export default {
         { text: 'Running', value: 'campaignAvailable' },
         { text: 'Status', value: 'campaignState', align: 'center' },
         { text: 'Active', value: 'campaignActive' },
-        { text: 'Actions', value: 'action', align: 'center', sortable: false },
+        { text: 'Actions', value: 'action', align: 'center', sortable: false }
       ],
       campaignId: '',
       campaignRemaining: null,
       quickSearchFilter: '',
       left: true,
-      timeout: 2000,
+      timeout: 2000
     }
   },
   computed: {
-    ...campaignComputed,
+    ...campaignComputed
   },
   watch: {
 
   },
   created () {
+    if (!this.hadShortcodesList) { this.getAllShortcodes() }
 
-    if(!this.hadShortcodesList)
-      this.getAllShortcodes()
+    if (!this.hadList) { this.getOrganizationsList() }
 
-    if(!this.hadList)
-      this.getOrganizationsList()
-
-    if(!this.hadCampaignList)
-      this.getAllCampaigns()
+    if (!this.hadCampaignList) { this.getAllCampaigns() }
   },
   methods: {
     ...campaignMethods,
-    print() {
+    print () {
       window.print()
     },
     reloadData () {
       this.getAllCampaigns()
     },
-    edit(item) {
+    edit (item) {
       this.$store.commit('campaigns/setCampaignSelected', item.id)
       this.$store.commit('campaigns/toggleState', item.campaignState)
       this.$router.push({ name: 'campaignDetails', params: { campaignId: item.id } })
     },
-    remove(item) {
+    remove (item) {
       this.campaignId = item.id
       this.dialog = true
     },
@@ -84,8 +80,8 @@ export default {
     exitSnackbar () {
       this.$store.commit('campaigns/setSnackbar', { snackbar: false })
       this.$store.commit('campaigns/setNotice', { notice: '' })
-    },
-  },
+    }
+  }
 }
 </script>
 
@@ -107,17 +103,17 @@ export default {
               />
             </span>
             <v-spacer />
-            <base-button 
+            <base-button
               color="primary"
               circle
               icon
               @click.native="reloadData()"
             >
-              <base-icon name="syncAlt" />            
+              <base-icon name="syncAlt" />
             </base-button>
-            <base-button 
-              text 
-              icon 
+            <base-button
+              text
+              icon
               color="primary"
             >
               <v-icon>
@@ -141,24 +137,24 @@ export default {
         </v-card>
       </v-flex>
       <!-- Pop up Panels -->
-      <BaseDialog 
-        :dialog="dialog" 
-        :dialog-title="dialogTitle" 
+      <BaseDialog
+        :dialog="dialog"
+        :dialog-title="dialogTitle"
         :dialog-text="dialogText"
-        @onConfirm="onConfirm" 
+        @onConfirm="onConfirm"
         @onCancel="onCancel"
       />
-      <v-snackbar 
-        v-if="loading===false" 
-        v-model="snackbar" 
-        :left="true" 
-        :timeout="timeout" 
+      <v-snackbar
+        v-if="loading===false"
+        v-model="snackbar"
+        :left="true"
+        :timeout="timeout"
         :color="mode"
       >
         {{ notice }}
-        <base-button 
-          dark 
-          text 
+        <base-button
+          dark
+          text
           @click.native="exitSnackbar"
         >
           Close
@@ -188,4 +184,3 @@ export default {
 <style lang="scss" module>
 @import '@design';
 </style>
-

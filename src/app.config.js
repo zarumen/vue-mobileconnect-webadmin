@@ -1,3 +1,4 @@
+/* eslint-disable no-alert, no-console */
 // App-specific config
 
 // Using CommonJS instead of ES2015+ export, because we also need to

@@ -11,12 +11,12 @@ export default {
   props: {
     routes: {
       type: Array,
-      required: true,
-    },
+      required: true
+    }
   },
   // Render functions are an alternative to templates
-  render(h, { props, $style = {} }) {
-    function getRouteTitle(route) {
+  render (h, { props, $style = {} }) {
+    function getRouteTitle (route) {
       return typeof route.title === 'function' ? route.title() : upperCase(route.title)
     }
 
@@ -28,7 +28,7 @@ export default {
         {getRouteTitle(route)}
       </VBtn>
     ))
-  },
+  }
 }
 </script>
 

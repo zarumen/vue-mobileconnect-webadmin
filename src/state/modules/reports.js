@@ -1,6 +1,6 @@
 import { set } from '@state/helpers'
-import axios from "@utils/aws-api.config"
-import firestoreApp from "@utils/firestore.config"
+import axios from '@utils/aws-api.config'
+import firestoreApp from '@utils/firestore.config'
 
 export const state = {
   campaignSelected: '',
@@ -12,7 +12,7 @@ export const state = {
   prefixFile: '',
   startAfter: '',
   downloadKey: '',
-  downloadUrl: '',
+  downloadUrl: ''
 }
 
 export const getters = {
@@ -29,44 +29,42 @@ export const actions = {
   // CREATE Zone
   // ===
   async createS3DownloadFileJob ({ state, dispatch }, { campaignId, fileName }) {
-
-    let data = {
-      "maxRow": state.maxRow,
-      "exportType": state.exportType,
-      "fileName": fileName
+    const data = {
+      maxRow: state.maxRow,
+      exportType: state.exportType,
+      fileName: fileName
     }
 
-  return  axios.postData(`jobs/${campaignId}/export`, data)
-    .then(response => {
+    return axios.postData(`jobs/${campaignId}/export`, data)
+      .then(response => {
       // JSON responses are automatically parsed.
-      let parsedData = response.data
+        const parsedData = response.data
 
-      console.log('create file: ', parsedData.output.S3FileName)
+        console.log('create file: ', parsedData.output.S3FileName)
 
-      let exportJobObject = {
-        'campaignId': campaignId,
-        'jobsCount': 0
-      }
-
-      dispatch('saveCampaignObjectToFirestore', {
-        campaignId: campaignId,
-        jobObject: exportJobObject
-      })
-
-      setTimeout(() => {
-        // delayed function set in 3 seconds
-        dispatch('getFileDownloadFromS3', {
+        const exportJobObject = {
           campaignId: campaignId,
-          fileName: parsedData.output.S3FileName
+          jobsCount: 0
+        }
+
+        dispatch('saveCampaignObjectToFirestore', {
+          campaignId: campaignId,
+          jobObject: exportJobObject
         })
-      }, 3000)
-    })
-    .catch(error => {
-      console.log(error)
-    })
+
+        setTimeout(() => {
+        // delayed function set in 3 seconds
+          dispatch('getFileDownloadFromS3', {
+            campaignId: campaignId,
+            fileName: parsedData.output.S3FileName
+          })
+        }, 3000)
+      })
+      .catch(error => {
+        console.log(error)
+      })
   },
   async saveCampaignObjectToFirestore ({ commit }, { campaignId, jobObject }) {
-
     return firestoreApp
       .collection('exportJobs')
       .doc(campaignId)
@@ -82,14 +80,12 @@ export const actions = {
   // ===
   // READ Zone
   // ===
-  getFileDownloadFromS3({ dispatch }, { campaignId, fileName }) {
-
-    let key = `reports/campaigns/${campaignId}/${fileName}`
+  getFileDownloadFromS3 ({ dispatch }, { campaignId, fileName }) {
+    const key = `reports/campaigns/${campaignId}/${fileName}`
 
     return axios.getData(`jobs/${campaignId}/download?downloadKey=${key}`)
       .then(response => {
-
-        let data = response.data.output.link
+        const data = response.data.output.link
         dispatch('campaigns/setLoadingFromAnotherModule', false, { root: true })
         // Download file to Client
         window.location = data
@@ -103,8 +99,7 @@ export const actions = {
       })
       .catch(e => console.log(e))
   },
-  async getCampaignExportJobsListener({ commit }, { campaignId }) {
-
+  async getCampaignExportJobsListener ({ commit }, { campaignId }) {
     return firestoreApp
       .collection('exportJobs')
       .doc(campaignId)
@@ -113,8 +108,7 @@ export const actions = {
       .limit(10)
       .get()
       .then((snap) => {
-
-        let jobList = []
+        const jobList = []
         console.log(snap.size)
 
         snap.forEach(doc => {
@@ -130,7 +124,7 @@ export const actions = {
         console.log(error)
         return error
       })
-  },
+  }
   // ===
   // UPDATE Zone
   // ===

@@ -63,7 +63,7 @@
           <v-row>
             <v-col cols="12">
               Campaign State:
-              <span 
+              <span
                 v-if="campaignState === 'production'"
                 class="success--text"
               >
@@ -78,7 +78,7 @@
             </v-col>
             <v-col cols="12">
               Campaign Status:
-              <span 
+              <span
                 v-if="campaignRunning"
                 class="success--text"
               >
@@ -93,7 +93,7 @@
             </v-col>
             <v-col cols="12">
               Campaign Position:
-              <span 
+              <span
                 v-if="campaignActive"
                 class="success--text"
               >
@@ -112,7 +112,7 @@
                 rounded
                 @click.native="$emit('onCalibrated')"
               >
-                calibrated Transactions
+                CALIBRATE TX
               </base-button>
             </v-col>
             <v-col cols="12">
@@ -121,7 +121,7 @@
                 rounded
                 @click.native="$emit('onOpen')"
               >
-                Open Admin Panel
+                OPEN ADMIN PANEL
               </base-button>
             </v-col>
           </v-row>

@@ -5,19 +5,19 @@ import { campaignComputed } from '@state/helpers'
 export default {
   page: {
     title: 'Transaction',
-    meta: [{ name: 'description', content: 'Campaign Transaction' }],
+    meta: [{ name: 'description', content: 'Campaign Transaction' }]
   },
-  components: { 
-    Layout: () => import('@layouts/main'), 
+  components: {
+    Layout: () => import('@layouts/main'),
     FormAddCampaign: () => import('@components/form/form-add-campaign')
   },
-  data() {
+  data () {
     return {
       baseModule: 'transaction',
       addCampaignDialog: '',
       dialog: '',
-      dialogTitle: "Campaign Delete Dialog",
-      dialogText: "Do you want to delete this campaign?",
+      dialogTitle: 'Campaign Delete Dialog',
+      dialogText: 'Do you want to delete this campaign?',
       headers: [
         { text: 'Report', value: 'Transaction' },
         {
@@ -32,50 +32,47 @@ export default {
         { text: 'Start Date', value: 'campaignDateStart' },
         { text: 'End Date', value: 'campaignDateEnd' },
         { text: 'Reward', value: 'campaignAvailable' },
-        { text: 'Status', value: 'campaignActive' },
+        { text: 'Status', value: 'campaignActive' }
       ],
       campaignId: '',
       campaign: {},
       left: true,
-      timeout: 2000,
+      timeout: 2000
     }
   },
   computed: {
     ...campaignComputed,
     ...mapGetters('organizations', [
-      'hadList',
-    ]),
+      'hadList'
+    ])
   },
   watch: {
 
   },
   created () {
-
-    if(!this.hadList)
-      this.getOrganizationsList()
+    if (!this.hadList) { this.getOrganizationsList() }
 
     // if(this.$route.params.campaignId)
-       this.getCampaign(this.$route.params.campaignId)
-       
+    this.getCampaign(this.$route.params.campaignId)
   },
   methods: {
     ...mapActions('campaigns', [
       'getCampaign',
-      'closeSnackBar',
+      'closeSnackBar'
     ]),
     ...mapActions('organizations', [
       'getOrganizationsList'
     ]),
-    print() {
+    print () {
       window.print()
     },
     reloadData () {
       this.getAllCampaigns()
     },
-    edit(item) {
+    edit (item) {
 
     },
-    remove(item) {
+    remove (item) {
       this.campaignId = item.id
       this.dialog = true
     },
@@ -91,8 +88,8 @@ export default {
     exitSnackbar () {
       this.$store.commit('campaigns/setSnackbar', { snackbar: false })
       this.$store.commit('campaigns/setNotice', { notice: '' })
-    },
-  },
+    }
+  }
 }
 </script>
 
@@ -104,7 +101,7 @@ export default {
           <!-- Controller Tools Panels -->
           <v-card-title>
             <span class="title">
-              Campaign: {{ item.campaignName }} 
+              Campaign: {{ item.campaignName }}
               {{ pagination? "("+pagination.totalItems+")": "" }}
               <v-text-field
                 append-icon="search"
@@ -114,17 +111,17 @@ export default {
               />
             </span>
             <v-spacer />
-            <base-button 
-              text 
-              icon 
+            <base-button
+              text
+              icon
               color="green"
               @click.native="reloadData()"
             >
-              <base-icon name="syncAlt" />            
+              <base-icon name="syncAlt" />
             </base-button>
-            <base-button 
-              text 
-              icon 
+            <base-button
+              text
+              icon
               color="indigo"
             >
               <v-icon>
@@ -145,24 +142,24 @@ export default {
         </v-card>
       </v-flex>
       <!-- Pop up Panels -->
-      <BaseDialog 
-        :dialog="dialog" 
-        :dialog-title="dialogTitle" 
+      <BaseDialog
+        :dialog="dialog"
+        :dialog-title="dialogTitle"
         :dialog-text="dialogText"
-        @onConfirm="onConfirm" 
+        @onConfirm="onConfirm"
         @onCancel="onCancel"
       />
-      <v-snackbar 
-        v-if="loading===false" 
-        v-model="snackbar" 
-        :left="true" 
-        :timeout="timeout" 
+      <v-snackbar
+        v-if="loading===false"
+        v-model="snackbar"
+        :left="true"
+        :timeout="timeout"
         :color="mode"
       >
         {{ notice }}
-        <base-button 
-          dark 
-          text 
+        <base-button
+          dark
+          text
           @click.native="exitSnackbar"
         >
           Close
@@ -191,4 +188,3 @@ export default {
 <style lang="scss" module>
 @import '@design';
 </style>
-

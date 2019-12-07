@@ -6,9 +6,9 @@ var storageRef = fireStorageApp.ref()
 export default {
   page: {
     title: 'Regex',
-    meta: [{ name: 'description', content: 'Regex' }],
+    meta: [{ name: 'description', content: 'Regex' }]
   },
-  components: { 
+  components: {
     Layout: () => import('@layouts/main')
   },
   data: () => ({
@@ -24,35 +24,34 @@ export default {
   }),
   methods: {
     pickFile () {
-      this.$refs.image.click ()
+      this.$refs.image.click()
     },
     pickXLSFile () {
-      this.$refs.xls.click ()
+      this.$refs.xls.click()
     },
     onFilePicked (e) {
       const files = e.target.files
       console.log(files)
-      if(files.length > 0) {
+      if (files.length > 0) {
         this.imageName = files[0].name
         console.log(this.imageName)
-				if(this.imageName.lastIndexOf('.') <= 0) {
-					return
-				}
-				const fr = new FileReader ()
-				fr.readAsDataURL(files[0])
-				fr.addEventListener('load', () => {
-					this.imageUrl = fr.result
+        if (this.imageName.lastIndexOf('.') <= 0) {
+          return
+        }
+        const fr = new FileReader()
+        fr.readAsDataURL(files[0])
+        fr.addEventListener('load', () => {
+          this.imageUrl = fr.result
           this.imageFile.push(files[0]) // this is an image file that can be sent to server...
           this.imageName.push(files[0].name)
 
-          console.log('in the listener:',this.imageName)
-          
-				})
-			} else {
-				this.imageName = ''
-				this.imageFile = ''
-				this.imageUrl = ''
-			}
+          console.log('in the listener:', this.imageName)
+        })
+      } else {
+        this.imageName = ''
+        this.imageFile = ''
+        this.imageUrl = ''
+      }
     },
     onXlsPicked (e) {
       const xfiles = e.target.files
@@ -77,31 +76,29 @@ export default {
     },
     sendToStorage () {
       this.fileXLSName.forEach((file, index) => {
-
-        let ref = storageRef.child(`sunsmile/${index}-${file}`)
+        const ref = storageRef.child(`sunsmile/${index}-${file}`)
 
         ref.putString(this.fileXLSUrl[index], 'data_url')
           .then((snapshot) => {
-          console.log('Uploaded a data_url string!')
-        })
-
+            console.log('Uploaded a data_url string!')
+          })
       })
     },
     dec2hex (dec) {
       return ('0' + dec.toString(36)).substr(-2)
     },
     clickedGen () {
-      for(let i = 0; i < this.totals; i++){
+      for (let i = 0; i < this.totals; i++) {
         this.result.push(this.generateId(this.digits))
       }
 
       let csvContent = 'data:text/csv;charset=utf-8,'
 
       this.result.forEach((rowArray) => {
-          csvContent += rowArray + "\r\n";
+        csvContent += rowArray + '\r\n'
       })
 
-      let encodedUri = encodeURI(csvContent)
+      const encodedUri = encodeURI(csvContent)
 
       this.fileXLSName.push('file_generated.csv')
       this.fileXLSUrl.push(encodedUri)
@@ -110,9 +107,9 @@ export default {
 
       return encodedUri
     },
-		// generateId :: Integer -> String
+    // generateId :: Integer -> String
     generateId (len) {
-      let arr = new Uint8Array((len || 40) / 2)
+      const arr = new Uint8Array((len || 40) / 2)
       window.crypto.getRandomValues(arr)
       return Array.from(arr, this.dec2hex).join('')
     }
@@ -174,8 +171,8 @@ export default {
         small
         @click.native="pickXLSFile"
       >
-        <v-icon 
-          left 
+        <v-icon
+          left
           dark
         >
           attachment
@@ -198,7 +195,7 @@ export default {
         fab
         @click="sendToStorage"
       >
-        <v-icon 
+        <v-icon
           dark
         >
           cloud_upload
@@ -286,4 +283,3 @@ export default {
 <style lang="scss" module>
 @import '@design';
 </style>
-

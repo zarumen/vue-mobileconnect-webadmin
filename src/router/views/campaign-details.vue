@@ -6,24 +6,24 @@ import { campaignDetailsComputed, campaignDetailsMethods } from '@state/helpers'
 export default {
   page: {
     title: 'CampaignDetails',
-    meta: [{ name: 'description', content: 'CampaignDetails' }],
+    meta: [{ name: 'description', content: 'CampaignDetails' }]
   },
-  components: { 
+  components: {
     Layout: () => import('@layouts/main'),
     Doughnut: () => import('@utils/chart/Doughnut'),
     LineChart: () => import('@utils/chart/LineChart'),
-    VueJsonPretty: () => import('vue-json-pretty'),
+    VueJsonPretty: () => import('vue-json-pretty')
   },
   data: () => ({
     baseModule: 'transactions',
     headers: [
       { text: 'Msisdn', value: 'msisdn' },
       { text: 'Msg', value: 'message' },
-      { text: 'ReplyMsg', value: 'replyMessage', left: true, },
+      { text: 'ReplyMsg', value: 'replyMessage', left: true },
       { text: 'Stage', value: 'messageStatus' },
       { text: 'TimeCode', value: 'groupID', align: 'center' },
       { text: 'StepMsg', value: 'stepName' },
-      { text: 'StateMsg', value: 'campaignState' },
+      { text: 'StateMsg', value: 'campaignState' }
     ],
     text: '',
     totals: '',
@@ -45,13 +45,12 @@ export default {
     cpTypes: [],
     cpFiles: [],
     cpFileUploadName: '',
-    cpFileUploadUrl: '',
+    cpFileUploadUrl: ''
   }),
   computed: {
     ...campaignDetailsComputed,
     updatedTimestampTxTotals () {
-
-      let date = (Date.parse(this.getTimestampTxTotals))/1000
+      const date = (Date.parse(this.getTimestampTxTotals)) / 1000
 
       return formatDateRelative(date)
     },
@@ -64,25 +63,25 @@ export default {
     },
     // Date Time Format Computed
     startDate () {
-      if(this.campaignValidateInfo) {
+      if (this.campaignValidateInfo) {
         return formatDateTime(this.campaignValidateInfo.campaignDateStart.seconds)
       }
       return ''
     },
     endDate () {
-      if(this.campaignValidateInfo) {
+      if (this.campaignValidateInfo) {
         return formatDateTime(this.campaignValidateInfo.campaignDateEnd.seconds)
       }
       return ''
     },
     startTestDate () {
-      if(this.campaignValidateInfo) {
+      if (this.campaignValidateInfo) {
         return formatDateTime(this.campaignValidateInfo.campaignDateTestStart.seconds)
       }
       return ''
     },
     endTestDate () {
-      if(this.campaignValidateInfo) {
+      if (this.campaignValidateInfo) {
         return formatDateTime(this.campaignValidateInfo.campaignDateTestEnd.seconds)
       }
       return ''
@@ -92,8 +91,8 @@ export default {
       return this.getTransactionSuccess
     },
     txKeyword () {
-      if(!this.isEmpty(this.getTransactionKeyword)) {
-        let result = Object.values(this.getTransactionKeyword).reduce((t, n) => parseInt(t) + parseInt(n))
+      if (!this.isEmpty(this.getTransactionKeyword)) {
+        const result = Object.values(this.getTransactionKeyword).reduce((t, n) => parseInt(t) + parseInt(n))
 
         return result
       }
@@ -104,27 +103,27 @@ export default {
       const children = this.vcTypes.map(type => ({
         id: type,
         name: this.makeTitle(type),
-        children: this.getChildren(type, this.vcFiles),
+        children: this.getChildren(type, this.vcFiles)
       }))
 
       return [{
         id: 1,
         name: 'Root Folder',
-        children,
+        children
       }]
     },
     shouldShowTree () {
       return this.vcFiles.length > 0 && !this.isLoading1
     },
     classVerifyStatus () {
-      if(this.campaignInfo.campaignHasVerifyCode) {
+      if (this.campaignInfo.campaignHasVerifyCode) {
         return 'green--text'
       }
       return 'red--text'
     },
     // Coupons computed
     checkRewardsHaveCoupons () {
-      if(this.campaignValidateInfo.rewardsArray) {
+      if (this.campaignValidateInfo.rewardsArray) {
         // check ว่า campaign นี้มี coupons รึเปล่า
         return this.campaignValidateInfo.rewardsArray.some(x => x.rewardHasCoupon === true)
       }
@@ -134,18 +133,18 @@ export default {
       const children = this.cpTypes.map(type => ({
         id: type,
         name: this.makeTitle(type),
-        children: this.getChildren(type, this.cpFiles),
+        children: this.getChildren(type, this.cpFiles)
       }))
 
       return [{
         id: 1,
         name: 'Root Folder',
-        children,
+        children
       }]
     },
     shouldShowCpTree () {
       return this.cpFiles.length > 0 && !this.isLoading2
-    },
+    }
   },
   watch: {
     vcFiles (val) {
@@ -165,13 +164,12 @@ export default {
 
         return acc
       }, []).sort()
-    },
+    }
   },
   mounted () {
     this.initializeData()
   },
   destroyed () {
-
     this.socketUnRegister({
       campaignState: this.state,
       campaignId: this.$route.params.campaignId
@@ -197,21 +195,18 @@ export default {
       })
     },
     reloadVerifyCodeTotals () {
-
       this.getVerifyCodeFromRedis({
         campaignState: this.state,
         campaignId: this.$route.params.campaignId
       })
     },
     deleteVerifyCodeTotals () {
-
       this.delVerifyCodeFromRedis({
         campaignState: this.state,
         campaignId: this.$route.params.campaignId
       })
     },
     reloadCouponsTotals () {
-
       this.getCouponsFromRedis({
         campaignState: this.state,
         campaignId: this.$route.params.campaignId,
@@ -219,7 +214,6 @@ export default {
       })
     },
     deleteCouponsTotals () {
-
       this.delCouponsFromRedis({
         campaignState: this.state,
         campaignId: this.$route.params.campaignId,
@@ -238,9 +232,9 @@ export default {
       this.fetchCoupons({
         campaignId: this.$route.params.campaignId
       })
-      .then(res => {
-        this.cpFiles = res
-      })
+        .then(res => {
+          this.cpFiles = res
+        })
     },
     loadVerifyCodeTree () {
       // if (this.vcFiles.length) return
@@ -248,9 +242,9 @@ export default {
       this.fetchVerifyCode({
         campaignId: this.$route.params.campaignId
       })
-      .then(res => {
-        this.vcFiles = res
-      })
+        .then(res => {
+          this.vcFiles = res
+        })
     },
     loadTransaction () {
       // load 20 lastest transactions from dynamoDB
@@ -274,7 +268,7 @@ export default {
 
         files.push({
           ...file,
-          name: this.makeTitle(file.name),
+          name: this.makeTitle(file.name)
         })
       }
 
@@ -288,46 +282,45 @@ export default {
     onCalibrated () {
       // calibrated all transactions
       this.calibratedCampaignTx({
-        campaignState: this.state,
+        campaignState: this.state
       })
-      .then(response => {
-        let msg = `Calibrated ${response.length} Transactions From Database Success!`
-        console.log(msg)
-        window.location.reload()
-      })
-      .catch(error => {
-        console.log(error)
-      })
+        .then(response => {
+          const msg = `Calibrated ${response.length} Transactions From Database Success!`
+          console.log(msg)
+          window.location.reload()
+        })
+        .catch(error => {
+          console.log(error)
+        })
     },
     isEmpty (obj) {
-      for(var key in obj) {
-        if(obj.hasOwnProperty(key))
-            return false;
+      for (var key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) return false
       }
-      return true;
+      return true
     },
     classStatus (status) {
-      if(status) {
+      if (status) {
         return 'green--text'
       }
       return 'red--text'
     },
     classColorSelected (arr) {
-      if(arr[0].hasOwnProperty('fullPath')) {
+      if (Object.prototype.hasOwnProperty.call(arr[0], 'fullPath')) {
         return 'green'
       }
       return 'indigo'
     },
     // upload files verifycode &  campaigncode
     upload (type, fileSelected, fileUploadName, fileUploadUrl) {
-      if(fileSelected.length === 0)  return
-      
+      if (fileSelected.length === 0) return
+
       let text = ''
       let path = ''
       fileSelected.forEach(item => {
         text = item.id
       })
-      if(type ==='verifycode') {
+      if (type === 'verifycode') {
         path = `campaigns/${this.$route.params.campaignId}/verifyCodeFile/${text}/${fileUploadName}`
       } else {
         path = `campaigns/${this.$route.params.campaignId}/couponsFile/${text}/${fileUploadName}`
@@ -335,15 +328,15 @@ export default {
 
       this.uploadFile({
         fileUrl: fileUploadUrl,
-        path: path,
+        path: path
       })
-      .then(x => (x === 'verifyCodeFile') ?
-          this.loadVerifyCodeTree()
+        .then(x => (x === 'verifyCodeFile')
+          ? this.loadVerifyCodeTree()
           : this.loadCouponTree())
     },
     // delete upload verifycode file & coupons file
     deleteFile (fileSelected) {
-      if(fileSelected.length === 0) return
+      if (fileSelected.length === 0) return
 
       let text = ''
       fileSelected.forEach(item => {
@@ -353,12 +346,12 @@ export default {
       this.deleteUploadFile({
         path: text
       })
-      .then(x => (x === 'verifyCodeFile') ?
-          this.loadVerifyCodeTree()
+        .then(x => (x === 'verifyCodeFile')
+          ? this.loadVerifyCodeTree()
           : this.loadCouponTree())
     },
     putVerifyCode () {
-      if(this.vcFileSelected.length === 0) return
+      if (this.vcFileSelected.length === 0) return
 
       let path = ''
       this.vcFileSelected.forEach(item => {
@@ -372,7 +365,7 @@ export default {
       })
     },
     putCoupons () {
-      if(this.cpFileSelected.length === 0) return
+      if (this.cpFileSelected.length === 0) return
 
       let path = ''
       this.cpFileSelected.forEach(item => {
@@ -385,8 +378,8 @@ export default {
         data: path,
         rewardId: 0
       })
-    },
-  },
+    }
+  }
 }
 </script>
 
@@ -394,7 +387,7 @@ export default {
   <Layout>
     <v-container>
       <v-row>
-        <v-col 
+        <v-col
           cols="12"
           sm="6"
           lg="3"
@@ -408,7 +401,7 @@ export default {
             :sub-text="updatedTimestampTxTotals"
           />
         </v-col>
-        <v-col 
+        <v-col
           cols="12"
           sm="6"
           lg="3"
@@ -422,7 +415,7 @@ export default {
             :sub-text="updatedTimestampTxTotals"
           />
         </v-col>
-        <v-col 
+        <v-col
           cols="12"
           sm="6"
           lg="3"
@@ -531,15 +524,15 @@ export default {
               </v-tabs>
             </v-col>
             <v-card-title>
-              <span 
-                v-if="tabs === 0" 
+              <span
+                v-if="tabs === 0"
                 class="title"
               >
                 Campaign:
                 <span class="body-2 primary--text">
                   {{ campaignInfo.campaignCode }}
                 </span>
-                <base-button 
+                <base-button
                   color="secondary"
                   circle
                   icon
@@ -548,8 +541,8 @@ export default {
                   <v-icon>edit</v-icon>
                 </base-button>
               </span>
-              <span 
-                v-if="tabs === 1" 
+              <span
+                v-if="tabs === 1"
                 class="title"
               >
                 Campaign Validate:
@@ -565,8 +558,8 @@ export default {
                   <v-icon>edit</v-icon>
                 </base-button>
               </span>
-              <span 
-                v-if="tabs === 2" 
+              <span
+                v-if="tabs === 2"
                 class="title"
               >
                 Campaign Has Verify Code
@@ -574,8 +567,8 @@ export default {
                   ({{ campaignInfo.campaignHasVerifyCode }})
                 </span>
               </span>
-              <span 
-                v-if="tabs === 3" 
+              <span
+                v-if="tabs === 3"
                 class="title"
               >
                 Campaign Has Coupons Code
@@ -583,8 +576,8 @@ export default {
                   ({{ checkRewardsHaveCoupons }})
                 </span>
               </span>
-              <span 
-                v-if="tabs === 4" 
+              <span
+                v-if="tabs === 4"
                 class="title"
               >
                 Campaign Transactions
@@ -647,7 +640,7 @@ export default {
                   icon
                   @click.native="loadTransaction()"
                 >
-                  RELOAD           
+                  RELOAD
                 </base-button>
               </span>
             </v-card-title>
@@ -657,9 +650,9 @@ export default {
                 <!-- campaign Info -->
                 <v-card-text>
                   <v-row>
-                    <v-col 
+                    <v-col
                       cols="12"
-                    > 
+                    >
                       <p class="body-1 indigo--text">
                         <strong>Campaign General Information</strong>
                       </p>
@@ -763,7 +756,7 @@ export default {
               <v-tab-item :value="1">
                 <v-card-text>
                   <v-row>
-                    <v-col 
+                    <v-col
                       cols="12"
                     >
                       <p class="body-2 indigo--text">
@@ -805,7 +798,7 @@ export default {
                         show-double-quotes
                       />
                     </v-col>
-                    <v-col 
+                    <v-col
                       cols="12"
                     >
                       <p class="body-2 indigo--text">
@@ -930,8 +923,8 @@ export default {
                     <v-toolbar-title>Verify Code in Database</v-toolbar-title>
                     <base-icon
                       class="px-2"
-                      :source="`custom`" 
-                      name="mdi-ticket" 
+                      :source="`custom`"
+                      name="mdi-ticket"
                     />
                     <v-toolbar-title>
                       ({{ getTotalsVerifyCode }})
@@ -943,7 +936,7 @@ export default {
                         icon
                         click.native="reloadVerifyCodeTotals"
                       >
-                        <base-icon name="syncAlt" />            
+                        <base-icon name="syncAlt" />
                       </base-button>
                     </v-toolbar-items>
                   </v-toolbar>
@@ -1062,8 +1055,8 @@ export default {
                     <v-toolbar-title>Coupons in Database</v-toolbar-title>
                     <base-icon
                       class="px-2"
-                      :source="`custom`" 
-                      name="mdi-ticket" 
+                      :source="`custom`"
+                      name="mdi-ticket"
                     />
                     <v-toolbar-title>
                       ({{ getTotalsCoupon }})
@@ -1075,7 +1068,7 @@ export default {
                         icon
                         click.native="reloadVerifyCodeTotals"
                       >
-                        <base-icon name="syncAlt" />            
+                        <base-icon name="syncAlt" />
                       </base-button>
                     </v-toolbar-items>
                   </v-toolbar>
@@ -1310,17 +1303,17 @@ export default {
           </base-card>
         </v-col>
       </v-row>
-      <v-snackbar 
+      <v-snackbar
         v-if="loading===false"
-        v-model="snackbar" 
-        :left="true" 
-        :timeout="timeout" 
+        v-model="snackbar"
+        :left="true"
+        :timeout="timeout"
         :color="mode"
       >
         {{ notice }}
-        <base-button 
-          dark 
-          text 
+        <base-button
+          dark
+          text
           @click.native="exitSnackbar"
         >
           Close
@@ -1329,4 +1322,3 @@ export default {
     </v-container>
   </Layout>
 </template>
-

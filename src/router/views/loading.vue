@@ -3,11 +3,11 @@
 export default {
   page: {
     title: 'Loading page...',
-    meta: [{ name: 'description', content: 'Loading page...' }],
+    meta: [{ name: 'description', content: 'Loading page...' }]
   },
-  components: { 
+  components: {
     Layout: () => import('@layouts/main')
-  },
+  }
 }
 </script>
 

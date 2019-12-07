@@ -29,7 +29,7 @@ export default {
     return {
       oppForm: Object.assign({}, defaultOppForm),
       items: [
-        "MO", "MT"
+        'MO', 'MT'
       ],
       valid: true,
       iconValue: true,
@@ -38,17 +38,15 @@ export default {
   },
   computed: {
     opsRadio () {
-
       if (this.operator) {
-
         return this.changedTrickRadio(this.opsDisabled, this.operator)
       }
       return null
-    },
+    }
   },
   methods: {
     ...mapActions('shortcodes', [
-        'createOperatorConfig'
+      'createOperatorConfig'
     ]),
     closeDialog () {
       this.$emit('emitCloseOpConfigDialog', false)
@@ -59,9 +57,8 @@ export default {
       this.select = Object.assign({}, this.defaultDropdown)
     },
     saveOpConfig () {
-
-      if(this.$refs.oppForm.validate()) {
-        let data = this.oppForm
+      if (this.$refs.oppForm.validate()) {
+        const data = this.oppForm
 
         this.createOperatorConfig({
           shortcode: this.shortcode,
@@ -73,7 +70,6 @@ export default {
       }
     },
     changedTrickRadio (bool, operator) {
-
       bool = !bool
 
       return operator
@@ -84,12 +80,12 @@ export default {
 
 <template>
   <div>
-    <v-dialog 
+    <v-dialog
       v-model="addOperatorConfigDialog"
       persistent
       width="800px"
     >
-      <v-form 
+      <v-form
         ref="oppForm"
         v-model="valid"
         lazy-validation
@@ -98,47 +94,46 @@ export default {
           <v-card-title class="light-green lighten-4 py-4 title">
             Operator Config
           </v-card-title>
-          <v-container 
-            grid-list-sm 
+          <v-container
+            grid-list-sm
             class="pa-4"
           >
-            <v-layout
-              row
+            <v-row
               wrap
             >
-              <v-flex
-                xs12
+              <v-col
+                cols="12"
               >
-                <v-radio-group 
+                <v-radio-group
                   v-model="opsRadio"
                   :disabled="opsDisabled"
                   row
                 >
-                  <v-radio 
+                  <v-radio
                     color="green"
                     label="AIS"
                     value="ais"
                   />
-                  <v-radio 
+                  <v-radio
                     color="orange"
                     label="CAT"
                     value="cat"
                   />
-                  <v-radio 
+                  <v-radio
                     color="blue"
                     label="DTAC"
                     value="dtac"
                   />
-                  <v-radio 
+                  <v-radio
                     color="red"
                     label="TRUE"
                     value="true"
                   />
                 </v-radio-group>
-              </v-flex>
-              <v-flex
-                xs8
-                md6
+              </v-col>
+              <v-col
+                cols="12"
+                md="6"
               >
                 <v-text-field
                   v-model="oppForm.url"
@@ -166,22 +161,22 @@ export default {
                   :type="iconValue ? 'password' : 'text'"
                   @click:append="() => (iconValue = !iconValue)"
                 />
-              </v-flex>
-            </v-layout>
+              </v-col>
+            </v-row>
           </v-container>
           <v-card-actions>
             <!-- Button Action in below card-->
             <v-spacer />
             <base-button
-              text 
-              color="primary" 
+              text
+              color="primary"
               @click="clearOppForm()"
             >
               Clear
             </base-button>
             <base-button
-              text 
-              color="secondary darken-2" 
+              text
+              color="secondary darken-2"
               @click="closeDialog()"
             >
               CANCEL

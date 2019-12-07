@@ -19,10 +19,10 @@ export default {
     return {
       dialog: false,
       items: [
-        "MO", "MT"
+        'MO', 'MT'
       ],
       valid: true,
-      iconValue: true,
+      iconValue: true
     }
   },
   computed: {
@@ -70,12 +70,12 @@ export default {
       set (value) {
         this.setElementOperatorConfig({ password: value })
       }
-    },
+    }
   },
-  watch: {   
+  watch: {
     operator: {
-      handler(operator) {
-        if(this.operator) {
+      handler (operator) {
+        if (this.operator) {
           this.getOperatorConfig({
             operator: this.operator,
             shortcode: this.shortcode
@@ -85,8 +85,8 @@ export default {
       immediate: true
     },
     shortcode: {
-      handler(shortcode) {
-        if(this.shortcode) {
+      handler (shortcode) {
+        if (this.shortcode) {
           this.getOperatorConfig({
             operator: this.operator,
             shortcode: this.shortcode
@@ -114,15 +114,14 @@ export default {
       this.mutateOperatorConfig(val)
     },
     mutateShortcodeList (sc, op) {
-
-      let scList = this.getShortcodesList
-      let deletedShortcodeListObj = scList.find(rc => rc.shortcode === sc)
+      const scList = this.getShortcodesList
+      const deletedShortcodeListObj = scList.find(rc => rc.shortcode === sc)
       // get position of mutate shortcodesList Object
-      let i = this.getShortcodesList.indexOf(deletedShortcodeListObj)
+      const i = this.getShortcodesList.indexOf(deletedShortcodeListObj)
 
       // deleted operator from operatorName in Obj
       // operator array remaining such as ["ais", "dtac"]
-      let result = deletedShortcodeListObj.operatorName.filter(re => re !== op)
+      const result = deletedShortcodeListObj.operatorName.filter(re => re !== op)
 
       this.setElementShortcodesList({
         position: i,
@@ -139,15 +138,14 @@ export default {
         shortcode: this.shortcode,
         operator: this.operator
       })
-      .then(() => {
-        this.mutateShortcodeList(this.shortcode, this.operator)
-      })
+        .then(() => {
+          this.mutateShortcodeList(this.shortcode, this.operator)
+        })
 
       this.closeDialog()
     },
     editOpConfig () {
-      
-      let data = {
+      const data = {
         url: this.url,
         type: this.type,
         username: this.username,
@@ -167,19 +165,19 @@ export default {
     },
     onConfirm () {
       this.clearOpp()
-    },
+    }
   }
 }
 </script>
 
 <template>
   <div>
-    <v-dialog 
+    <v-dialog
       v-model="editOperatorConfigDialog"
       persistent
       width="800px"
     >
-      <v-form 
+      <v-form
         ref="oppForm"
         v-model="valid"
         lazy-validation
@@ -188,47 +186,46 @@ export default {
           <v-card-title class="light-green lighten-4 py-4 title">
             Edit Operator Config
           </v-card-title>
-          <v-container 
-            grid-list-sm 
+          <v-container
+            grid-list-sm
             class="pa-4"
           >
-            <v-layout
-              row
+            <v-row
               wrap
             >
-              <v-flex
-                xs12
+              <v-col
+                cols="12"
               >
-                <v-radio-group 
+                <v-radio-group
                   v-model="opsRadio"
                   disabled
                   row
                 >
-                  <v-radio 
+                  <v-radio
                     color="green"
                     label="AIS"
                     value="ais"
                   />
-                  <v-radio 
+                  <v-radio
                     color="orange"
                     label="CAT"
                     value="cat"
                   />
-                  <v-radio 
+                  <v-radio
                     color="blue"
                     label="DTAC"
                     value="dtac"
                   />
-                  <v-radio 
+                  <v-radio
                     color="red"
                     label="TRUE"
                     value="true"
                   />
                 </v-radio-group>
-              </v-flex>
-              <v-flex
-                xs8
-                md6
+              </v-col>
+              <v-col
+                cols="8"
+                md="6"
               >
                 <v-text-field
                   v-model="url"
@@ -252,22 +249,22 @@ export default {
                   :type="iconValue ? 'password' : 'text'"
                   @click:append="() => (iconValue = !iconValue)"
                 />
-              </v-flex>
-            </v-layout>
+              </v-col>
+            </v-row>
           </v-container>
           <v-card-actions>
             <!-- Button Action in below card-->
             <v-spacer />
             <base-button
-              text 
-              color="primary" 
+              text
+              color="primary"
               @click="dialog = !dialog"
             >
               Clear
             </base-button>
             <base-button
-              text 
-              color="secondary darken-2" 
+              text
+              color="secondary darken-2"
               @click="closeDialog()"
             >
               CANCEL
@@ -284,13 +281,12 @@ export default {
         </v-card>
       </v-form>
     </v-dialog>
-    <BaseDialog 
-      :dialog="dialog" 
-      :dialog-title="`Confirm Deleted ${operator} Password Config`" 
+    <BaseDialog
+      :dialog="dialog"
+      :dialog-title="`Confirm Deleted ${operator} Password Config`"
       :dialog-text="`You want to Delete ${operator} password in ${shortcode}?`"
-      @onConfirm="onConfirm" 
+      @onConfirm="onConfirm"
       @onCancel="onCancel"
     />
   </div>
 </template>
-

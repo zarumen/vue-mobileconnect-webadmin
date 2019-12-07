@@ -3,11 +3,11 @@
 export default {
   page: {
     title: 'Search Admin',
-    meta: [{ name: 'description', content: 'Search All Transactions' }],
+    meta: [{ name: 'description', content: 'Search All Transactions' }]
   },
-  components: { 
+  components: {
     Layout: () => import('@layouts/main'),
-    WidgetSearch: () => import('@components/ui/widget-search'), 
+    WidgetSearch: () => import('@components/ui/widget-search')
   }
 }
 </script>
@@ -24,4 +24,3 @@ export default {
 <style lang="scss" module>
 @import '@design';
 </style>
-

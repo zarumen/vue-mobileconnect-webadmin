@@ -4,14 +4,14 @@ export default [
   {
     path: '/',
     name: 'home',
-    component: () => lazyLoadView(import(/* webpackPrefetch: true */ '@views/home')),
+    component: () => lazyLoadView(import(/* webpackPrefetch: true */ '@views/home'))
   },
   {
     path: '/login',
     name: 'login',
     component: () => lazyLoadView(import(/* webpackPrefetch: true */ '@views/login')),
     meta: {
-      beforeResolve(routeTo, routeFrom, next) {
+      beforeResolve (routeTo, routeFrom, next) {
         console.log('render login page!')
         // If the user is already logged in
         if (store.getters['auth/loggedIn']) {
@@ -31,7 +31,7 @@ export default [
     meta: {
       authRequired: true,
       beforeEach: (routeTo, routeFrom, next) => {
-        console.log('Log: redirect from '+JSON.stringify(routeFrom))
+        console.log('Log: redirect from ' + JSON.stringify(routeFrom))
         // If the user is already logged in
         if (store.getters['auth/loggedIn']) {
           // Redirect to the home page instead
@@ -46,7 +46,7 @@ export default [
     },
     props: (route) => ({
       user: store.state.auth.userInfo || {}
-    }),
+    })
   },
   {
     path: '/profile/:username',
@@ -73,49 +73,48 @@ export default [
             next({
               name: '404',
               params: {
-                resource: 'User',
-              },
+                resource: 'User'
+              }
             })
           })
-      },
+      }
     },
     // Set the user from the route params, once it's set in the
     // beforeResolve route guard.
     props: route => ({
-      user: route.params.user,
-    }),
+      user: route.params.user
+    })
   },
   {
     path: '/dashboard',
     name: 'dashboard',
     component: () => lazyLoadView(import('@views/dashboard')),
     meta: {
-      authRequired: true,
+      authRequired: true
     },
     beforeResolve: (routeTo, routeFrom, next) => {
-       
-       // check admin role to access
-       if (store.getters['auth/isAdmin']) {
-         next()
-       }
+      // check admin role to access
+      if (store.getters['auth/isAdmin']) {
+        next()
+      }
     }
-   
+
   },
   {
     path: '/organizations',
     name: 'organizations',
     component: () => lazyLoadView(import('@views/organizations')),
     meta: {
-      authRequired: true,
-    },
+      authRequired: true
+    }
   },
   {
     path: '/shortcodes',
     name: 'shortcodes',
     component: () => lazyLoadView(import('@views/shortcodes')),
     meta: {
-      authRequired: true,
-    },  
+      authRequired: true
+    }
   },
   {
     path: '/search',
@@ -132,23 +131,23 @@ export default [
           next()
         }
       }
-    },  
+    }
   },
   {
     path: '/users',
     name: 'users',
     component: () => lazyLoadView(import('@views/users')),
     meta: {
-      authRequired: true,
-    },  
+      authRequired: true
+    }
   },
   {
     path: '/campaigns',
     name: 'campaigns',
     component: () => lazyLoadView(import('@views/campaigns')),
     meta: {
-      authRequired: true,
-    },
+      authRequired: true
+    }
   },
   {
     path: '/campaignDetails/:campaignId',
@@ -165,14 +164,14 @@ export default [
           next()
         }
       }
-    },
+    }
   },
   {
     path: '/reportViewer',
     name: 'reportViewer',
     component: () => lazyLoadView(import('@views/report-viewer')),
     meta: {
-      authRequired: true,
+      authRequired: true
       // beforeResolve: (routeTo, routeFrom, next) => {
       //   store
       //     // Try to fetch the user's information by their username(email)
@@ -200,33 +199,33 @@ export default [
     },
     props: (route) => ({
       user: store.state.auth.userInfo || {}
-    }),
+    })
   },
   {
     path: '/campaignsViewer',
     name: 'campaignsViewer',
     component: () => lazyLoadView(import('@views/campaigns-viewer')),
     meta: {
-      authRequired: true,
+      authRequired: true
     },
     props: (route) => ({
       user: store.state.auth.userInfo || {}
-    }),
+    })
   },
   {
     path: '/campaignwidgets',
     name: 'campaignwidgets',
     component: () => lazyLoadView(import('@views/campaignwidgets')),
     meta: {
-      authRequired: true,
-    },
+      authRequired: true
+    }
   },
   {
     path: '/campaignwidget/:campaignId',
     name: 'campaignswidget',
     component: () => lazyLoadView(import('@views/campaignwidget')),
     meta: {
-      authRequired: true,
+      authRequired: true
     }
   },
   {
@@ -234,7 +233,7 @@ export default [
     name: 'campaignswidgetviewstate',
     component: () => lazyLoadView(import('@views/campaignwidgetview')),
     meta: {
-      authRequired: false,
+      authRequired: false
     }
   },
   {
@@ -242,7 +241,7 @@ export default [
     name: 'campaignswidgetview',
     component: () => lazyLoadView(import('@views/campaignwidgetview')),
     meta: {
-      authRequired: false,
+      authRequired: false
     }
   },
   {
@@ -250,7 +249,7 @@ export default [
     name: 'campaignswidgetview2state',
     component: () => lazyLoadView(import('@views/campaignwidgetview2')),
     meta: {
-      authRequired: false,
+      authRequired: false
     }
   },
   {
@@ -258,7 +257,7 @@ export default [
     name: 'campaignswidgetview2',
     component: () => lazyLoadView(import('@views/campaignwidgetview2')),
     meta: {
-      authRequired: false,
+      authRequired: false
     }
   },
   {
@@ -266,7 +265,7 @@ export default [
     name: 'campaignswidgetview3',
     component: () => lazyLoadView(import('@views/campaignwidgetview3')),
     meta: {
-      authRequired: false,
+      authRequired: false
     }
   },
   {
@@ -274,31 +273,31 @@ export default [
     name: 'regex',
     component: () => lazyLoadView(import('@views/regex')),
     meta: {
-      authRequired: true,
-    },
+      authRequired: true
+    }
   },
   {
     path: '/reports',
     name: 'reports',
     component: () => lazyLoadView(import('@views/reports')),
     meta: {
-      authRequired: true,
-    },
+      authRequired: true
+    }
   },
   {
     path: '/report/transaction/:campaignId',
     name: 'transaction',
     component: () => lazyLoadView(import('@views/transaction')),
     meta: {
-      authRequired: true,
-    },
+      authRequired: true
+    }
   },
   {
     path: '/logout',
     name: 'logout',
     meta: {
       authRequired: true,
-      beforeResolve(routeTo, routeFrom, next) {
+      beforeResolve (routeTo, routeFrom, next) {
         store.dispatch('auth/logOut')
         const authRequiredOnPreviousRoute = routeFrom.matched.some(
           (route) => route.meta.authRequired
@@ -307,14 +306,14 @@ export default [
         next(
           authRequiredOnPreviousRoute
             ? {
-                name: 'home',
-              }
+              name: 'home'
+            }
             : {
-                ...routeFrom,
-              }
+              ...routeFrom
+            }
         )
-      },
-    },
+      }
+    }
   },
   {
     path: '/404',
@@ -322,23 +321,23 @@ export default [
     component: require('@views/404').default,
     // Allows props to be passed to the 404 page through route
     // params, such as `resource` to define what wasn't found.
-    props: true,
+    props: true
   },
   // Redirect any unmatched routes to the 404 page. This may
   // require some server configuration to work in production:
   // https://router.vuejs.org/en/essentials/history-mode.html#example-server-configurations
   {
     path: '*',
-    redirect: '404',
+    redirect: '404'
   },
   {
     path: '/home',
-    redirect: '/',
+    redirect: '/'
   },
   {
     path: '/index.html',
-    redirect: '/',
-  },
+    redirect: '/'
+  }
 ]
 
 // Lazy-loads view components, but with better UX. A loading view
@@ -355,7 +354,7 @@ export default [
 //
 // component: () => import('@views/my-view')
 //
-function lazyLoadView(AsyncView) {
+function lazyLoadView (AsyncView) {
   const AsyncHandler = () => ({
     component: AsyncView,
     // A component to use while the component is loading.
@@ -368,15 +367,15 @@ function lazyLoadView(AsyncView) {
     delay: 400,
     // Time before giving up trying to load the component.
     // Default: Infinity (milliseconds).
-    timeout: 10000,
+    timeout: 10000
   })
 
   return Promise.resolve({
     functional: true,
-    render(h, { data, children }) {
+    render (h, { data, children }) {
       // Transparently pass any props or children
       // to the view component.
       return h(AsyncHandler, data, children)
-    },
+    }
   })
 }

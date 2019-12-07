@@ -5,7 +5,7 @@ var storageRef = fireStorageApp.ref()
 
 export const state = {
   couponTree: [],
-  verifyCodeTree: [] 
+  verifyCodeTree: []
 }
 
 export const getters = {}
@@ -17,12 +17,11 @@ export const mutations = {
 
 export const actions = {
   uploadFile ({ dispatch }, { fileUrl, path }) {
+    const pathSplitArr = path.split('/')
 
-    let pathSplitArr = path.split('/')
+    const ref = storageRef.child(`${path}`)
 
-    let ref = storageRef.child(`${path}`)
-
-    return new Promise((resolve, reject) => { 
+    return new Promise((resolve, reject) => {
       ref.putString(fileUrl, 'data_url')
         .then(snapshot => {
           console.log('Uploaded a data_url string!')
@@ -35,10 +34,9 @@ export const actions = {
     })
   },
   deleteUploadFile ({ dispatch }, { path }) {
+    const pathSplitArr = path.split('/')
 
-    let pathSplitArr = path.split('/')
-
-    let ref = storageRef.child(`${path}`)
+    const ref = storageRef.child(`${path}`)
 
     return new Promise((resolve, reject) => {
       ref.delete()
@@ -53,14 +51,13 @@ export const actions = {
     })
   },
   async fetchCoupons ({ commit }, { campaignId }) {
-    
-    let couponTRef = storageRef.child(`campaigns/${campaignId}/couponsFile/test/`)
-    let couponPRef = storageRef.child(`campaigns/${campaignId}/couponsFile/production/`)
+    const couponTRef = storageRef.child(`campaigns/${campaignId}/couponsFile/test/`)
+    const couponPRef = storageRef.child(`campaigns/${campaignId}/couponsFile/production/`)
 
     try {
       var firstPage = await couponTRef.listAll()
       var addFirstPage = await couponPRef.listAll()
-    } catch (error) { 
+    } catch (error) {
       console.log(error)
       return Promise.reject(new Error(error))
     }
@@ -68,7 +65,7 @@ export const actions = {
     const a = []
     firstPage.items.forEach((itemRef, index) => {
       // All the items under listRef.
-      let result = {
+      const result = {
         id: `test${index}`,
         type: 'test',
         name: itemRef.name,
@@ -78,7 +75,7 @@ export const actions = {
     })
     addFirstPage.items.forEach((itemRef, index) => {
       // All the items under listRef.
-      let result = {
+      const result = {
         id: `production${index}`,
         type: 'production',
         name: itemRef.name,
@@ -90,14 +87,13 @@ export const actions = {
     return Promise.resolve(a)
   },
   async fetchVerifyCode ({ commit }, { campaignId }) {
-
-    let verifyCodeTRef = storageRef.child(`campaigns/${campaignId}/verifyCodeFile/test/`)
-    let verifyCodePRef = storageRef.child(`campaigns/${campaignId}/verifyCodeFile/production/`)
+    const verifyCodeTRef = storageRef.child(`campaigns/${campaignId}/verifyCodeFile/test/`)
+    const verifyCodePRef = storageRef.child(`campaigns/${campaignId}/verifyCodeFile/production/`)
 
     try {
       var test = await verifyCodeTRef.listAll()
       var production = await verifyCodePRef.listAll()
-    } catch (error) { 
+    } catch (error) {
       console.log(error)
       return Promise.reject(new Error(error))
     }
@@ -105,7 +101,7 @@ export const actions = {
     const arr = []
     test.items.forEach((itemRef, index) => {
       // All the items under listRef.
-      let result = {
+      const result = {
         id: `test${index}`,
         type: 'test',
         name: itemRef.name,
@@ -115,7 +111,7 @@ export const actions = {
     })
     production.items.forEach((itemRef, index) => {
       // All the items under listRef.
-      let result = {
+      const result = {
         id: `production${index}`,
         type: 'production',
         name: itemRef.name,
@@ -123,9 +119,7 @@ export const actions = {
       }
       arr.push(result)
     })
-    
+
     return Promise.resolve(arr)
-  },
+  }
 }
-
-

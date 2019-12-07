@@ -1,15 +1,14 @@
 import { set } from '@state/helpers'
-import firestoreApp from "@utils/firestore.config"
-import { fireStoreFieldValue } from "@utils/firestore-timestamp"
+import firestoreApp from '@utils/firestore.config'
+import { fireStoreFieldValue } from '@utils/firestore-timestamp'
 import assign from 'lodash/assign'
 
 import {
   sendSuccessNotice,
   sendErrorNotice,
   closeNotice,
-  commitPagination,
+  commitPagination
 } from '@utils/pagination-util'
-
 
 export const state = {
   // -------------- Shortcode Parameter -------------------//
@@ -31,7 +30,7 @@ export const state = {
   loading: false,
   mode: '',
   snackbar: false,
-  notice: '',
+  notice: ''
 }
 
 export const getters = {
@@ -40,7 +39,7 @@ export const getters = {
   getShortcodesList: (state) => state.shortcodeList,
   hadOperatorConfig: (state) => !!state.operatorConfig,
   getOneOpsConfig: (state) => state.operatorConfig,
-  getShortcodesReservedList: (state) => state.keywordReservedList,
+  getShortcodesReservedList: (state) => state.keywordReservedList
 }
 
 export const mutations = {
@@ -48,7 +47,7 @@ export const mutations = {
   setShortcodeList: set('shortcodeList'),
   setKeywordList: set('keywordList'),
   setKeywordReservedList: set('keywordReservedList'),
-  setSLoading(state, { loading }) {
+  setSLoading (state, { loading }) {
     state.sLoading = loading
   },
   // -------------- Operator Parameter Mutations -------------------//
@@ -56,7 +55,7 @@ export const mutations = {
   setOperators: set('operators'),
   // mutate Operator Config
   setOperatorConfig (state, payload) {
-    state.operatorConfig =  payload
+    state.operatorConfig = payload
   },
   setElementOperatorConfig (state, payload) {
     assign(state.operatorConfig, payload)
@@ -69,7 +68,6 @@ export const mutations = {
     assign(state.shortcodeList[position].operatorName, payload)
   },
   setElementKeywordReservedByCreateCampaign (state, { position, payloadCreate, payloadReserved }) {
-
     state.keywordReservedList[position].keywordsArray = []
     state.keywordReservedList[position].keywordsFalseArray = []
 
@@ -85,14 +83,14 @@ export const mutations = {
     assign(state.shortcodeList[position].sendername, payload)
   },
   // update Page
-  setPage(state, paginationPage) {
+  setPage (state, paginationPage) {
     state.pagination.page = paginationPage
   },
   // Mutate Value in Pagination
   setItems (state, items) {
     state.items = items
   },
-  setLoading(state, { loading }) {
+  setLoading (state, { loading }) {
     state.loading = loading
   },
   setNotice (state, { notice }) {
@@ -103,26 +101,25 @@ export const mutations = {
   },
   setMode (state, { mode }) {
     state.mode = mode
-  },
+  }
 }
 
 export const actions = {
   // ===
   // CREATE Zone
   // ===
-  createShortcode({ commit, dispatch }, { shortcode, info }) {
-
-    let batch = firestoreApp.batch()
+  createShortcode ({ commit, dispatch }, { shortcode, info }) {
+    const batch = firestoreApp.batch()
 
     // สร้าง shortcodeInfo ใน shortcodeConfig
-    let shortcodeConfigRef = firestoreApp
+    const shortcodeConfigRef = firestoreApp
       .collection('shortcodeConfig')
       .doc(`${shortcode.shortcode}`)
-    
-    batch.set(shortcodeConfigRef ,info, { merge: true })
-    
+
+    batch.set(shortcodeConfigRef, info, { merge: true })
+
     // สร้าง shortcode ใน keyword Reserved
-    let keywordReservedRef = firestoreApp
+    const keywordReservedRef = firestoreApp
       .collection('campaignKeywordReserved')
       .doc(`${shortcode.shortcode}`)
 
@@ -132,7 +129,7 @@ export const actions = {
 
     return batch.commit()
       .then(() => {
-        console.log("Document written with ID: ", shortcode);
+        console.log('Document written with ID: ', shortcode)
         dispatch('getShortcodesFromFirestore')
         dispatch('getKeywordsReservedFromFirestore')
         sendSuccessNotice(commit, 'New Shortcode has been added.')
@@ -145,8 +142,7 @@ export const actions = {
         return error
       })
   },
-  createOperatorConfig({ commit, dispatch }, { shortcode, operator, config }) {
-
+  createOperatorConfig ({ commit, dispatch }, { shortcode, operator, config }) {
     return firestoreApp
       .collection('shortcodeConfig')
       .doc(`${shortcode}`)
@@ -154,7 +150,7 @@ export const actions = {
       .doc(`${operator}`)
       .set(config, { merge: true })
       .then(() => {
-        console.log(`Document written with ID: ${shortcode} ops: ${operator}`);
+        console.log(`Document written with ID: ${shortcode} ops: ${operator}`)
         dispatch('getShortcodesFromFirestore')
         sendSuccessNotice(commit, 'New OperatorConfig has been added.')
         closeNotice(commit, 1500)
@@ -166,29 +162,28 @@ export const actions = {
         return error
       })
   },
-  createKeywordByShortcode({ commit, dispatch }, { shortcode, keywordsTestObj, keywordsResObj }) {
+  createKeywordByShortcode ({ commit, dispatch }, { shortcode, keywordsTestObj, keywordsResObj }) {
     // สร้าง Keyword Test ใน keywordByShortcode
 
-    let batch = firestoreApp.batch()
+    const batch = firestoreApp.batch()
 
-    let keywordByShortcodeRef = firestoreApp
+    const keywordByShortcodeRef = firestoreApp
       .collection('campaignKeywordByShortcode')
       .doc(`${shortcode}`)
 
-      batch.set(keywordByShortcodeRef, keywordsTestObj, { merge: true })
+    batch.set(keywordByShortcodeRef, keywordsTestObj, { merge: true })
 
-    let keywordReservedRef = firestoreApp
+    const keywordReservedRef = firestoreApp
       .collection('campaignKeywordReserved')
       .doc(`${shortcode}`)
 
-      batch.set(keywordReservedRef, {
-        keywords: keywordsResObj
-      }, { merge: true })
+    batch.set(keywordReservedRef, {
+      keywords: keywordsResObj
+    }, { merge: true })
 
     return batch.commit()
       .then(() => {
-
-        console.log("Document written with ID: ", shortcode);
+        console.log('Document written with ID: ', shortcode)
         dispatch('getKeywordsActiveFromFirestore')
         dispatch('getKeywordsReservedFromFirestore')
         sendSuccessNotice(commit, 'TEST Keywords has been added.')
@@ -201,7 +196,7 @@ export const actions = {
         return error
       })
   },
-  createKeywordsReserved({ commit, dispatch }, { shortcode, keywords }) {
+  createKeywordsReserved ({ commit, dispatch }, { shortcode, keywords }) {
     // สร้าง keywords จอง
 
     return firestoreApp
@@ -211,8 +206,7 @@ export const actions = {
         keywords: keywords
       }, { merge: true })
       .then(docRef => {
-
-        console.log("Document written with ID: ", shortcode);
+        console.log('Document written with ID: ', shortcode)
         dispatch('getKeywordsReservedFromFirestore')
         sendSuccessNotice(commit, 'New Keywords has been added.')
         closeNotice(commit, 1500)
@@ -227,22 +221,20 @@ export const actions = {
   // ===
   // READ Zone
   // ===
-  getAllOperators({ commit }) {
-
+  getAllOperators ({ commit }) {
     commit('setLoading', { loading: true })
 
     return firestoreApp
       .collection('operatorInfo')
       .get()
       .then(querySnapshot => {
-
-        let opList = []
-        let opArray = []
+        const opList = []
+        const opArray = []
 
         querySnapshot.forEach(doc => {
           let data = {}
           data = doc.data()
-          data['operator'] = doc.id
+          data.operator = doc.id
           opArray.push(doc.id)
           opList.push(data)
         })
@@ -262,8 +254,7 @@ export const actions = {
         return error
       })
   },
-  async getAllShortcodes({ commit, dispatch }) {
-
+  async getAllShortcodes ({ commit, dispatch }) {
     commit('setSLoading', { loading: true })
 
     let sListQuery = []
@@ -271,49 +262,47 @@ export const actions = {
     let kReservedListQuery = []
 
     try {
-
       sListQuery = await firestoreApp.collection('shortcodeConfig').get()
       kListQuery = await firestoreApp.collection('campaignKeywordByShortcode').get()
       kReservedListQuery = await firestoreApp.collection('campaignKeywordReserved').get()
-
     } catch (error) {
       console.log(error)
     }
 
-    if(sListQuery && kListQuery && kReservedListQuery) {
-      let sList = []
-      let kList = []
-      let kReservedList = []
+    if (sListQuery && kListQuery && kReservedListQuery) {
+      const sList = []
+      const kList = []
+      const kReservedList = []
 
       sListQuery.forEach(doc => {
         let data = {}
         data = doc.data()
-        data['shortcode'] = doc.id
+        data.shortcode = doc.id
         sList.push(data)
       })
 
       kListQuery.forEach(doc => {
-        let data = {}
-        data['rawData'] = doc.data()
-        let array = Object.getOwnPropertyNames(doc.data())
-        data['shortcode'] = doc.id
-        data['keywords'] = array
+        const data = {}
+        data.rawData = doc.data()
+        const array = Object.getOwnPropertyNames(doc.data())
+        data.shortcode = doc.id
+        data.keywords = array
         kList.push(data)
       })
 
       kReservedListQuery.forEach(doc => {
-        let data = {}
-        let raw = doc.data()
-        data['rawData'] = raw
+        const data = {}
+        const raw = doc.data()
+        data.rawData = raw
 
-        let arr = adjustKeywordData(raw.keywords)
+        const arr = adjustKeywordData(raw.keywords)
 
-        let arrFilter = arr.filter((y) => y.value === true).map(item => item.key)
-        let arrFalseFilter = arr.filter((y) => y.value === false).map(item => item.key)
-        
-        data['shortcode'] = doc.id
-        data['keywordsArray'] = arrFilter
-        data['keywordsFalseArray'] = arrFalseFilter
+        const arrFilter = arr.filter((y) => y.value === true).map(item => item.key)
+        const arrFalseFilter = arr.filter((y) => y.value === false).map(item => item.key)
+
+        data.shortcode = doc.id
+        data.keywordsArray = arrFilter
+        data.keywordsFalseArray = arrFalseFilter
 
         kReservedList.push(data)
       })
@@ -325,7 +314,6 @@ export const actions = {
       commit('setSLoading', { loading: false })
       sendSuccessNotice(commit, 'Load All ShortCodes Finished!')
       closeNotice(commit, 2000)
-
     } else {
       console.log('no')
       commit('setShortcodeList', null)
@@ -336,8 +324,7 @@ export const actions = {
       closeNotice(commit, 2000)
     }
   },
-  getShortcodesFromFirestore({ commit }) {
-
+  getShortcodesFromFirestore ({ commit }) {
     console.log('loading!!')
     commit('setSLoading', { loading: true })
 
@@ -345,12 +332,12 @@ export const actions = {
       .collection('shortcodeConfig')
       .get()
       .then(querySnapshot => {
-        let shortcodeList = []
+        const shortcodeList = []
 
         querySnapshot.forEach(doc => {
           let data = {}
           data = doc.data()
-          data['shortcode'] = doc.id
+          data.shortcode = doc.id
           shortcodeList.push(data)
         })
 
@@ -368,22 +355,21 @@ export const actions = {
         closeNotice(commit, 2000)
       })
   },
-  getKeywordsActiveFromFirestore({ commit }) {
-
+  getKeywordsActiveFromFirestore ({ commit }) {
     commit('setSLoading', { loading: true })
 
     return firestoreApp
       .collection('campaignKeywordByShortcode')
       .get()
       .then(querySnapshot => {
-        let keywordList = []
+        const keywordList = []
 
         querySnapshot.forEach(doc => {
-          let data = {}
-          data['rawData'] = doc.data()
-          let array = Object.getOwnPropertyNames(doc.data())
-          data['shortcode'] = doc.id
-          data['keywords'] = array
+          const data = {}
+          data.rawData = doc.data()
+          const array = Object.getOwnPropertyNames(doc.data())
+          data.shortcode = doc.id
+          data.keywords = array
           keywordList.push(data)
         })
 
@@ -401,29 +387,28 @@ export const actions = {
         closeNotice(commit, 2000)
       })
   },
-  getKeywordsReservedFromFirestore({ commit }){
-
+  getKeywordsReservedFromFirestore ({ commit }) {
     commit('setSLoading', { loading: true })
 
     return firestoreApp
       .collection('campaignKeywordReserved')
       .get()
       .then(querySnapshot => {
-        let kReservedList = []
+        const kReservedList = []
 
         querySnapshot.forEach(doc => {
-          let data = {}
-          let raw = doc.data()
-          data['rawData'] = raw
+          const data = {}
+          const raw = doc.data()
+          data.rawData = raw
 
-          let arr = adjustKeywordData(raw.keywords)
+          const arr = adjustKeywordData(raw.keywords)
 
-          let arrFilter = arr.filter((y) => y.value === true).map(item => item.key)
-          let arrFalseFilter = arr.filter((y) => y.value === false).map(item => item.key)
+          const arrFilter = arr.filter((y) => y.value === true).map(item => item.key)
+          const arrFalseFilter = arr.filter((y) => y.value === false).map(item => item.key)
 
-          data['shortcode'] = doc.id
-          data['keywordsArray'] = arrFilter
-          data['keywordsFalseArray'] = arrFalseFilter
+          data.shortcode = doc.id
+          data.keywordsArray = arrFilter
+          data.keywordsFalseArray = arrFalseFilter
 
           kReservedList.push(data)
         })
@@ -442,8 +427,7 @@ export const actions = {
         closeNotice(commit, 2000)
       })
   },
-  getOperatorConfig({ commit }, { operator, shortcode }) {
-
+  getOperatorConfig ({ commit }, { operator, shortcode }) {
     return firestoreApp
       .collection('shortcodeConfig')
       .doc(`${shortcode}`)
@@ -456,32 +440,30 @@ export const actions = {
         if (opsDocSnapshot.exists) {
           // do something with the data
           operatorConf = opsDocSnapshot.data()
-
         } else {
-          console.log('document not found');
+          console.log('document not found')
         }
         commit('setOperatorConfig', operatorConf)
         return operatorConf
       })
       .catch(error => console.log(`operatorConfig Error: ${error}`))
-  }, 
+  },
   // ===
   // UPDATE Zone
   // ===
-  mutateOperatorConfig({ commit }, payload) {
+  mutateOperatorConfig ({ commit }, payload) {
     commit('setOperatorConfig', payload)
   },
-  mutateKeywordReservedListByCreateCampaign({ commit, state }, { shortcode, keyword }) {
+  mutateKeywordReservedListByCreateCampaign ({ commit, state }, { shortcode, keyword }) {
+    const positionObj = state.keywordReservedList.find(k => k.shortcode === shortcode)
 
-    let positionObj = state.keywordReservedList.find(k => k.shortcode === shortcode)
+    const position = state.keywordReservedList.indexOf(positionObj)
 
-    let position = state.keywordReservedList.indexOf(positionObj)
+    const array = state.keywordReservedList[position].keywordsArray.slice()
+    const falseArray = state.keywordReservedList[position].keywordsFalseArray.slice()
 
-    let array = state.keywordReservedList[position].keywordsArray.slice()
-    let falseArray = state.keywordReservedList[position].keywordsFalseArray.slice()
-
-    let addArray = array.push(keyword)
-    let cutArray = falseArray.filter(cutkey => cutkey !== keyword)
+    const addArray = array.push(keyword)
+    const cutArray = falseArray.filter(cutkey => cutkey !== keyword)
 
     commit('setElementKeywordReservedByCreateCampaign', {
       position: position,
@@ -489,32 +471,23 @@ export const actions = {
       payloadReserved: cutArray
     })
   },
-  mutateKeywordReservedListByDeleteCampaign({ commit, state }, { shortcode, keyword }) {
-    let positionObj
-    let position
-    let array
-    let falseArray
+  mutateKeywordReservedListByDeleteCampaign ({ commit, state }, { shortcode, keyword }) {
     let addArray
     let cutArray
-    
-    positionObj = state.keywordReservedList.find(k => k.shortcode === shortcode)
-    position = state.keywordReservedList.indexOf(positionObj)
-    
-    array = state.keywordReservedList[position].keywordsArray.slice()
-    falseArray = state.keywordReservedList[position].keywordsFalseArray.slice()
 
-    if(typeof keyword === 'string') {
-  
+    const positionObj = state.keywordReservedList.find(k => k.shortcode === shortcode)
+    const position = state.keywordReservedList.indexOf(positionObj)
+
+    const array = state.keywordReservedList[position].keywordsArray.slice()
+    const falseArray = state.keywordReservedList[position].keywordsFalseArray.slice()
+
+    if (typeof keyword === 'string') {
       cutArray = array.filter(cutkey => cutkey !== keyword)
       addArray = falseArray.push(keyword)
-
     } else {
-
       keyword.forEach(key => {
-
         cutArray = array.filter(cutkey => cutkey !== key)
         addArray = falseArray.push(key)
-
       })
     }
 
@@ -523,11 +496,8 @@ export const actions = {
       payloadCreate: cutArray,
       payloadReserved: addArray
     })
-
-
   },
-  editOperatorConfig({ commit }, { shortcode, operator, config }) {
-
+  editOperatorConfig ({ commit }, { shortcode, operator, config }) {
     return firestoreApp
       .collection('shortcodeConfig')
       .doc(`${shortcode}`)
@@ -535,7 +505,7 @@ export const actions = {
       .doc(`${operator}`)
       .update(config)
       .then(() => {
-        console.log(`Document written with ID: ${shortcode} ops: ${operator}`);
+        console.log(`Document written with ID: ${shortcode} ops: ${operator}`)
         sendSuccessNotice(commit, 'OperatorConfig has been edited.')
         closeNotice(commit, 1500)
       })
@@ -546,9 +516,8 @@ export const actions = {
         return error
       })
   },
-  updatedKeywordReservedByDeleteCampaign({ commit, dispatch }, { shortcode, keyword }) {
-
-    let keywordRef = firestoreApp.collection('campaignKeywordReserved').doc(`${shortcode}`)
+  updatedKeywordReservedByDeleteCampaign ({ commit, dispatch }, { shortcode, keyword }) {
+    const keywordRef = firestoreApp.collection('campaignKeywordReserved').doc(`${shortcode}`)
 
     let updateObj = {}
 
@@ -558,7 +527,7 @@ export const actions = {
       }
     } else if (typeof keyword === 'undefined') {
       // passed away
-    }  else {
+    } else {
       keyword.forEach(key => {
         updateObj[`keywords.${key}`] = true
       })
@@ -567,17 +536,16 @@ export const actions = {
     return keywordRef
       .update(updateObj)
       .then(() => {
-
         // dispatch('mutateKeywordReservedListByDeleteCampaign', {
         //   shortcode: shortcode,
         //   keyword: keyword
         // })
         dispatch('getKeywordsReservedFromFirestore')
 
-        console.log(`Delete Keyword Byshortcode!`);
+        console.log('Delete Keyword Byshortcode!')
         sendSuccessNotice(commit, 'Keyword reserved has been updated.')
         closeNotice(commit, 1500)
-        return `yes`
+        return 'yes'
       })
       .catch(error => {
         console.log(error)
@@ -585,10 +553,8 @@ export const actions = {
         closeNotice(commit, 1500)
         return error
       })
-
   },
-  editSenderName({ commit }, { shortcode, senderArray }) {
-
+  editSenderName ({ commit }, { shortcode, senderArray }) {
     return firestoreApp
       .collection('shortcodeConfig')
       .doc(`${shortcode}`)
@@ -609,8 +575,7 @@ export const actions = {
   // ===
   // DELETE Zone
   // ===
-  deleteOperatorConfig({ commit }, { shortcode, operator }) {
-
+  deleteOperatorConfig ({ commit }, { shortcode, operator }) {
     return firestoreApp
       .collection('shortcodeConfig')
       .doc(`${shortcode}`)
@@ -618,11 +583,10 @@ export const actions = {
       .doc(`${operator}`)
       .delete()
       .then(() => {
-
-        console.log(`Delete Operator Config`);
+        console.log('Delete Operator Config')
         sendSuccessNotice(commit, 'OperatorConfig has been deleted.')
         closeNotice(commit, 1500)
-        return `yes`
+        return 'yes'
       })
       .catch(error => {
         console.log(error)
@@ -631,9 +595,8 @@ export const actions = {
         return error
       })
   },
-  deleteKeywordByShortcode({ commit, dispatch }, { shortcode, keyword }) {
-
-    let keywordRef = firestoreApp.collection('campaignKeywordByShortcode').doc(`${shortcode}`)
+  deleteKeywordByShortcode ({ commit, dispatch }, { shortcode, keyword }) {
+    const keywordRef = firestoreApp.collection('campaignKeywordByShortcode').doc(`${shortcode}`)
 
     let updateObj = {}
 
@@ -652,7 +615,6 @@ export const actions = {
     return keywordRef
       .update(updateObj)
       .then(() => {
-
         dispatch('updatedKeywordReservedByDeleteCampaign', {
           shortcode: shortcode,
           keyword: keyword
@@ -660,10 +622,10 @@ export const actions = {
 
         dispatch('getKeywordsActiveFromFirestore')
 
-        console.log(`Delete Keyword Byshortcode!`);
+        console.log('Delete Keyword Byshortcode!')
         sendSuccessNotice(commit, 'Keyword active has been deleted.')
         closeNotice(commit, 1500)
-        return `yes`
+        return 'yes'
       })
       .catch(error => {
         console.log(error)
@@ -672,20 +634,18 @@ export const actions = {
         return error
       })
   },
-  deleteKeywordReserved({ commit }, { shortcode, keyword }) {
-
-    let keywordRef = firestoreApp.collection('campaignKeywordReserved').doc(`${shortcode}`)
+  deleteKeywordReserved ({ commit }, { shortcode, keyword }) {
+    const keywordRef = firestoreApp.collection('campaignKeywordReserved').doc(`${shortcode}`)
 
     return keywordRef
       .update({
-          [`keywords.${keyword}`]: fireStoreFieldValue.delete()
+        [`keywords.${keyword}`]: fireStoreFieldValue.delete()
       })
       .then(() => {
-
-        console.log(`Delete Keyword Reserved!`);
+        console.log('Delete Keyword Reserved!')
         sendSuccessNotice(commit, 'Keyword has been deleted.')
         closeNotice(commit, 1500)
-        return `yes`
+        return 'yes'
       })
       .catch(error => {
         console.log(error)
@@ -693,7 +653,7 @@ export const actions = {
         closeNotice(commit, 1500)
         return error
       })
-  },
+  }
   // ===
   // ETC. Zone
   // ===
@@ -706,12 +666,12 @@ function adjustKeywordData (rawdata) {
   const arrData = []
 
   Object.keys(rawdata).forEach((item) => {
-    let m = {}
-    m['key'] = item
-    m['value'] = rawdata[item] // value
-    
+    const m = {}
+    m.key = item
+    m.value = rawdata[item] // value
+
     arrData.push(m)
-  });
+  })
 
   return arrData
 }

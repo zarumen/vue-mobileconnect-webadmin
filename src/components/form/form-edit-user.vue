@@ -12,10 +12,10 @@ export default {
       default: Object.assign({})
     }
   },
-  data() {
+  data () {
     const defaultDropdown = Object.freeze({
-      id: 1, 
-      state: 'User Level: Company', 
+      id: 1,
+      state: 'User Level: Company',
       value: 'OrganizationLevel1'
     })
     return {
@@ -28,19 +28,19 @@ export default {
       levelItems: [
         { id: 1, state: 'User Level 1 (Company)', value: 'OrganizationLevel1' },
         { id: 2, state: 'User Level 2 (Department)', value: 'OrganizationLevel2' },
-        { id: 3, state: 'User Level 3 (Brand)', value: 'OrganizationLevel3' },
+        { id: 3, state: 'User Level 3 (Brand)', value: 'OrganizationLevel3' }
       ],
       genderItems: [
         'Male',
         'Female'
       ],
-      avartar : {
+      avartar: {
         male: 'https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png',
         female: 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
         admin: 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/supportfemale-512.png',
         anonymous: 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png'
       },
-      snackbar:false,
+      snackbar: false,
       timeout: 6000,
       textError: 'Error!',
       // /////////////////////
@@ -54,7 +54,7 @@ export default {
       nameRules: [
         v => !!v || 'Name is required',
         v => (v && v.length <= 20) || 'Name must be less than 20 characters'
-      ], 
+      ]
     }
   },
   computed: {
@@ -64,7 +64,7 @@ export default {
       brandList: 'brandList'
     }),
     ...mapGetters('users', [
-      'getOneEditedUser',
+      'getOneEditedUser'
     ]),
     // ////////////////
     //  Form Binding Variables from Vuex
@@ -153,23 +153,20 @@ export default {
     //  Organization Dropdown Controller
     // ////////////////
     enableLevel1 () {
-      if (!!this.select.value && this.select.id === 1) 
-        return true
-      
+      if (!!this.select.value && this.select.id === 1) { return true }
+
       return false
     },
     enableLevel2 () {
-      if (!!this.select.value && this.select.id === 2) 
-        return true
-      
+      if (!!this.select.value && this.select.id === 2) { return true }
+
       return false
     },
     enableLevel3 () {
-      if (!!this.select.value && this.select.id === 3) 
-        return true
-      
+      if (!!this.select.value && this.select.id === 3) { return true }
+
       return false
-    },
+    }
   },
   created () {
     const {
@@ -177,19 +174,17 @@ export default {
       organizationAuth,
       organizationLevel1,
       organizationLevel2,
-      organizationLevel3,
+      organizationLevel3
     } = this.editUser
 
     this.updateFirsttimeEditUserItems(email)
 
-    if(organizationAuth === 'Level1') {
+    if (organizationAuth === 'Level1') {
       this.select = this.levelItems[0]
       this.company = this.companyList.find(obj => obj.id === organizationLevel1)
-
     } else if (organizationAuth === 'Level2') {
       this.select = this.levelItems[1]
       this.department = this.departmentList.find(obj => obj.id === organizationLevel2)
-
     } else if (organizationAuth === 'Level3') {
       this.select = this.levelItems[2]
       this.brand = this.brandList.find(obj => obj.id === organizationLevel3)
@@ -209,76 +204,65 @@ export default {
     },
     saveUser () {
       // Initial Value in Form by v-model attribute
-      let editedThisUser = {}
-      let tCompany = this.company
-      let tDepartment = this.department
-      let tBrand = this.brand
+      const editedThisUser = {}
+      const tCompany = this.company
+      const tDepartment = this.department
+      const tBrand = this.brand
       // /////  Prepare Object Organization before add to Database  ////////
 
       // ///// Validator Check First!
-      if (this.select.id === 1 && tCompany === null)
-        this.openSnackBar('Please check "Company Name" is not Correct.')
+      if (this.select.id === 1 && tCompany === null) { this.openSnackBar('Please check "Company Name" is not Correct.') }
 
-      if (this.select.id === 2 && tDepartment === null)
-        this.openSnackBar('Please check "Department Name" is not Correct.')
+      if (this.select.id === 2 && tDepartment === null) { this.openSnackBar('Please check "Department Name" is not Correct.') }
 
-      if (this.select.id === 3 && tBrand === null)
-        this.openSnackBar('Please check "Brand Name" is not Correct.')
-
-      
+      if (this.select.id === 3 && tBrand === null) { this.openSnackBar('Please check "Brand Name" is not Correct.') }
 
       // /////////////////////
       // Company: Organization >> Level1
       // /////////////////////
-      if (this.select.id === 1 && 
+      if (this.select.id === 1 &&
             tCompany !== null) {
-          
-          editedThisUser['organizationAuth'] = tCompany.organizationAuth
-          editedThisUser['organizationLevel1'] = tCompany.organizationLevel1
-          editedThisUser['organizationLevel1Name'] = tCompany.organizationLevel1Name
+        editedThisUser.organizationAuth = tCompany.organizationAuth
+        editedThisUser.organizationLevel1 = tCompany.organizationLevel1
+        editedThisUser.organizationLevel1Name = tCompany.organizationLevel1Name
 
-          this.updateEditedUser(editedThisUser)
-          this.updatedUserToDB()
-          this.closeDialog()
-
+        this.updateEditedUser(editedThisUser)
+        this.updatedUserToDB()
+        this.closeDialog()
       }
 
       // /////////////////////
       // Department: Organization >> Level2
       // /////////////////////
-      if (this.select.id === 2 && 
+      if (this.select.id === 2 &&
             tDepartment !== null) {
-          
-          editedThisUser['organizationAuth'] = tDepartment.organizationAuth
-          editedThisUser['organizationLevel1'] = tDepartment.organizationLevel1
-          editedThisUser['organizationLevel1Name'] = tDepartment.organizationLevel1Name
-          editedThisUser['organizationLevel2'] = tDepartment.organizationLevel2
-          editedThisUser['organizationLevel2Name'] = tDepartment.organizationLevel2Name
+        editedThisUser.organizationAuth = tDepartment.organizationAuth
+        editedThisUser.organizationLevel1 = tDepartment.organizationLevel1
+        editedThisUser.organizationLevel1Name = tDepartment.organizationLevel1Name
+        editedThisUser.organizationLevel2 = tDepartment.organizationLevel2
+        editedThisUser.organizationLevel2Name = tDepartment.organizationLevel2Name
 
-          this.updateEditedUser(editedThisUser)
-          this.updatedUserToDB()
-          this.closeDialog()
-
+        this.updateEditedUser(editedThisUser)
+        this.updatedUserToDB()
+        this.closeDialog()
       }
 
       // /////////////////////
       // Brand: Organization >> Level3
       // /////////////////////
-      if (this.select.id === 3 && 
+      if (this.select.id === 3 &&
             tBrand !== null) {
-          
-          editedThisUser['organizationAuth'] = tBrand.organizationAuth
-          editedThisUser['organizationLevel1'] = tBrand.organizationLevel1
-          editedThisUser['organizationLevel1Name'] = tBrand.organizationLevel1Name
-          editedThisUser['organizationLevel2'] = tBrand.organizationLevel2
-          editedThisUser['organizationLevel2Name'] = tBrand.organizationLevel2Name
-          editedThisUser['organizationLevel3'] = tBrand.organizationLevel3
-          editedThisUser['organizationLevel3Name'] = tBrand.organizationLevel3Name
+        editedThisUser.organizationAuth = tBrand.organizationAuth
+        editedThisUser.organizationLevel1 = tBrand.organizationLevel1
+        editedThisUser.organizationLevel1Name = tBrand.organizationLevel1Name
+        editedThisUser.organizationLevel2 = tBrand.organizationLevel2
+        editedThisUser.organizationLevel2Name = tBrand.organizationLevel2Name
+        editedThisUser.organizationLevel3 = tBrand.organizationLevel3
+        editedThisUser.organizationLevel3Name = tBrand.organizationLevel3Name
 
-          this.updateEditedUser(editedThisUser)
-          this.updatedUserToDB()
-          this.closeDialog()
-
+        this.updateEditedUser(editedThisUser)
+        this.updatedUserToDB()
+        this.closeDialog()
       }
     },
     openSnackBar (insertText) {
@@ -293,12 +277,12 @@ export default {
 
 <template>
   <div>
-    <v-dialog 
+    <v-dialog
       v-model="editUserDialog"
       persistent
       width="800px"
     >
-      <v-form 
+      <v-form
         ref="uform"
         v-model="valid"
         lazy-validation
@@ -307,16 +291,16 @@ export default {
           <v-card-title class="light-green lighten-4 py-4 title">
             Edit User
           </v-card-title>
-          <v-container 
-            grid-list-sm 
+          <v-container
+            grid-list-sm
             class="pa-4"
           >
             <v-row>
               <v-col
                 cols="12"
               >
-                <v-row 
-                  class="mx-0" 
+                <v-row
+                  class="mx-0"
                   justify="center"
                 >
                   <v-col cols="8">
@@ -334,8 +318,8 @@ export default {
                   </v-col>
                   <div class="flex-grow-1" />
                   <v-col class="mr-5">
-                    <v-avatar 
-                      size="80px" 
+                    <v-avatar
+                      size="80px"
                       class="mr-3"
                     >
                       <img
@@ -354,7 +338,7 @@ export default {
                   </v-col>
                 </v-row>
               </v-col>
-              <v-col 
+              <v-col
                 v-if="enableLevel1"
                 cols="8"
               >
@@ -592,7 +576,7 @@ export default {
             <v-spacer />
             <base-button
               text
-              color="secondary darken-2" 
+              color="secondary darken-2"
               @click="closeDialog()"
             >
               CANCEL
@@ -615,7 +599,7 @@ export default {
       :bottom="true"
       vertical="vertical"
       color="error"
-    > 
+    >
       {{ textError }}
       <base-button
         dark

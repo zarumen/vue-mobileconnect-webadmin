@@ -16,7 +16,7 @@ _.mixin({
   pascalCase: _.flow(
     _.camelCase,
     _.upperFirst
-  ),
+  )
 })
 
 // ===
@@ -47,11 +47,11 @@ for (const fileName of globalComponentFiles) {
 // ===
 
 Vue.mixin({
-  created() {
+  created () {
     // HACK: Set a fallback for the `$style` until vue-jest
     // includes better support for CSS modules.
     this.$style = this.$style || {}
-  },
+  }
 })
 
 // ===
@@ -59,20 +59,20 @@ Vue.mixin({
 // ===
 
 Object.defineProperty(window, 'localStorage', {
-  value: (function() {
+  value: (function () {
     let store = {}
     return {
-      getItem: function(key) {
+      getItem: function (key) {
         return store[key] || null
       },
-      setItem: function(key, value) {
+      setItem: function (key, value) {
         store[key] = value.toString()
       },
-      clear: function() {
+      clear: function () {
         store = {}
-      },
+      }
     }
-  })(),
+  })()
 })
 
 // ===
@@ -92,12 +92,12 @@ global.shallowMountView = (Component, options = {}) => {
     stubs: {
       Layout: {
         functional: true,
-        render(h, { slots }) {
+        render (h, { slots }) {
           return <div>{slots().default}</div>
-        },
+        }
       },
-      ...(options.stubs || {}),
-    },
+      ...(options.stubs || {})
+    }
   })
 }
 
@@ -143,11 +143,11 @@ global.createComponentMocks = ({ store, router, style, mocks, stubs }) => {
               namespaced:
                 typeof storeModule.namespaced === 'undefined'
                   ? true
-                  : storeModule.namespaced,
-            },
+                  : storeModule.namespaced
+            }
           }
         })
-        .reduce((moduleA, moduleB) => Object.assign({}, moduleA, moduleB), {}),
+        .reduce((moduleA, moduleB) => Object.assign({}, moduleA, moduleB), {})
     })
   }
 
@@ -174,10 +174,10 @@ global.createModuleStore = (vuexModule, options = {}) => {
       auth: {
         namespaced: true,
         state: {
-          currentUser: options.currentUser,
-        },
-      },
-    },
+          currentUser: options.currentUser
+        }
+      }
+    }
   })
   axios.defaults.headers.common.Authorization = options.currentUser
     ? options.currentUser.token

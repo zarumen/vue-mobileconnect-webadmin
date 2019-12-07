@@ -1,100 +1,99 @@
 <script>
 import Layout from '@layouts/main'
-import firestoreApp from "@utils/firestore.config"
-import Chart from 'chart.js';
+import firestoreApp from '@utils/firestore.config'
+import Chart from 'chart.js'
 import formatCurrency from '@utils/format-number'
 import { genTimeSeries, genEmptyArray } from '@utils/rgt-array'
 
-
-let ChartData = {
+const ChartData = {
   type: 'bar',
   data: {
     labels: [],
     datasets: [{
-          label: '# message per min',
-          data: [],
-          backgroundColor:'rgba(31, 119, 180, 1)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1
-      }]
+      label: '# message per min',
+      data: [],
+      backgroundColor: 'rgba(31, 119, 180, 1)',
+      borderColor: 'rgba(54, 162, 235, 1)',
+      borderWidth: 1
+    }]
   },
-    options: {
-      title: {
-          display: true,
-          text: ''
-      },
-      scales: {
-          yAxes: [{
-              ticks: {
-                  beginAtZero:true
-              }
-          }],
-          xAxes: [{
-            ticks: {
-              maxTicksLimit: 30,
-              stepSize: 1
-            }
-          }]
-      }
+  options: {
+    title: {
+      display: true,
+      text: ''
+    },
+    scales: {
+      yAxes: [{
+        ticks: {
+          beginAtZero: true
+        }
+      }],
+      xAxes: [{
+        ticks: {
+          maxTicksLimit: 30,
+          stepSize: 1
+        }
+      }]
     }
+  }
 }
 
-let VoteData = {
+const VoteData = {
   type: 'bar',
   data: {
-    labels: ['','','',''],
+    labels: ['', '', '', ''],
     datasets: [{
-          label: '# messages',
-          data: [0,0,0,0],
-          percent: [0,0,0,0],
-          backgroundColor:'rgba(31, 119, 180, 1)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1
-      }]
+      label: '# messages',
+      data: [0, 0, 0, 0],
+      percent: [0, 0, 0, 0],
+      backgroundColor: 'rgba(31, 119, 180, 1)',
+      borderColor: 'rgba(54, 162, 235, 1)',
+      borderWidth: 1
+    }]
   },
-    options: {
-      title: {
-          display: true,
-          text: ''
-      },
+  options: {
+    title: {
+      display: true,
+      text: ''
     }
+  }
 }
 
-let RewardsData = {
+const RewardsData = {
   type: 'bar',
   data: {
-    labels: ['','','',''],
+    labels: ['', '', '', ''],
     datasets: [{
-          label: '# messages',
-          data: [0,0,0,0],
-          percent: [0,0,0,0],
-          backgroundColor:'rgba(31, 119, 180, 1)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1
-      }]
+      label: '# messages',
+      data: [0, 0, 0, 0],
+      percent: [0, 0, 0, 0],
+      backgroundColor: 'rgba(31, 119, 180, 1)',
+      borderColor: 'rgba(54, 162, 235, 1)',
+      borderWidth: 1
+    }]
   },
-    options: {
-      title: {
-          display: true,
-          text: ''
-      },
+  options: {
+    title: {
+      display: true,
+      text: ''
     }
+  }
 }
 
 export default {
-  page() {
-      return {
-        title: 'Campaign Widget',
-        meta: [
-          {
-            name: 'description',
-            content: `List All Campaign Menu Widget`,
-          },
-        ],
-      }
-  }, 
+  page () {
+    return {
+      title: 'Campaign Widget',
+      meta: [
+        {
+          name: 'description',
+          content: 'List All Campaign Menu Widget'
+        }
+      ]
+    }
+  },
   components: { Layout },
-  data() {
+  data () {
     return {
       totals: 0,
       totalsShow: 0,
@@ -108,7 +107,7 @@ export default {
         multiplier: 1,
         fontColor: '1CABE9',
         type: 'totals',
-        offset: 0,
+        offset: 0
       },
       ChartData: ChartData,
       VoteData: VoteData,
@@ -120,26 +119,26 @@ export default {
       minutes: 120
     }
   },
-  watch:{
+  watch: {
     campaignWidget: {
-      handler(val) {
-        this.code =  '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview/'+this.$route.params.campaignId+'/'+this.campaignWidget.offset+'/'+this.campaignWidget.caption+'/'+val.units+'/'+this.campaignWidget.multiplier+'/'+this.campaignWidget.fontColor+'/production" frameborder="0" ></iframe>'
-        this.code2 =  '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview2/'+this.$route.params.campaignId+'/'+this.campaignWidget.offset+'/'+this.campaignWidget.caption+'/'+val.units+'/'+this.campaignWidget.multiplier+'/'+this.campaignWidget.fontColor+'/production" frameborder="0" ></iframe>'
-        this.code3 =  '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview3/'+this.$route.params.campaignId+'/'+this.campaignWidget.offset+'/'+this.campaignWidget.caption+'/'+val.units+'/'+this.campaignWidget.multiplier+'/'+this.campaignWidget.fontColor+'/production" frameborder="0" ></iframe>'
-        
-        firestoreApp.collection("campaignWidget").doc(this.$route.params.campaignId).set(this.campaignWidget).then(function() {
-          console.log("Campaign Widget Successfully Written!");
-        });
-        let data = (this.totals - this.campaignWidget.offset) * this.campaignWidget.multiplier
+      handler (val) {
+        this.code = '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview/' + this.$route.params.campaignId + '/' + this.campaignWidget.offset + '/' + this.campaignWidget.caption + '/' + val.units + '/' + this.campaignWidget.multiplier + '/' + this.campaignWidget.fontColor + '/production" frameborder="0" ></iframe>'
+        this.code2 = '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview2/' + this.$route.params.campaignId + '/' + this.campaignWidget.offset + '/' + this.campaignWidget.caption + '/' + val.units + '/' + this.campaignWidget.multiplier + '/' + this.campaignWidget.fontColor + '/production" frameborder="0" ></iframe>'
+        this.code3 = '<iframe width="560" height="315" src="https://sms2mkt.com/campaignwidgetview3/' + this.$route.params.campaignId + '/' + this.campaignWidget.offset + '/' + this.campaignWidget.caption + '/' + val.units + '/' + this.campaignWidget.multiplier + '/' + this.campaignWidget.fontColor + '/production" frameborder="0" ></iframe>'
+
+        firestoreApp.collection('campaignWidget').doc(this.$route.params.campaignId).set(this.campaignWidget).then(function () {
+          console.log('Campaign Widget Successfully Written!')
+        })
+        const data = (this.totals - this.campaignWidget.offset) * this.campaignWidget.multiplier
         this.totalsShow = formatCurrency(data)
-        },
+      },
       deep: true
     }
   },
-  created() {
-    this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);
-    this.$socket.emit('register', 'keyword','production',this.$route.params.campaignId);
-    this.$socket.emit('register', 'rewards','production',this.$route.params.campaignId);
+  created () {
+    this.$socket.emit('register', 'totals', 'production', this.$route.params.campaignId)
+    this.$socket.emit('register', 'keyword', 'production', this.$route.params.campaignId)
+    this.$socket.emit('register', 'rewards', 'production', this.$route.params.campaignId)
     this.getCampaignWidget(this.$route.params.campaignId)
 
     this.$options.sockets.transactionRewards = (newdata) => {
@@ -147,86 +146,83 @@ export default {
       console.log(typeof newdata)
 
       // Rewards Widget
-      if(typeof newdata === 'object'){ // Register Type Keyword
+      if (typeof newdata === 'object') { // Register Type Keyword
         console.log(newdata)
 
         // console.log(Object.keys(newdata))
         // console.log(Object.values(newdata))
 
-        let keys = Object.keys(newdata)
-        let data = Object.values(newdata)
+        const keys = Object.keys(newdata)
+        const data = Object.values(newdata)
         // const reducer = (accumulator, currentValue) => accumulator + currentValue;
-        let totals = data.reduce((a,b)=> parseInt(a) + parseInt(b) , 0)
+        const totals = data.reduce((a, b) => parseInt(a) + parseInt(b), 0)
         // console.log("total:" + totals)
-        
+
         let count = 0
-        keys.forEach((result)=>{
-        this.VoteData.data.labels[count] = result
-        this.VoteData.data.datasets[0].data[count] = data[count] 
-        this.VoteData.data.datasets[0].percent[count] = Math.round((data[count])/totals * 100 * 100) / 100
-        count++ 
+        keys.forEach((result) => {
+          this.VoteData.data.labels[count] = result
+          this.VoteData.data.datasets[0].data[count] = data[count]
+          this.VoteData.data.datasets[0].percent[count] = Math.round((data[count]) / totals * 100 * 100) / 100
+          count++
         })
-      
+
         this.$forceUpdate()
       }
-    }     
+    }
     this.$options.sockets.transactionTotals = (newdata) => {
-
       // line chart widget
-      if(this.totals !== newdata && this.totals !== 0 && typeof newdata === 'string'){
-        var d = new Date();
-        var stime = d.toLocaleTimeString("th",{hour: '2-digit', minute:'2-digit'})
-        this.ChartData.data.labels[this.minutes-1] = stime 
+      if (this.totals !== newdata && this.totals !== 0 && typeof newdata === 'string') {
+        var d = new Date()
+        var stime = d.toLocaleTimeString('th', { hour: '2-digit', minute: '2-digit' })
+        this.ChartData.data.labels[this.minutes - 1] = stime
 
-        this.smscount = this.smscount + (newdata - this.totals);
-        this.myChart.data.datasets[0].data[this.minutes-1] = this.smscount;
-        this.myChart.update()  
+        this.smscount = this.smscount + (newdata - this.totals)
+        this.myChart.data.datasets[0].data[this.minutes - 1] = this.smscount
+        this.myChart.update()
       }
 
-      if(typeof newdata === 'string'){ // Register Type Total 
+      if (typeof newdata === 'string') { // Register Type Total
         // totals widget
         // console.log("trans:" + newdata)
-        this.totals =  newdata 
-        let data = (newdata - this.campaignWidget.offset) * this.campaignWidget.multiplier
+        this.totals = newdata
+        const data = (newdata - this.campaignWidget.offset) * this.campaignWidget.multiplier
         this.totalsShow = formatCurrency(data)
       }
-
-    }     
+    }
   },
-  mounted() {
-    let d = new Date();
-    this.ChartData.data.labels = genTimeSeries(d,this.minutes-1)
-    this.ChartData.data.datasets[0].data = genEmptyArray(this.minutes-1)
+  mounted () {
+    let d = new Date()
+    this.ChartData.data.labels = genTimeSeries(d, this.minutes - 1)
+    this.ChartData.data.datasets[0].data = genEmptyArray(this.minutes - 1)
 
-    this.createChart('widget-chart', this.ChartData);
+    this.createChart('widget-chart', this.ChartData)
     this.timer = setInterval(() => {
-    d = new Date();
-    this.ChartData.data.labels = genTimeSeries(d,this.minutes-1)
+      d = new Date()
+      this.ChartData.data.labels = genTimeSeries(d, this.minutes - 1)
 
-      let mydata = this.myChart.data.datasets[0].data;
+      const mydata = this.myChart.data.datasets[0].data
       mydata.shift()
       this.smscount = 0
       this.myChart.update()
-    }, 60000);
+    }, 60000)
   },
   methods: {
-    socketRegister(){
-      this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);
+    socketRegister () {
+      this.$socket.emit('register', 'totals', 'production', this.$route.params.campaignId)
     },
-    getCampaignWidget(campaignId) {
-      
+    getCampaignWidget (campaignId) {
       return firestoreApp
         .collection('campaignWidget')
         .doc(campaignId)
         .get()
         .then(doc => {
           if (doc.exists) {
-              this.campaignWidget = doc.data()
+            this.campaignWidget = doc.data()
           } else {
-              console.log("No such document!");
-              firestoreApp.collection("campaignWidget").doc(campaignId).set(this.campaignWidget).then(function() {
-                  console.log("New Campaign Widget Successfully Written!");
-              });
+            console.log('No such document!')
+            firestoreApp.collection('campaignWidget').doc(campaignId).set(this.campaignWidget).then(function () {
+              console.log('New Campaign Widget Successfully Written!')
+            })
           }
         })
         .catch(error => {
@@ -234,15 +230,15 @@ export default {
           return error
         })
     },
-    createChart(chartId, chartData) {
-      const ctx = document.getElementById(chartId);
+    createChart (chartId, chartData) {
+      const ctx = document.getElementById(chartId)
       this.myChart = new Chart(ctx, {
         type: chartData.type,
         data: chartData.data,
-        options: chartData.options,
-      });
-    },
-  },
+        options: chartData.options
+      })
+    }
+  }
 }
 </script>
 <style>
@@ -275,30 +271,30 @@ export default {
     padding: 10px 10px;
     margin: 1px;
     font-weight: bold;
-    text-align: right;   
+    text-align: right;
     background-color: #F1F1FF;
   }
 </style>
 
 <template>
   <Layout>
-    <v-container 
-      fluid 
+    <v-container
+      fluid
       fill-height
     >
-      <v-layout 
-        class="column" 
+      <v-row
+        class="column"
         fill-height
       >
         <section
           align-center
         >
-          <v-layout
+          <v-row
             align-center
           >
-            <v-flex 
-              xs-12
-              md-8
+            <v-col
+              cols="12"
+              md="8"
             >
               <v-form>
                 <p>Total Widget</p>
@@ -338,53 +334,53 @@ export default {
                   single-line
                 />
               </v-form>
-            </v-flex>
-          </v-layout>
+            </v-col>
+          </v-row>
         </section>
         <base-card
           color="deep-purple"
           title="Mobile Connect Info"
           text="Operator's General Informations"
         >
-          <v-layout 
-            align-center 
-            justify-center 
+          <v-row
+            align-center
+            justify-center
             column
-            style="    
+            style="
 
               width: 560px;
               height: 315px;
               border: 1px solid black;"
           >
-            <v-flex>
+            <v-col>
               <p />
-              <h1 
+              <h1
                 :style="{color: '#'+campaignWidget.fontColor}"
-                class="big" 
+                class="big"
               >
                 {{ campaignWidget.caption }}
               </h1>
-            </v-flex>
-            <v-flex xs-12>
+            </v-col>
+            <v-col cols="12">
               <div class="text-center">
-                <h1 
+                <h1
                   :style="{color: '#'+campaignWidget.fontColor}"
                   class="superbig"
                 >
                   {{ totalsShow }} {{ campaignWidget.units }}
                 </h1>
               </div>
-            </v-flex>
-          </v-layout>
+            </v-col>
+          </v-row>
         </base-card>
         <p />
         <section align-center>
-          <v-layout
+          <v-row
             align-center
           >
-            <v-flex 
-              xs-12
-              md-8
+            <v-col
+              cols="12"
+              md="8"
             >
               <v-form>
                 <p>Realtime Barchart Widget</p>
@@ -401,49 +397,49 @@ export default {
                   single-line
                 />
               </v-form>
-            </v-flex>
-          </v-layout>
+            </v-col>
+          </v-row>
         </section>
         <section>
-          <v-layout 
-            align-center 
-            justify-center 
+          <v-row
+            align-center
+            justify-center
             column
             style="
-              
+
               width: 560px;
               height: 315px;
               border: 1px solid black;"
           >
-            <v-flex>
+            <v-col>
               <p />
-              <h1 
+              <h1
                 :style="{color: '#'+campaignWidget.fontColor}"
-                class="big" 
+                class="big"
               >
                 {{ campaignWidget.caption }}
               </h1>
-            </v-flex>
-            <v-flex 
-              xs-12
-              style="width: 100%; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;"        
+            </v-col>
+            <v-col
+              cols="12"
+              style="width: 100%; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;"
             >
               <div class="text-center">
                 <canvas id="widget-chart" />
               </div>
-            </v-flex>
-          </v-layout>
+            </v-col>
+          </v-row>
         </section>
         <div style="padding: 10px;" />
         <v-divider />
         <div style="padding: 10px;" />
         <section align-center>
-          <v-layout
+          <v-row
             align-center
           >
-            <v-flex 
-              xs-12
-              md-8
+            <v-col
+              cols="12"
+              md="8"
             >
               <v-form>
                 <p>Keywords Widget</p>
@@ -455,28 +451,28 @@ export default {
                   single-line
                 />
               </v-form>
-            </v-flex>
-          </v-layout>
+            </v-col>
+          </v-row>
         </section>
         <section>
-          <v-container 
+          <v-container
             fluid
-            left 
+            float-left
             style="
 
               width: 580px;
               height: 315px;
             "
           >
-            <v-layout column>
+            <v-row column>
               <section>
-                <v-layout> 
-                  <v-flex 
-                    xs12
+                <v-row>
+                  <v-col
+                    cols="12"
                   >
                     <v-card color="gray darken-2">
                       <v-card-title primary-title>
-                        <v-layout column>
+                        <v-row column>
                           <div
                             class="headline"
                             style="font-weight: bolder;"
@@ -486,18 +482,17 @@ export default {
                           <!-- <span>Vote sub title</span> -->
                           <div class="headline" />
                           <div style="height:50px" />
-                          <v-layout
+                          <v-row
                             v-if="VoteData.data.labels !== undefine"
                             column
                             class="pa-0 ma-0"
                           >
-                            <v-layout
+                            <v-row
                               v-for="(label, index) in VoteData.data.labels"
                               :key="label"
                               align-left
-                              row
                               fill-height
-                            > 
+                            >
                               <div
                                 class="headline percent"
                                 style="width:50px;"
@@ -522,20 +517,20 @@ export default {
                               <div class="headline percent">
                                 {{ Math.round(VoteData.data.datasets[0].percent[index]) }}%
                               </div>
-                            </v-layout>
-                          </v-layout>
+                            </v-row>
+                          </v-row>
                           <div style="height:10px" />
                           <!-- <span>footer</span> -->
-                        </v-layout>
+                        </v-row>
                       </v-card-title>
                     </v-card>
-                  </v-flex>
-                </v-layout>
+                  </v-col>
+                </v-row>
               </section>
-            </v-layout>
+            </v-row>
           </v-container>
         </section>
-      </v-layout>
+      </v-row>
     </v-container>
   </Layout>
 </template>

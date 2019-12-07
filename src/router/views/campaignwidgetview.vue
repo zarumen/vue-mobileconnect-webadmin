@@ -3,20 +3,20 @@
 import formatCurrency from '@utils/format-number'
 
 export default {
-  page() {
-      return {
-        title: 'Campaign Widget Details',
-        meta: [
-          {
-            name: 'description',
-            content: `Campaign Widgets Details`,
-          },
-        ],
-      }
-  }, 
-  components: { 
+  page () {
+    return {
+      title: 'Campaign Widget Details',
+      meta: [
+        {
+          name: 'description',
+          content: 'Campaign Widgets Details'
+        }
+      ]
+    }
   },
-  data() {
+  components: {
+  },
+  data () {
     return {
       headerText: 'aaaa',
       height: 300,
@@ -25,26 +25,25 @@ export default {
       timeSeries: []
     }
   },
-  created() {
-    if(this.$route.params.state === "test"){
-      this.$socket.emit('register', 'totals',this.$route.params.state,this.$route.params.campaignId)
-    }else{
-      this.$socket.emit('register', 'totals','production',this.$route.params.campaignId)
+  created () {
+    if (this.$route.params.state === 'test') {
+      this.$socket.emit('register', 'totals', this.$route.params.state, this.$route.params.campaignId)
+    } else {
+      this.$socket.emit('register', 'totals', 'production', this.$route.params.campaignId)
     }
-    
 
     this.$options.sockets.transactionTotals = (newdata) => {
-      console.log("trans:" + newdata)
-      this.socketMessage = formatCurrency((newdata - this.$route.params.offset)  * this.$route.params.multiplier)
+      console.log('trans:' + newdata)
+      this.socketMessage = formatCurrency((newdata - this.$route.params.offset) * this.$route.params.multiplier)
       this.timeSeries.push('1')
-    }   
+    }
   },
   methods: {
-    socketRegister(){
-      console.log('param campaignId:'+this.campaignId)
-      this.$socket.emit('register', 'totals','production',this.$route.params.campaignId);
-    },
-  },
+    socketRegister () {
+      console.log('param campaignId:' + this.campaignId)
+      this.$socket.emit('register', 'totals', 'production', this.$route.params.campaignId)
+    }
+  }
 
 }
 </script>
@@ -68,32 +67,32 @@ export default {
 </style>
 
 <template>
-  <v-container 
-    fluid 
+  <v-container
+    fluid
     fill-height
     fill-width
   >
     <v-layout column>
       <section>
-        <v-layout 
-          align-center 
-          justify-center 
+        <v-layout
+          align-center
+          justify-center
           column
           style="height: 315px;"
         >
           <!-- border: 1px solid black; -->
           <v-flex>
             <p />
-            <h1 
+            <h1
               :style="{color: '#'+this.$route.params.color}"
-              class="big" 
+              class="big"
             >
               {{ this.$route.params.caption }}
             </h1>
           </v-flex>
           <v-flex xs-12>
             <div class="text-center">
-              <h1 
+              <h1
                 :style="{color: '#'+this.$route.params.color}"
                 class="superbig"
               >
@@ -104,13 +103,13 @@ export default {
         </v-layout>
       </section>
       <!--section>
-        <v-layout 
-          class="pt-1" 
-          row 
+        <v-layout
+          class="pt-1"
+          row
           wrap
         >
-          <v-flex 
-            md4 
+          <v-flex
+            md4
             xs12
           >
             <v-card light>

@@ -8,7 +8,7 @@ export default {
       default: ''
     }
   },
-  data() {
+  data () {
     const defaultForm = Object.freeze({
       email: '',
       firstName: '',
@@ -19,11 +19,11 @@ export default {
       jobPosition: '',
       mobileTelNumber: '',
       officeTelNumber: '',
-      addedNote: '',
+      addedNote: ''
     })
     const defaultDropdown = Object.freeze({
-      id: 1, 
-      state: 'User Level: Company', 
+      id: 1,
+      state: 'User Level: Company',
       value: 'OrganizationLevel1'
     })
     return {
@@ -37,19 +37,19 @@ export default {
       levelItems: [
         { id: 1, state: 'User Level 1 (Company)', value: 'OrganizationLevel1' },
         { id: 2, state: 'User Level 2 (Department)', value: 'OrganizationLevel2' },
-        { id: 3, state: 'User Level 3 (Brand)', value: 'OrganizationLevel3' },
+        { id: 3, state: 'User Level 3 (Brand)', value: 'OrganizationLevel3' }
       ],
       genderItems: [
         'Male',
         'Female'
       ],
-      avartar : {
+      avartar: {
         male: 'https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png',
         female: 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
         admin: 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/supportfemale-512.png',
         anonymous: 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png'
       },
-      snackbar:false,
+      snackbar: false,
       timeout: 6000,
       textError: 'Error!',
       // /////////////////////
@@ -63,7 +63,7 @@ export default {
       nameRules: [
         v => !!v || 'Name is required',
         v => (v && v.length <= 20) || 'Name must be less than 20 characters'
-      ], 
+      ]
     }
   },
   computed: {
@@ -76,27 +76,24 @@ export default {
     //  Organization Dropdown Controller
     // ////////////////
     enableLevel1 () {
-      if (!!this.select.value && this.select.id === 1) 
-        return true
-      
+      if (!!this.select.value && this.select.id === 1) { return true }
+
       return false
     },
     enableLevel2 () {
-      if (!!this.select.value && this.select.id === 2) 
-        return true
-      
+      if (!!this.select.value && this.select.id === 2) { return true }
+
       return false
     },
     enableLevel3 () {
-      if (!!this.select.value && this.select.id === 3) 
-        return true
-      
+      if (!!this.select.value && this.select.id === 3) { return true }
+
       return false
-    },
+    }
   },
   methods: {
     ...mapActions('users', [
-        'createUser'
+      'createUser'
     ]),
     closeDialog () {
       this.$emit('emitCloseUserDialog', false)
@@ -109,74 +106,63 @@ export default {
     saveUser () {
       // Initial Value in Form by v-model attribute
 
-      let newUser = this.uform
-      let tCompany = this.company
-      let tDepartment = this.department
-      let tBrand = this.brand 
-      newUser['isAdmin'] = false
+      const newUser = this.uform
+      const tCompany = this.company
+      const tDepartment = this.department
+      const tBrand = this.brand
+      newUser.isAdmin = false
       // /////  Prepare Object Organization before add to Database  ////////
 
       // ///// Validator Check First!
-      if (this.select.id === 1 && tCompany === null)
-        this.openSnackBar('Please check "Company Name" is not Correct.')
+      if (this.select.id === 1 && tCompany === null) { this.openSnackBar('Please check "Company Name" is not Correct.') }
 
-      if (this.select.id === 2 && tDepartment === null)
-        this.openSnackBar('Please check "Department Name" is not Correct.')
+      if (this.select.id === 2 && tDepartment === null) { this.openSnackBar('Please check "Department Name" is not Correct.') }
 
-      if (this.select.id === 3 && tBrand === null)
-        this.openSnackBar('Please check "Brand Name" is not Correct.')
-
-      
+      if (this.select.id === 3 && tBrand === null) { this.openSnackBar('Please check "Brand Name" is not Correct.') }
 
       // /////////////////////
       // Company: Organization >> Level1
       // /////////////////////
-      if (this.select.id === 1 && 
+      if (this.select.id === 1 &&
             tCompany !== null) {
-          
-          newUser['organizationAuth'] = tCompany.organizationAuth
-          newUser['organizationLevel1'] = tCompany.organizationLevel1
-          newUser['organizationLevel1Name'] = tCompany.organizationLevel1Name
+        newUser.organizationAuth = tCompany.organizationAuth
+        newUser.organizationLevel1 = tCompany.organizationLevel1
+        newUser.organizationLevel1Name = tCompany.organizationLevel1Name
 
-          this.createUser(newUser)
-          this.closeDialog()
-
+        this.createUser(newUser)
+        this.closeDialog()
       }
 
       // /////////////////////
       // Department: Organization >> Level2
       // /////////////////////
-      if (this.select.id === 2 && 
+      if (this.select.id === 2 &&
             tDepartment !== null) {
-          
-          newUser['organizationAuth'] = tDepartment.organizationAuth
-          newUser['organizationLevel1'] = tDepartment.organizationLevel1
-          newUser['organizationLevel1Name'] = tDepartment.organizationLevel1Name
-          newUser['organizationLevel2'] = tDepartment.organizationLevel2
-          newUser['organizationLevel2Name'] = tDepartment.organizationLevel2Name
+        newUser.organizationAuth = tDepartment.organizationAuth
+        newUser.organizationLevel1 = tDepartment.organizationLevel1
+        newUser.organizationLevel1Name = tDepartment.organizationLevel1Name
+        newUser.organizationLevel2 = tDepartment.organizationLevel2
+        newUser.organizationLevel2Name = tDepartment.organizationLevel2Name
 
-          this.createUser(newUser)
-          this.closeDialog()
-
+        this.createUser(newUser)
+        this.closeDialog()
       }
 
       // /////////////////////
       // Brand: Organization >> Level3
       // /////////////////////
-      if (this.select.id === 3 && 
+      if (this.select.id === 3 &&
             tBrand !== null) {
-          
-          newUser['organizationAuth'] = tBrand.organizationAuth
-          newUser['organizationLevel1'] = tBrand.organizationLevel1
-          newUser['organizationLevel1Name'] = tBrand.organizationLevel1Name
-          newUser['organizationLevel2'] = tBrand.organizationLevel2
-          newUser['organizationLevel2Name'] = tBrand.organizationLevel2Name
-          newUser['organizationLevel3'] = tBrand.organizationLevel3
-          newUser['organizationLevel3Name'] = tBrand.organizationLevel3Name
+        newUser.organizationAuth = tBrand.organizationAuth
+        newUser.organizationLevel1 = tBrand.organizationLevel1
+        newUser.organizationLevel1Name = tBrand.organizationLevel1Name
+        newUser.organizationLevel2 = tBrand.organizationLevel2
+        newUser.organizationLevel2Name = tBrand.organizationLevel2Name
+        newUser.organizationLevel3 = tBrand.organizationLevel3
+        newUser.organizationLevel3Name = tBrand.organizationLevel3Name
 
-          this.createUser(newUser)
-          this.closeDialog()
-
+        this.createUser(newUser)
+        this.closeDialog()
       }
     },
     openSnackBar (insertText) {
@@ -191,12 +177,12 @@ export default {
 
 <template>
   <div>
-    <v-dialog 
+    <v-dialog
       v-model="addUserDialog"
       persistent
       width="800px"
     >
-      <v-form 
+      <v-form
         ref="uform"
         v-model="valid"
         lazy-validation
@@ -205,16 +191,16 @@ export default {
           <v-card-title class="light-green lighten-4 py-4 title">
             Create New User
           </v-card-title>
-          <v-container 
-            grid-list-sm 
+          <v-container
+            grid-list-sm
             class="pa-4"
           >
             <v-row>
               <v-col
                 cols="12"
               >
-                <v-row 
-                  class="mx-0" 
+                <v-row
+                  class="mx-0"
                   justify="center"
                 >
                   <v-cols cols="8">
@@ -232,8 +218,8 @@ export default {
                   </v-cols>
                   <div class="flex-grow-1" />
                   <v-cols class="mr-5">
-                    <v-avatar 
-                      size="80px" 
+                    <v-avatar
+                      size="80px"
                       class="mr-3"
                     >
                       <img
@@ -252,7 +238,7 @@ export default {
                   </v-cols>
                 </v-row>
               </v-col>
-              <v-col 
+              <v-col
                 v-if="enableLevel1"
                 cols="8"
               >
@@ -488,15 +474,15 @@ export default {
             <!-- Button Action in below card-->
             <v-spacer />
             <base-button
-              text 
-              color="primary" 
+              text
+              color="primary"
               @click="clearForm()"
             >
               Clear
             </base-button>
             <base-button
               text
-              color="secondary darken-2" 
+              color="secondary darken-2"
               @click="closeDialog()"
             >
               CANCEL
@@ -519,7 +505,7 @@ export default {
       :bottom="true"
       vertical="vertical"
       color="error"
-    > 
+    >
       {{ textError }}
       <base-button
         dark

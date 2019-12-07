@@ -2,13 +2,13 @@
 import { shortcodeComputed, shortcodeMethods } from '@state/helpers'
 
 export default {
-  components: { 
-    FormAddKeywordByShortcode: () => import('@components/form/form-add-keyword-by-shortcode'), 
-    FormAddKeywordReserved: () => import('@components/form/form-add-keyword-reserved'), 
-    FormAddShortcode: () => import('@components/form/form-add-shortcode'), 
-    FormAddOperatorConfig: () => import('@components/form/form-add-operator-config'), 
-    FormEditOperatorConfig: () => import('@components/form/form-edit-operator-config'), 
-    FormEditSendername: () => import('@components/form/form-edit-sendername') 
+  components: {
+    FormAddKeywordByShortcode: () => import('@components/form/form-add-keyword-by-shortcode'),
+    FormAddKeywordReserved: () => import('@components/form/form-add-keyword-reserved'),
+    FormAddShortcode: () => import('@components/form/form-add-shortcode'),
+    FormAddOperatorConfig: () => import('@components/form/form-add-operator-config'),
+    FormEditOperatorConfig: () => import('@components/form/form-edit-operator-config'),
+    FormEditSendername: () => import('@components/form/form-edit-sendername')
   },
   data: () => ({
     addKeywordByShortcodeDialog: '',
@@ -36,16 +36,15 @@ export default {
     selectedShortcodeObject: '',
     selectedKeywordActive: '',
     selectedKeywordReserved: '',
-    selectedCampaignId: '',
+    selectedCampaignId: ''
   }),
   computed: {
     ...shortcodeComputed,
     operatorsArray () {
-      let array = []
+      const array = []
       if (!this.operators) return
       this.operators.map(v => {
-
-        v= {
+        v = {
           operator: v,
           color: this.colorOperator[this.num - 1]
         }
@@ -59,36 +58,30 @@ export default {
       return array
     },
     filteredList () {
-
-      if(this.shortcodeList) {
+      if (this.shortcodeList) {
         return this.shortcodeList.filter(post => {
           return post.shortcode.includes(this.quickSearchFilterSC)
         })
       }
-      
+
       return null
     },
     filteredKeywordList () {
+      if (!this.keywordList) return
 
-      if(!this.keywordList) return
-
-      let reg = /^([A-Z]|[a-z])\w+/
-      if(reg.test(this.quickSearchFilterKW)) {
-
+      const reg = /^([A-Z]|[a-z])\w+/
+      if (reg.test(this.quickSearchFilterKW)) {
         return this.keywordList.filter(one => {
-
           return one.keywords.some(k => k.includes(this.quickSearchFilterKW))
         })
       } else {
         return this.keywordList.filter(post => {
-          
           return post.shortcode.includes(this.quickSearchFilterKW)
         })
       }
     },
     filteredKeywordReservedList () {
-
-      if(this.keywordReservedList) {
+      if (this.keywordReservedList) {
         return this.keywordReservedList.filter(post => {
           return post.shortcode.includes(this.quickSearchFilterKWR)
         })
@@ -100,9 +93,8 @@ export default {
   watch: {
     // เช็ค List เพื่อ updated หน้า auto
   },
-  created() {
-    if(!this.hadShortcodesList)
-      this.getAllShortcodes()
+  created () {
+    if (!this.hadShortcodesList) { this.getAllShortcodes() }
   },
   methods: {
     ...shortcodeMethods,
@@ -116,27 +108,25 @@ export default {
       return this.getKeywordsReservedFromFirestore()
     },
     mutateDeleteKeywordReservedList (sc, keyword) {
+      const kReservedList = this.getShortcodesReservedList
 
-      let kReservedList = this.getShortcodesReservedList
+      const deletedKeywordListObj = kReservedList.find(rc => rc.shortcode === sc)
 
-      let deletedKeywordListObj = kReservedList.find(rc => rc.shortcode === sc)
+      const i = kReservedList.indexOf(deletedKeywordListObj)
 
-      let i = kReservedList.indexOf(deletedKeywordListObj)
-
-      let resultArray = deletedKeywordListObj.keywordsArray.filter(t => t !== keyword)
+      const resultArray = deletedKeywordListObj.keywordsArray.filter(t => t !== keyword)
 
       this.setElementKeywordReservedList({
         position: i,
         payload: resultArray
       })
-
     },
     checkedOperatorNameColor (ops, item) {
       let data = []
       if (item) {
         data = [...item.operatorName]
       }
-      let checked = data.includes(ops)
+      const checked = data.includes(ops)
 
       return (checked) ? 'secondary' : 'default'
     },
@@ -146,9 +136,9 @@ export default {
         shortcode: this.selectedShortcode,
         keyword: this.selectedKeywordReserved
       })
-      .then(() => {
-        this.mutateDeleteKeywordReservedList(this.selectedShortcode, this.selectedKeywordReserved)
-      })
+        .then(() => {
+          this.mutateDeleteKeywordReservedList(this.selectedShortcode, this.selectedKeywordReserved)
+        })
       this.deletedDialog = false
     },
     onCancel () {
@@ -158,16 +148,15 @@ export default {
       console.log(`click in :${JSON.stringify(i)}`)
     },
     clickedOperator (operator, i) {
-
       this.selectedOperator = operator
       this.selectedShortcode = i.shortcode
-      
+
       let data = []
       if (i) {
         data = [...i.operatorName]
-      } 
+      }
 
-      let checkedOperator = data.includes(operator)
+      const checkedOperator = data.includes(operator)
 
       if (checkedOperator) {
         // edit operator config
@@ -182,23 +171,20 @@ export default {
     clickedSenderName (object) {
       this.selectedShortcodeObject = object
 
-      if(object.sendername) {
+      if (object.sendername) {
         this.editSenderNameDialog = !this.editSenderNameDialog
-        return console.log(`to edit sendername dialog`)
+        return console.log('to edit sendername dialog')
       }
 
-      return console.log(`don't have sendername property!!`)
+      return console.log('don\'t have sendername property!!')
     },
     clickedKeywordReserved (keyword, shortcode) {
-
       this.selectedShortcode = shortcode
       this.selectedKeywordReserved = keyword
 
       this.deletedDialog = !this.deletedDialog
-
     },
     openBaseDialogDetails (keyword, campaignId) {
-
       this.selectedCampaignId = campaignId
       this.selectedKeywordActive = keyword
 
@@ -254,8 +240,8 @@ export default {
         </v-tabs>
       </v-col>
       <v-card-title>
-        <span 
-          v-if="tabs === 0" 
+        <span
+          v-if="tabs === 0"
           class="title"
         >
           ShortCode Totals {{ filteredList? "("+filteredList.length+")": "" }}
@@ -268,8 +254,8 @@ export default {
             hide-details
           />
         </span>
-        <span 
-          v-if="tabs === 1" 
+        <span
+          v-if="tabs === 1"
           class="title"
         >
           Keyword Totals {{ filteredKeywordList? "("+filteredKeywordList.length+")": "" }}
@@ -282,8 +268,8 @@ export default {
             hide-details
           />
         </span>
-        <span 
-          v-if="tabs === 2" 
+        <span
+          v-if="tabs === 2"
           class="title"
         >
           Keyword Reserved Totals {{ filteredKeywordReservedList? "("+filteredKeywordReservedList.length+")": "" }}
@@ -304,9 +290,9 @@ export default {
             rounded
             @click.stop="addShortcodeDialog = !addShortcodeDialog"
           >
-            +SHORTCODE            
+            +SHORTCODE
           </base-button>
-          <base-button 
+          <base-button
             color="secondary"
             circle
             icon
@@ -324,7 +310,7 @@ export default {
             rounded
             @click.stop="addKeywordByShortcodeDialog = !addKeywordByShortcodeDialog"
           >
-            +TEST Keyword         
+            +TEST Keyword
           </base-button>
           <base-button
             color="secondary"
@@ -334,7 +320,7 @@ export default {
           >
             <v-icon>
               refresh
-            </v-icon>      
+            </v-icon>
           </base-button>
         </span>
         <span v-if="tabs === 2">
@@ -344,7 +330,7 @@ export default {
             rounded
             @click.stop="addKeywordReservedDialog = !addKeywordReservedDialog"
           >
-            +KEY RESERVED         
+            +KEY RESERVED
           </base-button>
           <base-button
             color="primary"
@@ -354,7 +340,7 @@ export default {
           >
             <v-icon>
               refresh
-            </v-icon>      
+            </v-icon>
           </base-button>
         </span>
       </v-card-title>
@@ -364,7 +350,7 @@ export default {
           <!-- shortcode list -->
           <v-list three-line>
             <template v-for="(item0, index) in filteredList">
-              <v-list-item 
+              <v-list-item
                 :key="index"
                 ripple
                 @click="onClicked(item0)"
@@ -397,8 +383,8 @@ export default {
                   </v-list-item-subtitle>
                 </v-list-item-content>
                 <v-list-item-action>
-                  <v-col 
-                    cols="12" 
+                  <v-col
+                    cols="12"
                     class="py-2"
                   >
                     <base-button
@@ -437,7 +423,7 @@ export default {
                 </v-list-item-action>
               </v-list-item>
               <v-divider
-                v-if="index + 1 < filteredList.length" 
+                v-if="index + 1 < filteredList.length"
                 :key="`divider-${index}`"
               />
             </template>
@@ -447,7 +433,7 @@ export default {
           <!-- keyword list -->
           <v-list three-line>
             <template v-for="(item1, index) in filteredKeywordList">
-              <v-list-item 
+              <v-list-item
                 :key="index"
                 ripple
               >
@@ -471,7 +457,7 @@ export default {
                       show-arrows
                     >
                       <v-chip
-                        v-for="k in item1.keywords" 
+                        v-for="k in item1.keywords"
                         :key="k"
                         class="my-2 mx-1 caption"
                         color="light-green lighten-4"
@@ -484,8 +470,8 @@ export default {
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
-              <v-divider 
-                v-if="index + 1 < filteredKeywordList.length" 
+              <v-divider
+                v-if="index + 1 < filteredKeywordList.length"
                 :key="`divider-${index}`"
               />
             </template>
@@ -495,7 +481,7 @@ export default {
           <!-- keyword reserved -->
           <v-list three-line>
             <template v-for="(item2, index) in filteredKeywordReservedList">
-              <v-list-item 
+              <v-list-item
                 :key="item2.shortcode"
                 ripple
                 @click.stop="onClicked(item2)"
@@ -519,7 +505,7 @@ export default {
                         column
                       >
                         <v-chip
-                          v-for="i in item2.keywordsArray" 
+                          v-for="i in item2.keywordsArray"
                           :key="i"
                           class="mb-2 primary lighten-3 caption font-weight-thin"
                           x-small
@@ -529,7 +515,7 @@ export default {
                         </v-chip>
                         <!-- Keywords ที่ถูกใช้ไปแล้ว (Actived) -->
                         <v-chip
-                          v-for="i in item2.keywordsFalseArray" 
+                          v-for="i in item2.keywordsFalseArray"
                           :key="i"
                           class="mb-2 grey lighten-1 white--text caption font-weight-thin"
                           x-small
@@ -546,7 +532,7 @@ export default {
                     </v-list-item-action-text>
                     <v-list-item-subtitle class="body-2 font-weight-thin">
                       <v-chip
-                        v-for="i in item2.keywordsFalseArray" 
+                        v-for="i in item2.keywordsFalseArray"
                         :key="i"
                         class="mb-2 grey lighten-1 white--text caption font-weight-thin"
                         small
@@ -557,8 +543,8 @@ export default {
                   </div> -->
                 </v-list-item-content>
               </v-list-item>
-              <v-divider 
-                v-if="index + 1 < filteredKeywordReservedList.length" 
+              <v-divider
+                v-if="index + 1 < filteredKeywordReservedList.length"
                 :key="`divider-${index}`"
               />
             </template>
@@ -569,17 +555,17 @@ export default {
     <!-- Pop up Panels -->
     <form-add-keyword-by-shortcode
       v-if="addKeywordByShortcodeDialog"
-      :add-keyword-by-shortcode-dialog="addKeywordByShortcodeDialog" 
+      :add-keyword-by-shortcode-dialog="addKeywordByShortcodeDialog"
       @emitCloseKeywordByShortcodeDialog="addKeywordByShortcodeDialog=arguments[0]"
     />
     <form-add-keyword-reserved
       v-if="addKeywordReservedDialog"
-      :add-keyword-reserved-dialog="addKeywordReservedDialog" 
+      :add-keyword-reserved-dialog="addKeywordReservedDialog"
       @emitCloseKeywordDialog="addKeywordReservedDialog=arguments[0]"
     />
     <form-add-shortcode
       v-if="addShortcodeDialog"
-      :add-shortcode-dialog="addShortcodeDialog" 
+      :add-shortcode-dialog="addShortcodeDialog"
       @emitCloseShortcodeDialog="addShortcodeDialog=arguments[0]"
     />
     <form-add-operator-config
@@ -603,8 +589,8 @@ export default {
       @emitCloseEditSendernameDialog="editSenderNameDialog=arguments[0]"
     />
     <BaseDialog
-      :dialog="deletedDialog" 
-      :dialog-title="`Deleted Keyword Reserved Dialog`" 
+      :dialog="deletedDialog"
+      :dialog-title="`Deleted Keyword Reserved Dialog`"
       :dialog-text="`Do you want to Deleted ${selectedKeywordReserved} Keyword?`"
       @onConfirm="onConfirm"
       @onCancel="onCancel"
@@ -641,4 +627,3 @@ export default {
     </v-dialog>
   </base-helper-offset>
 </template>
-

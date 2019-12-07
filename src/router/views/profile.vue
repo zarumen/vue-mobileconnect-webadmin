@@ -3,29 +3,29 @@ import fireauth from '@utils/fireauth.config'
 import { authComputed } from '@state/helpers'
 
 export default {
-  page() {
+  page () {
     return {
       title: `${this.user.firstName}'s Profile`,
       meta: [
         {
           name: 'description',
-          content: `The user profile for ${this.user.firstName}.`,
-        },
-      ],
+          content: `The user profile for ${this.user.firstName}.`
+        }
+      ]
     }
   },
-  components: { 
+  components: {
     Layout: () => import('@layouts/main')
   },
   props: {
     user: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   data () {
     return {
-      dialog: null,
+      dialog: null
     }
   },
   computed: {
@@ -35,7 +35,7 @@ export default {
         return `${this.user.firstName}`
       },
       set (value) {
-        
+
       }
     },
     displayName () {
@@ -53,7 +53,7 @@ export default {
   // },
   methods: {
     updatedDisplayName (name) {
-      let user = fireauth.currentUser
+      const user = fireauth.currentUser
 
       user.updateProfile({
         displayName: name
@@ -62,11 +62,10 @@ export default {
         console.log('User DisplayName Changed!')
         user.reload()
         this.dialog = !this.dialog
-
       }).catch((error) => {
         // An error happened.
         console.log(error)
-      });
+      })
     },
     save () {
       this.updatedDisplayName(this.profileName)
@@ -100,8 +99,8 @@ export default {
                 :src="avatar"
               />
             </v-avatar>
-            <v-card-text 
-              class="text-center" 
+            <v-card-text
+              class="text-center"
             >
               <h4 class="card-title font-weight-light">
                 {{ displayName }}
@@ -180,7 +179,7 @@ export default {
                     md6
                   >
                     <v-text-field
-                      v-model="user.lastName"  
+                      v-model="user.lastName"
                       label="Last Name"
                       class="purple-input"
                       disabled
@@ -223,8 +222,8 @@ export default {
         <v-card-actions>
           <v-spacer />
           <base-button
-            rounded 
-            color="primary" 
+            rounded
+            color="primary"
             @click="dialog=false"
           >
             CANCEL

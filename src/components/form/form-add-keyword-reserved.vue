@@ -10,7 +10,7 @@ export default {
   },
   data: () => ({
     keyform: {
-      shortcode: null,
+      shortcode: null
     },
     activator: null,
     attach: null,
@@ -42,7 +42,7 @@ export default {
     x: 0,
     search: null,
     y: 0,
-    snackbar:false,
+    snackbar: false,
     timeout: 6000,
     textError: 'Error!',
     valid: true,
@@ -50,8 +50,8 @@ export default {
       v => !!v || 'Shortcode is required'
     ],
     secondRules: [
-      v => v.length > 0  || 'Keyword is required'
-    ],
+      v => v.length > 0 || 'Keyword is required'
+    ]
   }),
   computed: {
     ...mapState('shortcodes', {
@@ -60,16 +60,16 @@ export default {
       keywordReservedList: 'keywordReservedList'
     }),
     keywordInKeywordList () {
-      let sCheck = this.keyform.shortcode.shortcode
+      const sCheck = this.keyform.shortcode.shortcode
 
-      if(sCheck) {
-        let kws = this.keywordReservedList.find(sc => sc.shortcode === sCheck)
+      if (sCheck) {
+        const kws = this.keywordReservedList.find(sc => sc.shortcode === sCheck)
 
         return [...kws.keywordsFalseArray, ...kws.keywordsArray]
       }
 
       return []
-    },
+    }
   },
   watch: {
     model (val, prev) {
@@ -93,20 +93,18 @@ export default {
   },
   methods: {
     ...mapActions('shortcodes', [
-        'createKeywordsReserved',
+      'createKeywordsReserved'
     ]),
     checkDupKeyword (keywordArr) {
-
-      if(keywordArr) {
-
-        if(!this.keywordInKeywordList) return true
+      if (keywordArr) {
+        if (!this.keywordInKeywordList) return true
         // ถ้ามี keyword เข้ามาให้ เช็คว่า มี keyword ที่ใช้อยู่รึิเปล่า
-        let checkArr = keywordArr.map(element => {
+        const checkArr = keywordArr.map(element => {
           // return เป็น Boolean Array ของ keywords [true, false, true]
           return this.keywordInKeywordList.includes(element.text)
         })
         // ถ้ามี แม้แต่ 1 ตัวที่เป็น true ให้โชว์ error ว่า มี keyword ซ้ำ
-        if(checkArr.includes(true)) {
+        if (checkArr.includes(true)) {
           // show Error
           return false
         }
@@ -138,42 +136,36 @@ export default {
         .indexOf(query.toString().toLowerCase()) > -1
     },
     saveKeyword () {
-      
       // validate field shortcode first
-      if(!this.keyform.shortcode)
-        this.openSnackBar("You cannot fill Data in Textfields!")
+      if (!this.keyform.shortcode) { this.openSnackBar('You cannot fill Data in Textfields!') }
 
-      if(!this.checkDupKeyword(this.model)) {
-        
-        this.openSnackBar("KEYWORDS ซ้ำ+")
-
+      if (!this.checkDupKeyword(this.model)) {
+        this.openSnackBar('KEYWORDS ซ้ำ+')
       } else {
-
       // reformat Data Informations
-      let x
-      if(typeof this.keyform.shortcode === 'string')
-        x = this.keyform.shortcode
-      
-      let { shortcode: { shortcode: y } } = this.keyform
-      
-      let object = this.model
+        let x
+        if (typeof this.keyform.shortcode === 'string') { x = this.keyform.shortcode }
 
-      const changeToObject = (array) =>
-        array.reduce((obj, item) => {
-          obj[item.text] = true
-          return obj
-        }, {})
+        const { shortcode: { shortcode: y } } = this.keyform
 
-      const keywordObject = changeToObject(object)
+        const object = this.model
 
-      const shortcodeResult = ((typeof x === 'string') ? x : y)
+        const changeToObject = (array) =>
+          array.reduce((obj, item) => {
+            obj[item.text] = true
+            return obj
+          }, {})
 
-      // save Data to Firestore & close Dialog
-      this.createKeywordsReserved({
-        shortcode: shortcodeResult,
-        keywords: keywordObject
-      })
-      this.closeDialog()
+        const keywordObject = changeToObject(object)
+
+        const shortcodeResult = ((typeof x === 'string') ? x : y)
+
+        // save Data to Firestore & close Dialog
+        this.createKeywordsReserved({
+          shortcode: shortcodeResult,
+          keywords: keywordObject
+        })
+        this.closeDialog()
       }
     },
     closeDialog () {
@@ -194,12 +186,12 @@ export default {
 
 <template>
   <div>
-    <v-dialog 
+    <v-dialog
       v-model="addKeywordReservedDialog"
       persistent
       width="800px"
     >
-      <v-form 
+      <v-form
         ref="keyform"
         v-model="valid"
         lazy-validation
@@ -208,16 +200,15 @@ export default {
           <v-card-title class="light-green lighten-4 py-4 title">
             Add New Keywords
           </v-card-title>
-          <v-container 
-            grid-list-sm 
+          <v-container
+            grid-list-sm
             class="pa-4"
           >
-            <v-layout 
-              row 
+            <v-row
               wrap
             >
-              <v-flex
-                xs8
+              <v-col
+                cols="8"
               >
                 <p>Please Enter Your Shortcode:</p>
                 <v-combobox
@@ -233,8 +224,8 @@ export default {
                   chips
                   solo
                 >
-                  <template 
-                    slot="item" 
+                  <template
+                    slot="item"
                     slot-scope="data"
                   >
                     <template v-if="typeof data.item !== 'object'">
@@ -245,8 +236,8 @@ export default {
                         <v-list-item-title>{{ data.item.shortcode }}</v-list-item-title>
                       </v-list-item-content>
                     </template>
-                    <template 
-                      slot="selection" 
+                    <template
+                      slot="selection"
                       slot-scope="idata"
                     >
                       <v-chip
@@ -261,11 +252,11 @@ export default {
                     </template>
                   </template>
                 </v-combobox>
-              </v-flex>
-              <v-flex xs12>
+              </v-col>
+              <v-col cols="12">
                 <p>&nbsp;</p>
-              </v-flex>
-              <v-flex xs12>
+              </v-col>
+              <v-col cols="12">
                 <p>Please Enter Your Keywords (Allow entering multiple values):</p>
                 <v-combobox
                   v-model="model"
@@ -354,22 +345,22 @@ export default {
                     </v-list-item-action>
                   </template>
                 </v-combobox>
-              </v-flex>
-            </v-layout>
+              </v-col>
+            </v-row>
           </v-container>
           <v-card-actions>
             <!-- Button Action in below card-->
             <v-spacer />
             <base-button
-              text 
-              color="primary" 
+              text
+              color="primary"
               @click="clearForm()"
             >
               Clear
             </base-button>
             <base-button
-              text 
-              color="secondary darken-2" 
+              text
+              color="secondary darken-2"
               @click="closeDialog()"
             >
               CANCEL
@@ -392,7 +383,7 @@ export default {
       :bottom="true"
       vertical="vertical"
       color="error"
-    > 
+    >
       {{ textError }}
       <base-button
         dark

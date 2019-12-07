@@ -4,12 +4,12 @@ export default {
   page: {
     title: 'Page timeout',
     meta: [
-      { name: 'description', content: 'The page timed out while loading.' },
-    ],
+      { name: 'description', content: 'The page timed out while loading.' }
+    ]
   },
-  components: { 
-    Layout: () => import('@layouts/main')  
-  },
+  components: {
+    Layout: () => import('@layouts/main')
+  }
 }
 </script>
 

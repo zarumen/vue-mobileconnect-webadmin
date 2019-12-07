@@ -20,4 +20,3 @@ export default new Vuetify({
     current: 'th'
   }
 })
-

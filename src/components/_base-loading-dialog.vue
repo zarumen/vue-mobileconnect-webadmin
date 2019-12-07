@@ -3,8 +3,8 @@ export default {
   props: {
     dialog: {
       type: [String, Boolean],
-      default: '',
-    },
+      default: ''
+    }
   },
   watch: {
     dialog (val) {
@@ -12,7 +12,7 @@ export default {
 
       setTimeout(() => (this.dialog = false), 4000)
     }
-  },
+  }
 }
 </script>
 

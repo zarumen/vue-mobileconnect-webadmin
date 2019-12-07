@@ -6,23 +6,23 @@ export default {
   props: {
     headers: {
       type: Array,
-      default: () => ({}),
+      default: () => ({})
     },
     items: {
       type: [Array, Object],
-      default: () => ({}),
+      default: () => ({})
     },
     pagination: {
       type: [Object, String],
-      default: '',
+      default: ''
     },
     search: {
       type: String,
-      default: '',
+      default: ''
     },
     basemodule: {
       type: String,
-      default: '',
+      default: ''
     },
     actionBtn: {
       type: Boolean,
@@ -33,12 +33,12 @@ export default {
     return {
       currentItems: '',
       menuShow: false,
-      keywordArraySelected: [],
+      keywordArraySelected: []
     }
   },
   computed: {
     isNotEmpty () {
-      return this.items && this.items.length > 0;
+      return this.items && this.items.length > 0
     },
     mutablePagination: {
       get () {
@@ -136,7 +136,7 @@ export default {
     },
     checkStatusMsg () {
       return this.headers.some(head => head.value === 'messageStatus')
-    },
+    }
   },
   created () {
 
@@ -151,33 +151,29 @@ export default {
         val = item[header.value]
       }
       if (typeof val === 'boolean') {
-        
         if (header.text === 'Active') {
-
           val = val ? 'Active' : 'Non-Active'
         } else {
-
           val = val ? 'Yes' : 'No'
         }
       }
       if (typeof val === 'object' && val.constructor === Array) {
-        let array = item[header.value]
+        const array = item[header.value]
         val = array
       }
       if (typeof val === 'object' && val.constructor === Object) {
         // convert Date format before Render data
-        let object = item[header.value]
+        const object = item[header.value]
 
         if (header.text === 'Create Time') {
           // ถ้า เป็น create time ให้ใช้ relatives time
           val = formatDateRelative(object.seconds)
-
         } else {
           // format time ปกติ
           val = formatDate(object.seconds)
         }
       }
-      return val;
+      return val
     },
     nextPage (newValue) {
       return this.$store.dispatch(`${this.basemodule}/updatePage`, newValue)
@@ -208,11 +204,9 @@ export default {
       else return 'red'
     },
     updatedItems (event) {
-      
       this.currentItems = event
-      
-      if(this.search) {
 
+      if (this.search) {
         return this.$emit('updated-items', this.currentItems)
       }
 
@@ -226,16 +220,16 @@ export default {
       this.keywordArraySelected = []
       this.menuShow = false
     }
-  },
-  
+  }
+
 }
 </script>
 
 <template>
   <div>
-    <v-data-table 
+    <v-data-table
       :headers="headers"
-      :items="items" 
+      :items="items"
       :search="search"
       :page.sync="page"
       :options.sync="mutablePagination"
@@ -407,7 +401,7 @@ export default {
         v-if="checkOrganizationAuth"
         v-slot:item.organizationAuth="{ item }"
       >
-        <v-chip 
+        <v-chip
           :color="getColor(item.organizationAuth)"
           small
           dark
@@ -431,7 +425,7 @@ export default {
         v-if="checkStatus"
         v-slot:item.campaignState="{ item }"
       >
-        <v-chip 
+        <v-chip
           :color="getColorState(item.campaignState)"
           x-small
           label
@@ -446,7 +440,7 @@ export default {
         v-if="checkStatusMsg"
         v-slot:item.messageStatus="{ item }"
       >
-        <v-chip 
+        <v-chip
           :color="getColorStatus(item.messageStatus)"
           x-small
           label
@@ -457,12 +451,12 @@ export default {
           </span>
         </v-chip>
       </template>
-      <template 
+      <template
         v-if="checkActionsBtn"
         v-slot:item.action="{ item }"
       >
         <div v-if="actionBtn">
-          <base-button 
+          <base-button
             color="secondary"
             circle
             icon
@@ -472,7 +466,7 @@ export default {
             <v-icon>edit</v-icon>
           </base-button>
           <base-button
-            color="error" 
+            color="error"
             circle
             icon
             x-small
@@ -482,7 +476,7 @@ export default {
           </base-button>
         </div>
         <div v-if="checkUserViewer">
-          <router-link 
+          <router-link
             :to="{ path: `campaignDetails/${item.id}` }"
           >
             <v-icon color="secondary">
@@ -491,7 +485,7 @@ export default {
           </router-link>
         </div>
         <div v-if="checkWidgets">
-          <router-link 
+          <router-link
             :to="{ path: `campaignwidget/${item.id}` }"
           >
             <v-icon color="secondary">
@@ -528,7 +522,7 @@ export default {
             column
             active-class="primary--text"
           >
-            <v-chip 
+            <v-chip
               v-for="i in keywordArraySelected"
               :key="JSON.stringify(i)"
               x-small
@@ -547,7 +541,7 @@ export default {
       class="text-center pt-2"
     >
       <v-pagination
-        v-model="page" 
+        v-model="page"
         :length.sync="pages"
         next-icon="arrow_right"
         prev-icon="arrow_left"

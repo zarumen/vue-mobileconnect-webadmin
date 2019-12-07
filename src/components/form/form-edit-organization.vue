@@ -1,7 +1,6 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 
-
 export default {
   props: {
     editOrgDialog: {
@@ -23,7 +22,7 @@ export default {
     orgLevelThree: {
       type: [String],
       default: ''
-    },
+    }
   },
   data: () => ({
     form: {
@@ -34,11 +33,11 @@ export default {
     levelItems: [
       { id: 1, state: 'Company', value: 'OrganizationLevel1' },
       { id: 2, state: 'Department', value: 'OrganizationLevel2' },
-      { id: 3, state: 'Brand', value: 'OrganizationLevel3' },
+      { id: 3, state: 'Brand', value: 'OrganizationLevel3' }
     ],
     select: Object.assign({}, {
-      id: 1, 
-      state: 'User Level: Company', 
+      id: 1,
+      state: 'User Level: Company',
       value: 'OrganizationLevel1'
     }),
     snackbar: false,
@@ -52,7 +51,7 @@ export default {
       brandList: 'brandList'
     }),
     mutateDepartmentList () {
-      if(typeof this.form.company === 'object') {
+      if (typeof this.form.company === 'object') {
         return this.mutateList(this.form.company.id)
       } else {
         return []
@@ -61,48 +60,41 @@ export default {
     // ////////////////
     //  Organization Dropdown Controller
     // ////////////////
-    enableLevel1() {
-      if (!!this.select.value && this.select.id === 1) 
-        return true
-      
+    enableLevel1 () {
+      if (!!this.select.value && this.select.id === 1) { return true }
+
       return false
     },
-    enableLevel2() {
-      if (!!this.select.value && this.select.id === 2) 
-        return true
-      
+    enableLevel2 () {
+      if (!!this.select.value && this.select.id === 2) { return true }
+
       return false
     },
-    enableLevel3() {
-      if (!!this.select.value && this.select.id === 3) 
-        return true
-      
+    enableLevel3 () {
+      if (!!this.select.value && this.select.id === 3) { return true }
+
       return false
     },
     // conditions of Edit Items
     conditionEditDepartment () {
-      if (this.select.id === 2)
-        return true
+      if (this.select.id === 2) { return true }
 
       return false
     },
     conditionEditBrand () {
-      if (this.select.id === 3)
-        return true
+      if (this.select.id === 3) { return true }
 
       return false
     }
   },
   created () {
-    if(this.level === 'Level1') {
+    if (this.level === 'Level1') {
       this.select = this.levelItems[0]
       this.form.company = this.findOrganizationObject(this.level, this.orgLevelOne)
-
     } else if (this.level === 'Level2') {
       this.select = this.levelItems[1]
       this.form.company = this.findOrganizationObject('Level1', this.orgLevelOne)
       this.form.department = this.findOrganizationObject(this.level, this.orgLevelTwo)
-
     } else if (this.level === 'Level3') {
       this.select = this.levelItems[2]
       this.form.company = this.findOrganizationObject('Level1', this.orgLevelOne)
@@ -118,17 +110,11 @@ export default {
       return this.departmentList.filter(org => org.organizationLevel1 === companyListId)
     },
     findOrganizationObject (lvl, orgId) {
-
-      if(lvl === 'Level1') {
-        
+      if (lvl === 'Level1') {
         return this.companyList.find(obj => obj.id === orgId)
-
       } else if (lvl === 'Level2') {
-
         return this.departmentList.find(obj => obj.id === orgId)
-
       } else if (lvl === 'Level3') {
-
         return this.brandList.find(obj => obj.id === orgId)
       }
     },
@@ -136,7 +122,7 @@ export default {
       // TODO: save edited Organization by:
       // Level2 can change displayName and OrgNameLevel2
       // Level3 can change Object by switch Department in the same Company and change DisplayName and OrgNameLevel3
-      switch(this.select.id) {
+      switch (this.select.id) {
         case 3:
           // code block
 
@@ -158,11 +144,11 @@ export default {
               console.log(result)
               this.closeDialog()
             })
-            .catch((err) => console.log(err))
+              .catch((err) => console.log(err))
           }
 
           if (typeof this.form.company === 'object') {
-            let checkObj = this.findOrganizationObject('Level1', this.orgLevelOne)
+            const checkObj = this.findOrganizationObject('Level1', this.orgLevelOne)
 
             if (checkObj.displayName === this.form.company.displayName) {
               this.openSnackBar('You choose Company is the same!')
@@ -174,8 +160,7 @@ export default {
               break
             }
 
-            let data = `${this.form.company.displayName}`
-            
+            const data = `${this.form.company.displayName}`
 
             this.editOrganizationLevelCompany({
               organizationId: `${this.orgLevelOne}`,
@@ -186,7 +171,6 @@ export default {
             this.closeDialog()
           }
       }
-
     },
     closeDialog () {
       this.$emit('emitCloseEditDialog', false)
@@ -203,8 +187,8 @@ export default {
 
 <template>
   <div>
-    <v-dialog 
-      v-model="editOrgDialog" 
+    <v-dialog
+      v-model="editOrgDialog"
       persistent
       width="600px"
     >
@@ -212,22 +196,21 @@ export default {
         <v-card-title class="light-green lighten-4 py-4 title">
           Edit Organization
         </v-card-title>
-        <v-container 
-          grid-list-sm 
+        <v-container
+          grid-list-sm
           class="pa-4"
         >
-          <v-layout 
-            row 
+          <v-row
             wrap
           >
-            <v-flex 
-              xs8 
-              align-center 
+            <v-col
+              cols="8"
+              align-center
               justify-space-between
             >
-              <v-layout align-center>
-                <v-avatar 
-                  size="80px" 
+              <v-row align-center>
+                <v-avatar
+                  size="80px"
                   class="mr-3"
                 >
                   <img
@@ -249,10 +232,10 @@ export default {
                   return-object
                   single-line
                 />
-              </v-layout>
-            </v-flex>
-            <v-flex
-              xs12
+              </v-row>
+            </v-col>
+            <v-col
+              cols="12"
             >
               <v-combobox
                 :key="JSON.stringify(companyList.id)"
@@ -303,10 +286,10 @@ export default {
                   </template>
                 </template>
               </v-combobox>
-            </v-flex>
-            <v-flex
+            </v-col>
+            <v-col
               v-if="enableLevel2 || enableLevel3"
-              xs12
+              cols="12"
             >
               <v-combobox
                 :key="mutateDepartmentList.id"
@@ -363,10 +346,10 @@ export default {
                   </template>
                 </template>
               </v-combobox>
-            </v-flex>
-            <v-flex
+            </v-col>
+            <v-col
               v-if="enableLevel3"
-              xs12
+              cols="12"
             >
               <v-combobox
                 :key="brandList.key"
@@ -381,7 +364,7 @@ export default {
               >
                 <template v-slot:item="data">
                   <template v-if="data.item.picURL === 'undefine'">
-                    <v-list-item-avatar 
+                    <v-list-item-avatar
                       color="secondary"
                     >
                       {{ data.item.displayName.slice(0, 2).toUpperCase() }}
@@ -426,19 +409,19 @@ export default {
                   </v-chip>
                 </template>
               </v-combobox>
-            </v-flex>
-          </v-layout>
+            </v-col>
+          </v-row>
         </v-container>
         <v-card-actions>
-          <!-- <base-button 
-            text 
+          <!-- <base-button
+            text
             color="indigo"
           >
             More
           </base-button> -->
           <v-spacer />
-          <base-button 
-            text 
+          <base-button
+            text
             color="secondary darken-2"
             @click="closeDialog()"
           >
@@ -460,7 +443,7 @@ export default {
       :bottom="true"
       vertical="vertical"
       color="error"
-    > 
+    >
       {{ text }}
       <base-button
         dark

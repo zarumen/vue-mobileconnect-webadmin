@@ -1,22 +1,20 @@
 <script>
 
 export default {
-  components: { 
-    Toolbar: () => import('./tool-bar'), 
+  components: {
+    Toolbar: () => import('./tool-bar'),
     Drawer: () => import('./drawer')
   },
-  data() {
+  data () {
     return {
-      drawer: true,
+      drawer: true
     }
   },
   computed: {
-    showDrawer() {
+    showDrawer () {
       // check ว่า เป็นหน้า home หรือ login รึเปล่า ถ้าไม่ใช่ return true
-      if (this.$route.name === 'home')
-        return false
-      if (this.$route.name === 'login')
-        return false
+      if (this.$route.name === 'home') { return false }
+      if (this.$route.name === 'login') { return false }
 
       return true
     }
@@ -34,7 +32,7 @@ export default {
 </script>
 
 <template>
-  <v-layout>    
+  <v-layout>
     <toolbar />
 
     <drawer v-if="showDrawer" />
@@ -43,6 +41,5 @@ export default {
 
 <style lang="scss" scoped>
 @import '@design';
-
 
 </style>

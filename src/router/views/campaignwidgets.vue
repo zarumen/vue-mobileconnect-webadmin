@@ -3,19 +3,18 @@ import Layout from '@layouts/main'
 import { mapGetters, mapActions } from 'vuex'
 import { campaignComputed } from '@state/helpers'
 
-
 export default {
   page: {
     title: 'Widgets',
-    meta: [{ name: 'description', content: 'Campaigns Widget Manager' }],
+    meta: [{ name: 'description', content: 'Campaigns Widget Manager' }]
   },
   components: { Layout },
-  data() {
+  data () {
     return {
       baseModule: 'campaigns',
       dialog: '',
-      dialogTitle: "Campaign Delete Dialog",
-      dialogText: "Do you want to delete this campaign?",
+      dialogTitle: 'Campaign Delete Dialog',
+      dialogText: 'Do you want to delete this campaign?',
       headers: [
         { text: 'Widget', value: 'action', sortable: false },
         {
@@ -28,7 +27,7 @@ export default {
         { text: 'Keyword', value: 'keyword' },
         { text: 'Shortcode', value: 'shortcode' },
         { text: 'Running', value: 'campaignAvailable' },
-        { text: 'Status', value: 'campaignState' },
+        { text: 'Status', value: 'campaignState' }
       ],
       campaignId: '',
       left: true,
@@ -40,25 +39,23 @@ export default {
   computed: {
     ...campaignComputed,
     ...mapGetters('organizations', [
-      'hadList',
-    ]),
+      'hadList'
+    ])
   },
   created () {
+    if (!this.hadList) this.getOrganizationsList()
 
-    if(!this.hadList) this.getOrganizationsList()
-
-    if(!this.hadCampaignList) this.getAllCampaigns()
-
+    if (!this.hadCampaignList) this.getAllCampaigns()
   },
   methods: {
     ...mapActions('campaigns', [
       'getAllCampaigns',
-      'closeSnackBar',
+      'closeSnackBar'
     ]),
     ...mapActions('organizations', [
       'getOrganizationsList'
     ]),
-    print() {
+    print () {
       window.print()
     },
     reloadData () {
@@ -67,8 +64,8 @@ export default {
     exitSnackbar () {
       this.$store.commit('campaigns/setSnackbar', { snackbar: false })
       this.$store.commit('campaigns/setNotice', { notice: '' })
-    },
-  },
+    }
+  }
 }
 </script>
 
@@ -90,17 +87,17 @@ export default {
               />
             </span>
             <v-spacer />
-            <base-button 
+            <base-button
               color="primary"
               circle
               icon
               @click.native="reloadData()"
             >
-              <base-icon name="syncAlt" />            
+              <base-icon name="syncAlt" />
             </base-button>
-            <base-button 
-              text 
-              icon 
+            <base-button
+              text
+              icon
               color="primary"
             >
               <v-icon>
@@ -121,17 +118,17 @@ export default {
         </v-card>
       </v-flex>
       <!-- Pop up Panels -->
-      <v-snackbar 
-        v-if="loading===false" 
-        v-model="snackbar" 
-        :left="true" 
-        :timeout="timeout" 
+      <v-snackbar
+        v-if="loading===false"
+        v-model="snackbar"
+        :left="true"
+        :timeout="timeout"
         :color="mode"
       >
         {{ notice }}
-        <base-button 
-          dark 
-          text 
+        <base-button
+          dark
+          text
           @click.native="exitSnackbar"
         >
           Close
@@ -144,4 +141,3 @@ export default {
 <style lang="scss" module>
 @import '@design';
 </style>
-

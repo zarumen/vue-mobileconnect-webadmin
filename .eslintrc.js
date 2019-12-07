@@ -15,8 +15,8 @@ module.exports = {
     // https://github.com/standard/standard/blob/master/docs/RULES-en.md
     '@vue/standard',
     // https://github.com/prettier/eslint-config-prettier
-    'prettier',
-    'prettier/standard',
+    // 'prettier',
+    // 'prettier/standard',
   ],
   rules: {
     // Only allow debugger in development

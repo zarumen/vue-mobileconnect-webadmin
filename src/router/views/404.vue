@@ -4,15 +4,15 @@ import Layout from '@layouts/main'
 export default {
   page: {
     title: '404',
-    meta: [{ name: 'description', content: '404' }],
+    meta: [{ name: 'description', content: '404' }]
   },
   components: { Layout },
   props: {
     resource: {
       type: String,
-      default: '',
-    },
-  },
+      default: ''
+    }
+  }
 }
 </script>
 

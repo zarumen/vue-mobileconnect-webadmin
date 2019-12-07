@@ -6,8 +6,7 @@ import camelCase from 'lodash/camelCase'
 
 const moduleCache = {}
 const root = { modules: {} }
-;(function updateModules() {
-
+;(function updateModules () {
   // Allow us to dynamically require all Vuex module files.
   // https://webpack.js.org/guides/dependency-management/#require-context
   const requireModule = require.context(
@@ -48,7 +47,7 @@ const root = { modules: {} }
     modules[modulePath.pop()] = {
       // Modules are namespaced by default.
       namespaced: true,
-      ...moduleDefinition,
+      ...moduleDefinition
     }
   })
 
@@ -65,16 +64,15 @@ const root = { modules: {} }
 })()
 
 // Recursively get the namespace of a Vuex module, even if nested.
-function getNamespace(subtree, path) {
+function getNamespace (subtree, path) {
   if (path.length === 1) return subtree
 
   const namespace = path.shift()
   subtree.modules[namespace] = {
     modules: {},
-    ...subtree.modules[namespace],
+    ...subtree.modules[namespace]
   }
   return getNamespace(subtree.modules[namespace], path)
 }
-
 
 export default root.modules

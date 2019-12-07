@@ -4,33 +4,33 @@ export default {
   props: {
     href: {
       type: String,
-      default: '',
+      default: ''
     },
     allowInsecure: {
       type: Boolean,
-      default: false,
+      default: false
     },
     to: {
       type: Object,
-      default: null,
+      default: null
     },
     name: {
       type: String,
-      default: '',
+      default: ''
     },
     params: {
       type: Object,
-      default: () => ({}),
-    },
+      default: () => ({})
+    }
   },
   computed: {
-    routerLinkTo({ name, params }) {
+    routerLinkTo ({ name, params }) {
       return {
         name,
         params,
-        ...(this.to || {}),
+        ...(this.to || {})
       }
-    },
+    }
   },
   created () {
     this.validateProps()
@@ -38,7 +38,7 @@ export default {
   methods: {
     // Perform more complex prop validations than is possible
     // inside individual validator functions for each prop.
-    validateProps() {
+    validateProps () {
       if (process.env.NODE_ENV === 'production') return
 
       if (this.href) {
@@ -70,8 +70,8 @@ export default {
           )
         }
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

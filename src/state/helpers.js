@@ -2,65 +2,18 @@ import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 
 export const authComputed = {
   ...mapState('auth', {
-    currentUser: state => state.currentUser,
+    currentUser: state => state.currentUser
   }),
-  ...mapGetters('auth', ['loggedIn', 'isAdmin', 'getAvartar']),
+  ...mapGetters('auth', ['loggedIn', 'isAdmin', 'getAvartar'])
 }
 
 export const authMethods = mapActions('auth', ['logIn', 'logOut'])
 
 export const orgComputed = {
   ...mapState('organizations', {
-    // ListItem of Data Table 
+    // ListItem of Data Table
     items: state => state.items,
-    // Set Up Data Table Pagination & 
-    pagination: state => state.pagination,
-    page: state => state.pagination.page,
-    // Loading (Looking || Hiding) &
-    loading: state => state.loading,
-    // Snackbar Status and UI Set Up
-    mode: state => state.mode,
-    snackbar: state => state.snackbar,
-    notice: state => state.notice
-  }),
-  ...mapGetters('organizations', [
-    'hadList', 
-    'getCompanyList', 
-    'getDepartmentList', 
-    'getBrandList'
-  ])
-}
-
-
-export const orgMethods = mapActions('organizations', ['getOrganizationsList', 'addCompanyToOrganization'])
-
-export const userComputed = {
-  ...mapState('users', {
-    // ListItem of Data Table 
-    items: state => state.items,
-    // Set Up Data Table Pagination & 
-    pagination: state => state.pagination,
-    page: state => state.pagination.page,
-    // Loading (Looking || Hiding) &
-    loading: state => state.loading,
-    // Snackbar Status and UI Set Up
-    mode: state => state.mode,
-    snackbar: state => state.snackbar,
-    notice: state => state.notice
-  }),
-  ...mapGetters('users', [
-    'hadUserList',
-  ])
-}
-
-export const userMethods = mapActions('users', ['getAllUsers', 'fetchUser', 'createUser'])
-
-export const campaignComputed = {
-  ...mapState('campaigns', {
-    // ListItem of Data Table 
-    items: state => state.items,
-    item: state => state.item,
-    // Set Up Data Table Pagination & 
+    // Set Up Data Table Pagination &
     pagination: state => state.pagination,
     page: state => state.pagination.page,
     // Loading (Looking || Hiding) &
@@ -72,12 +25,58 @@ export const campaignComputed = {
   }),
   ...mapGetters('organizations', [
     'hadList',
+    'getCompanyList',
+    'getDepartmentList',
+    'getBrandList'
+  ])
+}
+
+export const orgMethods = mapActions('organizations', ['getOrganizationsList', 'addCompanyToOrganization'])
+
+export const userComputed = {
+  ...mapState('users', {
+    // ListItem of Data Table
+    items: state => state.items,
+    // Set Up Data Table Pagination &
+    pagination: state => state.pagination,
+    page: state => state.pagination.page,
+    // Loading (Looking || Hiding) &
+    loading: state => state.loading,
+    // Snackbar Status and UI Set Up
+    mode: state => state.mode,
+    snackbar: state => state.snackbar,
+    notice: state => state.notice
+  }),
+  ...mapGetters('users', [
+    'hadUserList'
+  ])
+}
+
+export const userMethods = mapActions('users', ['getAllUsers', 'fetchUser', 'createUser'])
+
+export const campaignComputed = {
+  ...mapState('campaigns', {
+    // ListItem of Data Table
+    items: state => state.items,
+    item: state => state.item,
+    // Set Up Data Table Pagination &
+    pagination: state => state.pagination,
+    page: state => state.pagination.page,
+    // Loading (Looking || Hiding) &
+    loading: state => state.loading,
+    // Snackbar Status and UI Set Up
+    mode: state => state.mode,
+    snackbar: state => state.snackbar,
+    notice: state => state.notice
+  }),
+  ...mapGetters('organizations', [
+    'hadList'
   ]),
   ...mapGetters('campaigns', [
-    'hadCampaignList',
+    'hadCampaignList'
   ]),
   ...mapGetters('shortcodes', [
-    'hadShortcodesList',
+    'hadShortcodesList'
   ])
 }
 
@@ -85,21 +84,21 @@ export const campaignMethods = {
   ...mapActions('campaigns', [
     'getAllCampaigns',
     'deleteCampaign',
-    'closeSnackBar',
+    'closeSnackBar'
   ]),
   ...mapActions('organizations', [
     'getOrganizationsList'
   ]),
   ...mapActions('shortcodes', [
-  'getAllShortcodes',
-  ]),
+    'getAllShortcodes'
+  ])
 }
 
 export const campaignDetailsComputed = {
   ...mapState('transactions', {
-    // ListItem of Data Table 
+    // ListItem of Data Table
     items: state => state.items,
-    // // Set Up Data Table Pagination & 
+    // // Set Up Data Table Pagination &
     pagination: state => state.pagination,
     page: state => state.pagination.page,
     // Loading (Looking || Hiding) &
@@ -110,12 +109,12 @@ export const campaignDetailsComputed = {
     notice: state => state.notice
   }),
   ...mapGetters('auth', [
-    'isAdmin',
+    'isAdmin'
   ]),
   ...mapGetters('campaigns', [
     'getOneCampaign',
     'getOneCampaignValidate',
-    'getCampaignStateSelected',
+    'getCampaignStateSelected'
   ]),
   ...mapGetters('transactions', [
     'getTransactionTotals',
@@ -124,7 +123,7 @@ export const campaignDetailsComputed = {
     'getTimestampTxTotals',
     'getTotalsVerifyCode',
     'getTotalsCoupon'
-  ]),
+  ])
 }
 
 export const campaignDetailsMethods = {
@@ -149,7 +148,7 @@ export const campaignDetailsMethods = {
     'fetchVerifyCode',
     'uploadFile',
     'deleteUploadFile'
-  ]),
+  ])
 }
 
 export const reportComputed = {
@@ -158,27 +157,27 @@ export const reportComputed = {
     campaignSelected: state => state.campaignSelected
   }),
   ...mapGetters('reports', [
-    'getCampaignSelected',
+    'getCampaignSelected'
   ])
 }
 
 export const reportMethods = {
   ...mapActions('campaigns', [
-    'getAllCampaigns',
+    'getAllCampaigns'
   ]),
   ...mapActions('reports', [
     'createS3DownloadFileJob',
     'getCampaignExportJobsListener',
-    'getFileDownloadFromS3',
-  ]),
+    'getFileDownloadFromS3'
+  ])
 }
 
 export const operatorComputed = {
   ...mapState('shortcodes', {
-    // ListItem of Data Table 
+    // ListItem of Data Table
     operators: state => state.operators,
     items: state => state.items,
-    // // Set Up Data Table Pagination & 
+    // // Set Up Data Table Pagination &
     pagination: state => state.pagination,
     page: state => state.pagination.page,
     // Loading (Looking || Hiding) &
@@ -189,19 +188,19 @@ export const operatorComputed = {
     notice: state => state.notice
   }),
   ...mapGetters('shortcodes', [
-    'hadOperatorsList',
+    'hadOperatorsList'
   ])
 }
 
 export const operatorMethods = {
   ...mapActions('shortcodes', [
-    'getAllOperators',
+    'getAllOperators'
   ])
 }
 
 export const shortcodeComputed = {
   ...mapState('shortcodes', {
-    // ListItem of Data 
+    // ListItem of Data
     operators: state => state.operators,
     shortcodeList: state => state.shortcodeList,
     keywordList: state => state.keywordList,
@@ -228,8 +227,8 @@ export const shortcodeMethods = {
     'deleteKeywordReserved'
   ]),
   ...mapMutations('shortcodes', [
-    'setElementKeywordReservedList',
-  ]),
+    'setElementKeywordReservedList'
+  ])
 }
 
 export const set = property => (state, payload) => (state[property] = payload)
