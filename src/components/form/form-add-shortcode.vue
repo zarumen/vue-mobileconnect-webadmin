@@ -202,7 +202,7 @@ export default {
                 </v-col>
                 <!-- <v-col
                   xs8
-                  align-center
+                  align="center"
                 >
                   <p>Please Select Number of Operators:</p>
                   <v-select
@@ -309,7 +309,7 @@ export default {
                   </v-combobox>
                 </v-col>
                 <!-- <v-col
-                  xs12
+                  cols="12"
                 >
                   <v-list two-line>
                     <v-list-item

@@ -282,254 +282,199 @@ export default {
       fluid
       fill-height
     >
-      <v-row
-        class="column"
-        fill-height
-      >
-        <section
-          align-center
+      <v-row align="center">
+        <v-col
+          cols="6"
         >
-          <v-row
-            align-center
+          <v-form>
+            <p>Total Widget</p>
+            <v-text-field
+              v-if="campaignWidget.type=='totals'"
+              v-model="campaignWidget.offset"
+              :counter="10"
+              label="Offset Count"
+              required
+            />
+            <v-text-field
+              v-model="campaignWidget.caption"
+              :counter="40"
+              label="Caption"
+            />
+            <v-text-field
+              v-model="campaignWidget.units"
+              :counter="10"
+              label="Units"
+              required
+            />
+            <v-text-field
+              v-model="campaignWidget.multiplier"
+              :counter="10"
+              label="Multiplier"
+            />
+            <v-text-field
+              v-model="campaignWidget.fontColor"
+              :counter="10"
+              label="fontColor"
+            />
+            <v-textarea
+              v-model="code"
+              label="Message"
+              counter
+              full-width
+              single-line
+            />
+          </v-form>
+        </v-col>
+        <v-col cols="6">
+          <base-card
+            color="deep-purple"
+            title="Mobile Connect Info"
+            text="Operator's General Informations"
           >
-            <v-col
-              cols="12"
-              md="8"
+            <v-row
+              align="center"
+              justify="center"
+              style="
+                height: 315px;
+                border: 1px solid black;"
             >
-              <v-form>
-                <p>Total Widget</p>
-                <v-text-field
-                  v-if="campaignWidget.type=='totals'"
-                  v-model="campaignWidget.offset"
-                  :counter="10"
-                  label="Offset Count"
-                  required
-                />
-                <v-text-field
-                  v-model="campaignWidget.caption"
-                  :counter="40"
-                  label="Caption"
-                />
-                <v-text-field
-                  v-model="campaignWidget.units"
-                  :counter="10"
-                  label="Units"
-                  required
-                />
-                <v-text-field
-                  v-model="campaignWidget.multiplier"
-                  :counter="10"
-                  label="Multiplier"
-                />
-                <v-text-field
-                  v-model="campaignWidget.fontColor"
-                  :counter="10"
-                  label="fontColor"
-                />
-                <v-textarea
-                  v-model="code"
-                  label="Message"
-                  counter
-                  full-width
-                  single-line
-                />
-              </v-form>
-            </v-col>
-          </v-row>
-        </section>
-        <base-card
-          color="deep-purple"
-          title="Mobile Connect Info"
-          text="Operator's General Informations"
-        >
-          <v-row
-            align-center
-            justify-center
-            column
-            style="
-
-              width: 560px;
-              height: 315px;
-              border: 1px solid black;"
-          >
-            <v-col>
-              <p />
-              <h1
-                :style="{color: '#'+campaignWidget.fontColor}"
-                class="big"
-              >
-                {{ campaignWidget.caption }}
-              </h1>
-            </v-col>
-            <v-col cols="12">
-              <div class="text-center">
+              <v-col>
+                <p />
                 <h1
                   :style="{color: '#'+campaignWidget.fontColor}"
-                  class="superbig"
+                  class="big"
                 >
-                  {{ totalsShow }} {{ campaignWidget.units }}
+                  {{ campaignWidget.caption }}
                 </h1>
-              </div>
-            </v-col>
-          </v-row>
-        </base-card>
-        <p />
-        <section align-center>
-          <v-row
-            align-center
-          >
-            <v-col
-              cols="12"
-              md="8"
-            >
-              <v-form>
-                <p>Realtime Barchart Widget</p>
-                <v-text-field
-                  v-model="campaignWidget.minutes"
-                  :counter="10"
-                  label="Minutes"
-                />
-                <v-textarea
-                  v-model="code2"
-                  label="Message"
-                  counter
-                  full-width
-                  single-line
-                />
-              </v-form>
-            </v-col>
-          </v-row>
-        </section>
-        <section>
-          <v-row
-            align-center
-            justify-center
-            column
-            style="
-
-              width: 560px;
-              height: 315px;
-              border: 1px solid black;"
-          >
-            <v-col>
-              <p />
-              <h1
-                :style="{color: '#'+campaignWidget.fontColor}"
-                class="big"
-              >
-                {{ campaignWidget.caption }}
-              </h1>
-            </v-col>
-            <v-col
-              cols="12"
-              style="width: 100%; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;"
-            >
-              <div class="text-center">
-                <canvas id="widget-chart" />
-              </div>
-            </v-col>
-          </v-row>
-        </section>
-        <div style="padding: 10px;" />
-        <v-divider />
-        <div style="padding: 10px;" />
-        <section align-center>
-          <v-row
-            align-center
-          >
-            <v-col
-              cols="12"
-              md="8"
-            >
-              <v-form>
-                <p>Keywords Widget</p>
-                <v-textarea
-                  v-model="code3"
-                  label="Message"
-                  counter
-                  full-width
-                  single-line
-                />
-              </v-form>
-            </v-col>
-          </v-row>
-        </section>
-        <section>
-          <v-container
-            fluid
-            float-left
-            style="
-
-              width: 580px;
-              height: 315px;
-            "
-          >
-            <v-row column>
-              <section>
-                <v-row>
-                  <v-col
-                    cols="12"
+              </v-col>
+              <v-col cols="12">
+                <div class="text-center">
+                  <h1
+                    :style="{color: '#'+campaignWidget.fontColor}"
+                    class="superbig"
                   >
-                    <v-card color="gray darken-2">
-                      <v-card-title primary-title>
-                        <v-row column>
-                          <div
-                            class="headline"
-                            style="font-weight: bolder;"
-                          >
-                            {{ campaignWidget.caption }}
-                          </div>
-                          <!-- <span>Vote sub title</span> -->
-                          <div class="headline" />
-                          <div style="height:50px" />
-                          <v-row
-                            v-if="VoteData.data.labels !== undefine"
-                            column
-                            class="pa-0 ma-0"
-                          >
-                            <v-row
-                              v-for="(label, index) in VoteData.data.labels"
-                              :key="label"
-                              align-left
-                              fill-height
-                            >
-                              <div
-                                class="headline percent"
-                                style="width:50px;"
-                              >
-                                {{ index+1 }}
-                              </div>
-                              <div
-                                class="headline percent"
-                                style="width:50px;"
-                              >
-                                {{ label }}
-                              </div>
-                              <div
-                                style="width:90% "
-                                class="headline item"
-                              >
-                                <span
-                                  :style="'padding-left:'+VoteData.data.datasets[0].percent[index]*10+'px;'+'background-color:#010166;' "
-                                  title="ActionScript"
-                                />
-                              </div>
-                              <div class="headline percent">
-                                {{ Math.round(VoteData.data.datasets[0].percent[index]) }}%
-                              </div>
-                            </v-row>
-                          </v-row>
-                          <div style="height:10px" />
-                          <!-- <span>footer</span> -->
-                        </v-row>
-                      </v-card-title>
-                    </v-card>
-                  </v-col>
-                </v-row>
-              </section>
+                    {{ totalsShow }} {{ campaignWidget.units }}
+                  </h1>
+                </div>
+              </v-col>
             </v-row>
-          </v-container>
-        </section>
+          </base-card>
+        </v-col>
+        <v-col
+          cols="12"
+          md="8"
+        >
+          <v-form>
+            <p>Realtime Barchart Widget</p>
+            <v-text-field
+              v-model="campaignWidget.minutes"
+              :counter="10"
+              label="Minutes"
+            />
+            <v-textarea
+              v-model="code2"
+              label="Message"
+              counter
+              full-width
+              single-line
+            />
+          </v-form>
+        </v-col>
+        <v-col cols="12">
+          <h1
+            :style="{color: '#'+campaignWidget.fontColor}"
+            class="big"
+          >
+            {{ campaignWidget.caption }}
+          </h1>
+        </v-col>
+        <v-col
+          cols="12"
+          style="width: 100%; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;"
+        >
+          <div class="text-center">
+            <canvas id="widget-chart" />
+          </div>
+        </v-col>
+        <v-col cols=12>
+          <div style="padding: 10px;" />
+          <v-divider />
+          <div style="padding: 10px;" />
+        </v-col>
+        <v-col
+          cols="12"
+          md="8"
+        >
+          <v-form>
+            <p>Keywords Widget</p>
+            <v-textarea
+              v-model="code3"
+              label="Message"
+              counter
+              full-width
+              single-line
+            />
+          </v-form>
+        </v-col>
+        <v-col
+          cols="12"
+        >
+          <v-card color="gray darken-2">
+            <v-card-title primary-title>
+              <v-col
+                cols=12
+              >
+                <div
+                  class="headline"
+                  style="font-weight: bolder;"
+                >
+                  {{ campaignWidget.caption }}
+                </div>
+                <!-- <span>Vote sub title</span> -->
+                <div class="headline" />
+                <div style="height:50px" />
+                <v-col
+                  v-if="VoteData.data.labels !== undefine"
+                  column
+                  class="pa-0 ma-0"
+                >
+                  <v-col
+                    v-for="(label, index) in VoteData.data.labels"
+                    :key="label"
+                    align-left
+                    fill-height
+                  >
+                    <div
+                      class="headline percent"
+                      style="width:50px;"
+                    >
+                      {{ index+1 }}
+                    </div>
+                    <div
+                      class="headline percent"
+                      style="width:50px;"
+                    >
+                      {{ label }}
+                    </div>
+                    <div
+                      style="width:90% "
+                      class="headline item"
+                    >
+                      <span
+                        :style="'padding-left:'+VoteData.data.datasets[0].percent[index]*10+'px;'+'background-color:#010166;' "
+                        title="ActionScript"
+                      />
+                    </div>
+                    <div class="headline percent">
+                      {{ Math.round(VoteData.data.datasets[0].percent[index]) }}%
+                    </div>
+                  </v-col>
+                </v-col>
+                <div style="height:10px" />
+              </v-col>
+            </v-card-title>
+          </v-card>
+        </v-col>
       </v-row>
     </v-container>
   </Layout>

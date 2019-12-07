@@ -108,7 +108,7 @@ export default {
 <template>
   <Layout>
     <v-container fluid>
-      <v-flex xs12>
+      <v-col cols="12">
         <base-helper-offset
           :offset="10"
         >
@@ -167,7 +167,7 @@ export default {
             </base-helper-offset>
           </base-card>
         </base-helper-offset>
-      </v-flex>
+      </v-col>
       <!-- Pop up Panels -->
       <BaseDialog
         :dialog="dialog"

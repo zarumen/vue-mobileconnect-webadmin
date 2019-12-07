@@ -82,11 +82,11 @@ export default {
       grid-list-xl
     >
       <v-layout
-        justify-center
+        justify="center"
         wrap
       >
-        <v-flex
-          xs12
+        <v-col
+          cols="12"
           md4
         >
           <base-card class="v-card-profile">
@@ -118,9 +118,9 @@ export default {
               </base-button>
             </v-card-text>
           </base-card>
-        </v-flex>
-        <v-flex
-          xs12
+        </v-col>
+        <v-col
+          cols="12"
           md8
         >
           <base-card
@@ -130,8 +130,8 @@ export default {
             <v-form>
               <v-container py-0>
                 <v-layout wrap>
-                  <v-flex
-                    xs12
+                  <v-col
+                    cols="12"
                     md4
                   >
                     <v-text-field
@@ -151,9 +151,9 @@ export default {
                       label="Brand"
                       disabled
                     />
-                  </v-flex>
-                  <v-flex
-                    xs12
+                  </v-col>
+                  <v-col
+                    cols="12"
                     md8
                   >
                     <v-text-field
@@ -162,9 +162,9 @@ export default {
                       class="purple-input"
                       disabled
                     />
-                  </v-flex>
-                  <v-flex
-                    xs12
+                  </v-col>
+                  <v-col
+                    cols="12"
                     md6
                   >
                     <v-text-field
@@ -173,9 +173,9 @@ export default {
                       class="purple-input"
                       disabled
                     />
-                  </v-flex>
-                  <v-flex
-                    xs12
+                  </v-col>
+                  <v-col
+                    cols="12"
                     md6
                   >
                     <v-text-field
@@ -184,9 +184,9 @@ export default {
                       class="purple-input"
                       disabled
                     />
-                  </v-flex>
-                  <v-flex
-                    xs12
+                  </v-col>
+                  <v-col
+                    cols="12"
                     md12
                   >
                     <v-text-field
@@ -195,12 +195,12 @@ export default {
                       class="purple-input"
                       disabled
                     />
-                  </v-flex>
+                  </v-col>
                 </v-layout>
               </v-container>
             </v-form>
           </base-card>
-        </v-flex>
+        </v-col>
       </v-layout>
     </v-container>
     <v-dialog

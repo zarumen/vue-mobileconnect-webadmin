@@ -112,7 +112,7 @@ export default {
 <template>
   <Layout>
     <v-container fluid>
-      <v-col xs12>
+      <v-col cols="12">
         <base-card
           color="light-green"
           title="List All Campaign"

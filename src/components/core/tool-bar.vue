@@ -41,6 +41,9 @@ export default {
         route.color = 'white'
         return route
       }) : this.loggedOutNavRoutes
+    },
+    classNavTitle () {
+      return (this.$route.name === 'home') ? 'white--text' : 'primary--text'
     }
   },
   methods: {
@@ -74,7 +77,9 @@ export default {
       v-if="loggedIn"
       @click.stop="onClickBtn"
     />
-    <v-toolbar-title justify-left>
+    <v-toolbar-title
+      :class="classNavTitle"
+    >
       Mobile Connect
     </v-toolbar-title>
     <v-spacer />

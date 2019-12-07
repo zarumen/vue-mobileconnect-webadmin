@@ -96,7 +96,7 @@ export default {
 <template>
   <Layout>
     <v-container fluid>
-      <v-flex xs12>
+      <v-col cols="12">
         <v-card>
           <!-- Controller Tools Panels -->
           <v-card-title>
@@ -140,7 +140,7 @@ export default {
             @remove="remove"
           />
         </v-card>
-      </v-flex>
+      </v-col>
       <!-- Pop up Panels -->
       <BaseDialog
         :dialog="dialog"

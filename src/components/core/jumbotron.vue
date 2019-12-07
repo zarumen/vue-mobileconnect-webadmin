@@ -33,9 +33,9 @@ export default {
           :key="$route.path"
           fill-height
         >
-          <v-layout align-center>
+          <v-row align="center">
             <v-fade-transition mode="out-in">
-              <v-flex
+              <v-col
                 :key="$route.path"
                 :text-center="isHome"
               >
@@ -57,9 +57,9 @@ export default {
                 >
                   {{ $t('Home.callToActionBtn') }}
                 </base-button>
-              </v-flex>
+              </v-col>
             </v-fade-transition>
-          </v-layout>
+          </v-row>
         </v-container>
       </v-fade-transition>
     </v-img>

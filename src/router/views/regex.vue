@@ -233,26 +233,26 @@ export default {
         <v-card-text>
           <v-container grid-list-md>
             <v-layout wrap>
-              <v-flex
-                xs12
-                sm6
-                md4
+              <v-col
+                cols="12"
+                sm="6"
+                md="4"
               >
                 <v-text-field
                   v-model="digits"
                   label="Digits"
                 />
-              </v-flex>
-              <v-flex
-                xs12
-                sm6
-                md4
+              </v-col>
+              <v-col
+                cols="12"
+                sm="6"
+                md="4"
               >
                 <v-text-field
                   v-model="totals"
                   label="Totals"
                 />
-              </v-flex>
+              </v-col>
             </v-layout>
           </v-container>
         </v-card-text>

@@ -66,12 +66,12 @@ export default {
         <v-card-text>
           <v-container>
             <v-layout column>
-              <v-flex xs12>
+              <v-col cols="12">
                 <h5 class="grey--text body-1 font-weight-medium">
                   {{ dialogText }}
                 </h5>
-              </v-flex>
-              <v-flex xs6>
+              </v-col>
+              <v-col cols="12">
                 <v-text-field
                   v-model="value"
                   :rules="validate"
@@ -80,7 +80,7 @@ export default {
                   placeholder="DELETE ME!"
                   required
                 />
-              </v-flex>
+              </v-col>
             </v-layout>
           </v-container>
         </v-card-text>

@@ -75,13 +75,13 @@ export default {
     <v-layout column>
       <section>
         <v-layout
-          align-center
-          justify-center
+          align="center"
+          justify="center"
           column
           style="height: 315px;"
         >
           <!-- border: 1px solid black; -->
-          <v-flex>
+          <v-col>
             <p />
             <h1
               :style="{color: '#'+this.$route.params.color}"
@@ -89,8 +89,8 @@ export default {
             >
               {{ this.$route.params.caption }}
             </h1>
-          </v-flex>
-          <v-flex xs-12>
+          </v-col>
+          <v-col xs-12>
             <div class="text-center">
               <h1
                 :style="{color: '#'+this.$route.params.color}"
@@ -99,7 +99,7 @@ export default {
                 {{ socketMessage }} {{ this.$route.params.unit }}
               </h1>
             </div>
-          </v-flex>
+          </v-col>
         </v-layout>
       </section>
       <!--section>
@@ -108,14 +108,14 @@ export default {
           row
           wrap
         >
-          <v-flex
+          <v-col
             md4
-            xs12
+            cols="12"
           >
             <v-card light>
               <bar/>
             </v-card>
-          </v-flex>
+          </v-col>
         </v-layout>
       </section-->
     </v-layout>

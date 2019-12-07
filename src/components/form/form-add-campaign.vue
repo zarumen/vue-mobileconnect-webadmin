@@ -597,7 +597,7 @@ export default {
 
 <template>
   <v-row
-    justify-center
+    justify="center"
   >
     <v-dialog
       v-model="addCampaignDialog"

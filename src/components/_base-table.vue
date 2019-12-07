@@ -536,7 +536,7 @@ export default {
         </v-card-text>
       </v-card>
     </v-dialog>
-    <v-flex
+    <v-col
       v-if="isNotEmpty"
       class="text-center pt-2"
     >
@@ -549,7 +549,7 @@ export default {
         circle
         @input="nextPage"
       />
-    </v-flex>
+    </v-col>
   </div>
 </template>
 

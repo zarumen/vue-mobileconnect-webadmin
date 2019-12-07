@@ -89,7 +89,7 @@ export default {
       <v-layout
         wrap
       >
-        <v-flex
+        <v-col
           md12
           lg6
         >
@@ -152,13 +152,13 @@ export default {
                         <v-layout
                           justify-space-between
                         >
-                          <v-flex
+                          <v-col
                             align-content-center
                             class="my-2"
                           >
                             {{ item.campaignName }} <br>
                             <v-list-item-subtitle>{{ item.campaignCode }} : {{ item.campaignActive }}</v-list-item-subtitle>
-                          </v-flex>
+                          </v-col>
                         </v-layout>
                       </div>
                     </v-list-item-content>
@@ -171,8 +171,8 @@ export default {
               </v-list>
             </v-card-text>
           </base-card>
-        </v-flex>
-        <v-flex
+        </v-col>
+        <v-col
           md12
           lg6
         >
@@ -277,7 +277,7 @@ export default {
               </div>
             </v-card-text>
           </base-card>
-        </v-flex>
+        </v-col>
         <v-snackbar
           v-if="loading===false"
           v-model="snackbar"

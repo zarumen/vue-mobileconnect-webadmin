@@ -154,7 +154,7 @@ export default {
               <v-row
                 row
                 wrap
-                align-center
+                align="center"
               >
                 <v-col
                   cols="12"
@@ -284,7 +284,7 @@ export default {
             <v-row
               row
               wrap
-              align-center
+              align="center"
             >
               <v-col
                 cols="12"
@@ -485,7 +485,7 @@ export default {
           <v-row
             row
             wrap
-            justify-center
+            justify="center"
             class="my-5"
           >
             <v-col
@@ -582,7 +582,7 @@ export default {
       <v-footer class="green darken-2">
         <v-row
           wrap
-          align-center
+          align="center"
         >
           <v-col cols="12">
             <center>

@@ -136,11 +136,11 @@ export default {
     <v-layout column>
       <section>
         <v-layout
-          align-center
-          justify-center
+          align="center"
+          justify="center"
           column
         >
-          <v-flex>
+          <v-col>
             <p />
             <h1
               :style="{color: '#'+this.$route.params.color}"
@@ -148,17 +148,17 @@ export default {
             >
               {{ this.$route.params.caption }}
             </h1>
-          </v-flex>
+          </v-col>
         </v-layout>
         <v-layout>
-          <v-flex
+          <v-col
             xs-12
             style="width: 100%;  padding-right: 20px; padding-bottom: 20px; padding-left: 20px;"
           >
             <div class="text-center">
               <canvas id="widget-chart" />
             </div>
-          </v-flex>
+          </v-col>
         </v-layout>
       </section>
     </v-layout>

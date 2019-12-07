@@ -261,10 +261,10 @@ export default {
           >
             <v-col
               cols="12"
-              align-center
+              align="center"
               justify-space-between
             >
-              <v-row align-center>
+              <v-row align="center">
                 <v-avatar
                   size="80px"
                   class="mr-3"
