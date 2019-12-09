@@ -83,11 +83,10 @@ export default {
     >
       <v-layout
         justify="center"
-        wrap
       >
         <v-col
           cols="12"
-          md4
+          md="4"
         >
           <base-card class="v-card-profile">
             <v-avatar
@@ -121,7 +120,7 @@ export default {
         </v-col>
         <v-col
           cols="12"
-          md8
+          md="8"
         >
           <base-card
             color="deep-purple"
@@ -132,7 +131,7 @@ export default {
                 <v-layout wrap>
                   <v-col
                     cols="12"
-                    md4
+                    md="4"
                   >
                     <v-text-field
                       v-model="user.organizationLevel1Name"
@@ -154,7 +153,7 @@ export default {
                   </v-col>
                   <v-col
                     cols="12"
-                    md8
+                    md="8"
                   >
                     <v-text-field
                       v-model="user.email"
@@ -165,7 +164,7 @@ export default {
                   </v-col>
                   <v-col
                     cols="12"
-                    md6
+                    md="6"
                   >
                     <v-text-field
                       v-model="user.firstName"
@@ -176,7 +175,7 @@ export default {
                   </v-col>
                   <v-col
                     cols="12"
-                    md6
+                    md="6"
                   >
                     <v-text-field
                       v-model="user.lastName"
@@ -187,7 +186,6 @@ export default {
                   </v-col>
                   <v-col
                     cols="12"
-                    md12
                   >
                     <v-text-field
                       v-model="user.mobileTelNumber"

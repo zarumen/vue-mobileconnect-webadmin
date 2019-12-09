@@ -14,10 +14,7 @@ export default {
 
 <template>
   <Layout>
-    Search
-    <base-card>
-      <widget-search :mode="false" />
-    </base-card>
+    <widget-search />
   </Layout>
 </template>
 

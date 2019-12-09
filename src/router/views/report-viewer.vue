@@ -133,8 +133,7 @@ export default {
             <v-spacer />
             <base-button
               color="primary"
-              circle
-              icon
+              text
               @click.native="reloadData()"
             >
               reload

@@ -396,7 +396,7 @@ export default {
             <canvas id="widget-chart" />
           </div>
         </v-col>
-        <v-col cols=12>
+        <v-col cols="12">
           <div style="padding: 10px;" />
           <v-divider />
           <div style="padding: 10px;" />
@@ -422,7 +422,7 @@ export default {
           <v-card color="gray darken-2">
             <v-card-title primary-title>
               <v-col
-                cols=12
+                cols="12"
               >
                 <div
                   class="headline"

@@ -3,6 +3,9 @@ import formatDate from '@utils/format-date'
 import formatDateRelative from '@utils/format-date-relative'
 
 export default {
+  components: {
+    VueJsonPretty: () => import('vue-json-pretty')
+  },
   props: {
     headers: {
       type: Array,
@@ -32,7 +35,9 @@ export default {
   data () {
     return {
       currentItems: '',
-      menuShow: false,
+      dialogKeywordShow: false,
+      dialogTXShow: false,
+      txSelected: {},
       keywordArraySelected: []
     }
   },
@@ -80,6 +85,9 @@ export default {
     checkWidgets () {
       return this.headers.some(head => head.text === 'Widget')
     },
+    checkViewItem () {
+      return this.headers.some(head => head.text === 'TxDetails')
+    },
     checkUserViewer () {
       return this.headers.some(head => head.text === 'Views')
     },
@@ -109,6 +117,9 @@ export default {
     },
     checkCreateDate () {
       return this.headers.some(head => head.value === 'campaignCreateTime')
+    },
+    checkCreateTimeCode () {
+      return this.headers.some(head => head.value === 'createDateTime')
     },
     checkDate () {
       return this.headers.some(head => head.value === 'campaignDateStart' || head.value === 'campaignDateEnd')
@@ -175,6 +186,14 @@ export default {
       }
       return val
     },
+    splitFirstTimeCode (time) {
+      const str = time.toString()
+      return str.slice(0, 8)
+    },
+    splitLastTimeCode (time) {
+      const str = time.toString()
+      return str.slice(8, 15)
+    },
     nextPage (newValue) {
       return this.$store.dispatch(`${this.basemodule}/updatePage`, newValue)
     },
@@ -212,13 +231,21 @@ export default {
 
       return this.$emit('updated-items', this.items)
     },
+    showDetailsDialog (tx) {
+      this.txSelected = tx
+      this.dialogTXShow = true
+    },
+    closeSelected () {
+      this.txSelected = {}
+      this.dialogTXShow = false
+    },
     selectedShow (array) {
       this.keywordArraySelected = array
-      this.menuShow = true
+      this.dialogKeywordShow = true
     },
     closeSelectedShow () {
       this.keywordArraySelected = []
-      this.menuShow = false
+      this.dialogKeywordShow = false
     }
   }
 
@@ -248,6 +275,17 @@ export default {
         >
           {{ boolIcon(item.campaignActive) }}
         </v-icon>
+      </template>
+      <template
+        v-if="checkCreateTimeCode"
+        v-slot:item.createDateTime="{ item }"
+      >
+        <span class="text-truncate overline primary--text">
+          {{ splitFirstTimeCode(item.createDateTime) }}
+        </span>
+        <span class="text-truncate overline">
+          {{ splitLastTimeCode(item.createDateTime) }}
+        </span>
       </template>
       <template
         v-if="checkCreateDate"
@@ -475,6 +513,19 @@ export default {
             <v-icon>close</v-icon>
           </base-button>
         </div>
+        <div
+          v-if="checkViewItem"
+        >
+          <base-button
+            color="secondary"
+            circle
+            icon
+            x-small
+            @click.native="showDetailsDialog(item)"
+          >
+            <v-icon>remove_red_eye</v-icon>
+          </base-button>
+        </div>
         <div v-if="checkUserViewer">
           <router-link
             :to="{ path: `campaignDetails/${item.id}` }"
@@ -498,9 +549,38 @@ export default {
         <span class="primary--text">NO DATA PLEASE CLICK RELOAD!</span>
       </template>
     </v-data-table>
-    <!-- footer page running page number -->
+    <!-- footer page running page number & dialog zone -->
     <v-dialog
-      v-model="menuShow"
+      v-model="dialogTXShow"
+      persistent
+      max-width="500px"
+      transition="dialog-transition"
+    >
+      <v-card>
+        <v-card-actions>
+          <span class="subtitle-1 blue-grey--text">
+            Transaction Details in DynamoDB
+          </span>
+          <div class="flex-grow-1" />
+          <v-icon
+            @click="closeSelected"
+          >
+            close
+          </v-icon>
+        </v-card-actions>
+        <v-card-text>
+          <vue-json-pretty
+            :data="txSelected"
+            :deep="2"
+            highlight-mouseover-node
+            show-line
+            show-double-quotes
+          />
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+    <v-dialog
+      v-model="dialogKeywordShow"
       persistent
       max-width="290px"
       transition="dialog-transition"

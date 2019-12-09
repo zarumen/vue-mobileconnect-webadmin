@@ -155,11 +155,38 @@ export const actions = {
       queryString += `&campaignid=${campaignId}`
     }
 
-    console.log(queryString)
-
     return axios.getData(`transaction/msisdn/${msisdn}/${queryString}`)
       .then(response => {
+        console.log(response)
         const msg = `Load ${response.data.input.msisdn} Transactions From Database Success!`
+        commitPagination(commit, response.data.output.data)
+        sendSuccessNotice(commit, msg)
+        closeNotice(commit, 3000)
+        commit('setLoading', { loading: false })
+      })
+      .catch(error => {
+        console.log(error)
+        commit('setLoading', { loading: false })
+        sendErrorNotice(commit, 'Load Failed!')
+        closeNotice(commit, 3000)
+      })
+  },
+  getSearchCampaignID ({ commit }, { message, msisdn, jwtToken, campaignId }) {
+    console.log(campaignId)
+    let queryString = `?JWTToken=${jwtToken}`
+
+    if (msisdn !== '') {
+      queryString += `&msisdn=${msisdn}`
+    }
+    if (message !== '') {
+      queryString += `&message=${message}`
+    }
+
+    console.log(queryString)
+
+    return axios.getData(`transaction/campaignID/${campaignId}/${queryString}`)
+      .then(response => {
+        const msg = `Load ${response.data.input.campaignId} Transactions From Database Success!`
         commitPagination(commit, response.data.output.data)
         sendSuccessNotice(commit, msg)
         closeNotice(commit, 3000)

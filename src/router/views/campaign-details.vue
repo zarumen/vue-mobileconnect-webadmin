@@ -12,6 +12,7 @@ export default {
     Layout: () => import('@layouts/main'),
     Doughnut: () => import('@utils/chart/Doughnut'),
     LineChart: () => import('@utils/chart/LineChart'),
+    WidgetSearch: () => import('@components/ui/widget-search'),
     VueJsonPretty: () => import('vue-json-pretty')
   },
   data: () => ({
@@ -21,9 +22,10 @@ export default {
       { text: 'Msg', value: 'message' },
       { text: 'ReplyMsg', value: 'replyMessage', left: true },
       { text: 'Stage', value: 'messageStatus' },
-      { text: 'TimeCode', value: 'groupID', align: 'center' },
+      { text: 'TimeCode', value: 'createDateTime', align: 'center' },
       { text: 'StepMsg', value: 'stepName' },
-      { text: 'StateMsg', value: 'campaignState' }
+      { text: 'StateMsg', value: 'campaignState' },
+      { text: 'TxDetails', value: 'action', align: 'center', sortable: false }
     ],
     text: '',
     totals: '',
@@ -85,6 +87,15 @@ export default {
         return formatDateTime(this.campaignValidateInfo.campaignDateTestEnd.seconds)
       }
       return ''
+    },
+    checkMicrositeCampaign () {
+      return this.campaignInfo.campaignType === 'microsite'
+    },
+    micrositeFields () {
+      if (this.checkMicrositeCampaign) {
+        return this.campaignValidateInfo.micrositeFields
+      }
+      return []
     },
     // Check Text Keywords
     txSuccess () {
@@ -1223,7 +1234,16 @@ export default {
           </base-card>
         </v-col>
         <v-col
-          v-show="false"
+          v-if="!isAdmin"
+          cols="12"
+        >
+          <widget-search
+            :check-microsite="checkMicrositeCampaign"
+            :fields-microsite="micrositeFields"
+          />
+        </v-col>
+        <v-col
+          v-if="isAdmin"
           cols="12"
           md="6"
           lg="4"
@@ -1263,7 +1283,7 @@ export default {
           </base-card>
         </v-col>
         <v-col
-          v-show="false"
+          v-if="isAdmin"
           cols="12"
           md="6"
           lg="4"

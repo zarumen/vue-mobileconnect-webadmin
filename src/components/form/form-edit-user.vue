@@ -43,6 +43,8 @@ export default {
       snackbar: false,
       timeout: 6000,
       textError: 'Error!',
+      upperLetter: 'AAAAAAAAA',
+      phone: '(###)-###-####',
       // /////////////////////
       // Form Validator
       // /////////////////////
@@ -513,8 +515,8 @@ export default {
               <v-col cols="2">
                 <v-text-field
                   v-model="nickName"
+                  v-mask="upperLetter"
                   class="purple-input"
-                  mask="NNNNNNNNNN"
                   label="(Nick Name)"
                 />
               </v-col>
@@ -546,18 +548,18 @@ export default {
               <v-col cols="5">
                 <v-text-field
                   v-model="mobileTelNumber"
+                  v-mask="phone"
                   class="purple-input"
                   prepend-icon="phone_iphone"
-                  mask="phone"
                   label="Mobile No."
                 />
               </v-col>
               <v-col cols="5">
                 <v-text-field
                   v-model="officeTelNumber"
+                  v-mask="phone"
                   class="purple-input"
                   prepend-icon="phone"
-                  mask="phone"
                   label="Office Tel."
                 />
               </v-col>

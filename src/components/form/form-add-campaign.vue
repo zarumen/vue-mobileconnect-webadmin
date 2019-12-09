@@ -2521,8 +2521,8 @@ export default {
               >
                 <v-text-field
                   v-model="couponDigits"
+                  v-mask="`##`"
                   :rules="[v => v > 0 || 'DIGITS always is more than 0']"
-                  mask="##"
                   label="Digits"
                 />
               </v-col>
@@ -2533,7 +2533,7 @@ export default {
               >
                 <v-text-field
                   v-model="couponTotals"
-                  mask="#######"
+                  v-mask="`#######`"
                   label="Totals"
                 />
               </v-col>

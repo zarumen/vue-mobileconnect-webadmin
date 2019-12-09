@@ -192,8 +192,8 @@ export default {
                 <v-col cols="8">
                   <v-text-field
                     v-model="scform.shortcode"
+                    v-mask="`#######`"
                     :hint="`${scform.shortcode}`"
-                    :mask="`#######`"
                     prepend-icon="filter_6"
                     label="Shortcode"
                     persistent-hint

@@ -52,6 +52,8 @@ export default {
       snackbar: false,
       timeout: 6000,
       textError: 'Error!',
+      upperLetter: 'AAAAAAAAAA',
+      phone: '(###)-###-####',
       // /////////////////////
       // Form Validator
       // /////////////////////
@@ -203,7 +205,7 @@ export default {
                   class="mx-0"
                   justify="center"
                 >
-                  <v-cols cols="8">
+                  <v-col cols="8">
                     <v-select
                       v-model="select"
                       :items="levelItems"
@@ -215,19 +217,19 @@ export default {
                       return-object
                       single-line
                     />
-                  </v-cols>
+                  </v-col>
                   <div class="flex-grow-1" />
-                  <v-cols class="mr-5">
+                  <v-col class="mr-5">
                     <v-avatar
                       size="80px"
                       class="mr-3"
                     >
                       <img
-                        v-if="gender === ''"
+                        v-if="uform.gender === ''"
                         src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"
                       >
                       <img
-                        v-else-if="gender === 'Male'"
+                        v-else-if="uform.gender === 'Male'"
                         :src="avartar.male"
                       >
                       <img
@@ -235,7 +237,7 @@ export default {
                         :src="avartar.female"
                       >
                     </v-avatar>
-                  </v-cols>
+                  </v-col>
                 </v-row>
               </v-col>
               <v-col
@@ -412,8 +414,8 @@ export default {
               <v-col cols="2">
                 <v-text-field
                   v-model="uform.nickName"
+                  v-mask="upperLetter"
                   class="purple-input"
-                  mask="NNNNNNNNNN"
                   label="(Nick Name)"
                 />
               </v-col>
@@ -445,18 +447,18 @@ export default {
               <v-col cols="5">
                 <v-text-field
                   v-model="uform.mobileTelNumber"
+                  v-mask="phone"
                   class="purple-input"
                   prepend-icon="phone_iphone"
-                  mask="phone"
                   label="Mobile No."
                 />
               </v-col>
               <v-col cols="5">
                 <v-text-field
                   v-model="uform.officeTelNumber"
+                  v-mask="phone"
                   class="purple-input"
                   prepend-icon="phone"
-                  mask="phone"
                   label="Office Tel."
                 />
               </v-col>

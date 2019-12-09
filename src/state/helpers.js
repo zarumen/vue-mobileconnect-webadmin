@@ -151,6 +151,44 @@ export const campaignDetailsMethods = {
   ])
 }
 
+export const campaignSearchComputed = {
+  ...mapState('transactions', {
+    // ListItem of Data Table
+    items: state => state.items,
+    // // Set Up Data Table Pagination &
+    pagination: state => state.pagination,
+    page: state => state.pagination.page,
+    // Loading (Looking || Hiding) &
+    loading: state => state.loading,
+    // Snackbar Status and UI Set Up
+    mode: state => state.mode,
+    snackbar: state => state.snackbar,
+    notice: state => state.notice
+  }),
+  ...mapGetters('auth', [
+    'isAdmin'
+  ]),
+  ...mapGetters('campaigns', [
+    'hadCampaignList',
+    'getAllCampaignsId',
+    'getCampaignStateSelected'
+  ]),
+  ...mapGetters('transactions', [
+    'hadItems'
+  ])
+}
+
+export const campaignSearchMethods = {
+  ...mapActions('campaigns', [
+    'updateStatusCampaign',
+    'calibratedCampaignTx'
+  ]),
+  ...mapActions('transactions', [
+    'getSearchCampaignID',
+    'getSearchMsisdn'
+  ])
+}
+
 export const reportComputed = {
   ...mapState('reports', {
     jobList: state => state.jobList,
