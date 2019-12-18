@@ -363,9 +363,9 @@ export default {
 
         // check campaign has UNICODE Features (default: false)
         if (this.campaignLongMessage) {
-          campaignNew.campaignLongMessage = true
+          campaignValidationNew.campaignLongMessage = true
         } else {
-          campaignNew.campaignLongMessage = false
+          campaignValidationNew.campaignLongMessage = false
         }
 
         // set Date in here

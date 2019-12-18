@@ -122,7 +122,9 @@ export const campaignDetailsComputed = {
     'getTransactionSuccess',
     'getTimestampTxTotals',
     'getTotalsVerifyCode',
-    'getTotalsCoupon'
+    'getTotalsCoupon',
+    'hadHeaderConfig',
+    'getHeaderConfigArray'
   ])
 }
 
@@ -141,7 +143,8 @@ export const campaignDetailsMethods = {
     'delVerifyCodeFromRedis',
     'getCouponsFromRedis',
     'putCouponsToRedis',
-    'delCouponsFromRedis'
+    'delCouponsFromRedis',
+    'getHeaderConfig'
   ]),
   ...mapActions('storage', [
     'fetchCoupons',
@@ -174,7 +177,9 @@ export const campaignSearchComputed = {
     'getCampaignStateSelected'
   ]),
   ...mapGetters('transactions', [
-    'hadItems'
+    'hadItems',
+    'hadHeaderConfig',
+    'getHeaderConfigArray'
   ])
 }
 
@@ -186,6 +191,24 @@ export const campaignSearchMethods = {
   ...mapActions('transactions', [
     'getSearchCampaignID',
     'getSearchMsisdn'
+  ])
+}
+
+export const headerConfigComputed = {
+  ...mapGetters('transactions', [
+    'hadHeaderConfig',
+    'getHeaderConfigArray'
+  ])
+}
+
+export const headerConfigMethods = {
+  ...mapActions('transactions', [
+    'saveHeaderConfig',
+    'getHeaderConfig',
+    'changeElementHeader'
+  ]),
+  ...mapMutations('transactions', [
+    'setElementHeaderConfig'
   ])
 }
 

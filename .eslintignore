@@ -1,6 +1,7 @@
 /dist/
 /tests/unit/coverage/
 /tests/mock-api/
+/functions/
 # all file config
 /src/app.config.js
 aliases.config.js

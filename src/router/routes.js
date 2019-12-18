@@ -156,6 +156,10 @@ export default [
     meta: {
       authRequired: true,
       beforeResolve: (routeTo, routeFrom, next) => {
+        store.dispatch('transactions/getHeaderConfig', {
+          campaignId: routeTo.params.campaignId
+        })
+
         if (store.getters['transactions/hadItems']) {
           store
             .dispatch('transactions/resetTable')

@@ -1,4 +1,5 @@
 import { set } from '@state/helpers'
+import firestoreApp from '@utils/firestore.config'
 import $socket from '@/plugins/socket-instance'
 import axios from '@utils/aws-api.config'
 import assign from 'lodash/assign'
@@ -35,16 +36,20 @@ export const state = {
   totalsVerifyCode: '',
   totalsCoupon: '',
   // table & snackbar variables
-  items: null,
+  items: [],
   pagination: getDefaultPagination(),
   loading: false,
   mode: '',
   snackbar: false,
-  notice: ''
+  notice: '',
+  // header table Config
+  headerConfig: []
 }
 
 export const getters = {
-  hadItems: (state) => !!state.items,
+  hadItems: (state) => !!state.items && state.items.length > 0,
+  hadHeaderConfig: (state) => !!state.headerConfig && state.headerConfig.length > 0,
+  getHeaderConfigArray: (state) => state.headerConfig,
   getTransactionTotals: (state) => {
     const cId = state.campaignSelected
 
@@ -79,6 +84,11 @@ export const mutations = {
   setTotalsCoupon: set('totalsCoupon'),
   setItems: set('items'),
   setPagination: set('pagination'),
+  setHeaderConfig: set('headerConfig'),
+  setElementHeaderConfig (state, { position, payload }) {
+    const a = { text: payload }
+    assign(state.headerConfig[position], a)
+  },
   setPage (state, paginationElement) {
     assign(state.pagination, paginationElement)
   },
@@ -132,6 +142,57 @@ export const mutations = {
 }
 
 export const actions = {
+  // header config zone
+  saveHeaderConfig ({ commit }, { campaignId, headerArray }) {
+    const dataSave = headerArray
+      .reduce((map, obj) => {
+        map[obj.text] = obj.value
+        return map
+      }, {})
+
+    return firestoreApp
+      .collection('headerConfig')
+      .doc(campaignId)
+      .set(dataSave)
+      .then(() => {
+        commit('setHeaderConfig', headerArray)
+        return headerArray
+      })
+      .catch(error => {
+        console.log(error)
+        return error
+      })
+  },
+  getHeaderConfig ({ commit }, { campaignId }) {
+    return firestoreApp
+      .collection('headerConfig')
+      .doc(campaignId)
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          const data = doc.data()
+
+          const arrayConverted = Object.entries(data)
+            .map((element) => {
+              const a = {}
+              a.text = `${element[0]}`
+              a.value = `${element[1]}`
+              return a
+            })
+
+          commit('setHeaderConfig', arrayConverted)
+        } else {
+        // doc.data() will be undefined in this case
+          console.log('No such document!')
+          commit('setHeaderConfig', [])
+        }
+      })
+      .catch(error => {
+        console.log(error)
+        return error
+      })
+  },
+  // transactions Zone
   getLastestTransactions ({ commit }, { campaignState, campaignId }) {
     return axios.getData(`transaction/${campaignId}/${campaignState}/latest`)
       .then(response => {
@@ -148,11 +209,15 @@ export const actions = {
         closeNotice(commit, 3000)
       })
   },
-  getSearchMsisdn ({ commit }, { admin, msisdn, jwtToken, campaignId }) {
+  getSearchMsisdn ({ commit }, { admin, msisdn, jwtToken, campaignId, microsite }) {
     let queryString = `?JWTToken=${jwtToken}`
 
     if (!admin) {
       queryString += `&campaignid=${campaignId}`
+    }
+
+    if (microsite) {
+      queryString += '&campaignType=microsite'
     }
 
     return axios.getData(`transaction/msisdn/${msisdn}/${queryString}`)

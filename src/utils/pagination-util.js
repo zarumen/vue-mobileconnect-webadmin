@@ -6,7 +6,12 @@ export function getDefaultPagination () {
     totalItems: 0,
     itemsPerPage: DEFAULT_ROW_PER_PAGE,
     pages: 0,
-    sortBy: ['organizationAuth']
+    multiSort: true,
+    mustSort: false,
+    sortBy: [],
+    sortDesc: [],
+    groupBy: [],
+    groupDesc: []
   }
 }
 

@@ -8,9 +8,9 @@ export default {
       type: Boolean,
       default: false
     },
-    fieldsMicrosite: {
-      type: Array,
-      default: () => ([])
+    checkHeaderConfig: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
@@ -23,7 +23,6 @@ export default {
       { text: 'TimeCode', value: 'createDateTime', align: 'center' },
       { text: 'TxDetails', value: 'action', align: 'center', sortable: false }
     ],
-    headersMicrosite: [],
     isEditing: false,
     msisdn: null,
     msisdnRules: [
@@ -41,6 +40,12 @@ export default {
     ...campaignSearchComputed,
     campaignIdList () {
       return this.getAllCampaignsId
+    },
+    headersMicrosite () {
+      if (this.checkHeaderConfig) {
+        return this.getHeaderConfigArray
+      }
+      return []
     }
   },
   created () {
@@ -49,36 +54,38 @@ export default {
   methods: {
     ...campaignSearchMethods,
     initHeadersMicrosite () {
-      if (this.fieldsMicrosite.length > 0) {
-        console.log(this.fieldsMicrosite)
-        const array = this.fieldsMicrosite
-        this.headersMicrosite = array.map((element, index) => {
-          const a = {}
-          a.text = `Field ${index + 1}`
-          a.value = `micrositeFields.${element}`
-          return a
-        })
-      }
-      return []
+      return null
     },
     async telSearch () {
       const token = await getJwtToken
 
       if (this.$route.name === 'campaignDetails') {
         // search from user
-        this.getSearchMsisdn({
-          admin: this.isAdmin,
-          msisdn: `${this.msisdn}`,
-          jwtToken: token,
-          campaignId: `${this.$route.params.campaignId}`
-        })
+        if (this.checkMicrosite) {
+          this.getSearchMsisdn({
+            admin: this.isAdmin,
+            msisdn: `${this.msisdn}`,
+            jwtToken: token,
+            campaignId: `${this.$route.params.campaignId}`,
+            microsite: true
+          })
+        } else {
+          this.getSearchMsisdn({
+            admin: this.isAdmin,
+            msisdn: `${this.msisdn}`,
+            jwtToken: token,
+            campaignId: `${this.$route.params.campaignId}`,
+            microsite: false
+          })
+        }
       } else {
         // search from admin
         this.getSearchMsisdn({
           admin: this.isAdmin,
           msisdn: `${this.msisdn}`,
           jwtToken: token,
-          campaignId: `${this.id}`
+          campaignId: `${this.id}`,
+          microsite: true
         })
       }
     },
@@ -209,7 +216,7 @@ export default {
         <!-- Controller Tools Panels -->
         <v-card-title>
           <span class="title">
-            Transactions Search
+            Transactions Report
           </span>
           <v-spacer />
           <!-- <base-button
@@ -223,8 +230,8 @@ export default {
           </base-button> -->
         </v-card-title>
         <!-- Insert in Base-Table Component -->
-        <!-- <v-card-text v-if="!checkMicrosite"> -->
-        <v-card-text>
+        <v-card-text v-if="!checkHeaderConfig">
+          <!-- <v-card-text> -->
           <BaseTable
             :headers="headers"
             :items="items"
@@ -233,7 +240,7 @@ export default {
             :action-btn="false"
           />
         </v-card-text>
-        <!-- <v-card-text v-else>
+        <v-card-text v-else>
           <BaseTable
             :headers="headersMicrosite"
             :items="items"
@@ -241,7 +248,7 @@ export default {
             :pagination="pagination"
             :action-btn="false"
           />
-        </v-card-text> -->
+        </v-card-text>
       </v-card>
     </v-col>
   </v-row>

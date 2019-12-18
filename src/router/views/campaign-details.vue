@@ -13,6 +13,7 @@ export default {
     Doughnut: () => import('@utils/chart/Doughnut'),
     LineChart: () => import('@utils/chart/LineChart'),
     WidgetSearch: () => import('@components/ui/widget-search'),
+    WidgetHeaderConfig: () => import('@components/ui/widget-header-config'),
     VueJsonPretty: () => import('vue-json-pretty')
   },
   data: () => ({
@@ -532,6 +533,12 @@ export default {
                   </v-icon>
                   Transactions
                 </v-tab>
+                <v-tab>
+                  <v-icon class="mr-2">
+                    assessment
+                  </v-icon>
+                  Report Config
+                </v-tab>
               </v-tabs>
             </v-col>
             <v-card-title>
@@ -592,6 +599,12 @@ export default {
                 class="title"
               >
                 Campaign Transactions
+              </span>
+              <span
+                v-if="tabs === 5"
+                class="title"
+              >
+                Headers Report Config
               </span>
               <v-spacer />
               <span v-if="tabs === 0">
@@ -1201,6 +1214,12 @@ export default {
                   />
                 </v-card>
               </v-tab-item>
+              <v-tab-item :value="5">
+                <!-- Header Field Configs -->
+                <widget-header-config
+                  :fields-microsite="micrositeFields"
+                />
+              </v-tab-item>
             </v-tabs-items>
           </base-card>
         </v-col>
@@ -1239,7 +1258,7 @@ export default {
         >
           <widget-search
             :check-microsite="checkMicrositeCampaign"
-            :fields-microsite="micrositeFields"
+            :check-header-config="hadHeaderConfig"
           />
         </v-col>
         <v-col
