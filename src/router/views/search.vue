@@ -1,4 +1,5 @@
 <script>
+import { searchComputed, searchMethods } from '@state/helpers'
 
 export default {
   page: {
@@ -8,6 +9,15 @@ export default {
   components: {
     Layout: () => import('@layouts/main'),
     WidgetSearch: () => import('@components/ui/widget-search')
+  },
+  computed: {
+    ...searchComputed
+  },
+  created () {
+    if (!this.hadCampaignList) { this.getAllCampaigns() }
+  },
+  methods: {
+    ...searchMethods
   }
 }
 </script>

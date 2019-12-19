@@ -16,13 +16,13 @@ export default {
   data: () => ({
     baseModule: 'transactions',
     headers: [
-      { text: 'Msisdn', value: 'msisdn' },
+      { text: 'Tel No.', value: 'msisdn' },
       { text: 'Msg', value: 'message' },
       { text: 'ReplyMsg', value: 'replyMessage', align: 'left' },
-      { text: 'Stage', value: 'messageStatus' },
-      { text: 'TimeCode', value: 'createDateTime', align: 'center' },
-      { text: 'TxDetails', value: 'action', align: 'center', sortable: false }
+      { text: 'Stage', value: 'messageStatus', align: 'right' },
+      { text: 'TimeCode', value: 'createDateTime', align: 'right' }
     ],
+    elDetail: { text: 'TxDetails', value: 'action', align: 'center', sortable: false },
     isEditing: false,
     msisdn: null,
     msisdnRules: [
@@ -46,6 +46,15 @@ export default {
         return this.getHeaderConfigArray
       }
       return []
+    },
+    mutateHeaders () {
+      const head = this.headers
+
+      if (this.$route.name === 'search') {
+        return [...head, this.elDetail]
+      }
+
+      return head
     }
   },
   created () {
@@ -233,7 +242,7 @@ export default {
         <v-card-text v-if="!checkHeaderConfig">
           <!-- <v-card-text> -->
           <BaseTable
-            :headers="headers"
+            :headers="mutateHeaders"
             :items="items"
             :basemodule="baseModule"
             :pagination="pagination"

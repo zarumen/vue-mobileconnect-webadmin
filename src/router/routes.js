@@ -134,6 +134,23 @@ export default [
     }
   },
   {
+    path: '/searchViewer',
+    name: 'searchViewer',
+    component: () => lazyLoadView(import('@views/search-viewer')),
+    meta: {
+      authRequired: true,
+      beforeResolve: (routeTo, routeFrom, next) => {
+        if (store.getters['transactions/hadItems']) {
+          store
+            .dispatch('transactions/resetTable')
+          next()
+        } else {
+          next()
+        }
+      }
+    }
+  },
+  {
     path: '/users',
     name: 'users',
     component: () => lazyLoadView(import('@views/users')),

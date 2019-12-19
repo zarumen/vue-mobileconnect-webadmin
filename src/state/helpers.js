@@ -54,6 +54,10 @@ export const userComputed = {
 
 export const userMethods = mapActions('users', ['getAllUsers', 'fetchUser', 'createUser'])
 
+export const searchComputed = mapGetters('campaigns', ['hadCampaignList'])
+
+export const searchMethods = mapActions('campaigns', ['getAllCampaigns'])
+
 export const campaignComputed = {
   ...mapState('campaigns', {
     // ListItem of Data Table

@@ -95,6 +95,12 @@ export default {
       ]
       const menuUser = [
         {
+          name: 'searchViewer',
+          icon: 'search',
+          title: 'Search',
+          link: '/searchViewer'
+        },
+        {
           name: 'campaignsViewer',
           icon: 'store',
           title: 'Campaigns',
