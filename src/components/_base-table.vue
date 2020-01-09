@@ -623,6 +623,7 @@ export default {
       <v-pagination
         v-model="page"
         :length.sync="pages"
+        :total-visible="11"
         next-icon="arrow_right"
         prev-icon="arrow_left"
         color="light-green"

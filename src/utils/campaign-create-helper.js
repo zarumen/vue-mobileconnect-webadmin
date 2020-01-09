@@ -37,7 +37,7 @@ export const helperTH = {
   rewardTotal: 'จำนวนรางวัล',
   rewardvalidateForm: 'รายละเอียดของเงื่อนไข (Regex)',
   contextDelimiter: 'Delimiter = ตัวคั่นระหว่าง context (*, /, $, ...)',
-  contextParserUndefined: 'ไม่มีการตรวจสอบ Context ทั้งหมด (ใช้สำหรับตรวจเบอร์โทรอย่างเดียว + ใส่แค่ keyword)',
+  contextParserUndefined: 'ยกเลิกการใช้ contextParser **ไม่ต้องการตรวจสอบ Context** (ใช้สำหรับตรวจเบอร์โทรอย่างเดียว + ใส่แค่ keyword หรือ ใช้ใน API หรือ BulkAPI)',
   messageRewardOutOfStock: 'msg ตอบกลับเมื่อของรางวัล หมด',
   messageRewardSuccess: 'msg ตอบกลับเมื่อชนะเงื่อนไข',
   messageBoundariesLessError: 'msg ตอบกลับเมื่อข้อมูลไม่ครบ',

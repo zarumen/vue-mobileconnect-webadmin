@@ -72,6 +72,7 @@ export default {
         'vote',
         'text&win',
         'api',
+        'bulk-api',
         'reward',
         'microsite'
       ],
@@ -379,7 +380,7 @@ export default {
           campaignValidationNew.micrositeFields = this.micrositeField
         }
         // set Context Parsers
-        if (!this.contextParserUndefined) {
+        if (!this.contextParserUndefined || this.contextParser.length > 0) {
           campaignValidationNew.contextParser = this.contextParser
         } else {
           delete campaignValidationNew.contextDelimiter
@@ -1481,16 +1482,6 @@ export default {
                   <v-subheader>Campaign Validate Details</v-subheader>
                   <v-col v-if="helper">
                     <v-subheader class="helpertext">
-                      {{ helperText.contextParserUndefined }}
-                    </v-subheader>
-                  </v-col>
-                  <v-switch
-                    v-model="contextParserUndefined"
-                    color="error"
-                    label="Campaign Has Not Context Parser"
-                  />
-                  <v-col v-if="helper">
-                    <v-subheader class="helpertext">
                       {{ helperText.contextDelimiter }}
                     </v-subheader>
                   </v-col>
@@ -1805,6 +1796,19 @@ export default {
                         </v-card-actions>
                       </v-form>
                     </v-card>
+                  </v-col>
+                  <v-col>
+                    <v-col v-if="helper">
+                      <v-subheader class="helpertext error--text">
+                        {{ helperText.contextParserUndefined }}
+                      </v-subheader>
+                    </v-col>
+                    <v-switch
+                      v-model="contextParserUndefined"
+                      color="error"
+                      inset
+                      label="Campaign Has Not Context Parser"
+                    />
                   </v-col>
                 </v-card-text>
               </v-card>
