@@ -15,7 +15,7 @@ export const helperTH = {
   campaignNotAvailableMsg: 'msg ตอบกลับของรางวัลหมด',
   campaignLongMessage: 'campaign ปิดการใช้งานตอบกลับแบบ UNICODE ทำให้รองรับ message ตอบกลับได้มากกว่า 70 ตัวอักษร (แต่ต้องตอบกลับเป็นภาษาอังกฤษเท่านั้น)',
   campaignHasVerifyCode: 'ถ้า campaign ต้อง upload verify_code ของลูกค้ามี 2 แบบคือ รหัสสมาชิก หรือ เบอร์มือถือ contextType ต้องเป็น validate',
-  campaignHasMsisdnList: 'verify_code มีเบอร์มือถือเป็นตัวcheck แบบคีย์เดี่ยว { เบอร์โทรศัพท์(ปรับ contextType ให้เป็น regx) } หรือคีย์คู่ { เบอร์โทรศัพท์:รหัสสมาชิก }',
+  campaignHasMsisdnList: 'verify_code มีเบอร์มือถือ (msisdnList) เป็นตัวValidate แบบColumnเดี่ยว { เบอร์โทรศัพท์(ปรับ contextType ให้เป็น regx) } หรือColumnคู่ { เบอร์โทรศัพท์:รหัสสมาชิก }',
   keyword: 'keywords ของ campaign (เลือกจาก keyword ที่เราได้สร้างจาก shortcode management ใน tab ของ keyword reserved)',
   shortcode: 'shortcode',
   exclude: 'Character ที่ยกเว้น',

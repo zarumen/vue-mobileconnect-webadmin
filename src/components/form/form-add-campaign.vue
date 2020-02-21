@@ -1522,7 +1522,7 @@ export default {
                   <v-switch
                     v-model="validateForm.campaignHasMsisdnList"
                     color="deep-purple"
-                    label="VerifyCode Has Mobile Number"
+                    label="VerifyCode Has Msisdn List"
                   />
                   <v-col>
                     <v-col v-if="helper">

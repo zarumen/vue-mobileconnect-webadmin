@@ -422,12 +422,11 @@ export default {
         <v-badge
           v-if="item.keyword"
           color="secondary"
+          :content="item.keyword.length"
+          :value="item.keyword.length > 1"
           overlap
           @click.native="selectedShow(item.keyword)"
         >
-          <template v-slot:badge>
-            <span v-if="item.keyword.length > 1">{{ item.keyword.length }}</span>
-          </template>
           <v-chip small>
             <span class="text-truncate overline">
               {{ item.keyword[0] }}

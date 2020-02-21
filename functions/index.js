@@ -278,6 +278,24 @@ exports.deleteUserFromAuth = functions.firestore
       });
   });
 
+  exports.addCampaignIdToValidate = functions.firestore
+  .document("campaignValidate/{campaignId}")
+  .onWrite((change, context) => {
+
+    const id = context.params.campaignId;
+
+    const docRef = admin
+      .firestore()
+      .collection("campaignValidate")
+      .doc(id);
+
+    const data = {
+      campaignId: id
+    };
+
+    return docRef.set(data, { merge: true });
+
+  });
 
 exports.exportTxFromBigquery = functions.runWith({ memory: '1GB' }).pubsub
   .schedule('00 11 * * *').onRun(async context => {
