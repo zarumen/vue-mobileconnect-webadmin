@@ -297,6 +297,32 @@ export const actions = {
       payload: status
     })
   },
+  async updatePausedCampaign ({ state, commit }, { campaignId, runningAvailable }) {
+    const index = state.items.map(e => e.id).indexOf(campaignId)
+    const status = {}
+
+    if (runningAvailable) {
+      status.campaignAvailable = false
+    } else {
+      status.campaignAvailable = true
+    }
+
+    await firestoreApp
+      .collection('campaignValidate')
+      .doc(`${campaignId}`)
+      .set(status, { merge: true })
+
+    await firestoreApp
+      .collection('campaigns')
+      .doc(`${campaignId}`)
+      .set(status, { merge: true })
+
+    commit('setElementItemValidate', status)
+    commit('setElementCampaignList', {
+      position: index,
+      payload: status
+    })
+  },
   // ===
   // DELETE Zone
   // ===

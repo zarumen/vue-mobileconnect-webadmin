@@ -367,7 +367,7 @@ export default {
                   <v-list-item-action-text>
                     &nbsp;Sender Name:
                   </v-list-item-action-text>
-                  <v-list-item-subtitle class="body-2 font-weight-thin">
+                  <v-list-item-subtitle class="body-2 ">
                     <v-chip-group dark>
                       <v-chip
                         v-for="i in item0.sendername"
@@ -449,7 +449,7 @@ export default {
                   <v-list-item-action-text>
                     &nbsp;Keywords Used:
                   </v-list-item-action-text>
-                  <v-list-item-subtitle class="body-2 font-weight-thin">
+                  <v-list-item-subtitle class="body-2 ">
                     <v-chip-group
                       active-class="secondary--text"
                       next-icon="arrow_right"
@@ -499,7 +499,7 @@ export default {
                     <v-list-item-action-text>
                       &nbsp;Keywords Reserved:
                     </v-list-item-action-text>
-                    <v-list-item-subtitle class="body-2 font-weight-thin">
+                    <v-list-item-subtitle class="body-2">
                       <!-- Keyword ที่กำลัง reserved -->
                       <v-chip-group
                         column
@@ -507,7 +507,7 @@ export default {
                         <v-chip
                           v-for="i in item2.keywordsArray"
                           :key="i"
-                          class="mb-2 primary lighten-3 caption font-weight-thin"
+                          class="mb-2 primary lighten-3 caption"
                           x-small
                           @click.stop="clickedKeywordReserved(i, item2.shortcode)"
                         >
@@ -517,7 +517,7 @@ export default {
                         <v-chip
                           v-for="i in item2.keywordsFalseArray"
                           :key="i"
-                          class="mb-2 grey lighten-1 white--text caption font-weight-thin"
+                          class="mb-2 grey lighten-1 white--text caption"
                           x-small
                           @click.stop="onClicked(i)"
                         >
@@ -530,11 +530,11 @@ export default {
                     <v-list-item-action-text>
                       &nbsp;Keywords Reserved Used:
                     </v-list-item-action-text>
-                    <v-list-item-subtitle class="body-2 font-weight-thin">
+                    <v-list-item-subtitle class="body-2 ">
                       <v-chip
                         v-for="i in item2.keywordsFalseArray"
                         :key="i"
-                        class="mb-2 grey lighten-1 white--text caption font-weight-thin"
+                        class="mb-2 grey lighten-1 white--text caption "
                         small
                       >
                         {{ i }}

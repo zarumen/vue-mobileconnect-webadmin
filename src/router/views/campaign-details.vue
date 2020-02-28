@@ -232,9 +232,15 @@ export default {
         rewardId: 0
       })
     },
-    clickToProduciton () {
+    clickToProduction () {
       this.updateStatusCampaign({
         campaignId: this.$route.params.campaignId
+      })
+    },
+    clickToPaused () {
+      this.updatePausedCampaign({
+        campaignId: this.$route.params.campaignId,
+        runningAvailable: this.campaignInfo.campaignAvailable
       })
     },
     // ------------------------------------- LOAD ZONE -------------------------------------
@@ -611,13 +617,14 @@ export default {
                 <base-button
                   color="warning"
                   text
+                  @click="clickToPaused"
                 >
                   Paused
                 </base-button>
                 <base-button
                   color="primary"
                   text
-                  @click="clickToProduciton"
+                  @click="clickToProduction"
                 >
                   Production
                 </base-button>

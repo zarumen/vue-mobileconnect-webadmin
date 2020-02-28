@@ -136,6 +136,7 @@ export const campaignDetailsMethods = {
   ...mapActions('campaigns', [
     'getCampaignValidate',
     'updateStatusCampaign',
+    'updatePausedCampaign',
     'calibratedCampaignTx'
   ]),
   ...mapActions('transactions', [
