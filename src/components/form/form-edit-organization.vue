@@ -197,41 +197,43 @@ export default {
           Edit Organization
         </v-card-title>
         <v-container
-          grid-list-sm
           class="pa-4"
         >
           <v-row
             wrap
           >
             <v-col
-              cols="8"
+              cols="12"
               align="center"
               justify-space-between
             >
-              <v-row align="center">
-                <v-avatar
-                  size="80px"
-                  class="mr-3"
-                >
-                  <img
-                    src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"
-                    alt=""
+              <v-row align="left">
+                <v-col cols="4">
+                  <v-avatar
+                    size="80px"
                   >
-                </v-avatar>
-                <v-select
-                  :key="levelItems.id"
-                  v-model="select"
-                  :hint="`${select.value}: ${select.state}`"
-                  :items="levelItems"
-                  class="purple-input"
-                  item-text="state"
-                  item-value="value"
-                  label="OrganizationLevel Field"
-                  disabled
-                  persistent-hint
-                  return-object
-                  single-line
-                />
+                    <img
+                      src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"
+                      alt=""
+                    >
+                  </v-avatar>
+                </v-col>
+                <v-col cols="8">
+                  <v-select
+                    :key="levelItems.id"
+                    v-model="select"
+                    :hint="`${select.value}: ${select.state}`"
+                    :items="levelItems"
+                    class="purple-input"
+                    item-text="state"
+                    item-value="value"
+                    label="OrganizationLevel Field"
+                    disabled
+                    persistent-hint
+                    return-object
+                    single-line
+                  />
+                </v-col>
               </v-row>
             </v-col>
             <v-col

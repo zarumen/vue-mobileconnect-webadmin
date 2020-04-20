@@ -24,7 +24,6 @@ export const state = {
 
 export const getters = {
   // Whether the user is currently logged in.
-  // TODO: change loggedIn checked State
   loggedIn: state => haveIdToken(state.currentUser),
   // check Admin role
   isAdmin: state => state.isAdmin,

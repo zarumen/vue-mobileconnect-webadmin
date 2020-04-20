@@ -49,10 +49,41 @@ export default {
       messageRewardSuccess: ''
     })
 
+    const defaultussdForm = Object.freeze({
+      ACCOUNT: '',
+      DEFAULTREPLY: '',
+      LANGUAGE: 'T',
+      PASSWORD: '',
+      URL: '',
+      OPERATORS: {
+        ais: {
+          failure: false,
+          success: false
+        },
+        dtac: {
+          failure: false,
+          success: false
+        },
+        true: {
+          failure: false,
+          success: false
+        },
+        ussdtrue: {
+          failure: false,
+          success: false
+        },
+        testweb: {
+          failure: false,
+          success: false
+        }
+      }
+    })
+
     return {
       // Default Values
       campaignForm: Object.assign({}, defaultcForm),
       validateForm: Object.assign({}, defaultvForm),
+      ussdForm: Object.assign({}, defaultussdForm),
       cState: null,
       brand: null,
       // Stepper Setups
@@ -72,7 +103,6 @@ export default {
         'vote',
         'text&win',
         'api',
-        'bulk-api',
         'reward',
         'microsite'
       ],
@@ -171,7 +201,16 @@ export default {
       couponProductionGen: false,
       couponDigits: 0,
       couponTotals: 0,
-      couponResult: []
+      couponResult: [],
+      // ---------**-------------------------------------
+      // Operators Bulk Configs
+      // ---------**-------------------------------------
+      optionBulk: false,
+      optionAis: false,
+      optionTrue: false,
+      optionDtac: false,
+      optionTestweb: false,
+      optionUssdTrue: false
     }
   },
   computed: {
@@ -385,6 +424,12 @@ export default {
         } else {
           delete campaignValidationNew.contextDelimiter
         }
+        // SET OPTION BULK TO CAMPAIGN
+
+        if (this.optionBulk) {
+          campaignValidationNew.bulkConfig = this.ussdForm
+        }
+
         // set Reward Array or Object
         if (this.checkObjectReward) {
           campaignValidationNew.rewardsObject = arrayToObject(this.rewards, 'rewardId')
@@ -586,6 +631,9 @@ export default {
     dec2hex (dec) {
       return ('0' + dec.toString(36)).substr(-2)
     },
+    activatedOperators (option) {
+      return (option) ? 'Open' : 'Close'
+    },
     // generateId :: Integer -> String
     generateId (len) {
       const arr = new Uint8Array((len || 40) / 2)
@@ -658,7 +706,7 @@ export default {
               step="1"
             >
               {{ stepName.one }}
-              <small>v.1.01 patch note: (เพิ่ม Long Message Features) สร้าง campaign ประเภท microsite และ api ได้แต่ยังต้องใส่รายละเอียดอื่นๆ ไปก่อน เดี๋ยวค่อยไปลบใน database ทีหลัง</small>
+              <small>v.1.1 patch note: can set Bulk Option Config, and Bulk-API</small>
             </v-stepper-step>
             <v-stepper-content step="1">
               <v-card
@@ -730,11 +778,6 @@ export default {
                       prepend-icon="assignment"
                     />
                   </v-col>
-                  <v-col v-if="helper">
-                    <v-subheader class="helpertext">
-                      {{ helperText.campaignType }}
-                    </v-subheader>
-                  </v-col>
                   <v-col
                     v-if="campaignType === 'api'"
                     cols="12"
@@ -777,6 +820,177 @@ export default {
                         </v-list-item>
                       </template>
                     </v-combobox>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    md="8"
+                  >
+                    <v-switch
+                      v-model="optionBulk"
+                      :label="`Open Bulk Option to Send SMS`"
+                    />
+                  </v-col>
+                  <v-col
+                    v-if="optionBulk"
+                    cols="12"
+                  >
+                    <v-col v-if="helper">
+                      <v-subheader class="helpertext">
+                        {{ helperText.ussdLanguage }}
+                      </v-subheader>
+                    </v-col>
+                    <v-select
+                      v-model="ussdForm.LANGUAGE"
+                      :items="['T', 'E']"
+                      prepend-icon="language"
+                      label="Language"
+                    />
+                    <v-col v-if="helper">
+                      <v-subheader class="helpertext">
+                        {{ helperText.ussdUrl }}
+                      </v-subheader>
+                    </v-col>
+                    <v-text-field
+                      v-model="ussdForm.URL"
+                      prepend-icon="http"
+                      label="Url"
+                    />
+                    <v-col v-if="helper">
+                      <v-subheader class="helpertext">
+                        {{ helperText.ussdAccount }}
+                      </v-subheader>
+                    </v-col>
+                    <v-text-field
+                      v-model="ussdForm.ACCOUNT"
+                      prepend-icon="account_box"
+                      label="Account"
+                    />
+                    <v-col v-if="helper">
+                      <v-subheader class="helpertext">
+                        {{ helperText.ussdPassword }}
+                      </v-subheader>
+                    </v-col>
+                    <v-text-field
+                      v-model="ussdForm.PASSWORD"
+                      prepend-icon="vpn_key"
+                      label="Password"
+                      counter="0"
+                    />
+                    <v-col v-if="helper">
+                      <v-subheader class="helpertext">
+                        {{ helperText.ussdDefaultReply }}
+                      </v-subheader>
+                    </v-col>
+                    <v-text-field
+                      v-model="ussdForm.DEFAULTREPLY"
+                      prepend-icon="reply"
+                      label="Default Reply"
+                      counter="70"
+                    />
+                    <span><v-icon class="pr-2 my-2">call_split</v-icon>OPERATORS</span>
+                    <v-sheet class="pa-5">
+                      <v-col v-if="helper">
+                        <v-subheader class="helpertext">
+                          {{ helperText.ussdOperators }}
+                        </v-subheader>
+                        <v-subheader class="helpertext">
+                          {{ helperText.ussdOperatorsSuccess }}
+                        </v-subheader>
+                        <v-subheader class="helpertext">
+                          {{ helperText.ussdOperatorsFailure }}
+                        </v-subheader>
+                      </v-col>
+                      <v-switch
+                        v-model="optionAis"
+                        inset
+                        :label="`AIS: ${activatedOperators(optionAis)}`"
+                      />
+                      <v-sheet
+                        v-if="optionAis"
+                        class="pa-3"
+                      >
+                        <v-switch
+                          v-model="ussdForm.OPERATORS.ais.success"
+                          :label="`Success: ${ussdForm.OPERATORS.ais.success}`"
+                        />
+                        <v-switch
+                          v-model="ussdForm.OPERATORS.ais.failure"
+                          :label="`Failure: ${ussdForm.OPERATORS.ais.failure}`"
+                        />
+                      </v-sheet>
+                      <v-switch
+                        v-model="optionDtac"
+                        inset
+                        :label="`DTAC: ${activatedOperators(optionDtac)}`"
+                      />
+                      <v-sheet
+                        v-if="optionDtac"
+                        class="pa-3"
+                      >
+                        <v-switch
+                          v-model="ussdForm.OPERATORS.dtac.success"
+                          :label="`Success: ${ussdForm.OPERATORS.dtac.success}`"
+                        />
+                        <v-switch
+                          v-model="ussdForm.OPERATORS.dtac.failure"
+                          :label="`Failure: ${(ussdForm.OPERATORS.dtac.failure)}`"
+                        />
+                      </v-sheet>
+                      <v-switch
+                        v-model="optionTrue"
+                        inset
+                        :label="`TRUE: ${activatedOperators(optionTrue)}`"
+                      />
+                      <v-sheet
+                        v-if="optionTrue"
+                        class="pa-3"
+                      >
+                        <v-switch
+                          v-model="ussdForm.OPERATORS.true.success"
+                          :label="`Success: ${ussdForm.OPERATORS.true.success}`"
+                        />
+                        <v-switch
+                          v-model="ussdForm.OPERATORS.true.failure"
+                          :label="`Failure: ${ussdForm.OPERATORS.true.failure}`"
+                        />
+                      </v-sheet>
+                      <v-switch
+                        v-model="optionUssdTrue"
+                        inset
+                        :label="`USSD TRUE: ${activatedOperators(optionUssdTrue)}`"
+                      />
+                      <v-sheet
+                        v-if="optionUssdTrue"
+                        class="pa-3"
+                      >
+                        <v-switch
+                          v-model="ussdForm.OPERATORS.ussdtrue.success"
+                          :label="`Success: ${ussdForm.OPERATORS.ussdtrue.success}`"
+                        />
+                        <v-switch
+                          v-model="ussdForm.OPERATORS.ussdtrue.failure"
+                          :label="`Failure: ${ussdForm.OPERATORS.ussdtrue.failure}`"
+                        />
+                      </v-sheet>
+                      <v-switch
+                        v-model="optionTestweb"
+                        inset
+                        :label="`TESTWEB: ${activatedOperators(optionTestweb)}`"
+                      />
+                      <v-sheet
+                        v-if="optionTestweb"
+                        class="pa-3"
+                      >
+                        <v-switch
+                          v-model="ussdForm.OPERATORS.testweb.success"
+                          :label="`Success: ${ussdForm.OPERATORS.testweb.success}`"
+                        />
+                        <v-switch
+                          v-model="ussdForm.OPERATORS.testweb.failure"
+                          :label="`Failure: ${ussdForm.OPERATORS.testweb.failure}`"
+                        />
+                      </v-sheet>
+                    </v-sheet>
                   </v-col>
                 </v-card-text>
               </v-card>

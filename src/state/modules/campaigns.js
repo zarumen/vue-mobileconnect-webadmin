@@ -259,6 +259,7 @@ export const actions = {
   // ===
   // UPDATE Zone
   // ===
+  // TODO: update Field in Campaigns & CampaignValidate
   async calibratedCampaignTx ({ state }, { campaignState }) {
     const campaignId = state.campaignSelected
 

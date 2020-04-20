@@ -52,5 +52,16 @@ export const helperTH = {
   verifyCodeTestUpload: 'ฟอร์ม upload verifycode สำหรับ TEST',
   verifyCodeProductionUpload: 'ฟอร์ม upload verifycode สำหรับ PRODUCTION',
   couponsTestUpload: 'ฟอร์ม upload coupons สำหรับ TEST',
-  couponsProductionUpload: 'ฟอร์ม upload coupons สำหรับ PRODUCTION'
+  couponsProductionUpload: 'ฟอร์ม upload coupons สำหรับ PRODUCTION',
+  //
+  // helper in ussd BulkConfig
+  //
+  ussdLanguage: 'เลือกภาษาของ Bulk T (ไทย)/ E (อังกฤษ)',
+  ussdUrl: 'Url ของระบบ Bulk',
+  ussdAccount: 'Account ของระบบ Bulk',
+  ussdPassword: 'Password ของระบบ Bulk',
+  ussdDefaultReply: 'ข้อความตอบกลับพื้นฐานของ Bulk',
+  ussdOperators: 'เลือก options การส่งออกและการรับ ของ Bulk ว่าจะให้เข้าออกด้วย Operators ไหน',
+  ussdOperatorsSuccess: 'success: คือการส่งข้อความตอบกลับลูกค้าเวลาลงทะเบียนเสร็จ',
+  ussdOperatorsFailure: 'failure: คือการส่งข้อความ error ตอบกลับลูกค้าเวลาส่งข้อมูลผิด'
 }
