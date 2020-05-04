@@ -51,7 +51,7 @@ export default {
 
     const defaultussdForm = Object.freeze({
       ACCOUNT: '',
-      DEFAULTREPLY: '',
+      SENDERNAME: '',
       LANGUAGE: 'T',
       PASSWORD: '',
       URL: '',
@@ -205,6 +205,7 @@ export default {
       // ---------**-------------------------------------
       // Operators Bulk Configs
       // ---------**-------------------------------------
+      showPass: false,
       optionBulk: false,
       optionAis: false,
       optionTrue: false,
@@ -863,7 +864,7 @@ export default {
                     <v-text-field
                       v-model="ussdForm.ACCOUNT"
                       prepend-icon="account_box"
-                      label="Account"
+                      label="Bulk Account"
                     />
                     <v-col v-if="helper">
                       <v-subheader class="helpertext">
@@ -872,20 +873,22 @@ export default {
                     </v-col>
                     <v-text-field
                       v-model="ussdForm.PASSWORD"
+                      :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+                      :type="showPass ? 'text' : 'password'"
                       prepend-icon="vpn_key"
-                      label="Password"
+                      label="Bulk Password"
                       counter="0"
+                      @click:append="showPass = !showPass"
                     />
                     <v-col v-if="helper">
                       <v-subheader class="helpertext">
-                        {{ helperText.ussdDefaultReply }}
+                        {{ helperText.ussdSendername }}
                       </v-subheader>
                     </v-col>
                     <v-text-field
-                      v-model="ussdForm.DEFAULTREPLY"
-                      prepend-icon="reply"
-                      label="Default Reply"
-                      counter="70"
+                      v-model="ussdForm.SENDERNAME"
+                      prepend-icon="contact_mail"
+                      label="Bulk Sendername"
                     />
                     <span><v-icon class="pr-2 my-2">call_split</v-icon>OPERATORS</span>
                     <v-sheet class="pa-5">
@@ -2164,6 +2167,17 @@ export default {
                       :counter="70"
                       prepend-icon="chat"
                       label="Validate Verify Code with Mobile Number Failed Message"
+                    />
+                    <v-col v-if="helper">
+                      <v-subheader class="helpertext">
+                        {{ helperText.ussdDefaultReply }}
+                      </v-subheader>
+                    </v-col>
+                    <v-text-field
+                      v-model="validateForm.messageMTSuccessDefaultReply"
+                      :counter="70"
+                      prepend-icon="chat"
+                      label="Default Reply of USSD (MTSuccess) Message"
                     />
                   </v-col>
                 </v-card-text>
