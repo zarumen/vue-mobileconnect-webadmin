@@ -1,7 +1,19 @@
 <script>
+import { isPWA } from '@utils/check-pwa'
+
 const appConfig = require('@/app.config')
 
 export default {
+  metaInfo: {
+    changed (metaInfo) {
+      this.$analytics.setCurrentScreen(appConfig.title)
+      this.$analytics.logEvent('page_view')
+      this.$analytics.logEvent('screen_view', {
+        app_name: isPWA() ? 'pwa' : 'web',
+        screen_name: appConfig.title
+      })
+    }
+  },
   page: {
     // All subcomponent titles will be injected into this template.
     titleTemplate (title) {

@@ -278,7 +278,36 @@ exports.deleteUserFromAuth = functions.firestore
       });
   });
 
-  exports.addCampaignIdToValidate = functions.firestore
+exports.syncDateTime = functions.firestore
+  .document('campaignValidate/{campaignId}')
+  .onUpdate((change, context) => {
+    // Get an object representing the document
+    // e.g. {'name': 'Marie', 'age': 66}
+    const newValue = change.after.data();
+
+    // ...or the previous value before this update
+    const previousValue = change.before.data();
+
+    // access a particular field as you would any JS property
+    const id = context.params.campaignId;
+    const startDate = newValue.campaignDateStart;
+    const endDate = newValue.campaignDateEnd;
+
+    const docRef = admin
+    .firestore()
+    .collection("campaigns")
+    .doc(id);
+
+    // perform desired operations ...
+    const data = {
+      campaignDateStart: startDate,
+      campaignDateEnd: endDate
+    };
+
+    return docRef.update(data);
+  });
+
+exports.addCampaignIdToValidate = functions.firestore
   .document("campaignValidate/{campaignId}")
   .onWrite((change, context) => {
 

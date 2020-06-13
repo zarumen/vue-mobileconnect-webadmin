@@ -1,5 +1,6 @@
 <script>
 import { campaignComputed, campaignMethods } from '@state/helpers'
+import formatDate from '@utils/format-date'
 
 export default {
   page: {
@@ -40,7 +41,14 @@ export default {
     }
   },
   computed: {
-    ...campaignComputed
+    ...campaignComputed,
+    csvData () {
+      if (!this.quickSearchFilter) {
+        return this.mapFieldExport(this.items)
+      } else {
+        return this.mapFieldExport(this.campaignRemaining)
+      }
+    }
   },
   watch: {
 
@@ -59,6 +67,53 @@ export default {
     },
     reloadData () {
       this.getAllCampaigns()
+    },
+    csvExport (arrData) {
+      if (arrData === null) return null
+      let csvContent = 'data:text/csv;charset=utf-8,'
+      csvContent += [
+        Object.keys(arrData[0]).join(';'),
+        ...arrData.map(item => Object.values(item).join(';'))
+      ]
+        .join('\n')
+        .replace(/(^\[)|(\]$)/gm, '')
+
+      const csvdata = encodeURI(csvContent)
+      const link = document.createElement('a')
+      link.setAttribute('href', csvdata)
+      link.setAttribute('download', 'export.csv')
+      link.click()
+    },
+    mapFieldExport (arr) {
+      return arr.map(item => {
+        if (item.campaignDateStart) {
+          return {
+            campaignId: item.id,
+            company: item.organizationLevel1Name || '_BLANK',
+            department: item.organizationLevel2Name || '_BLANK',
+            brand: item.organizationLevel3Name || '_BLANK',
+            shortcode: item.shortcode || '_BLANK',
+            keyword: item.keyword || '_BLANK',
+            campaignActive: item.campaignActive || '_BLANK',
+            campaignAvailable: item.campaignAvailable || '_BLANK',
+            campaignDateStart: formatDate(item.campaignDateStart.seconds),
+            campaignDateEnd: formatDate(item.campaignDateEnd.seconds)
+          }
+        } else {
+          return {
+            campaignId: item.id,
+            company: item.organizationLevel1Name || '_BLANK',
+            department: item.organizationLevel2Name || '_BLANK',
+            brand: item.organizationLevel3Name || '_BLANK',
+            shortcode: item.shortcode || '_BLANK',
+            keyword: item.keyword || '_BLANK',
+            campaignActive: item.campaignActive || '_BLANK',
+            campaignAvailable: item.campaignAvailable || '_BLANK',
+            campaignDateStart: '_BLANK',
+            campaignDateEnd: '_BLANK'
+          }
+        }
+      })
     },
     edit (item) {
       this.$store.commit('campaigns/setCampaignSelected', item.id)
@@ -115,6 +170,7 @@ export default {
               text
               icon
               color="primary"
+              @click.native="csvExport(csvData)"
             >
               <v-icon>
                 print

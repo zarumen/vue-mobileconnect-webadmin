@@ -8,9 +8,11 @@ import router from '@router'
 import store from '@state/store'
 import '@utils/register-service-worker'
 import '@components/_globals'
+import { firebaseAnalyze } from '@utils/firebase.config'
 
 // Don't warn about using the dev version of Vue in development
 Vue.config.productionTip = process.env.NODE_ENV === 'production'
+Vue.prototype.$analytics = firebaseAnalyze
 
 new Vue({
   sockets: {
