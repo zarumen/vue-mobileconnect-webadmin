@@ -9,7 +9,7 @@ export default {
   },
   components: {
     Layout: () => import('@layouts/main'),
-    FormAddCampaign: () => import('@components/form/form-add-campaign')
+    FormAddCampaign: () => import(/* webpackChunkName: "form-add-campaign" */ '@components/form/form-add-campaign')
   },
   data () {
     return {

@@ -331,7 +331,7 @@ export default {
         v-if="checkUserNickName"
         v-slot:item.nickName="{ item }"
       >
-        <span class="text-truncate caption">
+        <span class="text-truncate text-caption">
           {{ item.nickName }}
         </span>
       </template>
@@ -339,7 +339,7 @@ export default {
         v-if="checkUserMobile"
         v-slot:item.mobileTelNumber="{ item }"
       >
-        <span class="text-truncate caption primary--text">
+        <span class="text-truncate text-caption primary--text">
           {{ item.mobileTelNumber }}
         </span>
       </template>
@@ -347,7 +347,7 @@ export default {
         v-if="checkSendMobile"
         v-slot:item.msisdn="{ item }"
       >
-        <span class="text-truncate caption primary--text">
+        <span class="text-truncate text-caption primary--text">
           {{ item.msisdn }}
         </span>
       </template>
@@ -557,7 +557,7 @@ export default {
     >
       <v-card>
         <v-card-actions>
-          <span class="subtitle-1 blue-grey--text">
+          <span class="text-subtitle-1 blue-grey--text">
             Transaction Details in DynamoDB
           </span>
           <div class="flex-grow-1" />
@@ -586,7 +586,7 @@ export default {
     >
       <v-card>
         <v-card-actions>
-          <span class="subtitle-1 blue-grey--text">
+          <span class="text-subtitle-1 blue-grey--text">
             All Keywords
           </span>
           <div class="flex-grow-1" />

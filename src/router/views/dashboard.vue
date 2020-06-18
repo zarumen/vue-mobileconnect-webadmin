@@ -326,7 +326,7 @@ export default {
               >
                 access_time
               </v-icon>
-              <span class="caption grey--text font-weight-light">
+              <span class="text-caption grey--text font-weight-light">
                 updated 4 minutes ago
               </span>
             </template>
@@ -358,7 +358,7 @@ export default {
               >
                 access_time
               </v-icon>
-              <span class="caption grey--text font-weight-light">
+              <span class="text-caption grey--text font-weight-light">
                 updated 10 minutes ago
               </span>
             </template>
@@ -389,7 +389,7 @@ export default {
               >
                 access_time
               </v-icon>
-              <span class="caption grey--text font-weight-light">
+              <span class="text-caption grey--text font-weight-light">
                 campaign sent 26 minutes ago
               </span>
             </template>
@@ -438,7 +438,7 @@ export default {
                         mdi-chevron-right
                       </v-icon>
                     </v-btn>
-                    <v-toolbar-title class="caption">
+                    <v-toolbar-title class="text-caption">
                       {{ title }}
                     </v-toolbar-title>
                     <div class="flex-grow-1" />

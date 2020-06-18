@@ -7,8 +7,8 @@ export default {
   },
   components: {
     Layout: () => import('@layouts/main'),
-    ListOperators: () => import('@components/ui/list-operators'),
-    ListShortcodes: () => import('@components/ui/list-shortcodes')
+    ListOperators: () => import(/* webpackChunkName: "list-operators" */ '@components/ui/list-operators'),
+    ListShortcodes: () => import(/* webpackChunkName: "list-shortcodes" */ '@components/ui/list-shortcodes')
   }
 }
 </script>

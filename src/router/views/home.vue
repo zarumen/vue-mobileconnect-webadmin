@@ -103,7 +103,7 @@ export default {
                     >
                       <v-col
                         cols="12"
-                        class="blue--text display-1 text-center"
+                        class="blue--text text-h4 text-center"
                       >
                         2 Ways SMS Solution
                       </v-col>
@@ -134,7 +134,7 @@ export default {
                   >
                     <v-col
                       cols="12"
-                      class="blue--text display-1 pa-5"
+                      class="blue--text text-h4 pa-5"
                     >
                       2WAYS SMS
                     </v-col>
@@ -302,7 +302,7 @@ export default {
                       <v-expand-transition>
                         <div
                           v-if="hover"
-                          class="d-flex transition-fast-in-fast-out green darken-2 display-3 white--text"
+                          class="d-flex transition-fast-in-fast-out green darken-2 text-h2 white--text"
                           style="align-items: center; justify-content: center; height: 100%; opacity: .7;"
                         >
                           ชิงโชค ชิงรางวัล
@@ -328,7 +328,7 @@ export default {
                       <v-expand-transition>
                         <div
                           v-if="hover"
-                          class="d-flex transition-fast-in-fast-out green darken-2 display-3 white--text"
+                          class="d-flex transition-fast-in-fast-out green darken-2 text-h2 white--text"
                           style="align-items: center; justify-content: center; height: 100%; opacity: .7;"
                         >
                           รับส่วนลด
@@ -355,7 +355,7 @@ export default {
                       <v-expand-transition>
                         <div
                           v-if="hover"
-                          class="d-flex transition-fast-in-fast-out green darken-2 display-3 white--text"
+                          class="d-flex transition-fast-in-fast-out green darken-2 text-h2 white--text"
                           style="align-items: center; justify-content: center; height: 100%; opacity: .7;"
                         >
                           ชิงโชคใบเสร็จ
@@ -381,7 +381,7 @@ export default {
                       <v-expand-transition>
                         <div
                           v-if="hover"
-                          class="d-flex transition-fast-in-fast-out green darken-2 display-3 white--text"
+                          class="d-flex transition-fast-in-fast-out green darken-2 text-h2 white--text"
                           style="align-items: center; justify-content: center; height: 100%; opacity: .7;"
                         >
                           ลงทะเบียน
@@ -407,7 +407,7 @@ export default {
                       <v-expand-transition>
                         <div
                           v-if="hover"
-                          class="d-flex transition-fast-in-fast-out green darken-2 display-3 white--text"
+                          class="d-flex transition-fast-in-fast-out green darken-2 text-h2 white--text"
                           style="align-items: center; justify-content: center; height: 100%; opacity: .7;"
                         >
                           ส่ง SMS
@@ -433,7 +433,7 @@ export default {
                       <v-expand-transition>
                         <div
                           v-if="hover"
-                          class="d-flex transition-fast-in-fast-out green darken-2 display-3 white--text"
+                          class="d-flex transition-fast-in-fast-out green darken-2 text-h2 white--text"
                           style="align-items: center; justify-content: center; height: 100%; opacity: .7;"
                         >
                           ส่ง USSD

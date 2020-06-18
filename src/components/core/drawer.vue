@@ -160,7 +160,7 @@ export default {
     :src="image"
     class="elevation-4"
     mini-variant-width="80"
-    mobile-break-point="991"
+    mobile-breakpoint="991"
     width="260"
   >
     <v-layout

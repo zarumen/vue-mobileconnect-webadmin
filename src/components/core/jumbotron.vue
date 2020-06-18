@@ -40,7 +40,7 @@ export default {
                 :text-center="isHome"
               >
                 <h1
-                  class="display-2"
+                  class="text-h3"
                 >
                   {{ title }}
                 </h1>

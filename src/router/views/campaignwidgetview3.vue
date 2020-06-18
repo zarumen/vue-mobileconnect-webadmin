@@ -208,7 +208,7 @@ export default {
           <v-card color="gray darken-2">
             <v-card-title primary-title>
               <span
-                class="display-1"
+                class="text-h4"
                 style="font-weight: bolder; color:#010166;"
               >
                 {{ this.$route.params.caption }}
@@ -247,7 +247,7 @@ export default {
                           >
                             <v-chip
                               color="blue-grey lighten-4"
-                              class="body-2 font-weight-light item"
+                              class="text-body-2 font-weight-light item"
                             >
                               {{ "KHK"+label }}
                             </v-chip>

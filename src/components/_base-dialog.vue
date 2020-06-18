@@ -56,7 +56,7 @@ export default {
         lazy-validation
       >
         <v-card-title
-          class="subtitle-1"
+          class="text-subtitle-1"
         >
           <v-icon color="red">
             warning
@@ -67,7 +67,7 @@ export default {
           <v-container>
             <v-layout column>
               <v-col cols="12">
-                <h5 class="grey--text body-1 font-weight-medium">
+                <h5 class="grey--text text-body-1 font-weight-medium">
                   {{ dialogText }}
                 </h5>
               </v-col>

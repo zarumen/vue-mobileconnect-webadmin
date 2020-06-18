@@ -14,7 +14,7 @@ export default {
     LineChart: () => import('@utils/chart/LineChart'),
     WidgetSearch: () => import('@components/ui/widget-search'),
     WidgetHeaderConfig: () => import('@components/ui/widget-header-config'),
-    VueJsonPretty: () => import('vue-json-pretty')
+    WidgetCampaignValidate: () => import('@components/ui/widget-campaign-validate')
   },
   data: () => ({
     baseModule: 'transactions',
@@ -33,6 +33,13 @@ export default {
     tabs: 0,
     state: 'test',
     timeout: 2000,
+    editCampaign: false,
+    // dialog variables
+    disableDialog: false,
+    dialogTitle: 'Campaign Delete Dialog',
+    dialogText: 'Do you want to delete this campaign?',
+    pauseDialog: false,
+    productionDialog: false,
     // verify code treeview variables
     vcFileSelected: [],
     isLoading1: false,
@@ -242,6 +249,16 @@ export default {
         campaignId: this.$route.params.campaignId,
         runningAvailable: this.campaignInfo.campaignAvailable
       })
+    },
+    onConfirm () {
+      this.deleteCampaign(this.$route.params.campaignId)
+      this.disableDialog = false
+    },
+    onCancel () {
+      this.disableDialog = false
+    },
+    editCampaignValidate () {
+      this.editCampaign = !this.editCampaign
     },
     // ------------------------------------- LOAD ZONE -------------------------------------
     loadCouponTree () {
@@ -501,7 +518,7 @@ export default {
                 dark
                 next-icon="arrow_right"
                 prev-icon="arrow_left"
-                show-arrows
+                show-arrows="mobile"
               >
                 <span
                   class="subheading font-weight-light mr-3"
@@ -513,37 +530,61 @@ export default {
                   <v-icon class="mr-2">
                     chrome_reader_mode
                   </v-icon>
-                  Campaign Info
+                  <span
+                    v-if="tabs === 0"
+                  >
+                    Campaign Info
+                  </span>
                 </v-tab>
                 <v-tab class="mr-3">
                   <v-icon class="mr-2">
                     settings_applications
                   </v-icon>
-                  Validate Info
+                  <span
+                    v-if="tabs === 1"
+                  >
+                    Validate Info
+                  </span>
                 </v-tab>
                 <v-tab class="mr-3">
                   <v-icon class="mr-2">
                     star
                   </v-icon>
-                  Verify Code
+                  <span
+                    v-if="tabs === 2"
+                  >
+                    Verify Code
+                  </span>
                 </v-tab>
                 <v-tab>
                   <v-icon class="mr-2">
                     card_giftcard
                   </v-icon>
-                  Coupons
+                  <span
+                    v-if="tabs === 3"
+                  >
+                    Coupons
+                  </span>
                 </v-tab>
                 <v-tab>
                   <v-icon class="mr-2">
                     textsms
                   </v-icon>
-                  Transactions
+                  <span
+                    v-if="tabs === 4"
+                  >
+                    Transactions
+                  </span>
                 </v-tab>
                 <v-tab>
                   <v-icon class="mr-2">
                     assessment
                   </v-icon>
-                  Report Config
+                  <span
+                    v-if="tabs === 5"
+                  >
+                    Report Config
+                  </span>
                 </v-tab>
               </v-tabs>
             </v-col>
@@ -553,34 +594,18 @@ export default {
                 class="title"
               >
                 Campaign:
-                <span class="body-2 primary--text">
+                <span class="text-body-2 primary--text">
                   {{ campaignInfo.campaignCode }}
                 </span>
-                <base-button
-                  color="secondary"
-                  circle
-                  icon
-                  small
-                >
-                  <v-icon>edit</v-icon>
-                </base-button>
               </span>
               <span
                 v-if="tabs === 1"
                 class="title"
               >
                 Campaign Validate:
-                <span class="body-2 primary--text">
+                <span class="text-body-2 primary--text">
                   {{ campaignInfo.campaignCode }}
                 </span>
-                <base-button
-                  color="secondary"
-                  circle
-                  icon
-                  small
-                >
-                  <v-icon>edit</v-icon>
-                </base-button>
               </span>
               <span
                 v-if="tabs === 2"
@@ -615,22 +640,100 @@ export default {
               <v-spacer />
               <span v-if="tabs === 0">
                 <base-button
-                  color="warning"
+                  color="red"
                   text
-                  @click="clickToPaused"
+                  @click.native="disableDialog = true"
                 >
-                  Paused
+                  Disabled
                 </base-button>
+                <BaseDialog
+                  :dialog="disableDialog"
+                  :dialog-title="dialogTitle"
+                  :dialog-text="dialogText"
+                  @onConfirm="onConfirm"
+                  @onCancel="onCancel"
+                />
+                <v-dialog
+                  v-model="pauseDialog"
+                  width="500"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <base-button
+                      color="warning"
+                      text
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      Paused
+                    </base-button>
+                  </template>
+                  <v-card>
+                    <v-card-title
+                      class="text-h5 grey lighten-2"
+                      primary-title
+                    >
+                      Paused Dialog
+                    </v-card-title>
+                    <v-card-text class="mt-5">
+                      Do you want to PAUSE this campaign?
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer />
+                      <v-btn
+                        color="primary"
+                        text
+                        @click="clickToPaused"
+                      >
+                        I accept
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+                <v-dialog
+                  v-model="productionDialog"
+                  width="500"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <base-button
+                      color="primary"
+                      text
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      Production
+                    </base-button>
+                  </template>
+                  <v-card>
+                    <v-card-title
+                      class="text-h5 grey lighten-2"
+                      primary-title
+                    >
+                      Production Dialog
+                    </v-card-title>
+                    <v-card-text class="mt-5">
+                      Do you want to change this campaign to PRODUCTION?
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer />
+                      <v-btn
+                        color="primary"
+                        text
+                        @click="clickToProduction"
+                      >
+                        I accept
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </span>
+              <span v-if="tabs === 1">
                 <base-button
                   color="primary"
                   text
-                  @click="clickToProduction"
+                  @click.stop="editCampaignValidate"
                 >
-                  Production
+                  Edit
                 </base-button>
-              </span>
-              <span v-if="tabs === 1">
-                &nbsp;
               </span>
               <span v-if="tabs === 2">
                 <base-button
@@ -650,7 +753,7 @@ export default {
               </span>
               <span v-if="tabs === 3">
                 <base-button
-                  color="warning"
+                  color="secondary"
                   text
                   @click.stop="putCoupons"
                 >
@@ -680,269 +783,57 @@ export default {
               <v-tab-item :value="0">
                 <!-- campaign Info -->
                 <v-card-text>
-                  <v-row>
-                    <v-col
-                      cols="12"
-                    >
-                      <p class="body-1 indigo--text">
-                        <strong>Campaign General Information</strong>
-                      </p>
-
-                      <p>
-                        compaign Code: <strong class="green--text">
-                          {{ campaignInfo.campaignCode }}
-                        </strong>
-                      </p>
-                      <p>
-                        compaign Name: <strong class="green--text">
-                          {{ campaignInfo.campaignName }}
-                        </strong>
-                      </p>
-                      <p>
-                        compaign Description: <strong class="green--text">
-                          {{ campaignInfo.campaignDescription }}
-                        </strong>
-                      </p>
-                      <p>
-                        compaign Type: <strong class="green--text">
-                          {{ campaignInfo.campaignType }}
-                        </strong>
-                      </p>
-                      <p>
-                        compaign Owner Company: <strong class="green--text">
-                          {{ campaignInfo.organizationLevel1Name }}
-                        </strong>
-                      </p>
-                      <p>
-                        compaign Owner Department: <strong class="green--text">
-                          {{ campaignInfo.organizationLevel2Name }}
-                        </strong>
-                      </p>
-                      <p>
-                        compaign Owner Brand: <strong class="green--text">
-                          {{ campaignInfo.organizationLevel3Name }}
-                        </strong>
-                      </p>
-                      <p>
-                        compaign Keyword: <strong class="green--text">
-                          {{ campaignInfo.keyword }}
-                        </strong>
-                      </p>
-                      <p>
-                        compaign Shortcode: <strong class="green--text">
-                          {{ campaignInfo.shortcode }}
-                        </strong>
-                      </p>
-                      <!-- <p>compaign's Brand: <strong class="green- -text">{{ brand.organizationLevel3Name }}</strong></p> -->
-                      <p>
-                        compaign's Start Date: <strong class="green--text">
-                          {{ startDate }}
-                        </strong>
-                      </p>
-                      <p>
-                        compaign's End Date: <strong class="green--text">
-                          {{ endDate }}
-                        </strong>
-                      </p>
-                      <p>
-                        compaign's Test Start Date: <strong class="green--text">
-                          {{ startTestDate }}
-                        </strong>
-                      </p>
-                      <p>
-                        compaign's Test End Date: <strong class="green--text">
-                          {{ endTestDate }}
-                        </strong>
-                      </p>
-                      <!-- <p>
-                        Delimiter: <strong class="green--text">
-                          {{ campaignValidateInfo.contextDelimiter }}
-                        </strong>
-                      </p>
-                      <p>
-                        campaign Has Verifycode: <strong class="green--text">
-                          {{ switchUploadVC }}
-                        </strong>
-                      </p>
-                      <p>
-                        campaign Has Verifycode (2 Column) { MobileNumber:Verifycode }: <strong class="green--text">
-                          {{ campaignValidateInfo.campaignHasMsisdnList }}
-                        </strong>
-                      </p>
-                      <p>
-                        Verifycode TEST Filename: <strong class="green--text">
-                          {{ fileNameTestVC }}
-                        </strong>
-                      </p>
-                      <p>
-                        Verifycode PRODUCTION Filename: <strong class="green--text">
-                          {{ fileNameProVC }}
-                        </strong>
-                      </p>
-                      <p>rewards: {{ JSON.stringify(rewards, null, 2) }}</p> -->
-                    </v-col>
-                  </v-row>
+                  hi
                 </v-card-text>
               </v-tab-item>
               <v-tab-item :value="1">
                 <v-card-text>
-                  <v-row>
-                    <v-col
-                      cols="12"
-                    >
-                      <p class="body-2 indigo--text">
+                  <v-list dense>
+                    <v-list-item>
+                      <v-list-item-content
+                        class="text-body-2 indigo--text"
+                      >
                         Campaign Validate Status:
-                      </p>
-                      <p>
-                        Campaign Has Verify Code: <strong class="green--text">
-                          {{ campaignInfo.campaignHasVerifyCode }}
-                        </strong>
-                      </p>
-                      <p>
-                        campaign Has verify by MsisdnList:  <strong class="green--text">
-                          {{ campaignValidateInfo.campaignHasMsisdnList }}
-                        </strong>
-                      </p>
-                      <p>
-                        Campaign Rewards Has Coupons: <strong class="green--text">
-                          {{ checkRewardsHaveCoupons }}
-                        </strong>
-                      </p>
-                      <p class="body-2 indigo--text">
-                        Campaign Contexts Parser:
-                      </p>
-                      <p>
-                        Context Delimiter: <strong class="green--text">
-                          "{{ campaignValidateInfo.contextDelimiter }}"
-                        </strong>
-                      </p>
-                      <p>
-                        Context Sections: <strong class="green--text">
-                          {{ (campaignValidateInfo.contextParser) ? campaignValidateInfo.contextParser.length : 0 }} Parts
-                        </strong>
-                      </p>
-                      <vue-json-pretty
-                        :data="campaignValidateInfo.contextParser"
-                        :deep="2"
-                        highlight-mouseover-node
-                        show-line
-                        show-double-quotes
-                      />
-                    </v-col>
-                    <v-col
-                      cols="12"
-                    >
-                      <p class="body-2 indigo--text">
-                        Services Messages:
-                      </p>
-                      <p>
-                        Empty Message: <strong class="green--text">
-                          {{ campaignValidateInfo.messageCampaignTestNotRegister }}
-                        </strong>
-                      </p>
-                      <p>
-                        Pause Service Message: <strong class="green--text">
-                          {{ campaignValidateInfo.messageCampaignNotAvailable }}
-                        </strong>
-                      </p>
-                      <p>
-                        Less Content Message: <strong class="green--text">
-                          {{ campaignValidateInfo.messageBoundariesLessError }}
-                        </strong>
-                      </p>
-                      <p>
-                        Over Content Message: <strong class="green--text">
-                          {{ campaignValidateInfo.messageBoundariesOverError }}
-                        </strong>
-                      </p>
-                      <p>
-                        Before Service Active: <strong class="green--text">
-                          {{ campaignValidateInfo.messageBeforeStart }}
-                        </strong>
-                      </p>
-                      <p>
-                        After Service Active: <strong class="green--text">
-                          {{ campaignValidateInfo.messageAfterEnd }}
-                        </strong>
-                      </p>
-                      <p>
-                        Already Registered Message: <strong class="green--text">
-                          {{ campaignValidateInfo.messageRegisterFail }}
-                        </strong>
-                      </p>
-                      <p>
-                        Validate Verify Code Failed Message: <strong class="green--text">
-                          {{ campaignValidateInfo.messageValidateFail }}
-                        </strong>
-                      </p>
-                      <p>
-                        Telephone Number Checked Error Message: <strong class="green--text">
-                          {{ campaignValidateInfo.messageCheckMsisdnNotFound }}
-                        </strong>
-                      </p>
-                      <p class="body-2 indigo--text">
-                        Rewards Sessions:
-                      </p>
-                      <p>
-                        Rewards Fail Message: <strong class="green--text">
-                          {{ campaignValidateInfo.messageRewardsFailed }}
-                        </strong>
-                      </p>
-                      <p>
-                        Rewards Invalid Message: <strong class="green--text">
-                          {{ campaignValidateInfo.messageRewardsInvalid }}
-                        </strong>
-                      </p>
-                      <p>
-                        Reward Received Limit Message: <strong class="green--text">
-                          {{ campaignValidateInfo.messageRewardReceivedLimit }}
-                        </strong>
-                      </p>
-                      <p>
-                        Reward have Sequence: <strong class="green--text">
-                          {{ campaignValidateInfo.rewardsHaveSequence }}
-                        </strong>
-                      </p>
-                      <p>
-                        Reward All Limit: <strong class="green--text">
-                          {{ campaignValidateInfo.rewardsLimit }}
-                        </strong>
-                      </p>
-                      <div v-if="campaignValidateInfo.rewardsArray">
-                        <p>
-                          Reward Type: <strong class="green--text">
-                            Array
-                          </strong>
-                        </p>
-                        <p class="body-2 indigo--text">
-                          Rewards Details:
-                        </p>
-                        <vue-json-pretty
-                          :data="campaignValidateInfo.rewardsArray"
-                          highlight-mouseover-node
-                          show-line
-                          show-double-quotes
-                        />
-                      </div>
-                      <div v-if="campaignValidateInfo.rewardsObject">
-                        <p>
-                          Reward Type: <strong class="green--text">
-                            Object
-                          </strong>
-                        </p>
-                        <p class="body-2 indigo--text">
-                          Rewards Details:
-                        </p>
-                        <vue-json-pretty
-                          :data="campaignValidateInfo.rewardsObject"
-                          :deep="1"
-                          highlight-mouseover-node
-                          show-line
-                          show-double-quotes
-                        />
-                      </div>
-                    </v-col>
-                  </v-row>
+                      </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-list-item-content>
+                        Campaign Has Verify Code:
+                      </v-list-item-content>
+                      <v-list-item-content
+                        :class="classStatus(campaignInfo.campaignHasVerifyCode)"
+                        align="end"
+                      >
+                        {{ campaignInfo.campaignHasVerifyCode }}
+                      </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-list-item-content>
+                        Campaign Has verify by MsisdnList (TelephoneNumber):
+                      </v-list-item-content>
+                      <v-list-item-content
+                        :class="classStatus(campaignValidateInfo.campaignHasMsisdnList)"
+                        align="end"
+                      >
+                        {{ (campaignValidateInfo.campaignHasMsisdnList) ? 'HAVE' : 'NOT-HAVE' }}
+                      </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-list-item-content>
+                        Campaign Rewards Has Coupons:
+                      </v-list-item-content>
+                      <v-list-item-content
+                        :class="classStatus(checkRewardsHaveCoupons)"
+                        align="end"
+                      >
+                        {{ checkRewardsHaveCoupons }}
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list>
+                  <widget-campaign-validate
+                    :edit-mode="editCampaign"
+                    :campaign-validate-info="campaignValidateInfo"
+                  />
                 </v-card-text>
               </v-tab-item>
               <v-tab-item :value="2">
@@ -1238,25 +1129,92 @@ export default {
             title="Campaign Details"
             text="Check Campaigns Details Information"
           >
-            <h4 class="font-weight-medium primary--text">
-              Campaign: {{ campaignInfo.campaignName }}
-            </h4>
+            <span class="font-weight-medium py-4 text-h5">
+              &nbsp;Campaign: <span class="primary--text">{{ campaignInfo.campaignName }}</span>
+            </span>
 
-            <p class="mb-5">
-              &nbsp;&nbsp;{{ campaignInfo.campaignDescription }}<br><br>
-              <span class="primary--text">Campaign Type:</span> {{ campaignInfo.campaignType }}<br><br>
-              <span class="primary--text">Campaign Owner:</span> {{ campaignInfo.organizationLevel1Name }}<br><br>
-              <span class="primary--text">Campaign Keyword:</span> {{ campaignInfo.keyword }}<br><br>
-              <span class="primary--text">Campaign Shortcode:</span> {{ campaignInfo.shortcode }}<br>
+            <p class="ma-5">
+              {{ campaignInfo.campaignDescription }}<br><br>
             </p>
 
-            <h5 class="font-weight-medium secondary--text">
-              Time Interval
-            </h5>
-            <p class="mb-5">
-              <span class="primary--text">Campaign StartDate:</span> {{ startDate }}<br><br>
-              <span class="primary--text">Campaign EndDate:</span> {{ endDate }}<br><br>
-            </p>
+            <v-list dense>
+              <v-list-item>
+                <v-list-item-content>Campaign Owner:</v-list-item-content>
+                <v-list-item-content class="primary--text align-end">
+                  {{ campaignInfo.organizationLevel1Name }}
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-content>Campaign Owner's Department:</v-list-item-content>
+                <v-list-item-content class="primary--text align-end">
+                  {{ campaignInfo.organizationLevel2Name }}
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-content>Campaign Owner's Brand:</v-list-item-content>
+                <v-list-item-content class="primary--text align-end">
+                  {{ campaignInfo.organizationLevel3Name }}
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-content>Campaign Type:</v-list-item-content>
+                <v-list-item-content class="secondary--text align-end">
+                  {{ campaignInfo.campaignType }}
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-content>Campaign Keyword:</v-list-item-content>
+                <v-list-item-content class="align-end">
+                  <v-chip-group
+                    column
+                    color="primary"
+                  >
+                    <v-chip
+                      v-for="tag in campaignInfo.keyword"
+                      :key="tag"
+                      x-small
+                    >
+                      {{ tag }}
+                    </v-chip>
+                  </v-chip-group>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-content>Campaign Shortcode:</v-list-item-content>
+                <v-list-item-content class="primary--text align-end">
+                  {{ campaignInfo.shortcode }}
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-content class="primary--text">
+                  Campaign Time Intervals
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-content>Campaign TEST Start Date:</v-list-item-content>
+                <v-list-item-content class="warning--text align-end">
+                  {{ startTestDate }}
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-content>Campaign TEST End Date:</v-list-item-content>
+                <v-list-item-content class="warning--text align-end">
+                  {{ endTestDate }}
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-content>Campaign Start Date:</v-list-item-content>
+                <v-list-item-content class="secondary--text align-end">
+                  {{ startDate }}
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-content>Campaign End Date:</v-list-item-content>
+                <v-list-item-content class="secondary--text align-end">
+                  {{ endDate }}
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
           </base-card>
         </v-col>
         <v-col
@@ -1302,7 +1260,7 @@ export default {
               >
                 access_time
               </v-icon>
-              <span class="caption grey--text font-weight-light">
+              <span class="text-caption grey--text font-weight-light">
                 updated 4 minutes ago
               </span>
             </template>
@@ -1342,7 +1300,7 @@ export default {
               >
                 access_time
               </v-icon>
-              <span class="caption grey--text font-weight-light">
+              <span class="text-caption grey--text font-weight-light">
                 updated 4 minutes ago
               </span>
             </template>

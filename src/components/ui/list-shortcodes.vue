@@ -210,7 +210,7 @@ export default {
           dark
           next-icon="arrow_right"
           prev-icon="arrow_left"
-          show-arrows
+          show-arrows="mobile"
           grow
         >
           <span
@@ -352,8 +352,6 @@ export default {
             <template v-for="(item0, index) in filteredList">
               <v-list-item
                 :key="index"
-                ripple
-                @click="onClicked(item0)"
               >
                 <v-list-item-avatar>
                   <v-icon small>
@@ -367,7 +365,7 @@ export default {
                   <v-list-item-action-text>
                     &nbsp;Sender Name:
                   </v-list-item-action-text>
-                  <v-list-item-subtitle class="body-2 ">
+                  <v-list-item-subtitle class="text-body-2 ">
                     <v-chip-group dark>
                       <v-chip
                         v-for="i in item0.sendername"
@@ -435,7 +433,6 @@ export default {
             <template v-for="(item1, index) in filteredKeywordList">
               <v-list-item
                 :key="index"
-                ripple
               >
                 <v-list-item-avatar>
                   <v-icon small>
@@ -449,17 +446,17 @@ export default {
                   <v-list-item-action-text>
                     &nbsp;Keywords Used:
                   </v-list-item-action-text>
-                  <v-list-item-subtitle class="body-2 ">
+                  <v-list-item-subtitle class="text-body-2 ">
                     <v-chip-group
                       active-class="secondary--text"
-                      next-icon="arrow_right"
-                      prev-icon="arrow_left"
-                      show-arrows
+                      next-icon="$next"
+                      prev-icon="$prev"
+                      show-arrows="mobile"
                     >
                       <v-chip
                         v-for="k in item1.keywords"
                         :key="k"
-                        class="my-2 mx-1 caption"
+                        class="my-2 mx-1 text-caption"
                         color="light-green lighten-4"
                         x-small
                         @click.stop="openBaseDialogDetails(k, item1.rawData[k])"
@@ -483,8 +480,6 @@ export default {
             <template v-for="(item2, index) in filteredKeywordReservedList">
               <v-list-item
                 :key="item2.shortcode"
-                ripple
-                @click.stop="onClicked(item2)"
               >
                 <v-list-item-avatar>
                   <v-icon small>
@@ -499,7 +494,7 @@ export default {
                     <v-list-item-action-text>
                       &nbsp;Keywords Reserved:
                     </v-list-item-action-text>
-                    <v-list-item-subtitle class="body-2">
+                    <v-list-item-subtitle class="text-body-2">
                       <!-- Keyword ที่กำลัง reserved -->
                       <v-chip-group
                         column
@@ -507,7 +502,7 @@ export default {
                         <v-chip
                           v-for="i in item2.keywordsArray"
                           :key="i"
-                          class="mb-2 primary lighten-3 caption"
+                          class="mb-2 primary lighten-3 text-caption"
                           x-small
                           @click.stop="clickedKeywordReserved(i, item2.shortcode)"
                         >
@@ -517,7 +512,7 @@ export default {
                         <v-chip
                           v-for="i in item2.keywordsFalseArray"
                           :key="i"
-                          class="mb-2 grey lighten-1 white--text caption"
+                          class="mb-2 grey lighten-1 white--text text-caption"
                           x-small
                           @click.stop="onClicked(i)"
                         >
@@ -526,21 +521,6 @@ export default {
                       </v-chip-group>
                     </v-list-item-subtitle>
                   </div>
-                  <!-- <div v-if="item2.keywordsFalseArray.length > 0">
-                    <v-list-item-action-text>
-                      &nbsp;Keywords Reserved Used:
-                    </v-list-item-action-text>
-                    <v-list-item-subtitle class="body-2 ">
-                      <v-chip
-                        v-for="i in item2.keywordsFalseArray"
-                        :key="i"
-                        class="mb-2 grey lighten-1 white--text caption "
-                        small
-                      >
-                        {{ i }}
-                      </v-chip>
-                    </v-list-item-subtitle>
-                  </div> -->
                 </v-list-item-content>
               </v-list-item>
               <v-divider

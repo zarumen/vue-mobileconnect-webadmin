@@ -4,12 +4,18 @@ export default [
   {
     path: '/',
     name: 'home',
-    component: () => lazyLoadView(import(/* webpackPrefetch: true */ '@views/home'))
+    component: () => lazyLoadView(import(
+      /* webpackChunkName: "home" */
+      /* webpackPrefetch: true */
+      '@views/home'))
   },
   {
     path: '/login',
     name: 'login',
-    component: () => lazyLoadView(import(/* webpackPrefetch: true */ '@views/login')),
+    component: () => lazyLoadView(import(
+      /* webpackChunkName: "login" */
+      /* webpackPrefetch: true */
+      '@views/login')),
     meta: {
       beforeResolve (routeTo, routeFrom, next) {
         console.log('render login page!')
@@ -27,7 +33,10 @@ export default [
   {
     path: '/profile',
     name: 'profile',
-    component: () => lazyLoadView(import(/* webpackPrefetch: true */ '@views/profile')),
+    component: () => lazyLoadView(import(
+      /* webpackChunkName: "profile" */
+      /* webpackPrefetch: true */
+      '@views/profile')),
     meta: {
       authRequired: true,
       beforeEach: (routeTo, routeFrom, next) => {
@@ -88,7 +97,7 @@ export default [
   {
     path: '/dashboard',
     name: 'dashboard',
-    component: () => lazyLoadView(import('@views/dashboard')),
+    component: () => lazyLoadView(import(/* webpackChunkName: "dashboard" */ '@views/dashboard')),
     meta: {
       authRequired: true
     },
@@ -103,7 +112,7 @@ export default [
   {
     path: '/organizations',
     name: 'organizations',
-    component: () => lazyLoadView(import('@views/organizations')),
+    component: () => lazyLoadView(import(/* webpackChunkName: "organizations" */ '@views/organizations')),
     meta: {
       authRequired: true
     }
@@ -111,7 +120,7 @@ export default [
   {
     path: '/shortcodes',
     name: 'shortcodes',
-    component: () => lazyLoadView(import('@views/shortcodes')),
+    component: () => lazyLoadView(import(/* webpackChunkName: "shortcodes" */ '@views/shortcodes')),
     meta: {
       authRequired: true
     }
@@ -119,7 +128,7 @@ export default [
   {
     path: '/search',
     name: 'search',
-    component: () => lazyLoadView(import('@views/search')),
+    component: () => lazyLoadView(import(/* webpackChunkName: "search" */ '@views/search')),
     meta: {
       authRequired: true,
       beforeResolve: (routeTo, routeFrom, next) => {
@@ -136,7 +145,7 @@ export default [
   {
     path: '/searchViewer',
     name: 'searchViewer',
-    component: () => lazyLoadView(import('@views/search-viewer')),
+    component: () => lazyLoadView(import(/* webpackChunkName: "searchViewer" */ '@views/search-viewer')),
     meta: {
       authRequired: true,
       beforeResolve: (routeTo, routeFrom, next) => {
@@ -153,7 +162,7 @@ export default [
   {
     path: '/users',
     name: 'users',
-    component: () => lazyLoadView(import('@views/users')),
+    component: () => lazyLoadView(import(/* webpackChunkName: "users" */ '@views/users')),
     meta: {
       authRequired: true
     }
@@ -161,7 +170,7 @@ export default [
   {
     path: '/campaigns',
     name: 'campaigns',
-    component: () => lazyLoadView(import('@views/campaigns')),
+    component: () => lazyLoadView(import(/* webpackChunkName: "campaigns" */ '@views/campaigns')),
     meta: {
       authRequired: true
     }
@@ -169,7 +178,7 @@ export default [
   {
     path: '/campaignDetails/:campaignId',
     name: 'campaignDetails',
-    component: () => lazyLoadView(import('@views/campaign-details')),
+    component: () => lazyLoadView(import(/* webpackChunkName: "campaignDetails" */ '@views/campaign-details')),
     meta: {
       authRequired: true,
       beforeResolve: (routeTo, routeFrom, next) => {
@@ -190,7 +199,7 @@ export default [
   {
     path: '/reportViewer',
     name: 'reportViewer',
-    component: () => lazyLoadView(import('@views/report-viewer')),
+    component: () => lazyLoadView(import(/* webpackChunkName: "reportViewer" */ '@views/report-viewer')),
     meta: {
       authRequired: true
       // beforeResolve: (routeTo, routeFrom, next) => {
@@ -225,7 +234,7 @@ export default [
   {
     path: '/campaignsViewer',
     name: 'campaignsViewer',
-    component: () => lazyLoadView(import('@views/campaigns-viewer')),
+    component: () => lazyLoadView(import(/* webpackChunkName: "campaignsViewer" */ '@views/campaigns-viewer')),
     meta: {
       authRequired: true
     },
@@ -300,7 +309,7 @@ export default [
   {
     path: '/reports',
     name: 'reports',
-    component: () => lazyLoadView(import('@views/reports')),
+    component: () => lazyLoadView(import(/* webpackChunkName: "reports" */ '@views/reports')),
     meta: {
       authRequired: true
     }

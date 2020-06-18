@@ -22,7 +22,7 @@
         class="category blue-grey--text font-weight-light"
         v-text="title"
       />
-      <h3 class="title display-1 font-weight-medium">
+      <h3 class="title text-h4 font-weight-medium">
         {{ value }} <small class="primary--text">{{ smallValue }}</small>
       </h3>
     </div>
@@ -30,7 +30,7 @@
     <template slot="actions">
       <v-col
         v-if="adminPanel"
-        class="caption secondary--text"
+        class="text-caption secondary--text"
       >
         <v-btn
           icon
@@ -52,7 +52,7 @@
         </v-icon>
         <span
           :class="subTextColor"
-          class="caption font-weight-light"
+          class="text-caption font-weight-light"
           v-text="subText"
         />
       </v-col>

@@ -178,7 +178,7 @@ export default {
         lazy-validation
       >
         <v-card>
-          <v-card-title class="light-green lighten-4 py-4 title">
+          <v-card-title class="light-green lighten-4 py-4 text-h6">
             Create New Shortcode
           </v-card-title>
           <v-card-text>

@@ -19,19 +19,19 @@ export default {
 </script>
 
 <template>
-  <v-content
+  <v-main
     v-if="checkHome"
   >
     <nav-bar />
     <slot />
-  </v-content>
-  <v-content
+  </v-main>
+  <v-main
     v-else
     class="container"
   >
     <nav-bar />
     <slot />
-  </v-content>
+  </v-main>
 </template>
 
 <style lang="scss" module>

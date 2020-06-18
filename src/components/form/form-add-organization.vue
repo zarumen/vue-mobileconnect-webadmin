@@ -249,7 +249,7 @@ export default {
       width="600px"
     >
       <v-card>
-        <v-card-title class="light-green lighten-4 py-4 title">
+        <v-card-title class="light-green lighten-4 py-4 text-h6">
           Create New Organization
         </v-card-title>
         <v-container
