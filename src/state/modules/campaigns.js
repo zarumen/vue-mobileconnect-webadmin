@@ -52,6 +52,7 @@ export const mutations = {
   toggleState: set('campaignStateSelected'),
   setElementItemValidate (state, payload) {
     assign(state.itemValidate, payload)
+    state.itemValidate = { ...state.itemValidate, ...payload }
   },
   setPagination (state, pagination) {
     state.pagination = pagination
@@ -59,9 +60,11 @@ export const mutations = {
   // update Page
   setPage (state, paginationElement) {
     assign(state.pagination, paginationElement)
+    state.pagination = { ...state.pagination, ...paginationElement }
   },
   setElementCampaignList (state, { position, payload }) {
     assign(state.items[position], payload)
+    state.items = [...state.items]
   },
   // Mutate Value in Pagination
   setItems (state, items) {
@@ -260,6 +263,25 @@ export const actions = {
   // UPDATE Zone
   // ===
   // TODO: update Field in Campaigns & CampaignValidate
+  editCampaignValidate ({ commit }, { campaignId, validateObj }) {
+    commit('setElementItemValidate', validateObj)
+    // update to firestore
+    return firestoreApp
+      .collection('campaignValidate')
+      .doc(`${campaignId}`)
+      .set(validateObj, { merge: true })
+      .then(() => {
+        console.log('success')
+        sendSuccessNotice(commit, 'CampaignValidate has been Updated.')
+        closeNotice(commit, 3000)
+      })
+      .catch(error => {
+        console.log(error)
+        sendErrorNotice(commit, 'CampaignValidate Update Failed!')
+        closeNotice(commit, 2000)
+        return error
+      })
+  },
   async calibratedCampaignTx ({ state }, { campaignState }) {
     const campaignId = state.campaignSelected
 
@@ -277,6 +299,9 @@ export const actions = {
   },
   updatePagination ({ commit }, pagiObj) {
     commit('setPage', pagiObj)
+  },
+  updateCampaignValidate ({ commit }, validateObj) {
+    commit('setElementItemValidate', validateObj)
   },
   async updateStatusCampaign ({ state, commit }, { campaignId }) {
     const index = state.items.map(e => e.id).indexOf(campaignId)

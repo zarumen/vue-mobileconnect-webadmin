@@ -64,6 +64,10 @@ export default {
           failure: false,
           success: false
         },
+        ussddtac: {
+          failure: false,
+          success: false
+        },
         true: {
           failure: false,
           success: false
@@ -210,6 +214,7 @@ export default {
       optionAis: false,
       optionTrue: false,
       optionDtac: false,
+      optionUssdDtac: false,
       optionTestweb: false,
       optionUssdTrue: false
     }
@@ -937,6 +942,24 @@ export default {
                         <v-switch
                           v-model="ussdForm.OPERATORS.dtac.failure"
                           :label="`Failure: ${(ussdForm.OPERATORS.dtac.failure)}`"
+                        />
+                      </v-sheet>
+                      <v-switch
+                        v-model="optionUssdDtac"
+                        inset
+                        :label="`USSD DTAC: ${activatedOperators(optionUssdDtac)}`"
+                      />
+                      <v-sheet
+                        v-if="optionUssdDtac"
+                        class="pa-3"
+                      >
+                        <v-switch
+                          v-model="ussdForm.OPERATORS.ussddtac.success"
+                          :label="`Success: ${ussdForm.OPERATORS.ussddtac.success}`"
+                        />
+                        <v-switch
+                          v-model="ussdForm.OPERATORS.ussddtac.failure"
+                          :label="`Failure: ${(ussdForm.OPERATORS.ussddtac.failure)}`"
                         />
                       </v-sheet>
                       <v-switch

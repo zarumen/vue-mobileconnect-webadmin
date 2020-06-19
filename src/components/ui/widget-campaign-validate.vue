@@ -15,15 +15,30 @@ export default {
     }
   },
   data: () => ({
-
+    editCampaignDialog: false,
+    selectedField: '',
+    selectedValue: '',
+    typeOfField: null
   }),
-  computed: {},
+  computed: {
+    checkTypeNull () {
+      return !!this.typeOfField
+    }
+  },
   methods: {
     checkTypeRewardsLimit (rwLimit) {
       return (typeof rwLimit === 'number') ? 'indigo--text align-end' : 'secondary--text align-end'
     },
     booleanClass (bool) {
       return (bool) ? 'secondary--text align-end' : 'warning--text align-end'
+    },
+    clickToEdit (fieldName, fieldType, fieldValue) {
+      this.typeOfField = fieldType
+      this.selectedField = fieldName
+      this.selectedValue = fieldValue
+      if (this.checkTypeNull) {
+        this.editCampaignDialog = !this.editCampaignDialog
+      }
     }
   }
 }
@@ -173,6 +188,11 @@ export default {
             color="primary"
             x-small
             text
+            @click="clickToEdit(
+              'campaignLongMessage',
+              'boolean',
+              campaignValidateInfo.campaignLongMessage
+            )"
           >
             edit
           </base-button>
@@ -195,6 +215,11 @@ export default {
             color="primary"
             x-small
             text
+            @click="clickToEdit(
+              'contextDelimiter',
+              'string',
+              campaignValidateInfo.contextDelimiter
+            )"
           >
             edit
           </base-button>
@@ -253,6 +278,11 @@ export default {
             color="primary"
             x-small
             text
+            @click="clickToEdit(
+              'messageCampaignTestNotRegister',
+              'string',
+              campaignValidateInfo.messageCampaignTestNotRegister
+            )"
           >
             edit
           </base-button>
@@ -275,6 +305,11 @@ export default {
             color="primary"
             x-small
             text
+            @click="clickToEdit(
+              'messageCampaignNotAvailable',
+              'string',
+              campaignValidateInfo.messageCampaignNotAvailable
+            )"
           >
             edit
           </base-button>
@@ -297,6 +332,11 @@ export default {
             color="primary"
             x-small
             text
+            @click="clickToEdit(
+              'messageBoundariesLessError',
+              'string',
+              campaignValidateInfo.messageBoundariesLessError
+            )"
           >
             edit
           </base-button>
@@ -319,6 +359,11 @@ export default {
             color="primary"
             x-small
             text
+            @click="clickToEdit(
+              'messageBoundariesOverError',
+              'string',
+              campaignValidateInfo.messageBoundariesOverError
+            )"
           >
             edit
           </base-button>
@@ -341,6 +386,11 @@ export default {
             color="primary"
             x-small
             text
+            @click="clickToEdit(
+              'messageBeforeStart',
+              'string',
+              campaignValidateInfo.messageBeforeStart
+            )"
           >
             edit
           </base-button>
@@ -363,6 +413,11 @@ export default {
             color="primary"
             x-small
             text
+            @click="clickToEdit(
+              'messageAfterEnd',
+              'string',
+              campaignValidateInfo.messageAfterEnd
+            )"
           >
             edit
           </base-button>
@@ -385,6 +440,11 @@ export default {
             color="primary"
             x-small
             text
+            @click="clickToEdit(
+              'messageRegisterFail',
+              'string',
+              campaignValidateInfo.messageRegisterFail
+            )"
           >
             edit
           </base-button>
@@ -407,6 +467,11 @@ export default {
             color="primary"
             x-small
             text
+            @click="clickToEdit(
+              'messageValidateFail',
+              'string',
+              campaignValidateInfo.messageValidateFail
+            )"
           >
             edit
           </base-button>
@@ -429,6 +494,11 @@ export default {
             color="primary"
             x-small
             text
+            @click="clickToEdit(
+              'messageCheckMsisdnNotFound',
+              'string',
+              campaignValidateInfo.messageCheckMsisdnNotFound
+            )"
           >
             edit
           </base-button>
@@ -451,6 +521,11 @@ export default {
             color="primary"
             x-small
             text
+            @click="clickToEdit(
+              'messageMTSuccessDefaultReply',
+              'string',
+              campaignValidateInfo.messageMTSuccessDefaultReply
+            )"
           >
             edit
           </base-button>
@@ -478,6 +553,11 @@ export default {
             color="primary"
             x-small
             text
+            @click="clickToEdit(
+              'rewardsHaveSequence',
+              'boolean',
+              campaignValidateInfo.rewardsHaveSequence
+            )"
           >
             edit
           </base-button>
@@ -500,6 +580,11 @@ export default {
             color="primary"
             x-small
             text
+            @click="clickToEdit(
+              'rewardsLimit',
+              'number',
+              campaignValidateInfo.rewardsLimit
+            )"
           >
             edit
           </base-button>
@@ -576,6 +661,11 @@ export default {
         />
       </v-list-item>
     </v-list>
-    <form-edit-campaign-validate />
+    <form-edit-campaign-validate
+      :edit-campaign-dialog="editCampaignDialog"
+      :field-name="selectedField"
+      :field-type="typeOfField"
+      @emitCloseEditDialog="editCampaignDialog=arguments[0]"
+    />
   </div>
 </template>
