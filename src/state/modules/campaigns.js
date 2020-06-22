@@ -262,7 +262,7 @@ export const actions = {
   // ===
   // UPDATE Zone
   // ===
-  // TODO: update Field in Campaigns & CampaignValidate
+  // TODO: update Field in CampaignValidate DATE OBJECT
   editCampaignValidate ({ commit }, { campaignId, validateObj }) {
     commit('setElementItemValidate', validateObj)
     // update to firestore
@@ -272,14 +272,15 @@ export const actions = {
       .set(validateObj, { merge: true })
       .then(() => {
         console.log('success')
-        sendSuccessNotice(commit, 'CampaignValidate has been Updated.')
-        closeNotice(commit, 3000)
+        // TODO: change snackbar to @view/main
+        // sendSuccessNotice(commit, 'CampaignValidate has been Updated.')
+        // closeNotice(commit, 3000)
       })
       .catch(error => {
         console.log(error)
-        sendErrorNotice(commit, 'CampaignValidate Update Failed!')
-        closeNotice(commit, 2000)
-        return error
+        // sendErrorNotice(commit, 'CampaignValidate Update Failed!')
+        // closeNotice(commit, 2000)
+        // return error
       })
   },
   async calibratedCampaignTx ({ state }, { campaignState }) {

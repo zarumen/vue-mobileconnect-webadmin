@@ -129,11 +129,17 @@ export const campaignDetailsComputed = {
     'getTotalsCoupon',
     'hadHeaderConfig',
     'getHeaderConfigArray'
+  ]),
+  ...mapGetters('shortcodes', [
+    'hadShortcodesList',
+    'getShortcodesList',
+    'getShortcodesReservedList'
   ])
 }
 
 export const campaignDetailsMethods = {
   ...mapActions('campaigns', [
+    'createCampaign',
     'getCampaignValidate',
     'updateStatusCampaign',
     'updatePausedCampaign',

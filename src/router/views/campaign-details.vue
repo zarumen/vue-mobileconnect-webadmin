@@ -3,6 +3,15 @@ import formatDateRelative from '@utils/format-date-relative'
 import { formatDateTime } from '@utils/format-date'
 import { campaignDetailsComputed, campaignDetailsMethods } from '@state/helpers'
 
+const defaultDupForm = Object.freeze({
+  dupCampaignCode: '',
+  dupCampaignName: '',
+  dupCampaignDesc: '',
+  dupShortcode: '',
+  dupSendername: '',
+  dupKeyword: ''
+})
+
 export default {
   page: {
     title: 'CampaignDetails',
@@ -40,6 +49,34 @@ export default {
     dialogText: 'Do you want to delete this campaign?',
     pauseDialog: false,
     productionDialog: false,
+    duplicateDialog: false,
+    duplicateConfirmDialog: false,
+    valid: true,
+    // ---------**-------------------------------------
+    // Campaign DUPLICATED variables
+    // ---------**-------------------------------------
+    dupform: Object.assign({}, defaultDupForm),
+    cState: 'test',
+    fieldRules: [
+      v => !!v || 'This Field is required'
+    ],
+    // date-time
+    date: null, // start date
+    date2: null, // end date
+    date3: null, // start test date
+    date4: null, // end test date
+    time: '00:00', // start time
+    time2: '00:00', // end time
+    time3: '00:00', // start test time
+    time4: '00:00', // end test time
+    menu: false, // start date menu
+    menu2: false, // start time menu
+    menu3: false, // end date menu
+    menu4: false, // end time menu
+    menu5: false, // start test date menu
+    menu6: false, // start test time menu
+    menu7: false, // end test date menu
+    menu8: false, // end test time menu
     // verify code treeview variables
     vcFileSelected: [],
     isLoading1: false,
@@ -96,6 +133,7 @@ export default {
       }
       return ''
     },
+    // campaign MICROSITE
     checkMicrositeCampaign () {
       return this.campaignInfo.campaignType === 'microsite'
     },
@@ -104,6 +142,52 @@ export default {
         return this.campaignValidateInfo.micrositeFields
       }
       return []
+    },
+    // shortcode & keyword List
+    shortcodeList () {
+      return this.getShortcodesList.map(x => x.shortcode)
+    },
+    senderNameList () {
+      const scCheck = this.dupform.dupShortcode
+
+      if (scCheck) {
+        const scObj = this.getShortcodesList.find(x => x.shortcode === scCheck)
+
+        return scObj.sendername
+      }
+      return []
+    },
+    mutateKeywordList () {
+      const scCheck = this.dupform.dupShortcode
+
+      if (scCheck) {
+        const checkedInReservedList = this.getShortcodesReservedList.some(sc => sc.shortcode === scCheck)
+
+        if (checkedInReservedList) {
+          console.log('have keyword Reserved!')
+          const kw = this.getShortcodesReservedList.find(x => x.shortcode === scCheck)
+          console.log(kw)
+
+          return [...kw.keywordsArray]
+        }
+
+        return []
+      }
+
+      return []
+    },
+    objNewDate () {
+      const startDate = this.date + 'T' + this.time
+      const endDate = this.date2 + 'T' + this.time2
+      const startTestDate = this.date3 + 'T' + this.time3
+      const endTestDate = this.date4 + 'T' + this.time4
+
+      return {
+        campaignDateStart: new Date(startDate),
+        campaignDateEnd: new Date(endDate),
+        campaignDateTestStart: new Date(startTestDate),
+        campaignDateTestEnd: new Date(endTestDate)
+      }
     },
     // Check Text Keywords
     txSuccess () {
@@ -196,6 +280,42 @@ export default {
   },
   methods: {
     ...campaignDetailsMethods,
+    validate () {
+      this.$refs.dupform.validate()
+
+      this.duplicateConfirmDialog = true
+    },
+    createDupCampaign () {
+      const formatDupForm = {
+        campaignCode: this.dupform.dupCampaignCode,
+        campaignName: this.dupform.dupCampaignName,
+        campaignDescription: this.dupform.dupCampaignDesc,
+        shortcode: this.dupform.dupShortcode,
+        campaignSenderName: this.dupform.dupSendername,
+        keyword: this.dupform.dupKeyword
+      }
+
+      const newCampaign = {
+        ...this.campaignInfo,
+        ...this.objNewDate,
+        ...formatDupForm,
+        campaignState: this.cState,
+        campaignActive: true,
+        campaignAvailable: true
+      }
+
+      const newValidateCampaign = {
+        ...this.campaignValidateInfo,
+        ...this.objNewDate,
+        campaignState: this.cState,
+        campaignId: this.dupform.dupCampaignCode,
+        campaignSenderName: this.dupform.dupSendername,
+        campaignActive: true,
+        campaignAvailable: true
+      }
+
+      return this.createCampaign(newCampaign, newValidateCampaign)
+    },
     initializeData () {
       // initial load socket.io data
       this.totals = this.getTransactionTotals
@@ -533,7 +653,7 @@ export default {
                   <span
                     v-if="tabs === 0"
                   >
-                    Campaign Info
+                    Control Panel
                   </span>
                 </v-tab>
                 <v-tab class="mr-3">
@@ -639,92 +759,7 @@ export default {
               </span>
               <v-spacer />
               <span v-if="tabs === 0">
-                <base-button
-                  color="red"
-                  text
-                  @click.native="disableDialog = true"
-                >
-                  Disabled
-                </base-button>
-                <BaseDialog
-                  :dialog="disableDialog"
-                  :dialog-title="dialogTitle"
-                  :dialog-text="dialogText"
-                  @onConfirm="onConfirm"
-                  @onCancel="onCancel"
-                />
-                <v-dialog
-                  v-model="pauseDialog"
-                  width="500"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <base-button
-                      color="warning"
-                      text
-                      v-bind="attrs"
-                      v-on="on"
-                    >
-                      Paused
-                    </base-button>
-                  </template>
-                  <v-card>
-                    <v-card-title
-                      class="text-h5 grey lighten-2"
-                      primary-title
-                    >
-                      Paused Dialog
-                    </v-card-title>
-                    <v-card-text class="mt-5">
-                      Do you want to PAUSE this campaign?
-                    </v-card-text>
-                    <v-card-actions>
-                      <v-spacer />
-                      <v-btn
-                        color="primary"
-                        text
-                        @click="clickToPaused"
-                      >
-                        I accept
-                      </v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
-                <v-dialog
-                  v-model="productionDialog"
-                  width="500"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <base-button
-                      color="primary"
-                      text
-                      v-bind="attrs"
-                      v-on="on"
-                    >
-                      Production
-                    </base-button>
-                  </template>
-                  <v-card>
-                    <v-card-title
-                      class="text-h5 grey lighten-2"
-                      primary-title
-                    >
-                      Production Dialog
-                    </v-card-title>
-                    <v-card-text class="mt-5">
-                      Do you want to change this campaign to PRODUCTION?
-                    </v-card-text>
-                    <v-card-actions>
-                      <v-spacer />
-                      <v-btn
-                        color="primary"
-                        text
-                        @click="clickToProduction"
-                      >
-                        I accept
-                      </v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
+                &nbsp;
               </span>
               <span v-if="tabs === 1">
                 <base-button
@@ -783,7 +818,795 @@ export default {
               <v-tab-item :value="0">
                 <!-- campaign Info -->
                 <v-card-text>
-                  hi
+                  <v-list dense>
+                    <v-list-item>
+                      <v-list-item-content
+                        class="text-body-2 indigo--text"
+                      >
+                        Campaign State Management:
+                      </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-list-item-content>
+                        Disable Campaign:
+                      </v-list-item-content>
+                      <v-list-item-content
+                        align="end"
+                      >
+                        <base-button
+                          color="red"
+                          text
+                          @click.native="disableDialog = true"
+                        >
+                          <v-icon left>
+                            close
+                          </v-icon>
+                          Disabled
+                        </base-button>
+                        <BaseDialog
+                          :dialog="disableDialog"
+                          :dialog-title="dialogTitle"
+                          :dialog-text="dialogText"
+                          @onConfirm="onConfirm"
+                          @onCancel="onCancel"
+                        />
+                      </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-list-item-content>
+                        Pause Campaign:
+                      </v-list-item-content>
+                      <v-list-item-content
+                        align="end"
+                      >
+                        <v-dialog
+                          v-model="pauseDialog"
+                          width="500"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <base-button
+                              color="warning"
+                              text
+                              v-bind="attrs"
+                              v-on="on"
+                            >
+                              <v-icon left>
+                                pause
+                              </v-icon>
+                              Paused
+                            </base-button>
+                          </template>
+                          <v-card>
+                            <v-card-title
+                              class="text-h5 grey lighten-2"
+                              primary-title
+                            >
+                              Paused Dialog
+                            </v-card-title>
+                            <v-card-text class="mt-5">
+                              Do you want to PAUSE this campaign?
+                            </v-card-text>
+                            <v-card-actions>
+                              <v-spacer />
+                              <v-btn
+                                color="warning"
+                                text
+                                @click="pauseDialog = !pauseDialog"
+                              >
+                                cancel
+                              </v-btn>
+                              <v-btn
+                                color="warning"
+                                rounded
+                                @click="clickToPaused"
+                              >
+                                confirm
+                              </v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
+                      </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-list-item-content>
+                        Change Campaign To Production:
+                      </v-list-item-content>
+                      <v-list-item-content
+                        align="end"
+                      >
+                        <v-dialog
+                          v-model="productionDialog"
+                          width="500"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <base-button
+                              color="green"
+                              text
+                              v-bind="attrs"
+                              v-on="on"
+                            >
+                              <v-icon left>
+                                mdi-checkbox-marked-circle
+                              </v-icon>
+                              Production
+                            </base-button>
+                          </template>
+                          <v-card>
+                            <v-card-title
+                              class="text-h5 grey lighten-2"
+                              primary-title
+                            >
+                              Production Dialog
+                            </v-card-title>
+                            <v-card-text class="mt-5">
+                              Do you want to change this campaign to PRODUCTION?
+                            </v-card-text>
+                            <v-card-actions>
+                              <v-spacer />
+                              <v-btn
+                                color="green"
+                                text
+                                @click="productionDialog = !productionDialog"
+                              >
+                                cancel
+                              </v-btn>
+                              <v-btn
+                                color="green white--text"
+                                rounded
+                                @click="clickToProduction"
+                              >
+                                confirm
+                              </v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
+                      </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-list-item-content
+                        class="text-body-2 indigo--text"
+                      >
+                        Campaign Duplicate Management:
+                      </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-list-item-content>
+                        Duplicate Campaign:
+                      </v-list-item-content>
+                      <v-list-item-content
+                        align="end"
+                      >
+                        <v-dialog
+                          v-model="duplicateDialog"
+                          width="500"
+                          persistent
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <base-button
+                              color="primary"
+                              text
+                              v-bind="attrs"
+                              v-on="on"
+                            >
+                              <v-icon left>
+                                content_copy
+                              </v-icon>
+                              Duplicated
+                            </base-button>
+                          </template>
+                          <v-card>
+                            <v-card-title
+                              class="text-h5 grey lighten-2"
+                              primary-title
+                            >
+                              Duplicate Dialog
+                              <v-spacer />
+                              <v-btn
+                                color="red"
+                                icon
+                                @click="duplicateDialog = !duplicateDialog"
+                              >
+                                <v-icon>
+                                  close
+                                </v-icon>
+                              </v-btn>
+                            </v-card-title>
+                            <v-card-text class="mt-5">
+                              <v-form
+                                ref="dupform"
+                                v-model="valid"
+                                lazy-validation
+                              >
+                                <v-row>
+                                  <v-col cols="12">
+                                    <v-alert type="warning">
+                                      If you want to used same shortcode and keyword, just DISABLED old campaign first!
+                                    </v-alert>
+                                  </v-col>
+                                  <v-col cols="8">
+                                    <v-text-field
+                                      v-model="dupform.dupCampaignCode"
+                                      label="Campaign Code"
+                                      prepend-icon="face"
+                                      :rules="fieldRules"
+                                      required
+                                    />
+                                  </v-col>
+                                  <v-col cols="8">
+                                    <v-text-field
+                                      v-model="dupform.dupCampaignName"
+                                      label="Campaign Name"
+                                      prepend-icon="shop"
+                                      :rules="fieldRules"
+                                      required
+                                    />
+                                  </v-col>
+                                  <v-col cols="12">
+                                    <v-textarea
+                                      v-model="dupform.dupCampaignDesc"
+                                      label="Campaign Description"
+                                      prepend-icon="shop_two"
+                                      :rules="fieldRules"
+                                      required
+                                    />
+                                  </v-col>
+                                  <v-col cols="12">
+                                    <v-radio-group
+                                      v-model="cState"
+                                      prepend-icon="slideshow"
+                                      row
+                                    >
+                                      <v-radio
+                                        color="deep-purple"
+                                        label="Test"
+                                        value="test"
+                                      />
+                                      <v-radio
+                                        color="light-green"
+                                        label="Production"
+                                        value="production"
+                                      />
+                                    </v-radio-group>
+                                  </v-col>
+                                  <v-col cols="8">
+                                    <v-autocomplete
+                                      v-model="dupform.dupShortcode"
+                                      :items="shortcodeList"
+                                      :rules="fieldRules"
+                                      label="Shortcode"
+                                      prepend-icon="looks_6"
+                                      required
+                                    />
+                                  </v-col>
+                                  <v-col cols="8">
+                                    <v-select
+                                      v-model="dupform.dupSendername"
+                                      :items="senderNameList"
+                                      :rules="fieldRules"
+                                      label="Sendername"
+                                      prepend-icon="looks"
+                                      required
+                                    />
+                                  </v-col>
+                                  <v-col cols="12">
+                                    <v-select
+                                      v-model="dupform.dupKeyword"
+                                      :items="mutateKeywordList"
+                                      :rules="fieldRules"
+                                      multiple
+                                      label="Keyword"
+                                      prepend-icon="text_fields"
+                                      required
+                                    />
+                                  </v-col>
+                                  <!-- START DATE PICKER -->
+                                  <v-col>
+                                    <v-subheader>Start Date :</v-subheader>
+                                  </v-col>
+                                  <v-row>
+                                    <v-col
+                                      cols="6"
+                                      md="6"
+                                    >
+                                      <v-menu
+                                        ref="menu"
+                                        v-model="menu"
+                                        :close-on-content-click="false"
+                                        :nudge-right="40"
+                                        :return-value.sync="date"
+                                        transition="scale-transition"
+                                        offset-y
+                                        min-width="290px"
+                                      >
+                                        <template v-slot:activator="{ on }">
+                                          <v-text-field
+                                            slot="activator"
+                                            v-model="date"
+                                            label="Date Picker"
+                                            prepend-icon="event"
+                                            :rules="fieldRules"
+                                            readonly
+                                            required
+                                            v-on="on"
+                                          />
+                                        </template>
+                                        <v-date-picker
+                                          v-model="date"
+                                          no-title
+                                          scrollable
+                                          dark
+                                          locale="th"
+                                          color="deep-purple"
+                                        >
+                                          <div class="flex-grow-1" />
+                                          <base-button
+                                            text
+                                            color="primary"
+                                            @click="menu = false"
+                                          >
+                                            Cancel
+                                          </base-button>
+                                          <base-button
+                                            color="primary"
+                                            rounded
+                                            @click="$refs.menu.save(date)"
+                                          >
+                                            OK
+                                          </base-button>
+                                        </v-date-picker>
+                                      </v-menu>
+                                    </v-col>
+                                    <v-col
+                                      cols="6"
+                                      md="6"
+                                    >
+                                      <v-menu
+                                        ref="menu2"
+                                        v-model="menu2"
+                                        :close-on-content-click="false"
+                                        :nudge-right="40"
+                                        :return-value.sync="time"
+                                        transition="scale-transition"
+                                        offset-y
+                                        min-width="290px"
+                                      >
+                                        <template v-slot:activator="{ on }">
+                                          <v-text-field
+                                            slot="activator"
+                                            v-model="time"
+                                            label="Time Picker"
+                                            prepend-icon="access_time"
+                                            readonly
+                                            v-on="on"
+                                          />
+                                        </template>
+                                        <v-time-picker
+                                          v-model="time"
+                                          color="deep-purple"
+                                        />
+                                        <v-row class="grey lighten-5">
+                                          <div class="flex-grow-1" />
+                                          <v-col
+                                            cols="auto"
+                                            class="mx-2"
+                                          >
+                                            <base-button
+                                              text
+                                              color="primary"
+                                              @click="menu2 = false"
+                                            >
+                                              Cancel
+                                            </base-button>
+                                            <base-button
+                                              rounded
+                                              color="primary"
+                                              @click="$refs.menu2.save(time)"
+                                            >
+                                              OK
+                                            </base-button>
+                                          </v-col>
+                                        </v-row>
+                                      </v-menu>
+                                    </v-col>
+                                  </v-row>
+                                  <!-- END DATE PICKER -->
+                                  <v-col>
+                                    <v-subheader>End Date :</v-subheader>
+                                  </v-col>
+                                  <v-row>
+                                    <v-col
+                                      cols="6"
+                                      md="6"
+                                    >
+                                      <v-menu
+                                        ref="menu3"
+                                        v-model="menu3"
+                                        :close-on-content-click="false"
+                                        :nudge-right="40"
+                                        :return-value.sync="date2"
+                                        transition="scale-transition"
+                                        offset-y
+                                        min-width="290px"
+                                      >
+                                        <template v-slot:activator="{ on }">
+                                          <v-text-field
+                                            slot="activator"
+                                            v-model="date2"
+                                            label="Date Picker"
+                                            prepend-icon="event"
+                                            :rules="fieldRules"
+                                            readonly
+                                            required
+                                            v-on="on"
+                                          />
+                                        </template>
+                                        <v-date-picker
+                                          v-model="date2"
+                                          no-title
+                                          scrollable
+                                          dark
+                                          locale="th"
+                                          color="deep-purple"
+                                        >
+                                          <div class="flex-grow-1" />
+                                          <base-button
+                                            text
+                                            color="primary"
+                                            @click="menu3 = false"
+                                          >
+                                            Cancel
+                                          </base-button>
+                                          <base-button
+                                            rounded
+                                            color="primary"
+                                            @click="$refs.menu3.save(date2)"
+                                          >
+                                            OK
+                                          </base-button>
+                                        </v-date-picker>
+                                      </v-menu>
+                                    </v-col>
+                                    <v-col
+                                      cols="6"
+                                      md="6"
+                                    >
+                                      <v-menu
+                                        ref="menu4"
+                                        v-model="menu4"
+                                        :close-on-content-click="false"
+                                        :nudge-right="40"
+                                        :return-value.sync="time2"
+                                        transition="scale-transition"
+                                        offset-y
+                                        min-width="290px"
+                                      >
+                                        <template v-slot:activator="{ on }">
+                                          <v-text-field
+                                            slot="activator"
+                                            v-model="time2"
+                                            label="Time Picker"
+                                            prepend-icon="access_time"
+                                            readonly
+                                            v-on="on"
+                                          />
+                                        </template>
+                                        <v-time-picker
+                                          v-model="time2"
+                                          width="320"
+                                          color="deep-purple"
+                                        />
+                                        <v-row>
+                                          <div class="flex-grow-1" />
+                                          <v-col
+                                            cols="auto"
+                                            class="mx-2"
+                                          >
+                                            <base-button
+                                              text
+                                              color="primary"
+                                              @click="menu4 = false"
+                                            >
+                                              Cancel
+                                            </base-button>
+                                            <base-button
+                                              rounded
+                                              color="primary"
+                                              @click="$refs.menu4.save(time2)"
+                                            >
+                                              OK
+                                            </base-button>
+                                          </v-col>
+                                        </v-row>
+                                      </v-menu>
+                                    </v-col>
+                                  </v-row>
+                                  <!-- START TEST DATE PICKER -->
+                                  <v-col>
+                                    <v-subheader>Start TEST Date :</v-subheader>
+                                  </v-col>
+                                  <v-row>
+                                    <v-col
+                                      cols="6"
+                                      md="6"
+                                    >
+                                      <v-menu
+                                        ref="menu5"
+                                        v-model="menu5"
+                                        :close-on-content-click="false"
+                                        :nudge-right="40"
+                                        :return-value.sync="date3"
+                                        transition="scale-transition"
+                                        offset-y
+                                        min-width="290px"
+                                      >
+                                        <template v-slot:activator="{ on }">
+                                          <v-text-field
+                                            slot="activator"
+                                            v-model="date3"
+                                            label="Date Picker"
+                                            prepend-icon="event"
+                                            :rules="fieldRules"
+                                            required
+                                            readonly
+                                            v-on="on"
+                                          />
+                                        </template>
+                                        <v-date-picker
+                                          v-model="date3"
+                                          no-title
+                                          scrollable
+                                          dark
+                                          locale="th"
+                                          color="deep-purple"
+                                        >
+                                          <div class="flex-grow-1" />
+                                          <base-button
+                                            text
+                                            color="primary"
+                                            @click="menu5 = false"
+                                          >
+                                            Cancel
+                                          </base-button>
+                                          <base-button
+                                            color="primary"
+                                            rounded
+                                            @click="$refs.menu5.save(date3)"
+                                          >
+                                            OK
+                                          </base-button>
+                                        </v-date-picker>
+                                      </v-menu>
+                                    </v-col>
+                                    <v-col
+                                      cols="6"
+                                      md="6"
+                                    >
+                                      <v-menu
+                                        ref="menu6"
+                                        v-model="menu6"
+                                        :close-on-content-click="false"
+                                        :nudge-right="40"
+                                        :return-value.sync="time3"
+                                        transition="scale-transition"
+                                        offset-y
+                                        min-width="290px"
+                                      >
+                                        <template v-slot:activator="{ on }">
+                                          <v-text-field
+                                            slot="activator"
+                                            v-model="time3"
+                                            label="Time Picker"
+                                            prepend-icon="access_time"
+                                            readonly
+                                            v-on="on"
+                                          />
+                                        </template>
+                                        <v-time-picker
+                                          v-model="time3"
+                                          color="deep-purple"
+                                        />
+                                        <v-row>
+                                          <div class="flex-grow-1" />
+                                          <v-col
+                                            cols="auto"
+                                            class="mx-2"
+                                          >
+                                            <base-button
+                                              text
+                                              color="primary"
+                                              @click="menu6 = false"
+                                            >
+                                              Cancel
+                                            </base-button>
+                                            <base-button
+                                              rounded
+                                              color="primary"
+                                              @click="$refs.menu6.save(time3)"
+                                            >
+                                              OK
+                                            </base-button>
+                                          </v-col>
+                                        </v-row>
+                                      </v-menu>
+                                    </v-col>
+                                  </v-row>
+                                  <!-- END TEST DATE PICKER -->
+                                  <v-col>
+                                    <v-subheader>End TEST Date :</v-subheader>
+                                  </v-col>
+                                  <v-row>
+                                    <v-col
+                                      cols="6"
+                                      md="6"
+                                    >
+                                      <v-menu
+                                        ref="menu7"
+                                        v-model="menu7"
+                                        :close-on-content-click="false"
+                                        :nudge-right="40"
+                                        :return-value.sync="date4"
+                                        transition="scale-transition"
+                                        offset-y
+                                        min-width="290px"
+                                      >
+                                        <template v-slot:activator="{ on }">
+                                          <v-text-field
+                                            slot="activator"
+                                            v-model="date4"
+                                            label="Date Picker"
+                                            prepend-icon="event"
+                                            :rules="fieldRules"
+                                            required
+                                            readonly
+                                            v-on="on"
+                                          />
+                                        </template>
+                                        <v-date-picker
+                                          v-model="date4"
+                                          no-title
+                                          scrollable
+                                          dark
+                                          locale="th"
+                                          color="deep-purple"
+                                        >
+                                          <div class="flex-grow-1" />
+                                          <base-button
+                                            text
+                                            color="primary"
+                                            @click="menu7 = false"
+                                          >
+                                            Cancel
+                                          </base-button>
+                                          <base-button
+                                            rounded
+                                            color="primary"
+                                            @click="$refs.menu7.save(date4)"
+                                          >
+                                            OK
+                                          </base-button>
+                                        </v-date-picker>
+                                      </v-menu>
+                                    </v-col>
+                                    <v-col
+                                      cols="6"
+                                      md="6"
+                                    >
+                                      <v-menu
+                                        ref="menu8"
+                                        v-model="menu8"
+                                        :close-on-content-click="false"
+                                        :nudge-right="40"
+                                        :return-value.sync="time4"
+                                        transition="scale-transition"
+                                        offset-y
+                                        min-width="290px"
+                                      >
+                                        <template v-slot:activator="{ on }">
+                                          <v-text-field
+                                            slot="activator"
+                                            v-model="time4"
+                                            label="Time Picker"
+                                            prepend-icon="access_time"
+                                            readonly
+                                            v-on="on"
+                                          />
+                                        </template>
+                                        <v-time-picker
+                                          v-model="time4"
+                                          color="deep-purple"
+                                        />
+                                        <v-row>
+                                          <div class="flex-grow-1" />
+                                          <v-col
+                                            cols="auto"
+                                            class="mx-2"
+                                          >
+                                            <base-button
+                                              text
+                                              color="primary"
+                                              @click="menu8 = false"
+                                            >
+                                              Cancel
+                                            </base-button>
+                                            <base-button
+                                              rounded
+                                              color="primary"
+                                              @click="$refs.menu8.save(time4)"
+                                            >
+                                              OK
+                                            </base-button>
+                                          </v-col>
+                                        </v-row>
+                                      </v-menu>
+                                    </v-col>
+                                  </v-row>
+                                </v-row>
+                              </v-form>
+                            </v-card-text>
+                            <v-card-actions>
+                              <v-spacer />
+                              <v-btn
+                                color="warning"
+                                text
+                                @click.stop="$refs.dupform.reset()"
+                              >
+                                clear
+                              </v-btn>
+                              <v-btn
+                                color="primary"
+                                text
+                                @click.stop="duplicateDialog = !duplicateDialog"
+                              >
+                                cancel
+                              </v-btn>
+                              <v-dialog
+                                v-model="duplicateConfirmDialog"
+                                width="500"
+                              >
+                                <v-card>
+                                  <v-card-title
+                                    class="text-h5 grey lighten-2"
+                                    primary-title
+                                  >
+                                    Confirm Dialog
+                                  </v-card-title>
+                                  <v-card-text class="mt-5">
+                                    Do you want to DUPLICATED this campaign?
+                                  </v-card-text>
+                                  <v-card-actions>
+                                    <v-spacer />
+                                    <v-btn
+                                      color="primary"
+                                      text
+                                      @click="duplicateConfirmDialog = !duplicateConfirmDialog"
+                                    >
+                                      cancel
+                                    </v-btn>
+                                    <v-btn
+                                      color="primary"
+                                      rounded
+                                      :disabled="!valid"
+                                      @click="createDupCampaign"
+                                    >
+                                      confirm
+                                    </v-btn>
+                                  </v-card-actions>
+                                </v-card>
+                              </v-dialog>
+                              <v-btn
+                                color="primary"
+                                rounded
+                                :disabled="!valid"
+                                @click.stop="validate"
+                              >
+                                confirm
+                              </v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list>
                 </v-card-text>
               </v-tab-item>
               <v-tab-item :value="1">
@@ -1163,6 +1986,18 @@ export default {
                 </v-list-item-content>
               </v-list-item>
               <v-list-item>
+                <v-list-item-content>Campaign Shortcode:</v-list-item-content>
+                <v-list-item-content class="primary--text align-end">
+                  {{ campaignInfo.shortcode }}
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-content>Campaign Sendername:</v-list-item-content>
+                <v-list-item-content class="primary--text align-end">
+                  {{ campaignInfo.campaignSenderName }}
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item>
                 <v-list-item-content>Campaign Keyword:</v-list-item-content>
                 <v-list-item-content class="align-end">
                   <v-chip-group
@@ -1177,12 +2012,6 @@ export default {
                       {{ tag }}
                     </v-chip>
                   </v-chip-group>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content>Campaign Shortcode:</v-list-item-content>
-                <v-list-item-content class="primary--text align-end">
-                  {{ campaignInfo.shortcode }}
                 </v-list-item-content>
               </v-list-item>
               <v-list-item>
