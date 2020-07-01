@@ -363,12 +363,14 @@ export default {
       this.updateStatusCampaign({
         campaignId: this.$route.params.campaignId
       })
+      this.productionDialog = false
     },
     clickToPaused () {
       this.updatePausedCampaign({
         campaignId: this.$route.params.campaignId,
         runningAvailable: this.campaignInfo.campaignAvailable
       })
+      this.pauseDialog = false
     },
     onConfirm () {
       this.deleteCampaign(this.$route.params.campaignId)
