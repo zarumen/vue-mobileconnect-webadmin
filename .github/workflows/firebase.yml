@@ -36,6 +36,8 @@ jobs:
         with:
           name: dist
           path: dist
+      - name: Firebase choose Project
+        run: firebase use default
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
