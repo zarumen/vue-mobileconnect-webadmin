@@ -37,7 +37,11 @@ jobs:
           name: dist
           path: dist
       - name: Firebase choose Project
-        run: firebase use default
+        uses: w9jds/firebase-action@master
+        with:
+          args: use default
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
