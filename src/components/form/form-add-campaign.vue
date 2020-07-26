@@ -60,6 +60,18 @@ export default {
           failure: false,
           success: false
         },
+        ussdAisBais: {
+          failure: false,
+          success: false
+        },
+        ussdAisBdtac: {
+          failure: false,
+          success: false
+        },
+        ussdAisBtrue: {
+          failure: false,
+          success: false
+        },
         dtac: {
           failure: false,
           success: false
@@ -212,6 +224,9 @@ export default {
       showPass: false,
       optionBulk: false,
       optionAis: false,
+      optionUssdAisBais: false,
+      optionUssdAisBdtac: false,
+      optionUssdAisBtrue: false,
       optionTrue: false,
       optionDtac: false,
       optionUssdDtac: false,
@@ -924,6 +939,60 @@ export default {
                         <v-switch
                           v-model="ussdForm.OPERATORS.ais.failure"
                           :label="`Failure: ${ussdForm.OPERATORS.ais.failure}`"
+                        />
+                      </v-sheet>
+                      <v-switch
+                        v-model="optionUssdAisBais"
+                        inset
+                        :label="`USSD CHARGE B AIS: ${activatedOperators(optionUssdAisBais)}`"
+                      />
+                      <v-sheet
+                        v-if="optionUssdAisBais"
+                        class="pa-3"
+                      >
+                        <v-switch
+                          v-model="ussdForm.OPERATORS.ussdAisBais.success"
+                          :label="`Success: ${ussdForm.OPERATORS.ussdAisBais.success}`"
+                        />
+                        <v-switch
+                          v-model="ussdForm.OPERATORS.ussdAisBais.failure"
+                          :label="`Failure: ${ussdForm.OPERATORS.ussdAisBais.failure}`"
+                        />
+                      </v-sheet>
+                      <v-switch
+                        v-model="optionUssdAisBdtac"
+                        inset
+                        :label="`USSD CHARGE B DTAC: ${activatedOperators(optionUssdAisBdtac)}`"
+                      />
+                      <v-sheet
+                        v-if="optionUssdAisBdtac"
+                        class="pa-3"
+                      >
+                        <v-switch
+                          v-model="ussdForm.OPERATORS.ussdAisBdtac.success"
+                          :label="`Success: ${ussdForm.OPERATORS.ussdAisBdtac.success}`"
+                        />
+                        <v-switch
+                          v-model="ussdForm.OPERATORS.ussdAisBdtac.failure"
+                          :label="`Failure: ${ussdForm.OPERATORS.ussdAisBdtac.failure}`"
+                        />
+                      </v-sheet>
+                      <v-switch
+                        v-model="optionUssdAisBtrue"
+                        inset
+                        :label="`USSD CHARGE B TRUE: ${activatedOperators(optionUssdAisBtrue)}`"
+                      />
+                      <v-sheet
+                        v-if="optionUssdAisBtrue"
+                        class="pa-3"
+                      >
+                        <v-switch
+                          v-model="ussdForm.OPERATORS.ussdAisBtrue.success"
+                          :label="`Success: ${ussdForm.OPERATORS.ussdAisBtrue.success}`"
+                        />
+                        <v-switch
+                          v-model="ussdForm.OPERATORS.ussdAisBtrue.failure"
+                          :label="`Failure: ${ussdForm.OPERATORS.ussdAisBtrue.failure}`"
                         />
                       </v-sheet>
                       <v-switch
@@ -2191,17 +2260,31 @@ export default {
                       prepend-icon="chat"
                       label="Validate Verify Code with Mobile Number Failed Message"
                     />
-                    <v-col v-if="helper">
-                      <v-subheader class="helpertext">
-                        {{ helperText.ussdDefaultReply }}
-                      </v-subheader>
+                    <v-col
+                      v-if="optionBulk"
+                      cols="12"
+                    >
+                      <span>
+                        USSD DEFAULT REPLY MESSAGE SERVICE
+                      </span>
+                      <v-col v-if="helper">
+                        <v-subheader class="helpertext">
+                          {{ helperText.ussdDefaultReply }}
+                        </v-subheader>
+                      </v-col>
+                      <v-text-field
+                        v-model="validateForm.messageMTSuccessDefaultReply"
+                        :counter="70"
+                        prepend-icon="chat"
+                        label="Default Reply of USSD (MTSuccess) Message"
+                      />
+                      <v-text-field
+                        v-model="validateForm.messageMTFailureDefaultReply"
+                        :counter="70"
+                        prepend-icon="chat"
+                        label="Default Reply of USSD (MTFailure) Message"
+                      />
                     </v-col>
-                    <v-text-field
-                      v-model="validateForm.messageMTSuccessDefaultReply"
-                      :counter="70"
-                      prepend-icon="chat"
-                      label="Default Reply of USSD (MTSuccess) Message"
-                    />
                   </v-col>
                 </v-card-text>
               </v-card>
