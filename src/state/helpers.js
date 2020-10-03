@@ -126,6 +126,8 @@ export const campaignDetailsComputed = {
     'getTransactionSuccess',
     'getTimestampTxTotals',
     'getTotalsVerifyCode',
+    'getCheckVerifyCode',
+    'getListCoupons',
     'getTotalsCoupon',
     'hadHeaderConfig',
     'getHeaderConfigArray'
@@ -151,8 +153,12 @@ export const campaignDetailsMethods = {
     'getLastestTransactions',
     'getVerifyCodeFromRedis',
     'putVerifyCodeToRedis',
+    'searchVerifyCodeFromRedis',
+    'postOneVerfyCodeToRedis',
     'delVerifyCodeFromRedis',
     'getCouponsFromRedis',
+    'searchCouponsFromRedis',
+    'postCouponsToRedis',
     'putCouponsToRedis',
     'delCouponsFromRedis',
     'getHeaderConfig'

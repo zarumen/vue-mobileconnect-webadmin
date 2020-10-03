@@ -85,6 +85,12 @@ export default {
     vcFiles: [],
     vcFileUploadName: '',
     vcFileUploadUrl: '',
+    showUploadMenu: false,
+    showAddMenu: false,
+    VerifyCodeAlert: false,
+    VerifyCodeSearchAlert: false,
+    searchCodeValue: '',
+    addCodeValue: '',
     // coupons treeview variables
     cpFileSelected: [],
     isLoading2: false,
@@ -92,7 +98,18 @@ export default {
     cpTypes: [],
     cpFiles: [],
     cpFileUploadName: '',
-    cpFileUploadUrl: ''
+    cpFileUploadUrl: '',
+    rewardIdSelected: 0,
+    limitListCoupon: 10,
+    couponsRules: [
+      v => (Number.isInteger(v) && v > 0) || 'Get Positive Number',
+      v => v <= 20 || 'You Should Watch Limit Below 20'
+    ],
+    searchCouponValue: '',
+    addCouponValue: '',
+    showCUploadMenu: false,
+    showCAddMenu: false,
+    couponAlert: false
   }),
   computed: {
     ...campaignDetailsComputed,
@@ -224,6 +241,15 @@ export default {
       }
       return 'red--text'
     },
+    handleAlertVerifyCode () {
+      return (this.addCodeValue.length > 0)
+    },
+    handleAlertCoupon () {
+      return (this.addCouponValue.length > 0)
+    },
+    searchResult () {
+      return this.getCheckVerifyCode
+    },
     // Coupons computed
     checkRewardsHaveCoupons () {
       if (this.campaignValidateInfo.rewardsArray) {
@@ -231,6 +257,18 @@ export default {
         return this.campaignValidateInfo.rewardsArray.some(x => x.rewardHasCoupon === true)
       }
       return false
+    },
+    listRewardId () {
+      if (this.campaignValidateInfo.rewardsArray) {
+        return this.campaignValidateInfo.rewardsArray.map(x => x.rewardId)
+      }
+      return []
+    },
+    couponsList () {
+      if (this.getListCoupons.length > 0) {
+        return this.getListCoupons
+      }
+      return []
     },
     couponCodeItems () {
       const children = this.cpTypes.map(type => ({
@@ -280,6 +318,9 @@ export default {
   },
   methods: {
     ...campaignDetailsMethods,
+    changeTextButton (bool) {
+      return (bool) ? 'Hide' : 'Expand'
+    },
     validate () {
       this.$refs.dupform.validate()
 
@@ -506,6 +547,58 @@ export default {
         .then(x => (x === 'verifyCodeFile')
           ? this.loadVerifyCodeTree()
           : this.loadCouponTree())
+    },
+    searchOneVerifyCode () {
+      this.VerifyCodeSearchAlert = true
+
+      if (this.searchCodeValue.length > 0) {
+        // search verify code from redis
+        return this.searchVerifyCodeFromRedis({
+          campaignId: this.$route.params.campaignId,
+          campaignState: this.state,
+          data: this.searchCodeValue
+        })
+      }
+    },
+    postOneVerifyCode () {
+      this.VerifyCodeAlert = true
+
+      if (this.handleAlertVerifyCode) {
+        // post one verify code to redis
+        return this.postOneVerfyCodeToRedis({
+          campaignId: this.$route.params.campaignId,
+          state: this.state,
+          data: this.addCodeValue
+        })
+      }
+    },
+    listCoupons () {
+      // post one verify code to redis
+      if (this.rewardIdSelected && this.couponsList.length > 0) {
+        return this.searchCouponsFromRedis({
+          campaignId: this.$route.params.campaignId,
+          campaignState: this.state,
+          data: this.addCouponValue,
+          rewardId: this.rewardIdSelected,
+          startAt: this.searchCouponValue,
+          limit: this.limitListCoupon
+        })
+      } else {
+        return console.log('nothing to do')
+      }
+    },
+    postOneCoupon () {
+      this.couponAlert = true
+
+      if (this.handleAlertCoupon) {
+        // post one verify code to redis
+        return this.postCouponsToRedis({
+          campaignId: this.$route.params.campaignId,
+          state: this.state,
+          data: this.addCouponValue,
+          rewardId: this.rewardIdSelected
+        })
+      }
     },
     putVerifyCode () {
       if (this.vcFileSelected.length === 0) return
@@ -775,10 +868,10 @@ export default {
               <span v-if="tabs === 2">
                 <base-button
                   color="secondary"
-                  text
+                  rounded
                   @click.stop="putVerifyCode"
                 >
-                  Add
+                  +Add
                 </base-button>
                 <base-button
                   color="error"
@@ -1688,9 +1781,7 @@ export default {
                     </v-toolbar-items>
                   </v-toolbar>
                   <v-row>
-                    <v-col
-                      cols="12"
-                    >
+                    <v-col>
                       <v-card-text>
                         <v-treeview
                           v-model="vcFileSelected"
@@ -1718,6 +1809,7 @@ export default {
                     <v-divider vertical />
                     <v-col
                       cols="12"
+                      md="6"
                     >
                       <v-card-text>
                         <div
@@ -1753,10 +1845,22 @@ export default {
                   <v-row>
                     <v-toolbar
                       flat
+                      class="purple lighten-5 ma-5"
                     >
                       <v-subheader>Additional VerifyCode Upload File</v-subheader>
+                      <v-spacer />
+                      <v-btn
+                        text
+                        color="primary"
+                        @click="showUploadMenu = !showUploadMenu"
+                      >
+                        {{ changeTextButton(showUploadMenu) }}
+                      </v-btn>
                     </v-toolbar>
-                    <v-col cols="12">
+                    <v-col
+                      v-show="showUploadMenu"
+                      cols="12"
+                    >
                       <v-card-text>
                         <BaseUploadfield
                           :accept="`.csv`"
@@ -1789,6 +1893,129 @@ export default {
                           </v-icon>
                         </v-btn>
                       </v-card-actions>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-toolbar
+                      flat
+                      class="deep-purple lighten-5 ma-5"
+                    >
+                      <v-subheader>Additional VerifyCode Single Code</v-subheader>
+                      <v-spacer />
+                      <v-btn
+                        text
+                        color="primary"
+                        @click="showAddMenu = !showAddMenu"
+                      >
+                        {{ changeTextButton(showAddMenu) }}
+                      </v-btn>
+                    </v-toolbar>
+                    <v-col
+                      v-show="showAddMenu"
+                      cols="12"
+                    >
+                      <v-card-text>
+                        <v-row>
+                          <v-col cols="6">
+                            <v-text-field
+                              v-model="addCodeValue"
+                              label="Fill Your Verify Code Here!"
+                              prepend-icon="mdi-plus-circle"
+                            />
+                            <v-btn
+                              rounded
+                              color="success"
+                              @click="postOneVerifyCode"
+                            >
+                              Add
+                            </v-btn>
+                            <base-button
+                              color="error"
+                              text
+                              @click.stop="addCodeValue = ''"
+                            >
+                              Clear
+                            </base-button>
+                          </v-col>
+                          <v-col cols="6">
+                            <v-alert
+                              v-if="handleAlertVerifyCode"
+                              v-model="VerifyCodeAlert"
+                              border="left"
+                              close-text="Close Alert"
+                              color="success accent-4"
+                              dark
+                              dismissible
+                            >
+                              คุณได้เพิ่ม <br>Verify Code:
+                              <strong class="title amber--text">{{ addCodeValue }}</strong>
+                              <br>เข้า Database แล้ว
+                            </v-alert>
+                            <v-alert
+                              v-else
+                              v-model="VerifyCodeAlert"
+                              border="left"
+                              close-text="Close Alert"
+                              color="error"
+                              dark
+                              dismissible
+                            >
+                              คุณไม่ได้กรอก VerifyCode ในช่องกรอก!!
+                            </v-alert>
+                          </v-col>
+                        </v-row>
+                      </v-card-text>
+                    </v-col>
+                  </v-row>
+
+                  <v-row>
+                    <v-toolbar
+                      flat
+                      class="grey lighten-5 ma-5"
+                    >
+                      <v-subheader>Search VerifyCode</v-subheader>
+                    </v-toolbar>
+                    <v-col
+                      cols="12"
+                    >
+                      <v-card-text>
+                        <v-row>
+                          <v-col cols="6">
+                            <v-text-field
+                              v-model="searchCodeValue"
+                              label="Search Verify Code"
+                              prepend-icon="search"
+                            />
+                            <v-btn
+                              rounded
+                              color="primary"
+                              @click.stop="searchOneVerifyCode"
+                            >
+                              Search
+                            </v-btn>
+                            <base-button
+                              color="error"
+                              text
+                              @click.stop="searchCodeValue = ''"
+                            >
+                              Clear
+                            </base-button>
+                          </v-col>
+                          <v-col cols="6">
+                            <v-alert
+                              v-model="VerifyCodeSearchAlert"
+                              border="left"
+                              close-text="Close Alert"
+                              color="primary accent-4"
+                              dark
+                              dismissible
+                            >
+                              ผลการค้นหา Verify Code:
+                              <br> <strong class="title yellow--text">{{ searchResult }}</strong>
+                            </v-alert>
+                          </v-col>
+                        </v-row>
+                      </v-card-text>
                     </v-col>
                   </v-row>
                 </v-card>
@@ -1884,10 +2111,22 @@ export default {
                   <v-row>
                     <v-toolbar
                       flat
+                      class="light-green lighten-5 ma-5"
                     >
                       <v-subheader>Additional Coupons Upload File</v-subheader>
+                      <v-spacer />
+                      <v-btn
+                        text
+                        color="green"
+                        @click="showCAddMenu = !showCAddMenu"
+                      >
+                        {{ changeTextButton(showCAddMenu) }}
+                      </v-btn>
                     </v-toolbar>
-                    <v-col cols="12">
+                    <v-col
+                      v-show="showCAddMenu"
+                      cols="12"
+                    >
                       <v-card-text>
                         <BaseUploadfield
                           :accept="`.csv`"
@@ -1920,6 +2159,140 @@ export default {
                           </v-icon>
                         </v-btn>
                       </v-card-actions>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-toolbar
+                      flat
+                      class="light-green lighten-4 ma-5"
+                    >
+                      <v-subheader>Additional Coupons Single Code</v-subheader>
+                      <v-spacer />
+                      <v-btn
+                        text
+                        color="green"
+                        @click="showCUploadMenu = !showCUploadMenu"
+                      >
+                        {{ changeTextButton(showCUploadMenu) }}
+                      </v-btn>
+                    </v-toolbar>
+                    <v-col
+                      v-show="showCUploadMenu"
+                      cols="12"
+                    >
+                      <v-card-text>
+                        <v-row>
+                          <v-col cols="6">
+                            <v-select
+                              v-model="rewardIdSelected"
+                              :items="listRewardId"
+                              label="Reward ID"
+                              prepend-icon="mdi-numeric-1-box"
+                            />
+                            <v-text-field
+                              v-model="addCouponValue"
+                              label="Fill Your Coupon Here!"
+                              prepend-icon="mdi-plus-circle"
+                            />
+                            <v-btn
+                              rounded
+                              color="success"
+                              @click.stop="postOneCoupon"
+                            >
+                              Add
+                            </v-btn>
+                            <base-button
+                              color="error"
+                              text
+                              @click.stop="addCouponValue = ''"
+                            >
+                              Clear
+                            </base-button>
+                          </v-col>
+                          <v-col cols="6">
+                            <v-alert
+                              v-if="handleAlertCoupon"
+                              v-model="couponAlert"
+                              border="left"
+                              close-text="Close Alert"
+                              color="success accent-4"
+                              dark
+                              dismissible
+                            >
+                              คุณได้เพิ่ม <br>Coupon Code:
+                              <strong class="title amber--text">{{ addCouponValue }}</strong>
+                              <br>เข้า Database แล้ว
+                            </v-alert>
+                            <v-alert
+                              v-else
+                              v-model="couponAlert"
+                              border="left"
+                              close-text="Close Alert"
+                              color="error"
+                              dark
+                              dismissible
+                            >
+                              คุณไม่ได้กรอก Coupon Code ในช่องกรอก!!
+                            </v-alert>
+                          </v-col>
+                        </v-row>
+                      </v-card-text>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-toolbar
+                      flat
+                      class="grey lighten-5 ma-5"
+                    >
+                      <v-subheader>List Coupons : Slide Start to List Coupon</v-subheader>
+                    </v-toolbar>
+                    <v-col
+                      cols="12"
+                    >
+                      <v-card-text>
+                        <v-row>
+                          <v-col cols="6">
+                            <v-slider
+                              v-model="searchCouponValue"
+                              :max="getTotalsCoupon"
+                              prepend-icon="search"
+                              thumb-label="always"
+                            />
+                            <v-select
+                              v-model="rewardIdSelected"
+                              :items="listRewardId"
+                              label="Reward ID"
+                              prepend-icon="mdi-numeric-1-box"
+                            />
+                            <v-text-field
+                              v-model.number="limitListCoupon"
+                              :rules="couponsRules"
+                              label="Max Number"
+                              prepend-icon="mdi-playlist-check"
+                            />
+                            <v-btn
+                              text
+                              color="success"
+                              @click="listCoupons"
+                            >
+                              List Coupons
+                            </v-btn>
+                          </v-col>
+                          <v-col cols="6">
+                            <span>Result:</span>
+                            <v-list dense>
+                              <v-list-item
+                                v-for="(item, i) in couponsList"
+                                :key="i"
+                              >
+                                <v-list-item-content class="primary--text">
+                                  {{ item }}
+                                </v-list-item-content>
+                              </v-list-item>
+                            </v-list>
+                          </v-col>
+                        </v-row>
+                      </v-card-text>
                     </v-col>
                   </v-row>
                 </v-card>

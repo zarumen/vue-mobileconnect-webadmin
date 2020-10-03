@@ -33,8 +33,10 @@ export const state = {
   transactionSuccess: null,
   rewardsPercentage: null,
   // Coupons & Verify Code zone
+  checkVerifyCode: '',
+  listCoupons: [],
   totalsVerifyCode: '',
-  totalsCoupon: '',
+  totalsCoupon: 0,
   // table & snackbar variables
   items: [],
   pagination: getDefaultPagination(),
@@ -63,14 +65,11 @@ export const getters = {
   },
   getTransactionSuccess: (state) => state.transactionSuccess,
   getTransactionKeyword: (state) => state.transactionKeyword,
+  getCheckVerifyCode: (state) => state.checkVerifyCode,
   getTotalsVerifyCode: (state) => state.totalsVerifyCode,
   getTotalsCoupon: (state) => state.totalsCoupon,
+  getListCoupons: (state) => state.listCoupons,
   getTimestampTxTotals: (state) => {
-    const cId = state.campaignSelected
-
-    const cacheTxTotals = getSavedState(`transactions.${cId}.timestampTxTotals`)
-    console.log(cacheTxTotals)
-
     if (state.transactionTotals === state.flagTotals) {
       return state.flagTimestampTxTotals
     } else {
@@ -81,6 +80,8 @@ export const getters = {
 
 export const mutations = {
   setTotalsVerifyCode: set('totalsVerifyCode'),
+  setCheckVerifyCode: set('checkVerifyCode'),
+  setListCoupons: set('listCoupons'),
   setTotalsCoupon: set('totalsCoupon'),
   setItems: set('items'),
   setPagination: set('pagination'),
@@ -265,6 +266,32 @@ export const actions = {
       })
   },
   // coupon code zone
+  postCouponsToRedis ({ commit, dispatch }, { campaignId, state, data, rewardId }) {
+    commit('setLoading', { loading: true })
+    const file = {
+      couponcode: `${data}`
+    }
+
+    return axios.postData(`coupons/${campaignId}/${state}/${rewardId}`, file)
+      .then(response => {
+        const msg = `Post New Coupon to ${state} Database`
+        sendSuccessNotice(commit, msg)
+        closeNotice(commit, 3000)
+        commit('setLoading', { loading: false })
+
+        dispatch('getCouponsFromRedis', {
+          campaignId: campaignId,
+          campaignState: state,
+          rewardId: rewardId
+        })
+      })
+      .catch(error => {
+        console.log(error)
+        commit('setLoading', { loading: false })
+        sendErrorNotice(commit, 'Put code to Database Failed!')
+        closeNotice(commit, 3000)
+      })
+  },
   putCouponsToRedis ({ commit, dispatch }, { campaignId, state, data, rewardId }) {
     commit('setLoading', { loading: true })
     const file = {
@@ -291,12 +318,28 @@ export const actions = {
         closeNotice(commit, 3000)
       })
   },
+  searchCouponsFromRedis ({ commit }, { campaignId, campaignState, rewardId, startAt, limit }) {
+    commit('setLoading', { loading: true })
+
+    return axios.getData(`coupons/${campaignId}/${campaignState}/${rewardId}?start=${startAt}&length=${limit}`)
+      .then(response => {
+        commit('setListCoupons', response.data.output.data)
+        commit('setLoading', { loading: false })
+      })
+      .catch(error => {
+        console.log(error)
+        commit('setLoading', { loading: false })
+        sendErrorNotice(commit, 'Load Code Failed! Please check Connection')
+        closeNotice(commit, 3000)
+      })
+  },
   getCouponsFromRedis ({ commit }, { campaignId, campaignState, rewardId }) {
     commit('setLoading', { loading: true })
 
     return axios.getData(`coupons/${campaignId}/${campaignState}/${rewardId}/totals`)
       .then(response => {
         commit('setTotalsCoupon', response.data.data)
+        commit('setLoading', { loading: false })
       })
       .catch(error => {
         console.log(error)
@@ -323,6 +366,34 @@ export const actions = {
       })
   },
   // verify code zone
+  postOneVerfyCodeToRedis ({ commit, dispatch }, { campaignId, state, data }) {
+    const body = {
+      verifycode: `${data}`
+    }
+
+    return new Promise((resolve, reject) => {
+      axios.postData(`verifycode/${campaignId}/${state}`, body)
+        .then(response => {
+          const msg = `Post code to ${state} Database`
+          sendSuccessNotice(commit, msg)
+          closeNotice(commit, 3000)
+          commit('setLoading', { loading: false })
+          resolve('done')
+
+          dispatch('getVerifyCodeFromRedis', {
+            campaignId: campaignId,
+            campaignState: state
+          })
+        })
+        .catch(error => {
+          console.log(error)
+          commit('setLoading', { loading: false })
+          sendErrorNotice(commit, 'Post code to Database Failed!')
+          closeNotice(commit, 3000)
+          reject(new Error('error'))
+        })
+    })
+  },
   putVerifyCodeToRedis ({ commit, dispatch }, { campaignId, state, data }) {
     commit('setLoading', { loading: true })
     const file = {
@@ -345,6 +416,21 @@ export const actions = {
         console.log(error)
         commit('setLoading', { loading: false })
         sendErrorNotice(commit, 'Put code to Database Failed!')
+        closeNotice(commit, 3000)
+      })
+  },
+  searchVerifyCodeFromRedis ({ commit }, { campaignId, campaignState, data }) {
+    console.log('flag search')
+    commit('setLoading', { loading: true })
+
+    return axios.getData(`verifycode/${campaignId}/${campaignState}?verifycode=${data}`)
+      .then(response => {
+        commit('setCheckVerifyCode', response.data.output.data)
+      })
+      .catch(error => {
+        console.log(error)
+        commit('setLoading', { loading: false })
+        sendErrorNotice(commit, 'Load Code Failed! Please check Connection')
         closeNotice(commit, 3000)
       })
   },

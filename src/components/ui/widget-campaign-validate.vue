@@ -1,4 +1,6 @@
 <script>
+import { formatDateTime } from '@utils/format-date'
+
 export default {
   components: {
     VueJsonPretty: () => import('vue-json-pretty'),
@@ -23,6 +25,30 @@ export default {
   computed: {
     checkTypeNull () {
       return !!this.typeOfField
+    },
+    startDate () {
+      if (this.campaignValidateInfo) {
+        return formatDateTime(this.campaignValidateInfo.campaignDateStart.seconds)
+      }
+      return ''
+    },
+    endDate () {
+      if (this.campaignValidateInfo) {
+        return formatDateTime(this.campaignValidateInfo.campaignDateEnd.seconds)
+      }
+      return ''
+    },
+    startTestDate () {
+      if (this.campaignValidateInfo) {
+        return formatDateTime(this.campaignValidateInfo.campaignDateTestStart.seconds)
+      }
+      return ''
+    },
+    endTestDate () {
+      if (this.campaignValidateInfo) {
+        return formatDateTime(this.campaignValidateInfo.campaignDateTestEnd.seconds)
+      }
+      return ''
     }
   },
   methods: {
@@ -49,12 +75,76 @@ export default {
     <v-list dense>
       <v-list-item>
         <v-list-item-content class="text-body-2 indigo--text">
+          Campaign Type API Config:
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item>
+        <v-list-item-content>
+          API Report URL:
+          <base-button
+            v-if="editMode"
+            color="primary"
+            x-small
+            text
+            @click="clickToEdit(
+              'apiReport',
+              'string',
+              campaignValidateInfo.apiReport
+            )"
+          >
+            edit
+          </base-button>
+          <strong
+            v-else
+            class="primary--text"
+          >
+            (apiReport)
+          </strong>
+        </v-list-item-content>
+        <v-list-item-content class="secondary--text align-end">
+          {{ campaignValidateInfo.apiReport }}
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item>
+        <v-list-item-content>
+          API URL:
+          <base-button
+            v-if="editMode"
+            color="primary"
+            x-small
+            text
+            @click="clickToEdit(
+              'apiURL',
+              'string',
+              campaignValidateInfo.apiURL
+            )"
+          >
+            edit
+          </base-button>
+          <strong
+            v-else
+            class="primary--text"
+          >
+            (apiURL)
+          </strong>
+        </v-list-item-content>
+        <v-list-item-content class="secondary--text align-end">
+          {{ campaignValidateInfo.apiURL }}
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item>
+        <v-list-item-content class="text-body-2 indigo--text">
           Bulk API Config Section:
           <base-button
             v-if="editMode"
             color="primary"
             x-small
             text
+            @click="clickToEdit(
+              'bulkConfig',
+              'bulk',
+              ''
+            )"
           >
             edit
           </base-button>
@@ -105,8 +195,8 @@ export default {
             (campaignDateTestStart)
           </strong>
         </v-list-item-content>
-        <v-list-item-content class="secondary--text align-end">
-          "{{ campaignValidateInfo.campaignDateTestStart }}"
+        <v-list-item-content class="warning--text align-end">
+          {{ startTestDate }}
         </v-list-item-content>
       </v-list-item>
       <v-list-item>
@@ -127,8 +217,8 @@ export default {
             (campaignDateTestEnd)
           </strong>
         </v-list-item-content>
-        <v-list-item-content class="secondary--text align-end">
-          "{{ campaignValidateInfo.campaignDateTestEnd }}"
+        <v-list-item-content class="warning--text align-end">
+          {{ endTestDate }}
         </v-list-item-content>
       </v-list-item>
       <v-list-item>
@@ -150,7 +240,7 @@ export default {
           </strong>
         </v-list-item-content>
         <v-list-item-content class="secondary--text align-end">
-          "{{ campaignValidateInfo.campaignDateStart }}"
+          {{ startDate }}
         </v-list-item-content>
       </v-list-item>
       <v-list-item>
@@ -172,7 +262,7 @@ export default {
           </strong>
         </v-list-item-content>
         <v-list-item-content class="secondary--text align-end">
-          "{{ campaignValidateInfo.campaignDateEnd }}"
+          {{ endDate }}
         </v-list-item-content>
       </v-list-item>
       <v-list-item>
@@ -538,6 +628,33 @@ export default {
         </v-list-item-content>
         <v-list-item-content class="secondary--text align-end">
           {{ campaignValidateInfo.messageMTSuccessDefaultReply }}
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item>
+        <v-list-item-content>
+          Default Reply of USSD (MTFailure) Message:
+          <base-button
+            v-if="editMode"
+            color="primary"
+            x-small
+            text
+            @click="clickToEdit(
+              'messageMTFailureDefaultReply',
+              'string',
+              campaignValidateInfo.messageMTFailureDefaultReply
+            )"
+          >
+            edit
+          </base-button>
+          <strong
+            v-else
+            class="primary--text"
+          >
+            (messageMTFailureDefaultReply)
+          </strong>
+        </v-list-item-content>
+        <v-list-item-content class="secondary--text align-end">
+          {{ campaignValidateInfo.messageMTFailureDefaultReply }}
         </v-list-item-content>
       </v-list-item>
       <v-list-item>
