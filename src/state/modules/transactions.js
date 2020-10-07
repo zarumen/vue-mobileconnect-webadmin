@@ -378,7 +378,7 @@ export const actions = {
           sendSuccessNotice(commit, msg)
           closeNotice(commit, 3000)
           commit('setLoading', { loading: false })
-          resolve('done')
+          resolve(response.data)
 
           dispatch('getVerifyCodeFromRedis', {
             campaignId: campaignId,

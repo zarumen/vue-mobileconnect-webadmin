@@ -91,6 +91,7 @@ export default {
     VerifyCodeSearchAlert: false,
     searchCodeValue: '',
     addCodeValue: '',
+    verifycodeStatusText: '',
     // coupons treeview variables
     cpFileSelected: [],
     isLoading2: false,
@@ -570,6 +571,10 @@ export default {
           state: this.state,
           data: this.addCodeValue
         })
+          .then((res) => {
+            this.verifycodeStatusText = res.output.message
+          })
+          .catch((err) => console.log(err))
       }
     },
     listCoupons () {
@@ -1200,7 +1205,7 @@ export default {
                                   </v-col>
                                   <v-row>
                                     <v-col
-                                      cols="6"
+                                      cols="12"
                                       md="6"
                                     >
                                       <v-menu
@@ -1252,7 +1257,7 @@ export default {
                                       </v-menu>
                                     </v-col>
                                     <v-col
-                                      cols="6"
+                                      cols="12"
                                       md="6"
                                     >
                                       <v-menu
@@ -1916,7 +1921,10 @@ export default {
                     >
                       <v-card-text>
                         <v-row>
-                          <v-col cols="6">
+                          <v-col
+                            cols="12"
+                            sm="6"
+                          >
                             <v-text-field
                               v-model="addCodeValue"
                               label="Fill Your Verify Code Here!"
@@ -1937,7 +1945,10 @@ export default {
                               Clear
                             </base-button>
                           </v-col>
-                          <v-col cols="6">
+                          <v-col
+                            cols="12"
+                            sm="6"
+                          >
                             <v-alert
                               v-if="handleAlertVerifyCode"
                               v-model="VerifyCodeAlert"
@@ -1947,9 +1958,11 @@ export default {
                               dark
                               dismissible
                             >
-                              คุณได้เพิ่ม <br>Verify Code:
+                              คุณได้เพิ่ม Verify Code:
                               <strong class="title amber--text">{{ addCodeValue }}</strong>
-                              <br>เข้า Database แล้ว
+                              แล้ว
+                              <br>Result:
+                              <br> <strong class="amber--text">{{ verifycodeStatusText }}</strong>
                             </v-alert>
                             <v-alert
                               v-else
@@ -1980,7 +1993,10 @@ export default {
                     >
                       <v-card-text>
                         <v-row>
-                          <v-col cols="6">
+                          <v-col
+                            cols="12"
+                            md="6"
+                          >
                             <v-text-field
                               v-model="searchCodeValue"
                               label="Search Verify Code"
@@ -2001,7 +2017,10 @@ export default {
                               Clear
                             </base-button>
                           </v-col>
-                          <v-col cols="6">
+                          <v-col
+                            cols="12"
+                            md="6"
+                          >
                             <v-alert
                               v-model="VerifyCodeSearchAlert"
                               border="left"
@@ -2182,7 +2201,10 @@ export default {
                     >
                       <v-card-text>
                         <v-row>
-                          <v-col cols="6">
+                          <v-col
+                            cols="12"
+                            md="6"
+                          >
                             <v-select
                               v-model="rewardIdSelected"
                               :items="listRewardId"
@@ -2209,7 +2231,10 @@ export default {
                               Clear
                             </base-button>
                           </v-col>
-                          <v-col cols="6">
+                          <v-col
+                            cols="12"
+                            md="6"
+                          >
                             <v-alert
                               v-if="handleAlertCoupon"
                               v-model="couponAlert"
@@ -2251,7 +2276,10 @@ export default {
                     >
                       <v-card-text>
                         <v-row>
-                          <v-col cols="6">
+                          <v-col
+                            cols="12"
+                            md="6"
+                          >
                             <v-slider
                               v-model="searchCouponValue"
                               :max="getTotalsCoupon"
@@ -2278,7 +2306,10 @@ export default {
                               List Coupons
                             </v-btn>
                           </v-col>
-                          <v-col cols="6">
+                          <v-col
+                            cols="12"
+                            md="6"
+                          >
                             <span>Result:</span>
                             <v-list dense>
                               <v-list-item

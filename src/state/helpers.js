@@ -190,6 +190,8 @@ export const campaignSearchComputed = {
   ]),
   ...mapGetters('campaigns', [
     'hadCampaignList',
+    'getBanList',
+    'getRegisterList',
     'getAllCampaignsId',
     'getCampaignStateSelected'
   ]),
@@ -203,6 +205,8 @@ export const campaignSearchComputed = {
 export const campaignSearchMethods = {
   ...mapActions('campaigns', [
     'updateStatusCampaign',
+    'searchBanListByCampaign',
+    'searchRegisterListByCampaign',
     'calibratedCampaignTx'
   ]),
   ...mapActions('transactions', [

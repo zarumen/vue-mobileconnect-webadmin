@@ -20,6 +20,8 @@ export const state = {
   items: null,
   item: null,
   itemValidate: null,
+  registerListResult: null,
+  banListResult: null,
   pagination: getDefaultPagination(),
   loading: false,
   mode: '',
@@ -41,12 +43,16 @@ export const getters = {
 
     return []
   },
+  getRegisterList: (state) => state.registerListResult,
+  getBanList: (state) => state.banListResult,
   getOneCampaignValidate: (state) => state.itemValidate,
   getOneCampaignSelected: (state) => state.campaignSelected,
   getCampaignStateSelected: (state) => state.campaignStateSelected
 }
 
 export const mutations = {
+  setBanList: set('banListResult'),
+  setRegisterList: set('registerListResult'),
   setItemValidate: set('itemValidate'),
   setCampaignSelected: set('campaignSelected'),
   toggleState: set('campaignStateSelected'),
@@ -258,6 +264,72 @@ export const actions = {
         closeNotice(commit, 2000)
         return error
       })
+  },
+  searchRegisterListByCampaign ({ commit }, { campaignId, msisdn }) {
+    // search register list
+    return new Promise((resolve, reject) => {
+      firestoreApp
+        .collection('campaignRecords')
+        .doc(`${campaignId}`)
+        .collection('registerList')
+        .doc(`${msisdn}`)
+        .get()
+        .then(doc => {
+          if (doc.exists) {
+            const data = doc.data()
+            // add telephone to document
+            data.id = msisdn
+            commit('setRegisterList', data)
+            resolve('Found')
+          } else {
+          // doc.data() will be undefined in this case
+            console.log('No such document!')
+            commit('setRegisterList', null)
+            resolve(null)
+          }
+        })
+        .catch(error => {
+          console.log(error)
+          commit('setLoading', { loading: false })
+          sendErrorNotice(commit, 'Load Failed!')
+          closeNotice(commit, 2000)
+          reject(new Error('error'))
+        })
+    })
+  },
+  searchBanListByCampaign ({ commit }, { campaignId, msisdn }) {
+    console.log(campaignId, msisdn)
+    // search ban list
+    return new Promise((resolve, reject) => {
+      firestoreApp
+        .collection('campaignRecords')
+        .doc(`${campaignId}`)
+        .collection('banList')
+        .doc(`${msisdn}`)
+        .get()
+        .then(doc => {
+          console.log(doc.data())
+          if (doc.exists) {
+            const data = doc.data()
+            // add telephone to document
+            data.id = msisdn
+            commit('setBanList', data)
+            resolve('This number has been banned!')
+          } else {
+          // doc.data() will be undefined in this case
+            console.log('No such document!')
+            commit('setBanList', null)
+            resolve(null)
+          }
+        })
+        .catch(error => {
+          console.log(error)
+          commit('setLoading', { loading: false })
+          sendErrorNotice(commit, 'Load Failed!')
+          closeNotice(commit, 2000)
+          reject(new Error('error'))
+        })
+    })
   },
   // ===
   // UPDATE Zone

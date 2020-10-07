@@ -3,6 +3,9 @@ import { campaignSearchComputed, campaignSearchMethods } from '@state/helpers'
 import { getJwtToken } from '@utils/fireauth.config'
 
 export default {
+  components: {
+    VueJsonPretty: () => import('vue-json-pretty')
+  },
   props: {
     checkMicrosite: {
       type: Boolean,
@@ -24,6 +27,10 @@ export default {
     ],
     elDetail: { text: 'TxDetails', value: 'action', align: 'center', sortable: false },
     isEditing: false,
+    alertBanList: false,
+    alertRegisterList: false,
+    alertBanListText: '',
+    alertRegisterListText: '',
     msisdn: null,
     msisdnRules: [
       v => !!v || 'Telephone Number is required',
@@ -62,6 +69,32 @@ export default {
   },
   methods: {
     ...campaignSearchMethods,
+    searchBanList () {
+      return this.searchBanListByCampaign({
+        msisdn: `${this.msisdn}`,
+        campaignId: `${this.id}`
+      })
+        .then((res) => {
+          this.alertBanList = true
+          if (res) {
+            this.alertBanListText = res
+          }
+        })
+        .catch(err => console.log(err))
+    },
+    searchRegisterList () {
+      return this.searchRegisterListByCampaign({
+        msisdn: `${this.msisdn}`,
+        campaignId: `${this.id}`
+      })
+        .then((res) => {
+          if (res) {
+            this.alertRegisterList = true
+            this.alertRegisterListText = res
+          }
+        })
+        .catch(err => console.log(err))
+    },
     initHeadersMicrosite () {
       return null
     },
@@ -126,12 +159,7 @@ export default {
         title="Search Settings"
       >
         <v-card-text>
-          Explore hundreds of free API's ready for consumption! For more information visit
-          <a
-            class="grey--text text--lighten-3"
-            href="https://github.com/toddmotto/public-apis"
-            target="_blank"
-          >the Github repository</a>.
+          Search Mobile Numbers for Inquiry Transactions
           <v-text-field
             v-model="msisdn"
             v-mask="mask"
@@ -206,6 +234,26 @@ export default {
             /> -->
           </v-card-text>
           <v-card-actions>
+            <v-btn
+              :disabled="!msisdn"
+              color="secondary"
+              @click="searchRegisterList"
+            >
+              Register List
+              <v-icon right>
+                search
+              </v-icon>
+            </v-btn>
+            <v-btn
+              :disabled="!msisdn"
+              class="error"
+              @click="searchBanList"
+            >
+              Ban List
+              <v-icon right>
+                search
+              </v-icon>
+            </v-btn>
             <v-spacer />
             <v-btn
               color="primary"
@@ -217,6 +265,43 @@ export default {
               </v-icon>
             </v-btn>
           </v-card-actions>
+          <v-card-text>
+            <v-alert
+              v-model="alertBanList"
+              border="left"
+              close-text="Close Alert"
+              color="indigo"
+              dark
+              dismissible
+            >
+              <span>{{ alertBanListText }}</span>
+              <vue-json-pretty
+                :data="getBanList"
+                :deep="1"
+                highlight-mouseover-node
+                show-line
+                show-double-quotes
+              />
+            </v-alert>
+            <v-alert
+              v-model="alertRegisterList"
+              border="left"
+              close-text="Close Alert"
+              color="indigo accent-4"
+              dark
+              dismissible
+            >
+              <span>{{ alertRegisterListText }}</span>
+              <span>Details</span>
+              <vue-json-pretty
+                :data="getRegisterList"
+                :deep="1"
+                highlight-mouseover-node
+                show-line
+                show-double-quotes
+              />
+            </v-alert>
+          </v-card-text>
         </div>
       </base-card>
     </v-col>

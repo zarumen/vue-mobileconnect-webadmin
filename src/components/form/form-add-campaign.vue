@@ -60,6 +60,10 @@ export default {
           failure: false,
           success: false
         },
+        ussdais: {
+          failure: false,
+          success: false
+        },
         ussdAisBais: {
           failure: false,
           success: false
@@ -224,6 +228,7 @@ export default {
       showPass: false,
       optionBulk: false,
       optionAis: false,
+      optionUssdAis: false,
       optionUssdAisBais: false,
       optionUssdAisBdtac: false,
       optionUssdAisBtrue: false,
@@ -939,6 +944,24 @@ export default {
                         <v-switch
                           v-model="ussdForm.OPERATORS.ais.failure"
                           :label="`Failure: ${ussdForm.OPERATORS.ais.failure}`"
+                        />
+                      </v-sheet>
+                      <v-switch
+                        v-model="optionUssdAis"
+                        inset
+                        :label="`USSD AIS: ${activatedOperators(optionUssdAis)}`"
+                      />
+                      <v-sheet
+                        v-if="optionUssdAis"
+                        class="pa-3"
+                      >
+                        <v-switch
+                          v-model="ussdForm.OPERATORS.ussdais.success"
+                          :label="`Success: ${ussdForm.OPERATORS.ussdais.success}`"
+                        />
+                        <v-switch
+                          v-model="ussdForm.OPERATORS.ussdais.failure"
+                          :label="`Failure: ${ussdForm.OPERATORS.ussdais.failure}`"
                         />
                       </v-sheet>
                       <v-switch
