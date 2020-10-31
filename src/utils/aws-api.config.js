@@ -8,7 +8,8 @@ const instance = axios.create({
   baseURL: baseURL,
   timeout: 60000,
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'X-API-Key': 'kCGgExxmuP6Iu5EpFDHho93fcLOvMxRSC4mFkeP9'
   }
 })
 
