@@ -22,6 +22,7 @@ export default {
     Doughnut: () => import('@utils/chart/Doughnut'),
     LineChart: () => import('@utils/chart/LineChart'),
     WidgetSearch: () => import('@components/ui/widget-search'),
+    WidgetTestPage: () => import('@components/ui/widget-test-page'),
     WidgetHeaderConfig: () => import('@components/ui/widget-header-config'),
     WidgetCampaignValidate: () => import('@components/ui/widget-campaign-validate')
   },
@@ -806,6 +807,16 @@ export default {
                     Report Config
                   </span>
                 </v-tab>
+                <v-tab>
+                  <v-icon class="mr-2">
+                    mdi-database-search
+                  </v-icon>
+                  <span
+                    v-if="tabs === 6"
+                  >
+                    Test Page
+                  </span>
+                </v-tab>
               </v-tabs>
             </v-col>
             <v-card-title>
@@ -856,6 +867,12 @@ export default {
                 class="title"
               >
                 Headers Report Config
+              </span>
+              <span
+                v-if="tabs === 6"
+                class="title"
+              >
+                Test Page
               </span>
               <v-spacer />
               <span v-if="tabs === 0">
@@ -2345,6 +2362,13 @@ export default {
                 <!-- Header Field Configs -->
                 <widget-header-config
                   :fields-microsite="micrositeFields"
+                />
+              </v-tab-item>
+              <v-tab-item :value="6">
+                <widget-test-page
+                  :shortcode="campaignInfo.shortcode"
+                  :keyword="campaignInfo.keyword"
+                  :delimiter="campaignValidateInfo.contextDelimiter"
                 />
               </v-tab-item>
             </v-tabs-items>

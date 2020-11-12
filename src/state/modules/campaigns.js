@@ -265,11 +265,12 @@ export const actions = {
         return error
       })
   },
-  searchRegisterListByCampaign ({ commit }, { campaignId, msisdn }) {
+  searchRegisterListByCampaign ({ commit }, { campaignId, msisdn, state }) {
+    const fieldCampaign = selectedFieldRecords(state)
     // search register list
     return new Promise((resolve, reject) => {
       firestoreApp
-        .collection('campaignRecords')
+        .collection(fieldCampaign)
         .doc(`${campaignId}`)
         .collection('registerList')
         .doc(`${msisdn}`)
@@ -297,18 +298,17 @@ export const actions = {
         })
     })
   },
-  searchBanListByCampaign ({ commit }, { campaignId, msisdn }) {
-    console.log(campaignId, msisdn)
+  searchBanListByCampaign ({ commit }, { campaignId, msisdn, state }) {
+    const fieldCampaign = selectedFieldRecords(state)
     // search ban list
     return new Promise((resolve, reject) => {
       firestoreApp
-        .collection('campaignRecords')
+        .collection(fieldCampaign)
         .doc(`${campaignId}`)
         .collection('banList')
         .doc(`${msisdn}`)
         .get()
         .then(doc => {
-          console.log(doc.data())
           if (doc.exists) {
             const data = doc.data()
             // add telephone to document
@@ -474,6 +474,40 @@ export const actions = {
 
     return console.log(resTest, resProd)
   },
+  deleteBanNumber ({ commit }, { campaignId, msisdn, state }) {
+    const fieldCampaign = selectedFieldRecords(state)
+    return firestoreApp
+      .collection(fieldCampaign)
+      .doc(campaignId)
+      .collection('banList')
+      .doc(msisdn)
+      .delete()
+      .then(() => {
+        console.log(`Ban Number ${msisdn} successfully deleted!`)
+        commit('setLoading', { loading: false })
+      })
+      .catch(error => {
+        commit('setLoading', { loading: false })
+        console.log('Error removing document: ', error)
+      })
+  },
+  deleteRegisterNumber ({ commit }, { campaignId, msisdn, state }) {
+    const fieldCampaign = selectedFieldRecords(state)
+    return firestoreApp
+      .collection(fieldCampaign)
+      .doc(campaignId)
+      .collection('registerList')
+      .doc(msisdn)
+      .delete()
+      .then(() => {
+        console.log(`Register Number ${msisdn} successfully deleted!`)
+        commit('setLoading', { loading: false })
+      })
+      .catch(error => {
+        commit('setLoading', { loading: false })
+        console.log('Error removing document: ', error)
+      })
+  },
   // ===
   // ETC. Zone
   // ===
@@ -488,6 +522,9 @@ export const actions = {
   }
 }
 
+function selectedFieldRecords (state) {
+  return (state === 'production') ? 'campaignRecords' : 'campaignTestRecords'
+}
 export function getExportJobsByCampaign (campaignId) {
   return firestoreApp
     .collection('exportJobs').doc(campaignId).collection('jobs')

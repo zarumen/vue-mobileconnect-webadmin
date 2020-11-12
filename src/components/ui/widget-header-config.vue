@@ -101,7 +101,7 @@ export default {
 <template>
   <v-card>
     <v-card-title class="title grey--text">
-      config button
+      Select Header from Database
     </v-card-title>
     <v-card-actions>
       <v-col>
@@ -153,7 +153,7 @@ export default {
       </v-btn>
     </v-card-actions>
     <v-card-title class="title grey--text">
-      header fields config
+      Header in Column Data Table
     </v-card-title>
     <v-card-text>
       <v-container>

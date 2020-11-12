@@ -732,7 +732,7 @@ export default {
               step="1"
             >
               {{ stepName.one }}
-              <small>v.1.1 patch note: can set Bulk Option Config, and Bulk-API</small>
+              <small>v.1.1 patch note: can set Bulk Option Config, and Bulk-API, send Test Msg</small>
             </v-stepper-step>
             <v-stepper-content step="1">
               <v-card

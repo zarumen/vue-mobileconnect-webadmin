@@ -2,14 +2,14 @@ import axios from 'axios'
 
 const version = 'staging'
 
-const baseURL = `https://api.sms2mkt.com/2waysms/${version}/`
+const baseURL = process.env.VUE_APP_APIURL + `${version}/`
 
 const instance = axios.create({
   baseURL: baseURL,
   timeout: 60000,
   headers: {
     'Content-Type': 'application/json',
-    'X-API-Key': 'kCGgExxmuP6Iu5EpFDHho93fcLOvMxRSC4mFkeP9'
+    'X-API-Key': process.env.VUE_APP_APIKEY
   }
 })
 

@@ -207,6 +207,8 @@ export const campaignSearchMethods = {
     'updateStatusCampaign',
     'searchBanListByCampaign',
     'searchRegisterListByCampaign',
+    'deleteBanNumber',
+    'deleteRegisterNumber',
     'calibratedCampaignTx'
   ]),
   ...mapActions('transactions', [

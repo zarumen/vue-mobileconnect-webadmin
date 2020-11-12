@@ -223,7 +223,6 @@ export const actions = {
 
     return axios.getData(`transaction/msisdn/${msisdn}/${queryString}`)
       .then(response => {
-        console.log(response)
         const msg = `Load ${response.data.input.msisdn} Transactions From Database Success!`
         commitPagination(commit, response.data.output.data)
         sendSuccessNotice(commit, msg)
@@ -238,7 +237,6 @@ export const actions = {
       })
   },
   getSearchCampaignID ({ commit }, { message, msisdn, jwtToken, campaignId }) {
-    console.log(campaignId)
     let queryString = `?JWTToken=${jwtToken}`
 
     if (msisdn !== '') {
@@ -247,8 +245,6 @@ export const actions = {
     if (message !== '') {
       queryString += `&message=${message}`
     }
-
-    console.log(queryString)
 
     return axios.getData(`transaction/campaignID/${campaignId}/${queryString}`)
       .then(response => {

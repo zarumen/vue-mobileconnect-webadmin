@@ -25,6 +25,9 @@ export default {
       { text: 'Stage', value: 'messageStatus', align: 'right' },
       { text: 'TimeCode', value: 'createDateTime', align: 'right' }
     ],
+    showAdvanceMenu: false,
+    showBanMenu: false,
+    campaignStatus: '',
     elDetail: { text: 'TxDetails', value: 'action', align: 'center', sortable: false },
     isEditing: false,
     alertBanList: false,
@@ -69,10 +72,14 @@ export default {
   },
   methods: {
     ...campaignSearchMethods,
+    changeTextButton (bool) {
+      return (bool) ? 'Hide' : 'Expand'
+    },
     searchBanList () {
       return this.searchBanListByCampaign({
         msisdn: `${this.msisdn}`,
-        campaignId: `${this.id}`
+        campaignId: `${this.id}`,
+        state: `${this.campaignStatus}`
       })
         .then((res) => {
           this.alertBanList = true
@@ -85,7 +92,8 @@ export default {
     searchRegisterList () {
       return this.searchRegisterListByCampaign({
         msisdn: `${this.msisdn}`,
-        campaignId: `${this.id}`
+        campaignId: `${this.id}`,
+        state: `${this.campaignStatus}`
       })
         .then((res) => {
           if (res) {
@@ -94,6 +102,22 @@ export default {
           }
         })
         .catch(err => console.log(err))
+    },
+    delBanNumber () {
+      this.alertBanList = false
+      return this.deleteBanNumber({
+        msisdn: `${this.msisdn}`,
+        campaignId: `${this.id}`,
+        state: `${this.campaignStatus}`
+      })
+    },
+    delRegisterNumber () {
+      this.alertRegisterList = false
+      return this.deleteRegisterNumber({
+        msisdn: `${this.msisdn}`,
+        campaignId: `${this.id}`,
+        state: `${this.campaignStatus}`
+      })
     },
     initHeadersMicrosite () {
       return null
@@ -170,7 +194,7 @@ export default {
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn
+          <base-button
             :disabled="!msisdn"
             color="primary"
             @click="telSearch"
@@ -179,14 +203,24 @@ export default {
             <v-icon right>
               search
             </v-icon>
-          </v-btn>
+          </base-button>
         </v-card-actions>
         <div v-if="isAdmin">
-          <v-card-text>
-            <span class="primary--text">
-              Advance Search Options
-            </span>
-            <p />
+          <v-toolbar
+            flat
+            class="primary lighten-5 ma-5"
+          >
+            <v-subheader>Advance Search Options</v-subheader>
+            <v-spacer />
+            <base-button
+              text
+              color="primary"
+              @click="showAdvanceMenu = !showAdvanceMenu"
+            >
+              {{ changeTextButton(showAdvanceMenu) }}
+            </base-button>
+          </v-toolbar>
+          <v-card-text v-if="showAdvanceMenu">
             <v-autocomplete
               v-model="id"
               :items="campaignIdList"
@@ -233,8 +267,83 @@ export default {
               label="StopDate"
             /> -->
           </v-card-text>
-          <v-card-actions>
-            <v-btn
+          <v-card-actions v-if="showAdvanceMenu">
+            <v-spacer />
+            <base-button
+              color="primary"
+              @click="advanceSearch"
+            >
+              Advance Search
+              <v-icon right>
+                search
+              </v-icon>
+            </base-button>
+          </v-card-actions>
+          <v-toolbar
+            flat
+            class="lime lighten-5 ma-5"
+          >
+            <v-subheader>Ban/Register Search Options</v-subheader>
+            <v-spacer />
+            <base-button
+              text
+              color="secondary"
+              @click="showBanMenu = !showBanMenu"
+            >
+              {{ changeTextButton(showBanMenu) }}
+            </base-button>
+          </v-toolbar>
+          <v-card-text v-if="showBanMenu">
+            <v-autocomplete
+              v-model="id"
+              :items="campaignIdList"
+              :hint="!isEditing ? 'Click the icon to edit' : 'Click the icon to save'"
+              :readonly="!isEditing"
+              :label="`Campaign ID — ${isEditing ? 'แก้ไขได้' : 'ล็อคอยู่'}`"
+              persistent-hint
+              hide-no-data
+              hide-selected
+              placeholder="Click Right Button and Start typing to Search"
+              prepend-icon="mdi-database-search"
+              return-object
+              required
+            >
+              <template v-slot:append-outer>
+                <v-slide-x-reverse-transition
+                  mode="out-in"
+                >
+                  <v-icon
+                    :key="`icon-${isEditing}`"
+                    :color="isEditing ? 'success' : 'primary'"
+                    @click="isEditing = !isEditing"
+                    v-text="isEditing ? 'mdi-check-outline' : 'mdi-circle-edit-outline'"
+                  />
+                </v-slide-x-reverse-transition>
+              </template>
+            </v-autocomplete>
+            <v-col cols="12 pl-5">
+              <span>Campaign Status</span>
+              <v-radio-group
+                v-model="campaignStatus"
+                mandatory
+                row
+              >
+                <v-radio
+                  label="TEST"
+                  value="test"
+                  color="amber"
+                />
+                <v-radio
+                  label="PRODUCTION"
+                  value="production"
+                  color="green"
+                />
+              </v-radio-group>
+            </v-col>
+          </v-card-text>
+          <v-card-actions v-if="showBanMenu">
+            <v-spacer />
+            <base-button
               :disabled="!msisdn"
               color="secondary"
               @click="searchRegisterList"
@@ -243,8 +352,8 @@ export default {
               <v-icon right>
                 search
               </v-icon>
-            </v-btn>
-            <v-btn
+            </base-button>
+            <base-button
               :disabled="!msisdn"
               class="error"
               @click="searchBanList"
@@ -253,28 +362,18 @@ export default {
               <v-icon right>
                 search
               </v-icon>
-            </v-btn>
-            <v-spacer />
-            <v-btn
-              color="primary"
-              @click="advanceSearch"
-            >
-              Advance Search
-              <v-icon right>
-                search
-              </v-icon>
-            </v-btn>
+            </base-button>
           </v-card-actions>
           <v-card-text>
             <v-alert
               v-model="alertBanList"
               border="left"
               close-text="Close Alert"
-              color="indigo"
+              color="red darken-4"
               dark
               dismissible
             >
-              <span>{{ alertBanListText }}</span>
+              <span class="yellow--text">Ban Number: {{ alertBanListText }}</span>
               <vue-json-pretty
                 :data="getBanList"
                 :deep="1"
@@ -282,17 +381,24 @@ export default {
                 show-line
                 show-double-quotes
               />
+              <v-col class="pa-2">
+                <base-button
+                  outlined
+                  @click="delBanNumber"
+                >
+                  Delete Ban Number
+                </base-button>
+              </v-col>
             </v-alert>
             <v-alert
               v-model="alertRegisterList"
               border="left"
               close-text="Close Alert"
-              color="indigo accent-4"
+              color="indigo darken-4"
               dark
               dismissible
             >
-              <span>{{ alertRegisterListText }}</span>
-              <span>Details</span>
+              <span class="yellow--text">Register Number: {{ alertRegisterListText }}</span>
               <vue-json-pretty
                 :data="getRegisterList"
                 :deep="1"
@@ -300,6 +406,14 @@ export default {
                 show-line
                 show-double-quotes
               />
+              <v-col class="pa-2">
+                <base-button
+                  outlined
+                  @click="delRegisterNumber"
+                >
+                  Delete Register Number
+                </base-button>
+              </v-col>
             </v-alert>
           </v-card-text>
         </div>

@@ -16,6 +16,10 @@ jobs:
         env:
           FIREBASE_CONFIG_FILE: ${{ secrets.FIREBASE_CONFIG_FILE }}
         run: echo $FIREBASE_CONFIG_FILE | base64 -d > ./src/utils/firebase.config.js
+      - name: Decrypt Environment Variable
+        env:
+          VUE_ENV: ${{ secrets.VUE_ENV }}
+        run: echo $VUE_ENV | base64 -d > .env.local
       - name: Install Dependencies
         run: yarn install
       - name: Build
