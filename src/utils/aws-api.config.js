@@ -13,6 +13,8 @@ const instance = axios.create({
   }
 })
 
+instance.defaults.headers.post['Access-Control-Allow-Origin'] = '*'
+
 export default {
   getData (action) {
     let url = `${baseURL}`
