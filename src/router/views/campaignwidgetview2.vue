@@ -67,7 +67,7 @@ export default {
       if (this.totals !== newdata && this.totals !== 0) {
         console.log(this.myChart.data.datasets[0].data)
         this.smscount = this.smscount + (newdata - this.totals)
-        this.myChart.data.datasets[0].data[28] = this.smscount
+        this.myChart.data.datasets[0].data[119] = this.smscount
         this.myChart.update()
       }
 
