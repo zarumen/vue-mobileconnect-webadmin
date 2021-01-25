@@ -576,7 +576,7 @@ export default {
           {{ campaignValidateInfo.messageValidateFail }}
         </v-list-item-content>
       </v-list-item>
-      <v-list-item>
+      <!-- <v-list-item>
         <v-list-item-content>
           Validate Verify Code with Mobile Number Failed Message:
           <base-button
@@ -602,7 +602,7 @@ export default {
         <v-list-item-content class="secondary--text align-end">
           {{ campaignValidateInfo.messageCheckMsisdnNotFound }}
         </v-list-item-content>
-      </v-list-item>
+      </v-list-item> -->
       <v-list-item>
         <v-list-item-content>
           Default Reply of USSD (MTSuccess) Message:

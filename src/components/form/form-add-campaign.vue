@@ -2272,7 +2272,7 @@ export default {
                       prepend-icon="chat"
                       label="Validate Verify Code Failed Message"
                     />
-                    <v-col v-if="helper">
+                    <!-- <v-col v-if="helper">
                       <v-subheader class="helpertext">
                         {{ helperText.messageCheckMsisdnNotFound }}
                       </v-subheader>
@@ -2282,7 +2282,7 @@ export default {
                       :counter="70"
                       prepend-icon="chat"
                       label="Validate Verify Code with Mobile Number Failed Message"
-                    />
+                    /> -->
                     <v-col
                       v-if="optionBulk"
                       cols="12"
@@ -2799,11 +2799,11 @@ export default {
                           {{ validateForm.messageValidateFail }}
                         </strong>
                       </p>
-                      <p>
+                      <!-- <p>
                         Telephone Number Checked Error Message: <strong class="green--text">
                           {{ validateForm.messageCheckMsisdnNotFound }}
                         </strong>
-                      </p>
+                      </p> -->
                       <p>
                         Limit Reward: <strong class="green--text">
                           {{ validateForm.rewardsLimit }}
