@@ -331,7 +331,7 @@ export default {
         v-if="checkUserNickName"
         v-slot:item.nickName="{ item }"
       >
-        <span class="text-truncate text-caption">
+        <span class="text-truncate text-caption success--text">
           {{ item.nickName }}
         </span>
       </template>

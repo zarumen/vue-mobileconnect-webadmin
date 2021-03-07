@@ -30,7 +30,7 @@ export default {
           value: 'organizationAuth'
         },
         { text: 'FirstName', value: 'firstName' },
-        { text: 'NickName', value: 'nickName' },
+        { text: 'NN', value: 'nickName' },
         { text: 'Company', value: 'organizationLevel1Name' },
         { text: 'Email', value: 'email' },
         { text: 'Mobile', value: 'mobileTelNumber' },

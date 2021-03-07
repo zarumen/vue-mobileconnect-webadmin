@@ -114,9 +114,12 @@ export default {
                   Log In
                 </span>
               </base-button>
-              <p v-if="authError">
-                There was an error logging in to your account.
-              </p>
+              <div v-if="!!authError">
+                <p>There was an error logging in to your account.</p>
+                <span class="red--text">
+                  {{ authError.message }}
+                </span>
+              </div>
             </v-form>
           </v-card-text>
         </base-card>
