@@ -158,6 +158,7 @@ export const actions = {
       console.log(error)
       trace.putAttribute('errorCode', `${error.code}`)
       trace.stop()
+      return Promise.reject(error)
     }
 
     if (loginUser) {
