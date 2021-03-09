@@ -1,13 +1,13 @@
-import { firebaseApp } from './firebase.config'
+import firebase from 'firebase/app'
 
 // ===
 // Private helpers
 // ===
 
 const getserverTimestamp = () => {
-  return firebaseApp.firestore.FieldValue.serverTimestamp()
+  return firebase.firestore.FieldValue.serverTimestamp()
 }
 
 export default getserverTimestamp
 
-export const fireStoreFieldValue = firebaseApp.firestore.FieldValue
+export const fireStoreFieldValue = firebase.firestore.FieldValue
