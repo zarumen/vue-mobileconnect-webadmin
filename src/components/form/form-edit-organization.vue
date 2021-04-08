@@ -207,7 +207,7 @@ export default {
               align="center"
               justify-space-between
             >
-              <v-row align="left">
+              <v-row align="start">
                 <v-col cols="4">
                   <v-avatar
                     size="80px"

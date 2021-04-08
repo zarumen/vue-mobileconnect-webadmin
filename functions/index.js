@@ -1,5 +1,5 @@
 const functions = require('firebase-functions');
-const admin = require("firebase-admin");
+const admin = require('firebase-admin');
 const { BigQuery } = require('@google-cloud/bigquery');
 admin.initializeApp();
 
@@ -24,11 +24,11 @@ const bigquery = new BigQuery({
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
 // exports.helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
+//  response.send('Hello from Firebase!');
 // });
 
 exports.aggregateOperatorInShortcodeConfig = functions.firestore
-  .document("shortcodeConfig/{ShortcodeId}/operator/{operatorId}")
+  .document('shortcodeConfig/{ShortcodeId}/operator/{operatorId}')
   .onWrite((change, context) => {
     // const txId = context.params.txId;
     const id = context.params.ShortcodeId;
@@ -40,12 +40,12 @@ exports.aggregateOperatorInShortcodeConfig = functions.firestore
     // ref to the parent document
     const docRef = admin
       .firestore()
-      .collection("shortcodeConfig")
+      .collection('shortcodeConfig')
       .doc(id);
 
     // get all comments and aggregate
     return docRef
-      .collection("operator")
+      .collection('operator')
       .get()
       .then(querySnapshot => {
         // get the total comment count
@@ -84,20 +84,20 @@ exports.aggregateOperatorInShortcodeConfig = functions.firestore
   });
 
 exports.deleteAggregationInShortcodeConfig = functions.firestore
-  .document("shortcodeConfig/{ShortcodeId}/operator/{operatorId}")
+  .document('shortcodeConfig/{ShortcodeId}/operator/{operatorId}')
   .onDelete((snap, context) => {
 
     const id = context.params.ShortcodeId;
 
     const docRef = admin
       .firestore()
-      .collection("shortcodeConfig")
+      .collection('shortcodeConfig')
       .doc(id);
 
     const deletedValue = snap.data();
 
     return docRef
-      .collection("operator")
+      .collection('operator')
       .get()
       .then(querySnapshot => {
         const operatorCount = querySnapshot.size;
@@ -135,7 +135,7 @@ exports.deleteAggregationInShortcodeConfig = functions.firestore
   });
 
 exports.aggregationInExportJobs = functions.firestore
-  .document("exportJobs/{campaignId}/jobs/{jobId}")
+  .document('exportJobs/{campaignId}/jobs/{jobId}')
   .onWrite((change, context) => {
 
     const id = context.params.campaignId;
@@ -144,12 +144,12 @@ exports.aggregationInExportJobs = functions.firestore
 
     const jobRef = admin
       .firestore()
-      .collection("exportJobs")
+      .collection('exportJobs')
       .doc(id);
 
     return jobRef
-      .collection("jobs")
-      .orderBy("createTime", "desc")
+      .collection('jobs')
+      .orderBy('createTime', 'desc')
       .get()
       .then(querySnapshot => {
 
@@ -193,15 +193,15 @@ exports.everyFiveMinuteJob = functions.pubsub
 
   const queryTestState = admin
     .firestore()
-    .collection("campaignValidate")
-    .where("campaignState", "==", "test")
-    .where("campaignDateTestEnd", ">", now)
+    .collection('campaignValidate')
+    .where('campaignState', '==', 'test')
+    .where('campaignDateTestEnd', '>', now)
 
   const queryProductionState = admin
     .firestore()
-    .collection("campaignValidate")
-    .where("campaignState", "==", "production")
-    .where("campaignDateStart", ">", now)
+    .collection('campaignValidate')
+    .where('campaignState', '==', 'production')
+    .where('campaignDateStart', '>', now)
 
   const tasks = await queryTestState.get();
   const tasks2 = await queryProductionState.get();
@@ -216,7 +216,7 @@ exports.everyFiveMinuteJob = functions.pubsub
     let t = `${formatDate(snapshot.data().campaignDateStart.seconds)}`;
     let c = t.slice(0,15);
 
-    item = `ID:"${snapshot.id}" => ${c} \r\n`;
+    item = `ID:'${snapshot.id}' => ${c} \r\n`;
     
     jobsTest.push(item);
     
@@ -228,7 +228,7 @@ exports.everyFiveMinuteJob = functions.pubsub
     let t = `${formatDate(snapshot.data().campaignDateStart.seconds)}`;
     let a = t.slice(0,15);
     
-    item = `ID:"${snapshot.id}" => ${a} \r\n`;
+    item = `ID:'${snapshot.id}' => ${a} \r\n`;
     
     jobsProduction.push(item);
     
@@ -247,8 +247,8 @@ exports.everyFiveMinuteJob = functions.pubsub
   const finalMessage = `${nowDate}\r\nWARNING!!!! \r\nTEST CAMPAIGNS (${jobsTest.length}):\r\n${testCamp}\r\nPRODUCTION FUTURE CAMPAIGNS (${jobsProduction.length}):\r\n${proCamp}`;
 
     request ({
-          uri: "https://notify-api.line.me/api/notify",
-          method: "POST",
+          uri: 'https://notify-api.line.me/api/notify',
+          method: 'POST',
           headers: {
             'Content-Type': 'application/x-www- form-urlencoded', 
             'Authorization':  `Bearer ${LINE_ACCESS_TOKEN}`
@@ -264,7 +264,7 @@ exports.everyFiveMinuteJob = functions.pubsub
   });
 
 exports.deleteUserFromAuth = functions.firestore
-  .document("users/{userId}")
+  .document('users/{userId}')
   .onDelete((snap, context) => {
 
     const uId = context.params.userId;
@@ -295,7 +295,7 @@ exports.syncDateTime = functions.firestore
 
     const docRef = admin
     .firestore()
-    .collection("campaigns")
+    .collection('campaigns')
     .doc(id);
 
     // perform desired operations ...
@@ -308,14 +308,14 @@ exports.syncDateTime = functions.firestore
   });
 
 exports.addCampaignIdToValidate = functions.firestore
-  .document("campaignValidate/{campaignId}")
+  .document('campaignValidate/{campaignId}')
   .onWrite((change, context) => {
 
     const id = context.params.campaignId;
 
     const docRef = admin
       .firestore()
-      .collection("campaignValidate")
+      .collection('campaignValidate')
       .doc(id);
 
     const data = {
@@ -331,9 +331,9 @@ exports.exportTxFromBigquery = functions.runWith({ memory: '1GB' }).pubsub
 
 
     const sqlQuery = `
-    SELECT shortcode, campaignID, campaignName, count( shortcode ) AS Total, CAST(FORMAT_DATE("%Y%m%d000000", current_date) as INT64) as today, CAST(FORMAT_DATE("%Y%m%d000000", DATE_SUB(current_date, INTERVAL 1 DAY)) as INT64) as yesterday
+    SELECT shortcode, campaignID, campaignName, count( shortcode ) AS Total, CAST(FORMAT_DATE('%Y%m%d000000', current_date) as INT64) as today, CAST(FORMAT_DATE('%Y%m%d000000', DATE_SUB(current_date, INTERVAL 1 DAY)) as INT64) as yesterday
     FROM \`mobile-connect-sms.2waysms.2waysms_transaction_status\`
-    WHERE createDateTime > CAST(FORMAT_DATE("%Y%m%d000000", DATE_SUB(current_date, INTERVAL 1 DAY)) as INT64) and createDateTime < CAST(FORMAT_DATE("%Y%m%d000000", current_date) as INT64) and operator!="testweb" and campaignID != " "
+    WHERE createDateTime > CAST(FORMAT_DATE('%Y%m%d000000', DATE_SUB(current_date, INTERVAL 1 DAY)) as INT64) and createDateTime < CAST(FORMAT_DATE('%Y%m%d000000', current_date) as INT64) and operator!='testweb' and campaignID != ' '
     group by shortcode, campaignID, campaignName
     order by shortcode
     `;
