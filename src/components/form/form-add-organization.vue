@@ -261,10 +261,10 @@ export default {
           >
             <v-col
               cols="12"
-              align="center"
+              align-self="center"
               justify-space-between
             >
-              <v-row align="left">
+              <v-row align="start">
                 <v-col cols="4">
                   <v-avatar
                     size="80px"
@@ -307,28 +307,41 @@ export default {
                 chips
               >
                 <template v-slot:selection="data">
-                  <v-chip
-                    :key="JSON.stringify(data.item)"
-                    :input-value="data.selected"
-                    color="primary"
-                    @input="data.parent.selectItem(data.item)"
-                  >
-                    <v-avatar
-                      v-if="data.item.picURL !== 'undefine'"
-                      left
+                  <template v-if="typeof data.item === 'object'">
+                    <v-chip
+                      :key="JSON.stringify(data.item)"
+                      :input-value="data.selected"
+                      color="primary"
+                      @input="data.parent.selectItem(data.item)"
                     >
-                      <img :src="data.item.picURL">
-                    </v-avatar>
-                    <v-avatar
-                      v-else
-                      class="white primary--text"
-                      left
+                      <v-avatar
+                        v-if="data.item.picURL !== 'undefine'"
+                        left
+                      >
+                        <img :src="data.item.picURL">
+                      </v-avatar>
+                      <v-avatar
+                        v-else
+                        class="white primary--text"
+                        left
+                      >
+                        {{ data.item.displayName.slice(0, 1).toUpperCase() }}
+                      </v-avatar>
+                      <!-- @input="data.parent.selectItem(data.item)" -->
+                      {{ data.item.displayName }}
+                    </v-chip>
+                  </template>
+                  <template v-else>
+                    <v-chip
+                      :key="JSON.stringify(data.item)"
+                      v-bind="data.attrs"
+                      :input-value="data.selected"
+                      color="primary"
+                      @input="data.parent.selectItem(data.item)"
                     >
-                      {{ data.item.displayName.slice(0, 1).toUpperCase() }}
-                    </v-avatar>
-                    <!-- @input="data.parent.selectItem(data.item)" -->
-                    {{ data.item.displayName }}
-                  </v-chip>
+                      {{ data.item }}
+                    </v-chip>
+                  </template>
                 </template>
               </v-combobox>
             </v-col>
